@@ -1,17 +1,9 @@
-// import Dashboard from '../pages/Dashboard';
-import SingIn from '../pages/SignIn';
 import Page from './Pages';
-// import SignUp from '../pages/SignUp';
-// import EmailConfirmation from '../pages/EmailConfirmation';
-// import PersonalData from '../pages/PersonalData';
-// import AccountBalance from '../pages/AccountBalance';
-// import AccountSecurity from "../pages/AccountSecurity";
-// import PhoneVerification from '../pages/PhoneVerification';
-// import ProofOfIdentity from '../pages/ProofOfIdentity';
-// import ForgotPassword from '../pages/ForgotPassword';
-// import ResetPassword from '../pages/ResetPassword';
-// import Withdraw from "../pages/Withdraw";
-// import LpLogin from '../pages/LpLogin';
+import Dashboard from '../pages/Dashboard';
+import SignUp from '../pages/SignUp';
+import SingIn from '../pages/SignIn';
+import ForgotPassword from '../pages/ForgotPassword';
+
 
 
 export enum RouteLayoutType {
@@ -37,13 +29,13 @@ const routesList = [
   //   strict: true,
   //   layoutType: RouteLayoutType.Public,
   // },
-  // {
-  //   component: SignUp,
-  //   path: Page.SIGN_UP,
-  //   exact: true,
-  //   strict: true,
-  //   layoutType: RouteLayoutType.Public,
-  // },
+  {
+    component: SignUp,
+    path: Page.SIGN_UP,
+    exact: true,
+    strict: true,
+    layoutType: RouteLayoutType.Public,
+  },
   // {
   //   component: EmailConfirmation,
   //   path: Page.EMAIL_CONFIRMATION,
@@ -51,13 +43,13 @@ const routesList = [
   //   strict: true,
   //   layoutType: RouteLayoutType.Public,
   // },
-  // {
-  //   component: ForgotPassword,
-  //   path: Page.FORGOT_PASSWORD,
-  //   exact: true,
-  //   strict: true,
-  //   layoutType: RouteLayoutType.Public,
-  // },
+   {
+     component: ForgotPassword,
+     path: Page.FORGOT_PASSWORD,
+     exact: true,
+     strict: true,
+     layoutType: RouteLayoutType.Public,
+   },
   // {
   //   component: ResetPassword,
   //   path: Page.RESET_PASSWORD,
@@ -65,13 +57,13 @@ const routesList = [
   //   strict: true,
   //   layoutType: RouteLayoutType.Public,
   // },
-  // {
-  //   component: Dashboard,
-  //   path: Page.DASHBOARD,
-  //   exact: true,
-  //   strict: true,
-  //   layoutType: RouteLayoutType.Authorized,
-  // },
+   {
+     component: Dashboard,
+     path: Page.DASHBOARD,
+     exact: true,
+     strict: true,
+     layoutType: RouteLayoutType.Authorized,
+   },
   // {
   //   component: AccountBalance,
   //   path: Page.ACCOUNT_BALANCE_HISTORY,

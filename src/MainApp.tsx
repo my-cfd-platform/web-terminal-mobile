@@ -4,16 +4,14 @@ import { reboot } from './styles/reboot';
 import Helmet from 'react-helmet';
 import RoutingLayout from './routing/RoutingLayout';
 import { BrowserRouter as Router } from 'react-router-dom';
-import { slickSliderStyles } from './styles/slickSlider';
 import 'react-dates/lib/css/_datepicker.css';
-import reactDatePickerOverrides from './styles/react-date-picker-overrides';
 import LoaderFullscreen from './components/LoaderFullscreen';
 import { useStores } from './hooks/useStores';
 import { Observer } from 'mobx-react-lite';
 import injectInerceptors from './http/interceptors';
-import NetworkErrorPopup from './components/NetworkErrorPopup';
 import { useTranslation } from 'react-i18next';
 import { autorun } from 'mobx';
+import Colors from './constants/Colors';
 
 const MainApp: FC = () => {
   const { mainAppStore } = useStores();
@@ -40,10 +38,9 @@ const MainApp: FC = () => {
 
   return (
     <>
-      <NetworkErrorPopup />
-      <Observer>
+      {/* <Observer>
         {() => <LoaderFullscreen isLoading={!mainAppStore.tradingUrl} />}
-      </Observer>
+      </Observer> */}
       <Helmet>
         <title>{`${mainAppStore.initModel.brandName} ${t(
           'trading platform'
@@ -64,18 +61,18 @@ const MainApp: FC = () => {
 
       <Global
         styles={css`
-          @import url('https://fonts.googleapis.com/css?family=Roboto:400,700&display=swap&subset=cyrillic,cyrillic-ext');
+          @import url(//db.onlinewebfonts.com/c/1c45e28f8e86cc89876f003b953cc3e9?family=SF+Pro+Text);
           ${reboot};
-          ${slickSliderStyles};
 
           html {
             font-size: 14px;
             line-height: 1.4;
-            font-family: 'Roboto', sans-serif;
+            font-family: 'SF Pro Text', sans-serif;
           }
 
           body {
-            background-color: #1c2026;
+            background-color: ${Colors.BACKGROUD_PAGE};
+            color: #fff;
           }
 
           .grecaptcha-badge {
@@ -89,7 +86,6 @@ const MainApp: FC = () => {
             }
           }
 
-          ${reactDatePickerOverrides};
         `}
       />
     </>
