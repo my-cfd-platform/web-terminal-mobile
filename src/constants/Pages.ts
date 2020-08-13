@@ -24,6 +24,14 @@ const Page = {
 
   TERMS_OF_SERVICE: 'https://monfex.com/terms-of-service',
   PRIVACY_POLICY: 'https://www.monfex.com/privacy-policy',
+
+  MARKETS: '/markets',
+  PORTFOLIO: '/portfolio',
+  NEWS: '/news',
+
+  ACCOUNTS_SWITCH: '/accounts',
+  DEPOSIT: '/deposit',
+
 };
 
 Object.freeze(Page);

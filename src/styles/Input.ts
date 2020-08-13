@@ -12,7 +12,7 @@ export const Input = styled.input<InputProps>`
   width: 100%;
   border: none;
   height: ${props => props?.height || "50px"};
-  padding: ${props => props?.padding || "14px 16px 16px"};
+  padding: ${props => props?.padding || "14px 16px 14px"};
   font-size: ${props => props?.fontSize || "16px"};
   border-bottom: ${props => `${props.borderColor || Colors.DARK_BLACK} 2px solid`};
 
@@ -44,6 +44,5 @@ export const Input = styled.input<InputProps>`
     transition: border 0.2s ease, background-color 50000s ease-in-out 0s;
     -webkit-text-fill-color: #fffccc !important;
     font-size: ${props => props?.fontSize || "16px"};
-
   }
 `;

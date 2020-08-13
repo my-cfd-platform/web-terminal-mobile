@@ -34,12 +34,7 @@ const RoutingLayout: FC = () => {
           <Observer>
             {() => (
               <>
-                {!mainAppStore.isInitLoading && <Switch>{allRoutes}</Switch>}
-                <LoaderFullscreen
-                  isLoading={
-                    mainAppStore.isInitLoading || mainAppStore.isLoading
-                  }
-                ></LoaderFullscreen>
+                <Switch>{allRoutes}</Switch>
               </>
             )}
           </Observer>
@@ -47,7 +42,6 @@ const RoutingLayout: FC = () => {
       );
 
     case RouteLayoutType.SignFlow:
-      console.log('router')
       return (
         <FlexContainer height="100vh" width="100%">
           <Observer>

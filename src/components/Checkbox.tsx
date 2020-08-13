@@ -22,21 +22,21 @@ const Checkbox: FC<Props> = ({
 }) => (
   <>
     <Label htmlFor={id}>
-      <InputCheckbox
-        checkboxClass={id}
-        id={id}
-        type="checkbox"
-        checked={checked}
-        onChange={onChange}
-      />
-      <CheckboxElement
-        className={`${id}-checkbox ${hasError && `hasError`}`}
-      ></CheckboxElement>
-      {children}
+      <FlexContainer>
+        <InputCheckbox
+          checkboxClass={id}
+          id={id}
+          type="checkbox"
+          checked={checked}
+          onChange={onChange}
+        />
+        <CheckboxElement
+          className={`${id}-checkbox ${hasError && `hasError`}`}
+        ></CheckboxElement>
+        {children}
+      </FlexContainer>
 
-      {hasError && (
-        <ErrorText>{errorText}</ErrorText>
-      )}
+      {hasError && <ErrorText>{errorText}</ErrorText>}
     </Label>
   </>
 );
@@ -47,6 +47,7 @@ const Label = styled.label`
   display: flex;
   margin: 0;
   position: relative;
+  flex-direction: column;
 
   &:hover {
     cursor: pointer;
@@ -84,11 +85,10 @@ const CheckboxElement = styled(FlexContainer)`
 const InputCheckbox = styled.input<{ checkboxClass: string }>`
   display: none;
 
-  &:checked + .${props => props.checkboxClass}-checkbox {
+  &:checked + .${(props) => props.checkboxClass}-checkbox {
     background-color: #ffffff;
   }
 `;
-
 
 const ErrorText = styled(FlexContainer)`
   color: ${Colors.RED};

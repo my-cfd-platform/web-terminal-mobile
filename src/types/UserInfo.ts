@@ -8,9 +8,8 @@ export interface UserAuthenticate {
 export interface UserRegistration {
   email: string;
   password: string;
-  repeatPassword?: string;
   userAgreement?: boolean;
-  captcha: string;
+  captcha?: string;
 }
 
 export interface UserForgotPassword {

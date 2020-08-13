@@ -13,6 +13,7 @@ interface InputFieldProps {
   hasError?: boolean;
   errorText?: string;
   onChange?: (e: ChangeEvent<HTMLInputElement>) => void;
+  value: string;
 }
 
 const InputField = ({
@@ -22,11 +23,13 @@ const InputField = ({
   pattern,
   onChange,
   hasError = false,
-  errorText = ''
+  errorText = '',
+  value
 }: InputFieldProps) => {
   return (
     <InputWrap>
       <CustomInput
+        value={value}
         id={id}
         placeholder={placeholder}
         type={type}

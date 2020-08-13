@@ -3,6 +3,7 @@ import Dashboard from '../pages/Dashboard';
 import SignUp from '../pages/SignUp';
 import SingIn from '../pages/SignIn';
 import ForgotPassword from '../pages/ForgotPassword';
+import Markets from '../pages/Markets';
 
 
 
@@ -64,6 +65,14 @@ const routesList = [
      strict: true,
      layoutType: RouteLayoutType.Authorized,
    },
+
+   {
+    component: Markets,
+    path: Page.MARKETS,
+    exact: true,
+    strict: true,
+    layoutType: RouteLayoutType.Authorized,
+  },
   // {
   //   component: AccountBalance,
   //   path: Page.ACCOUNT_BALANCE_HISTORY,

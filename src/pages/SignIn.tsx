@@ -1,4 +1,6 @@
 import React from 'react';
+import * as yup from 'yup';
+import { useFormik } from 'formik';
 import { FlexContainer } from '../styles/FlexContainer';
 import SignFlowLayout from '../components/SignFlowLayout';
 import SignTypeTabs from '../components/SignTypeTabs';
@@ -10,10 +12,117 @@ import Page from '../constants/Pages';
 import Colors from '../constants/Colors';
 import { PrimaryButton } from '../styles/Buttons';
 import { PrimaryTextSpan } from '../styles/TextsElements';
+import value from '*.png';
+import { useTranslation } from 'react-i18next';
+import { UserAuthenticate } from '../types/UserInfo';
+import validationInputTexts from '../constants/validationInputTexts';
+import { useStores } from '../hooks/useStores';
+import { OperationApiResponseCodes } from '../enums/OperationApiResponseCodes';
+import apiResponseCodeMessages from '../constants/apiResponseCodeMessages';
+import { Observer } from 'mobx-react-lite';
+import NotificationPopup from '../components/NotificationPopup';
 
 const SignIn = () => {
+  const { t } = useTranslation();
+  const validationSchema = yup.object().shape<UserAuthenticate>({
+    email: yup
+      .string()
+      .required(t(validationInputTexts.EMAIL))
+      .email(t(validationInputTexts.EMAIL)),
+    password: yup
+      .string()
+      .required(t(validationInputTexts.REQUIRED_FIELD))
+      .min(8, t(validationInputTexts.PASSWORD_MIN_CHARACTERS))
+      .max(40, t(validationInputTexts.PASSWORD_MAX_CHARACTERS)),
+  });
+
+  const initialValues: UserAuthenticate = {
+    email: '',
+    password: '',
+  };
+
+  const { mainAppStore, notificationStore, badRequestPopupStore } = useStores();
+
+  const handleSubmitForm = async (credentials: UserAuthenticate) => {
+    mainAppStore.isInitLoading = true;
+    try {
+      const result = await mainAppStore.signIn(credentials);
+      if (result !== OperationApiResponseCodes.Ok) {
+        notificationStore.notificationMessage = t(
+          apiResponseCodeMessages[result]
+        );
+        notificationStore.isSuccessfull = false;
+        notificationStore.openNotification();
+        mainAppStore.isInitLoading = false;
+
+        // mixpanel.track(mixpanelEvents.LOGIN_FAILED, {
+        //   [mixapanelProps.BRAND_NAME]: mainAppStore.initModel.brandName.toLowerCase(),
+        //   [mixapanelProps.ERROR_TEXT]: t(apiResponseCodeMessages[result]),
+        //   [mixapanelProps.EMAIL]: credentials.email,
+        // });
+      }
+      if (result === OperationApiResponseCodes.Ok) {
+        // mixpanel.people.union({
+        //   [mixapanelProps.BRAND_NAME]: mainAppStore.initModel.brandName.toLowerCase(),
+        //   [mixapanelProps.PLATFORMS_USED]: 'web',
+        // });
+        // mixpanel.track(mixpanelEvents.LOGIN_VIEW, {
+        //   [mixapanelProps.BRAND_NAME]: mainAppStore.initModel.brandName.toLowerCase(),
+        // });
+      }
+    } catch (error) {
+      mainAppStore.isInitLoading = false;
+      badRequestPopupStore.openModal();
+      badRequestPopupStore.setMessage(error);
+      mainAppStore.isInitLoading = false;
+    }
+  };
+
+  const {
+    values,
+    validateForm,
+    handleChange,
+    handleSubmit,
+    errors,
+    touched,
+    submitForm,
+    isSubmitting
+  } = useFormik({
+    initialValues,
+    onSubmit: handleSubmitForm,
+    validationSchema,
+    validateOnBlur: false,
+    validateOnChange: true,
+  });
+
+  const handlerClickSubmit = async () => {
+    const curErrors = await validateForm();
+    const curErrorsKeys = Object.keys(curErrors);
+    if (curErrorsKeys.length) {
+      const el = document.getElementById(curErrorsKeys[0]);
+      if (el) el.focus();
+    }
+    submitForm();
+  };
+
   return (
     <SignFlowLayout>
+      <FlexContainer
+        position="absolute"
+        top="10px"
+        left="16px"
+        right="16px"
+        zIndex="100"
+        justifyContent="center"
+      >
+        <Observer>
+          {() => (
+            <NotificationPopup
+              show={notificationStore.isActiveNotification}
+            ></NotificationPopup>
+          )}
+        </Observer>
+      </FlexContainer>
       <FlexContainer
         flexDirection="column"
         width="100%"
@@ -31,12 +140,20 @@ const SignIn = () => {
               name={Fields.EMAIL}
               placeholder="Email"
               type="email"
+              hasError={!!(touched.email && errors.email)}
+              errorText={errors.email}
+              value={values.email || ''}
+              onChange={handleChange}
             />
             <InputField
-              id={Fields.PASSWORD}
               name={Fields.PASSWORD}
-              placeholder="Password"
+              onChange={handleChange}
+              value={values.password || ''}
+              id={Fields.PASSWORD}
               type="password"
+              placeholder="Password"
+              hasError={!!(touched.password && errors.password)}
+              errorText={errors.password}
             />
           </CustomForm>
 
@@ -55,8 +172,8 @@ const SignIn = () => {
               padding="12px"
               type="submit"
               width="100%"
-              // onClick={handlerClickSubmit}
-              // disabled={true}
+              onClick={handlerClickSubmit}
+              disabled={isSubmitting}
             >
               <PrimaryTextSpan
                 color={Colors.BLACK}
@@ -68,12 +185,18 @@ const SignIn = () => {
             </PrimaryButton>
           </FlexContainer>
 
-          <FlexContainer alignItems="center" justifyContent="center" padding="0 0 40px 0">
-            <PrimaryTextSpan color={Colors.INPUT_LABEL_TEXT}>Don`t have an account yet?</PrimaryTextSpan>&nbsp;
+          <FlexContainer
+            alignItems="center"
+            justifyContent="center"
+            padding="0 0 40px 0"
+          >
+            <PrimaryTextSpan color={Colors.INPUT_LABEL_TEXT}>
+              Don`t have an account yet?
+            </PrimaryTextSpan>
+            &nbsp;
             <StyledLink to={Page.SIGN_UP}>Sign Up</StyledLink>
           </FlexContainer>
         </FlexContainer>
-
       </FlexContainer>
     </SignFlowLayout>
   );
@@ -86,7 +209,7 @@ const CustomForm = styled.form`
 `;
 
 const StyledLink = styled(Link)`
-font-size: 13px;
+  font-size: 13px;
   color: ${Colors.ACCENT};
   text-decoration: none;
   font-weight: 500;
@@ -96,7 +219,6 @@ font-size: 13px;
     color: #ffffff;
   }
 `;
-
 
 const LinkForgot = styled(Link)`
   font-size: 13px;
