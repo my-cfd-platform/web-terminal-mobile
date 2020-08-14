@@ -15,7 +15,12 @@ import Colors from '../constants/Colors';
 const NavigationPanel = () => {
   return (
     <NavigationPanelWrap>
-      <FlexContainer justifyContent="space-around" alignItems="center" width="100%" maxWidth="375px">
+      <FlexContainer
+        justifyContent="space-around"
+        alignItems="center"
+        width="100%"
+        maxWidth="375px"
+      >
         <CustomNavLink to={Page.MARKETS} activeClassName="selected">
           <SvgIcon
             {...IconMarkets}

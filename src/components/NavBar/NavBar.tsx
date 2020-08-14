@@ -5,10 +5,12 @@ import AccountsSwitchLink from './AccountsSwitchLink';
 import { Link } from 'react-router-dom';
 import Colors from '../../constants/Colors';
 import Page from '../../constants/Pages';
+import AccountLabel from './AccountLabel';
 
 const NavBar = () => {
   return (
     <NavBarWrap>
+      <AccountLabel />
       <AccountsSwitchLink />
       <DepositLink to={Page.DEPOSIT}>Deposit</DepositLink>
     </NavBarWrap>

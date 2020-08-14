@@ -16,7 +16,7 @@ const AccountsSwitchLink = () => {
       <Observer>
         {() => (
           <PrimaryTextSpan
-            color={Colors.ACCENT}
+            color={mainAppStore.activeAccount?.isLive ? Colors.ACCENT : "#ffffff"}
             fontSize="16px"
             fontWeight="bold"
             marginRight="8px"
