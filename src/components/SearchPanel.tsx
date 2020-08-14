@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect, ChangeEvent } from 'react';
 import SearchIcon from '../assets/svg/icon-search.svg';
 import { ButtonWithoutStyles } from '../styles/ButtonWithoutStyles';
 import SvgIcon from './SvgIcon';
@@ -10,15 +10,28 @@ import { PrimaryTextSpan } from '../styles/TextsElements';
 interface Props {
   position?: 'absolute';
   top?: string;
+  onToggle: (on: boolean) => void;
+  onChange?: (e: ChangeEvent<HTMLInputElement>) => void;
 }
 
 const SearchPanel = (props: Props) => {
-  const { position, top } = props;
+  const { position, top, onToggle, onChange } = props;
+  const inputRef = useRef<HTMLInputElement>(null);
 
   const [on, toggle] = useState(false);
 
-  const openSearch = () => toggle(true);
-  const closeSearch = () => toggle(false);
+  const openSearch = () => {
+    toggle(true);
+    onToggle(true);
+  };
+  const closeSearch = () => {
+    toggle(false);
+    onToggle(false)
+  };
+
+  useEffect(() => {
+    inputRef?.current?.focus();
+  });
 
   return (
     <>
@@ -42,7 +55,7 @@ const SearchPanel = (props: Props) => {
                 hoverFillColor="#ffffff"
               />
             </FlexContainer>
-            <SearchInput />
+            <SearchInput onChange={onChange} ref={inputRef} />
           </FlexContainer>
 
           <ButtonWithoutStyles onClick={closeSearch}>

@@ -34,4 +34,11 @@ const AccountsSwitchLink = () => {
 
 export default AccountsSwitchLink;
 
-const AccountSwitch = styled(Link)``;
+const AccountSwitch = styled(Link)`
+  margin-left: 16px;
+  text-decoration: none;
+  transition: all .4s ease;
+  &:hover {
+    text-decoration: none;
+  }
+`;

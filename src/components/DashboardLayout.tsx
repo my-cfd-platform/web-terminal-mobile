@@ -23,4 +23,5 @@ const DashboardLayoutWrap = styled(FlexContainer)`
   position: relative;
   height: 100vh;
   width: 100vw;
+  overflow: hidden;
 `;

@@ -68,11 +68,11 @@ const NavigationPanelWrap = styled(FlexContainer)`
   align-items: center;
   justify-content: center;
   width: 100%;
-  position: fixed;
-  z-index: 3;
+  /* position: fixed; */
+  /* z-index: 3;
   bottom: 0;
   left: 50%;
-  transform: translateX(-50%);
+  transform: translateX(-50%); */
   padding: 16px 0;
 `;
 
