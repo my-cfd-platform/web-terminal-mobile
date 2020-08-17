@@ -8,7 +8,7 @@ import { PrimaryTextSpan } from '../../styles/TextsElements';
 import { useStores } from '../../hooks/useStores';
 import { getNumberSign } from '../../helpers/getNumberSign';
 import ActivePositionPnL from './ActivePositionPnL';
-import { observer } from 'mobx-react-lite';
+import { observer, Observer } from 'mobx-react-lite';
 
 interface Props {
   position: PositionModelWSDTO;
@@ -53,18 +53,22 @@ const ActivePositionItem: FC<Props> = ({ position }) => {
         </PrimaryTextSpan>
       </FlexContainer>
 
-      <FlexContainer
-        flexDirection="column"
-        flex="1"
-        alignItems="flex-end"
-        justifyContent="center"
-      >
-        <PrimaryTextSpan fontSize="16px" color="#fffccc" marginBottom="4px">
-        {mainAppStore.activeAccount?.symbol}
-            {position.investmentAmount.toFixed(2)}
-        </PrimaryTextSpan>
-        <ActivePositionPnL position={position} />
-      </FlexContainer>
+      <Observer>
+        {() => (
+          <FlexContainer
+          flexDirection="column"
+          flex="1"
+          alignItems="flex-end"
+          justifyContent="center"
+        >
+          <PrimaryTextSpan fontSize="16px" color="#fffccc" marginBottom="4px">
+          {mainAppStore.activeAccount?.symbol}
+              {position.investmentAmount.toFixed(2)}
+          </PrimaryTextSpan>
+          <ActivePositionPnL position={position} />
+        </FlexContainer>
+        )}
+      </Observer>
     </InstrumentItem>
   );
 };
