@@ -62,21 +62,22 @@ const NotificationPopup: FC<Props> = observer(({ show }) => {
       show={show}
       onAnimationEnd={onAnimationEnd}
     >
-      {!notificationStore.isSuccessfull && (
+
         <FlexContainer flexDirection="column">
           <PrimaryTextSpan
-            color={Colors.RED}
+            color={notificationStore.isSuccessfull ? Colors.ACCENT_BLUE : Colors.RED}
             fontSize="16px"
             lineHeight="18px"
             marginBottom="4px"
           >
-            Error!
+            {notificationStore.isSuccessfull ? 'Success' : 'Error!'}
+            
           </PrimaryTextSpan>
           <PrimaryTextSpan color="#ffffff" fontSize="12px" lineHeight="18px">
             {notificationStore.notificationMessage}
           </PrimaryTextSpan>
         </FlexContainer>
-      )}
+
     </NotificationWrapper>
   ) : null;
 });

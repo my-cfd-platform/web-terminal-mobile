@@ -1,4 +1,5 @@
 export enum PortfolioTabEnum {
-  Portfolio,
-  Orders,
+  ACTIVE = 'active',
+  PENDING = 'pending',
+  CLOSED = 'closed',
 }

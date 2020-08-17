@@ -26,7 +26,8 @@ const Page = {
   PRIVACY_POLICY: 'https://www.monfex.com/privacy-policy',
 
   MARKETS: '/markets',
-  PORTFOLIO: '/portfolio',
+  PORTFOLIO: '/portfolio/:type',
+  PORTFOLIO_MAIN: '/portfolio',
   NEWS: '/news',
 
   ACCOUNTS_SWITCH: '/accounts',

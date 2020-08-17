@@ -1,7 +1,6 @@
 import { QuotesStore } from './QuotesStore';
 import { MainAppStore } from './MainAppStore';
 import { SLTPStore } from './SLTPStore';
-import { TabsStore } from './TabsStore';
 import { TradingViewStore } from './TradingViewStore';
 import { InstrumentsStore } from './InstrumentsStore';
 import { DateRangeStore } from './DateRangeStore';
@@ -19,7 +18,6 @@ export class RootStore {
   quotesStore: QuotesStore;
   mainAppStore: MainAppStore;
   SLTPStore: SLTPStore;
-  tabsStore: TabsStore;
   tradingViewStore: TradingViewStore;
   instrumentsStore: InstrumentsStore;
   dateRangeStore: DateRangeStore;
@@ -37,7 +35,6 @@ export class RootStore {
     this.quotesStore = new QuotesStore(this);
     this.mainAppStore = new MainAppStore(this);
     this.SLTPStore = new SLTPStore();
-    this.tabsStore = new TabsStore();
     this.tradingViewStore = new TradingViewStore();
     this.instrumentsStore = new InstrumentsStore(this);
     this.dateRangeStore = new DateRangeStore();

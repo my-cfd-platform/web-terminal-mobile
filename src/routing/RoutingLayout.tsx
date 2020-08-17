@@ -12,10 +12,10 @@ const RoutingLayout: FC = () => {
   const location = useLocation();
   const { mainAppStore } = useStores();
 
-  const allRoutes = routesList.map(route => (
+  const allRoutes = routesList.map((route) => (
     <RouteWrapper key={route.path} {...route} />
   ));
-  const currentRoute = routesList.find(item => {
+  const currentRoute = routesList.find((item) => {
     const match = matchPath(location.pathname, item.path);
     return match && match.isExact;
   });
@@ -25,7 +25,6 @@ const RoutingLayout: FC = () => {
   if (currentRoute) {
     layoutType = currentRoute.layoutType;
   }
-
 
   switch (layoutType) {
     case RouteLayoutType.Authorized:
@@ -57,7 +56,6 @@ const RoutingLayout: FC = () => {
         </FlexContainer>
       );
 
-  
     default:
       return (
         <FlexContainer height="100vh" width="100%">

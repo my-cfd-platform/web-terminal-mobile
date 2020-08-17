@@ -11,6 +11,7 @@ import IconChart from '../assets/svg/navigation/chart.svg';
 import IconNews from '../assets/svg/navigation/news.svg';
 import IconUser from '../assets/svg/navigation/user.svg';
 import Colors from '../constants/Colors';
+import { PortfolioTabEnum } from '../enums/PortfolioTabEnum';
 
 const NavigationPanel = () => {
   return (
@@ -28,7 +29,10 @@ const NavigationPanel = () => {
             hoverFillColor={Colors.ACCENT}
           />
         </CustomNavLink>
-        <CustomNavLink to={Page.PORTFOLIO} activeClassName="selected">
+        <CustomNavLink
+          to={Page.PORTFOLIO_MAIN}
+          activeClassName="selected"
+        >
           <SvgIcon
             {...IconPortfolio}
             fillColor="#979797"

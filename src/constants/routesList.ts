@@ -4,7 +4,8 @@ import SignUp from '../pages/SignUp';
 import SingIn from '../pages/SignIn';
 import ForgotPassword from '../pages/ForgotPassword';
 import Markets from '../pages/Markets';
-
+import AccountsPage from "../pages/AccountsPage";
+import Portfolio from "../pages/Portfolio";
 
 
 export enum RouteLayoutType {
@@ -67,9 +68,32 @@ const routesList = [
    },
 
    {
+    component: AccountsPage,
+    path: Page.ACCOUNTS_SWITCH,
+    exact: true,
+    strict: true,
+    layoutType: RouteLayoutType.Authorized,
+  },
+
+   {
     component: Markets,
     path: Page.MARKETS,
     exact: true,
+    strict: true,
+    layoutType: RouteLayoutType.Authorized,
+  },
+
+  {
+    component: Portfolio,
+    path: Page.PORTFOLIO_MAIN,
+    exact: true,
+    strict: true,
+    layoutType: RouteLayoutType.Authorized,
+  },
+  {
+    component: Portfolio,
+    path: Page.PORTFOLIO,
+    exact: false,
     strict: true,
     layoutType: RouteLayoutType.Authorized,
   },
