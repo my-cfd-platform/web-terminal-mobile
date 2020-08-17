@@ -6,7 +6,7 @@ import ForgotPassword from '../pages/ForgotPassword';
 import Markets from '../pages/Markets';
 import AccountsPage from "../pages/AccountsPage";
 import Portfolio from "../pages/Portfolio";
-
+import PositionDetails from "../pages/PositionDetails";
 
 export enum RouteLayoutType {
   Authorized,
@@ -90,6 +90,14 @@ const routesList = [
     strict: true,
     layoutType: RouteLayoutType.Authorized,
   },
+  {
+    component: PositionDetails,
+    path: Page.POSITION_DETAILS,
+    exact: false,
+    strict: true,
+    layoutType: RouteLayoutType.Authorized,
+  },
+
   {
     component: Portfolio,
     path: Page.PORTFOLIO,

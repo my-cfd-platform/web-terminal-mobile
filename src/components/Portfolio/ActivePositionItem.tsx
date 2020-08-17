@@ -8,26 +8,33 @@ import { PrimaryTextSpan } from '../../styles/TextsElements';
 import { useStores } from '../../hooks/useStores';
 import { getNumberSign } from '../../helpers/getNumberSign';
 import ActivePositionPnL from './ActivePositionPnL';
-import { observer, Observer } from 'mobx-react-lite';
+import { observer } from 'mobx-react-lite';
+import { useHistory } from 'react-router-dom';
 
 interface Props {
   position: PositionModelWSDTO;
+  backgroundColor?: string;
 }
 
-const handleOpenPosition = () => {}
 
-const ActivePositionItem: FC<Props> = ({ position }) => {
 
+const ActivePositionItem: FC<Props> = ({ position, backgroundColor }) => {
   const { mainAppStore, instrumentsStore } = useStores();
   const { id, instrument } = position;
+  const {push} = useHistory();
 
+  const handleOpenPosition = () => push(`/position/${id}`);
   const groupName = (instrument: string) => {
-    const groupId = instrumentsStore.instruments.find(item => item.instrumentItem.id === instrument)?.instrumentItem.groupId;
-    return groupId ? groupId.charAt(0).toUpperCase() + groupId.slice(1).toLowerCase() : '';
+    const groupId = instrumentsStore.instruments.find(
+      (item) => item.instrumentItem.id === instrument
+    )?.instrumentItem.groupId;
+    return groupId
+      ? groupId.charAt(0).toUpperCase() + groupId.slice(1).toLowerCase()
+      : '';
   };
 
   return (
-    <InstrumentItem onClick={handleOpenPosition}>
+    <InstrumentItem onClick={handleOpenPosition} backgroundColor={backgroundColor}>
       <FlexContainer width="48px" height="48px" marginRight="16px">
         <ImageContainer instrumentId={id.toString()} />
       </FlexContainer>
@@ -48,39 +55,33 @@ const ActivePositionItem: FC<Props> = ({ position }) => {
           fontWeight={500}
           lineHeight="1"
         >
-          
           {groupName(instrument)}
         </PrimaryTextSpan>
       </FlexContainer>
 
-      <Observer>
-        {() => (
-          <FlexContainer
-          flexDirection="column"
-          flex="1"
-          alignItems="flex-end"
-          justifyContent="center"
-        >
-          <PrimaryTextSpan fontSize="16px" color="#fffccc" marginBottom="4px">
+      <FlexContainer
+        flexDirection="column"
+        flex="1"
+        alignItems="flex-end"
+        justifyContent="center"
+      >
+        <PrimaryTextSpan fontSize="16px" color="#fffccc" marginBottom="4px">
           {mainAppStore.activeAccount?.symbol}
-              {position.investmentAmount.toFixed(2)}
-          </PrimaryTextSpan>
-          <ActivePositionPnL position={position} />
-        </FlexContainer>
-        )}
-      </Observer>
+          {position.investmentAmount.toFixed(2)}
+        </PrimaryTextSpan>
+        <ActivePositionPnL position={position} />
+      </FlexContainer>
     </InstrumentItem>
   );
 };
 
 export default ActivePositionItem;
 
-
 const InstrumentItem = styled(FlexContainer)`
   width: 100%;
   padding: 16px;
   margin-bottom: 2px;
-  background-color: rgba(42, 45, 56, 0.5);
+  background-color: ${props => props.backgroundColor ? props.backgroundColor : "rgba(42, 45, 56, 0.5)"};
   flex-wrap: wrap;
   transition: all 0.4s ease;
 
