@@ -10,13 +10,16 @@ import ActivePositionItem from '../components/Portfolio/ActivePositionItem';
 
 import moment from "moment";
 import useInstrument from '../hooks/useInstrument';
+import { useTranslation } from 'react-i18next';
 
 const PositionDetails = () => {
   const { id } = useParams();
 
+  const { t } = useTranslation();
   const { quotesStore } = useStores();
   const [position, setPosition] = useState<PositionModelWSDTO>();
 
+  const { getPressision } = useInstrument();
   
 
   useEffect(() => {
@@ -73,7 +76,7 @@ const PositionDetails = () => {
                     Opening Price
                   </PrimaryTextSpan>
                   <PrimaryTextSpan fontSize="16px">
-                  {t('at')} {position.openPrice.toFixed(+precision)}
+                  {t('at')} {position.openPrice.toFixed(+getPressision(position.instrument))}
                   </PrimaryTextSpan>
                 </FlexContainer>
 
