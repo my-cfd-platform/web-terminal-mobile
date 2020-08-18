@@ -8,19 +8,19 @@ import { FlexContainer } from '../styles/FlexContainer';
 import { PrimaryTextSpan } from '../styles/TextsElements';
 import ActivePositionItem from '../components/Portfolio/ActivePositionItem';
 
-import moment from "moment";
+import moment from 'moment';
 import useInstrument from '../hooks/useInstrument';
 import { useTranslation } from 'react-i18next';
+import { getNumberSign } from '../helpers/getNumberSign';
 
 const PositionDetails = () => {
   const { id } = useParams();
 
   const { t } = useTranslation();
-  const { quotesStore } = useStores();
+  const { mainAppStore, quotesStore } = useStores();
   const [position, setPosition] = useState<PositionModelWSDTO>();
 
   const { getPressision } = useInstrument();
-  
 
   useEffect(() => {
     const positionById = quotesStore?.activePositions?.find(
@@ -52,7 +52,7 @@ const PositionDetails = () => {
                     fontSize="13px"
                     textTransform="uppercase"
                   >
-                    Info
+                    {t('Info')}
                   </PrimaryTextSpan>
                 </FlexContainer>
 
@@ -62,25 +62,69 @@ const PositionDetails = () => {
                   justifyContent="space-between"
                 >
                   <PrimaryTextSpan color="#fff" fontSize="16px">
-                    Opening time
-                  </PrimaryTextSpan>
-                  <PrimaryTextSpan fontSize="16px">{moment(position.openDate).format('DD MMM, HH:mm:ss')}</PrimaryTextSpan>
-                </FlexContainer>
-
-                <FlexContainer
-                  width="100%"
-                  padding="8px 16px"
-                  justifyContent="space-between"
-                >
-                  <PrimaryTextSpan color="#fff" fontSize="16px">
-                    Opening Price
+                    {t('Opening time')}
                   </PrimaryTextSpan>
                   <PrimaryTextSpan fontSize="16px">
-                  {t('at')} {position.openPrice.toFixed(+getPressision(position.instrument))}
+                    {moment(position.openDate).format('DD MMM, HH:mm:ss')}
                   </PrimaryTextSpan>
                 </FlexContainer>
 
+                <FlexContainer
+                  width="100%"
+                  padding="8px 16px"
+                  justifyContent="space-between"
+                >
+                  <PrimaryTextSpan color="#fff" fontSize="16px">
+                    {t('Opening Price')}
+                  </PrimaryTextSpan>
+                  <PrimaryTextSpan fontSize="16px">
+                    {t('at')}{' '}
+                    {position.openPrice.toFixed(
+                      +getPressision(position.instrument)
+                    )}
+                  </PrimaryTextSpan>
+                </FlexContainer>
 
+                <FlexContainer
+                  width="100%"
+                  padding="8px 16px"
+                  justifyContent="space-between"
+                >
+                  <PrimaryTextSpan color="#fff" fontSize="16px">
+                    {t('Multiplier')}
+                  </PrimaryTextSpan>
+                  <PrimaryTextSpan fontSize="16px">
+                    &times;{position.multiplier}
+                  </PrimaryTextSpan>
+                </FlexContainer>
+
+                <FlexContainer
+                  width="100%"
+                  padding="8px 16px"
+                  justifyContent="space-between"
+                >
+                  <PrimaryTextSpan color="#fff" fontSize="16px">
+                    {t('Overnight fee')}
+                  </PrimaryTextSpan>
+                  <PrimaryTextSpan fontSize="16px">
+                    {getNumberSign(position.swap)}
+                    {mainAppStore.activeAccount?.symbol}
+                    {Math.abs(position.swap).toFixed(2)}
+                  </PrimaryTextSpan>
+                </FlexContainer>
+
+                <FlexContainer
+                  width="100%"
+                  padding="8px 16px"
+                  justifyContent="space-between"
+                >
+                  <PrimaryTextSpan color="#fff" fontSize="16px">
+                    {t('Position ID')}
+                  </PrimaryTextSpan>
+                  <PrimaryTextSpan fontSize="16px">
+                    {position.id}
+                  </PrimaryTextSpan>
+                </FlexContainer>
               </FlexContainer>
             )}
           </>
