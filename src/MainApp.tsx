@@ -5,7 +5,6 @@ import Helmet from 'react-helmet';
 import RoutingLayout from './routing/RoutingLayout';
 import { BrowserRouter as Router } from 'react-router-dom';
 import 'react-dates/lib/css/_datepicker.css';
-import LoaderFullscreen from './components/LoaderFullscreen';
 import { useStores } from './hooks/useStores';
 import { Observer } from 'mobx-react-lite';
 import injectInerceptors from './http/interceptors';

@@ -30,13 +30,7 @@ const RoutingLayout: FC = () => {
     case RouteLayoutType.Authorized:
       return (
         <AuthorizedContainer>
-          <Observer>
-            {() => (
-              <>
-                <Switch>{allRoutes}</Switch>
-              </>
-            )}
-          </Observer>
+          <Observer>{() => <Switch>{allRoutes}</Switch>}</Observer>
         </AuthorizedContainer>
       );
 
