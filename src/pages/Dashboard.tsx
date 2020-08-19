@@ -1,13 +1,17 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useCallback } from 'react';
 import DashboardLayout from '../components/DashboardLayout';
 import { useStores } from '../hooks/useStores';
 import Topics from '../constants/websocketTopics';
 import { ResponseFromWebsocket } from '../types/ResponseFromWebsocket';
 import { PositionModelWSDTO } from '../types/Positions';
 import { PendingOrderWSDTO } from '../types/PendingOrdersTypes';
-import { InstrumentModelWSDTO, PriceChangeWSDTO } from '../types/InstrumentsTypes';
+import {
+  InstrumentModelWSDTO,
+  PriceChangeWSDTO,
+} from '../types/InstrumentsTypes';
 import { Observer } from 'mobx-react-lite';
-import { FlexContainer } from '../styles/FlexContainer';
+import ChartContainer from '../containers/ChartContainer';
+import FavouriteInstruments from '../components/Dashboard/FavouriteInstruments';
 
 const Dashboard = () => {
   const { mainAppStore, quotesStore, instrumentsStore } = useStores();
@@ -56,7 +60,7 @@ const Dashboard = () => {
         (response: ResponseFromWebsocket<PositionModelWSDTO>) => {
           if (response.accountId === mainAppStore.activeAccount?.id) {
             quotesStore.activePositions = quotesStore.activePositions.map(
-              item => (item.id === response.data.id ? response.data : item)
+              (item) => (item.id === response.data.id ? response.data : item)
             );
           }
         }
@@ -66,7 +70,7 @@ const Dashboard = () => {
         Topics.UPDATE_PENDING_ORDER,
         (response: ResponseFromWebsocket<PendingOrderWSDTO>) => {
           if (response.accountId === mainAppStore.activeAccount?.id) {
-            quotesStore.pendingOrders = quotesStore.pendingOrders.map(item =>
+            quotesStore.pendingOrders = quotesStore.pendingOrders.map((item) =>
               item.id === response.data.id ? response.data : item
             );
           }
@@ -77,13 +81,21 @@ const Dashboard = () => {
 
   return (
     <DashboardLayout>
-       <Observer>
-          {() => (
-            <FlexContainer position="relative" padding="16px">
-              {instrumentsStore.activeInstrument?.instrumentItem.name}
-            </FlexContainer>
-          )}
-        </Observer>
+      <FavouriteInstruments />
+      <Observer>
+        {() => (
+          <>
+            {instrumentsStore.activeInstrument && (
+              <ChartContainer
+                instrumentId={
+                  instrumentsStore.activeInstrument.instrumentItem.id
+                }
+                instruments={instrumentsStore.instruments}
+              ></ChartContainer>
+            )}
+          </>
+        )}
+      </Observer>
     </DashboardLayout>
   );
 };
