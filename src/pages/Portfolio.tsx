@@ -15,14 +15,29 @@ import ActivePositionItem from '../components/Portfolio/ActivePositionItem';
 import PendingOrderItem from '../components/Portfolio/PendingOrderItem';
 import EmptyListText from '../components/EmptyListText';
 import { useTranslation } from 'react-i18next';
+import ActivePositions from '../components/Portfolio/ActivePositions';
+import PendingOrders from '../components/Portfolio/PendingOrders';
 
 const Portfolio = () => {
-  let { type } = useParams();
+  const { type } = useParams();
   const { push } = useHistory();
   const { t } = useTranslation();
 
   const { quotesStore, mainAppStore } = useStores();
   const [profit, setProfit] = useState(quotesStore.profit);
+
+  const renderTabsByType = () => {
+    switch (type) {
+      case PortfolioTabEnum.ACTIVE:
+        return <ActivePositions />;
+
+      case PortfolioTabEnum.PENDING:
+        return <PendingOrders />;
+
+      default:
+        return <ActivePositions />;
+    }
+  };
 
   useEffect(() => {
     const dispose = reaction(
@@ -56,7 +71,7 @@ const Portfolio = () => {
             alignItems="center"
           >
             <PrimaryTextSpan color="#ffffff" fontWeight={600} fontSize="24px">
-              Portfolio
+              {t('Portfolio')}
             </PrimaryTextSpan>
 
             <FlexContainer
@@ -94,39 +109,7 @@ const Portfolio = () => {
                 overflow="auto"
                 flexDirection="column"
               >
-                {type === PortfolioTabEnum.ACTIVE && (
-                  <>
-                    {quotesStore.sortedActivePositions.length ? (
-                      quotesStore.sortedActivePositions.map((item) => (
-                        <ActivePositionItem key={item.id} position={item} />
-                      ))
-                    ) : (
-                      <EmptyListText
-                        text={t("You haven't opened any positions yet")}
-                      />
-                    )}
-                  </>
-                )}
-
-                {type === PortfolioTabEnum.PENDING && (
-                  <>
-                    {quotesStore.sortedPendingOrders.length ? (
-                      quotesStore.sortedPendingOrders.map((item) => (
-                        <PendingOrderItem
-                          key={item.id}
-                          pendingOrder={item}
-                          currencySymbol={
-                            mainAppStore.activeAccount?.symbol || ''
-                          }
-                        />
-                      ))
-                    ) : (
-                      <EmptyListText
-                        text={t("You haven't opened any positions yet")}
-                      />
-                    )}
-                  </>
-                )}
+                {renderTabsByType()}
               </FlexContainer>
             )}
           </Observer>

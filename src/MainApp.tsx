@@ -12,6 +12,7 @@ import injectInerceptors from './http/interceptors';
 import { useTranslation } from 'react-i18next';
 import { autorun } from 'mobx';
 import Colors from './constants/Colors';
+import { SFfonts } from './styles/SFfonts';
 
 const MainApp: FC = () => {
   const { mainAppStore } = useStores();
@@ -27,20 +28,16 @@ const MainApp: FC = () => {
     }
   }, [mainAppStore.isAuthorized]);
 
-
   useEffect(() => {
     autorun(() => {
       if (mainAppStore.lang) {
         i18n.changeLanguage(mainAppStore.lang);
       }
-    })
+    });
   }, []);
 
   return (
     <>
-      {/* <Observer>
-        {() => <LoaderFullscreen isLoading={!mainAppStore.tradingUrl} />}
-      </Observer> */}
       <Helmet>
         <title>{`${mainAppStore.initModel.brandName} ${t(
           'trading platform'
@@ -61,13 +58,14 @@ const MainApp: FC = () => {
 
       <Global
         styles={css`
-          @import url(//db.onlinewebfonts.com/c/1c45e28f8e86cc89876f003b953cc3e9?family=SF+Pro+Text);
           ${reboot};
+          ${SFfonts};
 
           html {
             font-size: 14px;
             line-height: 1.4;
-            font-family: 'SF Pro Text', sans-serif;
+            font-family: 'sf_ui_text';
+            font-weight: normal;
           }
 
           body {
@@ -82,10 +80,9 @@ const MainApp: FC = () => {
           .input-border {
             border: 1px solid #494b50;
             &.error {
-              border-color: #ED145B !important;
+              border-color: #ed145b !important;
             }
           }
-
         `}
       />
     </>

@@ -23,10 +23,13 @@ const PositionDetails = () => {
   const { getPressision } = useInstrument();
 
   useEffect(() => {
-    const positionById = quotesStore?.activePositions?.find(
+    const positionById = quotesStore.activePositions?.find(
       (item) => item.id === +id
     );
-    positionById && setPosition(positionById);
+
+    if (positionById) {
+      setPosition(positionById);
+    }
   }, [id]);
 
   return (
@@ -41,10 +44,7 @@ const PositionDetails = () => {
                 overflow="auto"
                 width="100%"
               >
-                <ActivePositionItem
-                  position={position}
-                  backgroundColor="transparent"
-                />
+                <ActivePositionItem position={position} />
 
                 <FlexContainer padding="12px 16px 0" marginBottom="8px">
                   <PrimaryTextSpan
@@ -80,7 +80,7 @@ const PositionDetails = () => {
                   <PrimaryTextSpan fontSize="16px">
                     {t('at')}{' '}
                     {position.openPrice.toFixed(
-                      +getPressision(position.instrument)
+                      getPressision(position.instrument)
                     )}
                   </PrimaryTextSpan>
                 </FlexContainer>

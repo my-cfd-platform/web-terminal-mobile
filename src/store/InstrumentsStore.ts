@@ -27,6 +27,7 @@ interface ContextProps {
   instrumentGroups: InstrumentGroupWSDTO[];
   activeInstrumentGroupId?: InstrumentGroupWSDTO['id'];
   sortByField: string | null;
+  searchValue: string;
 }
 
 export class InstrumentsStore implements ContextProps {
@@ -36,30 +37,37 @@ export class InstrumentsStore implements ContextProps {
   @observable favouriteInstrumentsIds: string[] = [];
 
   @observable activeInstrument?: IActiveInstrument;
-  @observable filteredInstrumentsSearch: InstrumentModelWSDTO[] = [];
+  // @observable filteredInstrumentsSearch: InstrumentModelWSDTO[] = [];
   @observable instrumentGroups: InstrumentGroupWSDTO[] = [];
   @observable activeInstrumentGroupId?: InstrumentGroupWSDTO['id'];
 
   @observable sortByField: string | null = null;
 
   @observable pricesChange: IPriceChange = {};
+  @observable searchValue: string = '';
 
   constructor(rootStore: RootStore) {
     this.rootStore = rootStore;
   }
 
   @computed get activeInstruments() {
-    const filteredActiveInstruments = this.instruments.filter(item =>
-      this.activeInstrumentsIds.includes(item.instrumentItem.id)
-    ).sort((a, b) => this.activeInstrumentsIds.indexOf(a.instrumentItem.id) -
-      this.activeInstrumentsIds.indexOf(b.instrumentItem.id))
+    const filteredActiveInstruments = this.instruments
+      .filter((item) =>
+        this.activeInstrumentsIds.includes(item.instrumentItem.id)
+      )
+      .slice()
+      .sort(
+        (a, b) =>
+          this.activeInstrumentsIds.indexOf(a.instrumentItem.id) -
+          this.activeInstrumentsIds.indexOf(b.instrumentItem.id)
+      );
     return filteredActiveInstruments;
   }
 
   @action
   setInstruments = (instruments: InstrumentModelWSDTO[]) => {
     this.instruments = instruments.map(
-      item =>
+      (item) =>
         <IActiveInstrument>{
           chartType: SeriesStyle.Area,
           instrumentItem: item,
@@ -71,14 +79,15 @@ export class InstrumentsStore implements ContextProps {
 
   @action
   setActiveInstrument = (activeInstrumentId: string) => {
-    this.activeInstrument = this.instruments.find(
-      item => item.instrumentItem.id === activeInstrumentId
-    ) || this.instruments[0];
+    this.activeInstrument =
+      this.instruments.find(
+        (item) => item.instrumentItem.id === activeInstrumentId
+      ) || this.instruments[0];
   };
 
   @action
   editActiveInstrument = (activeInstrument: IActiveInstrument) => {
-    this.instruments = this.instruments.map(item =>
+    this.instruments = this.instruments.map((item) =>
       item.instrumentItem.id === activeInstrument.instrumentItem.id
         ? activeInstrument
         : item
@@ -101,7 +110,6 @@ export class InstrumentsStore implements ContextProps {
       this.activeInstrumentsIds[6] = activeInstrumentId;
     } else {
       this.activeInstrumentsIds.push(activeInstrumentId);
-
     }
     API.postFavoriteInstrumets({
       accountId: this.rootStore.mainAppStore.activeAccount!.id,
@@ -110,8 +118,7 @@ export class InstrumentsStore implements ContextProps {
         : AccountTypeEnum.Demo,
       instruments: this.activeInstrumentsIds,
     });
-
-  }
+  };
 
   @computed
   get sortedInstruments() {
@@ -139,22 +146,23 @@ export class InstrumentsStore implements ContextProps {
         break;
 
       default:
-        return this.instruments.map(item => item.instrumentItem);
+        return this.instruments.map((item) => item.instrumentItem);
     }
     return this.instruments
       .filter(
-        item => item.instrumentItem.groupId === this.activeInstrumentGroupId
+        (item) => item.instrumentItem.groupId === this.activeInstrumentGroupId
       )
       .sort(filterByFunc)
-      .map(item => item.instrumentItem);
+      .map((item) => item.instrumentItem);
   }
 
   // TODO: refactor, too heavy
   @action
   switchInstrument = async (instrumentId: string) => {
-    const newActiveInstrument = this.instruments.find(
-      item => item.instrumentItem.id === instrumentId
-    ) || this.instruments[0];
+    const newActiveInstrument =
+      this.instruments.find(
+        (item) => item.instrumentItem.id === instrumentId
+      ) || this.instruments[0];
     if (newActiveInstrument) {
       this.addActiveInstrumentId(instrumentId);
       this.activeInstrument = newActiveInstrument;
@@ -222,4 +230,19 @@ export class InstrumentsStore implements ContextProps {
     }
     return 0;
   };
+
+  @computed
+  get filteredInstrumentsSearch() {
+    return this.instruments
+      .filter(
+        (item) =>
+          !this.searchValue ||
+          item.instrumentItem.id.toLowerCase().includes(this.searchValue) ||
+          item.instrumentItem.base.toLowerCase().includes(this.searchValue) ||
+          item.instrumentItem.name.toLowerCase().includes(this.searchValue) ||
+          item.instrumentItem.quote.toLowerCase().includes(this.searchValue)
+      )
+      .sort((a, b) => a.instrumentItem.weight - b.instrumentItem.weight)
+      .map((item) => item.instrumentItem);
+  }
 }

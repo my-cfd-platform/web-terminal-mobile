@@ -27,8 +27,8 @@ const Page = {
 
   MARKETS: '/markets',
   PORTFOLIO: '/portfolio/:type',
+  POSITION_DETAILS: '/portfolio/:type/:id',
   PORTFOLIO_MAIN: '/portfolio',
-  POSITION_DETAILS: '/position/:id',
   NEWS: '/news',
 
   ACCOUNTS_SWITCH: '/accounts',
