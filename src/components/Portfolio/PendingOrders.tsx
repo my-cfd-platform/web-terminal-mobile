@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { useStores } from '../../hooks/useStores';
 import PendingOrderItem from './PendingOrderItem';
 import EmptyListText from '../EmptyListText';
+import { FlexContainer } from '../../styles/FlexContainer';
 
 const PendingOrders = () => {
   const { t } = useTranslation();
@@ -12,11 +13,17 @@ const PendingOrders = () => {
     <>
       {quotesStore.sortedPendingOrders.length ? (
         quotesStore.sortedPendingOrders.map((item) => (
-          <PendingOrderItem
+          <FlexContainer
             key={item.id}
-            pendingOrder={item}
-            currencySymbol={mainAppStore.activeAccount?.symbol || ''}
-          />
+            marginBottom="2px"
+            backgroundColor="rgba(42, 45, 56, 0.5)"
+          >
+            <PendingOrderItem
+              key={item.id}
+              pendingOrder={item}
+              currencySymbol={mainAppStore.activeAccount?.symbol || ''}
+            />
+          </FlexContainer>
         ))
       ) : (
         <EmptyListText text={t("You haven't opened any positions yet")} />
