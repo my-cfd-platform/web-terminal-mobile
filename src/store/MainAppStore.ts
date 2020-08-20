@@ -1,7 +1,6 @@
 import {
   LOCAL_STORAGE_TOKEN_KEY,
   LOCAL_STORAGE_REFRESH_TOKEN_KEY,
-  LOCAL_STORAGE_TRADING_URL,
   LOCAL_STORAGE_LANGUAGE,
 } from './../constants/global';
 import {

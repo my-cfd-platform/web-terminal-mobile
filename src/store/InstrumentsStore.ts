@@ -13,6 +13,7 @@ import { getIntervalByKey } from '../helpers/getIntervalByKey';
 import moment from 'moment';
 import { AccountTypeEnum } from '../enums/AccountTypeEnum';
 import API from '../helpers/API';
+
 interface IPriceChange {
   [key: string]: number;
 }

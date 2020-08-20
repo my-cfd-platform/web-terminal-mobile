@@ -3,6 +3,10 @@ import { AccountTypeEnum } from '../../enums/AccountTypeEnum';
 import API from '../../helpers/API';
 import { useStores } from '../../hooks/useStores';
 import { observer } from 'mobx-react-lite';
+import { FlexContainer } from '../../styles/FlexContainer';
+import SvgIcon from '../SvgIcon';
+import IconAddInstruments from '../../assets/svg/icon-add-instrument.svg';
+import InstrumentBadge from './InstrumentBadge';
 
 const FavouriteInstruments = observer(() => {
   const { instrumentsStore, badRequestPopupStore, mainAppStore } = useStores();
@@ -36,7 +40,33 @@ const FavouriteInstruments = observer(() => {
       );
     }
   }, [instrumentsStore.instruments, mainAppStore.activeAccountId]);
-  return <div></div>;
+
+  return (
+    <FlexContainer alignItems="center">
+      <FlexContainer padding="16px" marginRight="8px">
+        <SvgIcon
+          {...IconAddInstruments}
+          width={48}
+          height={48}
+          fillColor="#fffccc"
+        />
+      </FlexContainer>
+      <FlexContainer flexWrap="nowrap">
+        {instrumentsStore.activeInstruments.map((item) => (
+          <FlexContainer marginRight="2px">
+            <InstrumentBadge
+              instrumentId={item.instrumentItem.id}
+              instrumentName={item.instrumentItem.name}
+              isActive={
+                item.instrumentItem.id ===
+                instrumentsStore.activeInstrument?.instrumentItem.id
+              }
+            />
+          </FlexContainer>
+        ))}
+      </FlexContainer>
+    </FlexContainer>
+  );
 });
 
 export default FavouriteInstruments;

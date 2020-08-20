@@ -4,7 +4,6 @@ import { FlexContainer } from '../../styles/FlexContainer';
 import { useStores } from '../../hooks/useStores';
 import { observer } from 'mobx-react-lite';
 import { useTranslation } from 'react-i18next';
-import Colors from '../../constants/Colors';
 
 const AccountLabel = observer(() => {
   const { mainAppStore } = useStores();
@@ -17,29 +16,25 @@ const AccountLabel = observer(() => {
       alignItems="center"
       justifyContent="center"
     >
-      <FlexContainer flex="1" justifyContent="flex-end">
-        <AccountBadge
-          badgeColor={
-            mainAppStore.activeAccount?.isLive ? Colors.ACCENT : '#fff'
-          }
-        >
-          {mainAppStore.activeAccount?.isLive ? t('Live') : t('Demo')}
-        </AccountBadge>
-      </FlexContainer>
+      {!mainAppStore.activeAccount?.isLive && (
+        <FlexContainer flex="1" justifyContent="flex-end">
+          <AccountBadge>{t('Demo')}</AccountBadge>
+        </FlexContainer>
+      )}
     </FlexContainer>
   );
 });
 
 export default AccountLabel;
 
-const AccountBadge = styled.span<{ badgeColor?: string }>`
+const AccountBadge = styled.span`
   font-size: 13px;
   font-weight: bold;
-  background-color: ${props => props.badgeColor};
+  background-color: #fff;
   border-radius: 4px;
   padding: 4px 8px;
   text-transform: uppercase;
-  color: #1C1C1E;
+  color: #1c1c1e;
   width: 64px;
   height: 24px;
   display: flex;

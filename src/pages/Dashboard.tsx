@@ -12,6 +12,7 @@ import {
 import { Observer } from 'mobx-react-lite';
 import ChartContainer from '../containers/ChartContainer';
 import FavouriteInstruments from '../components/Dashboard/FavouriteInstruments';
+import { FlexContainer } from '../styles/FlexContainer';
 
 const Dashboard = () => {
   const { mainAppStore, quotesStore, instrumentsStore } = useStores();
@@ -81,21 +82,23 @@ const Dashboard = () => {
 
   return (
     <DashboardLayout>
-      <FavouriteInstruments />
-      <Observer>
-        {() => (
-          <>
-            {instrumentsStore.activeInstrument && (
-              <ChartContainer
-                instrumentId={
-                  instrumentsStore.activeInstrument.instrumentItem.id
-                }
-                instruments={instrumentsStore.instruments}
-              ></ChartContainer>
-            )}
-          </>
-        )}
-      </Observer>
+      <FlexContainer flexDirection="column" width="100%">
+        <FavouriteInstruments />
+        <Observer>
+          {() => (
+            <>
+              {instrumentsStore.activeInstrument && (
+                <ChartContainer
+                  instrumentId={
+                    instrumentsStore.activeInstrument.instrumentItem.id
+                  }
+                  instruments={instrumentsStore.instruments}
+                ></ChartContainer>
+              )}
+            </>
+          )}
+        </Observer>
+      </FlexContainer>
     </DashboardLayout>
   );
 };
