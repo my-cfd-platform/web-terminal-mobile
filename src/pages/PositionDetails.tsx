@@ -14,7 +14,7 @@ import { useTranslation } from 'react-i18next';
 import { getNumberSign } from '../helpers/getNumberSign';
 
 const PositionDetails = () => {
-  const { id } = useParams();
+  const { id, type } = useParams();
 
   const { t } = useTranslation();
   const { mainAppStore, quotesStore } = useStores();
