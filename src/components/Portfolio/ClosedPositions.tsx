@@ -8,6 +8,7 @@ import InfinityScrollList from '../InfinityScrollList';
 import ClosedPositionItem from './ClosedPositionItem';
 import EmptyListText from '../EmptyListText';
 import LoaderForComponents from '../LoaderForComponents';
+import { FlexContainer } from '../../styles/FlexContainer';
 
 const ClosedPositions = () => {
   const { mainAppStore, historyStore, dateRangeStore } = useStores();
@@ -82,13 +83,19 @@ const ClosedPositions = () => {
                 >
                   {historyStore.positionsHistoryReport.positionsHistory.map(
                     (item) => (
-                      <ClosedPositionItem
+                      <FlexContainer
                         key={item.id}
-                        tradingHistoryItem={item}
-                        currencySymbol={
-                          mainAppStore.activeAccount?.symbol || ''
-                        }
-                      />
+                        marginBottom="2px"
+                        backgroundColor="rgba(42, 45, 56, 0.5)"
+                      >
+                        <ClosedPositionItem
+                          key={item.id}
+                          tradingHistoryItem={item}
+                          currencySymbol={
+                            mainAppStore.activeAccount?.symbol || ''
+                          }
+                        />
+                      </FlexContainer>
                     )
                   )}
                 </InfinityScrollList>
