@@ -1,4 +1,4 @@
-import React, { useEffect, useCallback } from 'react';
+import React, { useEffect } from 'react';
 import DashboardLayout from '../components/DashboardLayout';
 import { useStores } from '../hooks/useStores';
 import Topics from '../constants/websocketTopics';
@@ -13,6 +13,10 @@ import { Observer } from 'mobx-react-lite';
 import ChartContainer from '../containers/ChartContainer';
 import FavouriteInstruments from '../components/Dashboard/FavouriteInstruments';
 import { FlexContainer } from '../styles/FlexContainer';
+import ActiveInstrument from '../components/Dashboard/ActiveInstrument';
+import BuyButton from '../components/Dashboard/BuyButton';
+import SellButton from '../components/Dashboard/SellButton';
+import TimeScaleWrapper from '../components/Dashboard/TimeScaleWrapper';
 
 const Dashboard = () => {
   const { mainAppStore, quotesStore, instrumentsStore } = useStores();
@@ -84,6 +88,7 @@ const Dashboard = () => {
     <DashboardLayout>
       <FlexContainer flexDirection="column" width="100%">
         <FavouriteInstruments />
+        <ActiveInstrument />
         <Observer>
           {() => (
             <>
@@ -98,6 +103,11 @@ const Dashboard = () => {
             </>
           )}
         </Observer>
+        <TimeScaleWrapper></TimeScaleWrapper>
+        <FlexContainer padding="0 16px">
+          <SellButton handleClick={() => {}} />
+          <BuyButton handleClick={() => {}} />
+        </FlexContainer>
       </FlexContainer>
     </DashboardLayout>
   );
