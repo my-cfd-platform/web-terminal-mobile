@@ -14,6 +14,7 @@ import { Observer } from 'mobx-react-lite';
 import { useTranslation } from 'react-i18next';
 import ActivePositions from '../components/Portfolio/ActivePositions';
 import PendingOrders from '../components/Portfolio/PendingOrders';
+import ClosedPositions from '../components/Portfolio/ClosedPositions';
 
 const Portfolio = () => {
   const { type } = useParams();
@@ -25,8 +26,8 @@ const Portfolio = () => {
 
   const renderTabsByType = () => {
     switch (type) {
-      case PortfolioTabEnum.ACTIVE:
-        return <ActivePositions />;
+      case PortfolioTabEnum.CLOSED:
+        return <ClosedPositions />;
 
       case PortfolioTabEnum.PENDING:
         return <PendingOrders />;
@@ -52,6 +53,7 @@ const Portfolio = () => {
       push(`${Page.PORTFOLIO_MAIN}/${PortfolioTabEnum.ACTIVE}`);
     }
   }, [type]);
+
   return (
     <DashboardLayout>
       <FlexContainer flexDirection="column" width="100%">
