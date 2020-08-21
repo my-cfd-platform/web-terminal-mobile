@@ -42,8 +42,8 @@ const FavouriteInstruments = observer(() => {
   }, [instrumentsStore.instruments, mainAppStore.activeAccountId]);
 
   return (
-    <FlexContainer alignItems="center" marginBottom="14px">
-      <FlexContainer padding="16px" marginRight="8px">
+    <FlexContainer marginBottom="14px" padding="16px 0">
+      <FlexContainer padding="0 16px" marginRight="8px">
         <SvgIcon
           {...IconAddInstruments}
           width={48}
@@ -53,7 +53,7 @@ const FavouriteInstruments = observer(() => {
       </FlexContainer>
       <FlexContainer flexWrap="nowrap">
         {instrumentsStore.activeInstruments.map((item) => (
-          <FlexContainer marginRight="2px" key={item.instrumentItem.id}>
+          <FlexContainer marginRight="8px" key={item.instrumentItem.id}>
             <InstrumentBadge
               instrumentId={item.instrumentItem.id}
               instrumentName={item.instrumentItem.name}
