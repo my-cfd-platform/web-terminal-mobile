@@ -8,6 +8,7 @@ import { Observer } from 'mobx-react-lite';
 import styled from '@emotion/styled';
 import InstrumentMarkets from '../components/Markets/InstrumentMarkets';
 import { useStores } from '../hooks/useStores';
+import { useTranslation } from 'react-i18next';
 
 const Markets = () => {
   const [acitveSearch, toggleSearch] = useState(false);
@@ -21,6 +22,8 @@ const Markets = () => {
     instrumentsStore.searchValue = searchValue;
   };
 
+  const { t } = useTranslation();
+
   return (
     <DashboardLayout>
       <FlexContainer flexDirection="column" width="100vw">
@@ -33,7 +36,7 @@ const Markets = () => {
             width="100%"
           >
             <PrimaryTextSpan color="#ffffff" fontWeight={600} fontSize="24px">
-              Markets
+              {t('Markets')}
             </PrimaryTextSpan>
             <SearchPanel
               onChange={handleChangeSearch}
@@ -50,7 +53,7 @@ const Markets = () => {
                 fontWeight={500}
                 textTransform="uppercase"
               >
-                Recent search
+                {t('Recent search')}
               </PrimaryTextSpan>
             </FlexContainer>
           ) : (
