@@ -132,22 +132,6 @@ const SignUp = () => {
 
   return (
     <SignFlowLayout>
-      <FlexContainer
-        position="absolute"
-        top="10px"
-        left="16px"
-        right="16px"
-        zIndex="100"
-        justifyContent="center"
-      >
-        <Observer>
-          {() => (
-            <NotificationPopup
-              show={notificationStore.isActiveNotification}
-            ></NotificationPopup>
-          )}
-        </Observer>
-      </FlexContainer>
       <CustomForm noValidate onSubmit={handleSubmit}>
         <FlexContainer
           flexDirection="column"

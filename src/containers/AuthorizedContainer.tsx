@@ -6,6 +6,6 @@ interface Props {}
 const AuthorizedContainer: FC<Props> = (props) => {
   const { children } = props;
 
-  return <FlexContainer>{children}</FlexContainer>;
+  return <FlexContainer position="relative">{children}</FlexContainer>;
 };
 export default AuthorizedContainer;

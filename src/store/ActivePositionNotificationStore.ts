@@ -1,14 +1,20 @@
 import { observable, action } from 'mobx';
+import { NotificationPositionData } from '../types/NotificationPosition';
 
 interface ContextProps {
-  notificationMessage: string;
+  notificationMessageData: NotificationPositionData;
   isActiveNotification: boolean;
   isSuccessfull: boolean;
   timer?: NodeJS.Timeout;
 }
 
-export class NotificationStore implements ContextProps {
-  @observable notificationMessage: string= '';
+export class ActivePositionNotificationStore implements ContextProps {
+  @observable notificationMessageData: NotificationPositionData = {
+    equity: 0,
+    instrumentGroup: '',
+    instrumentName: '',
+    instrumentId: '',
+  };
   @observable isActiveNotification: boolean = false;
   @observable isSuccessfull: boolean = false;
   @observable timer?: NodeJS.Timeout;
@@ -24,7 +30,7 @@ export class NotificationStore implements ContextProps {
   };
 
   @action
-  setNotification = (notification: string) => {
-    this.notificationMessage = notification;
+  setNotification = (notification: NotificationPositionData) => {
+    this.notificationMessageData = notification;
   };
 }

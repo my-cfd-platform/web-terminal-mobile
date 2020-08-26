@@ -7,6 +7,8 @@ import { FlexContainer } from '../styles/FlexContainer';
 import { useStores } from '../hooks/useStores';
 import LoaderFullscreen from '../components/LoaderFullscreen';
 import { Observer } from 'mobx-react-lite';
+import NotificationPopup from '../components/NotificationPopup';
+import NotificationActivePositionPopup from '../components/NotificationActivePositionPopup';
 
 const RoutingLayout: FC = () => {
   const location = useLocation();
@@ -30,6 +32,12 @@ const RoutingLayout: FC = () => {
     case RouteLayoutType.Authorized:
       return (
         <AuthorizedContainer>
+          <Observer>{() => <NotificationPopup></NotificationPopup>}</Observer>
+          <Observer>
+            {() => (
+              <NotificationActivePositionPopup></NotificationActivePositionPopup>
+            )}
+          </Observer>
           <Observer>{() => <Switch>{allRoutes}</Switch>}</Observer>
         </AuthorizedContainer>
       );
@@ -37,6 +45,7 @@ const RoutingLayout: FC = () => {
     case RouteLayoutType.SignFlow:
       return (
         <FlexContainer height="100vh" width="100%">
+          <Observer>{() => <NotificationPopup></NotificationPopup>}</Observer>
           <Observer>
             {() => (
               <>

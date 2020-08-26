@@ -12,7 +12,7 @@ interface Props {}
 const DashboardLayout: FC<Props> = (props) => {
   const { children } = props;
   const { notificationStore } = useStores();
-  
+
   return (
     <DashboardLayoutWrap flexDirection="column">
       <FlexContainer
@@ -24,11 +24,7 @@ const DashboardLayout: FC<Props> = (props) => {
         justifyContent="center"
       >
         <Observer>
-          {() => (
-            <NotificationPopup
-              show={notificationStore.isActiveNotification}
-            ></NotificationPopup>
-          )}
+          {() => <NotificationPopup></NotificationPopup>}
         </Observer>
       </FlexContainer>
       <NavBar />

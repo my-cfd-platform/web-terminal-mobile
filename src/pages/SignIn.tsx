@@ -12,15 +12,12 @@ import Page from '../constants/Pages';
 import Colors from '../constants/Colors';
 import { PrimaryButton } from '../styles/Buttons';
 import { PrimaryTextSpan } from '../styles/TextsElements';
-import value from '*.png';
 import { useTranslation } from 'react-i18next';
 import { UserAuthenticate } from '../types/UserInfo';
 import validationInputTexts from '../constants/validationInputTexts';
 import { useStores } from '../hooks/useStores';
 import { OperationApiResponseCodes } from '../enums/OperationApiResponseCodes';
 import apiResponseCodeMessages from '../constants/apiResponseCodeMessages';
-import { Observer } from 'mobx-react-lite';
-import NotificationPopup from '../components/NotificationPopup';
 
 const SignIn = () => {
   const { t } = useTranslation();
@@ -82,11 +79,10 @@ const SignIn = () => {
     values,
     validateForm,
     handleChange,
-    handleSubmit,
     errors,
     touched,
     submitForm,
-    isSubmitting
+    isSubmitting,
   } = useFormik({
     initialValues,
     onSubmit: handleSubmitForm,
@@ -107,22 +103,6 @@ const SignIn = () => {
 
   return (
     <SignFlowLayout>
-      <FlexContainer
-        position="absolute"
-        top="10px"
-        left="16px"
-        right="16px"
-        zIndex="100"
-        justifyContent="center"
-      >
-        <Observer>
-          {() => (
-            <NotificationPopup
-              show={notificationStore.isActiveNotification}
-            ></NotificationPopup>
-          )}
-        </Observer>
-      </FlexContainer>
       <FlexContainer
         flexDirection="column"
         width="100%"

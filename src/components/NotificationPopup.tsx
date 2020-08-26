@@ -1,32 +1,33 @@
 import React, { useEffect, FC, useState } from 'react';
 import { FlexContainer } from '../styles/FlexContainer';
 import styled from '@emotion/styled';
-import { PrimaryTextSpan } from '../styles/TextsElements';
-import { ButtonWithoutStyles } from '../styles/ButtonWithoutStyles';
-import SvgIcon from './SvgIcon';
 import { keyframes } from '@emotion/core';
 import { useStores } from '../hooks/useStores';
 import { observer } from 'mobx-react-lite';
 import Colors from '../constants/Colors';
+import { PrimaryTextSpan } from '../styles/TextsElements';
+import { useTranslation } from 'react-i18next';
 
-interface Props {
-  show: boolean;
-}
+interface Props {}
 
-const NotificationPopup: FC<Props> = observer(({ show }) => {
+// TODO: can i do it without should render?
+
+const NotificationPopup: FC<Props> = observer(() => {
   const { notificationStore } = useStores();
+  const { t } = useTranslation();
 
-  const [shouldRender, setRender] = useState(show);
-  let test: NodeJS.Timeout;
+  const [shouldRender, setRender] = useState(
+    notificationStore.isActiveNotification
+  );
 
   useEffect(() => {
-    if (show) {
+    if (notificationStore.isActiveNotification) {
       setRender(true);
     }
-  }, [show]);
+  }, [notificationStore.isActiveNotification]);
 
   const onAnimationEnd = () => {
-    if (!show) {
+    if (!notificationStore.isActiveNotification) {
       setRender(false);
     }
   };
@@ -57,27 +58,26 @@ const NotificationPopup: FC<Props> = observer(({ show }) => {
       isSuccessfull={notificationStore.isSuccessfull}
       alignItems="center"
       padding="12px 16px"
-      justifyContent="space-between"
-      position="relative"
-      show={show}
+      position="fixed"
+      top="8px"
+      right="8px"
+      left="8px"
+      flexDirection="column"
+      zIndex="101"
+      show={notificationStore.isActiveNotification}
       onAnimationEnd={onAnimationEnd}
     >
-
-        <FlexContainer flexDirection="column">
-          <PrimaryTextSpan
-            color={notificationStore.isSuccessfull ? Colors.ACCENT_BLUE : Colors.RED}
-            fontSize="16px"
-            lineHeight="18px"
-            marginBottom="4px"
-          >
-            {notificationStore.isSuccessfull ? 'Success' : 'Error!'}
-            
-          </PrimaryTextSpan>
-          <PrimaryTextSpan color="#ffffff" fontSize="12px" lineHeight="18px">
-            {notificationStore.notificationMessage}
-          </PrimaryTextSpan>
-        </FlexContainer>
-
+      <PrimaryTextSpan
+        color={Colors.RED}
+        fontSize="16px"
+        fontWeight="bold"
+        marginBottom="12px"
+      >
+        {t('Error')}!
+      </PrimaryTextSpan>
+      <PrimaryTextSpan fontSize="13px" color="#fff">
+        {notificationStore.notificationMessage}
+      </PrimaryTextSpan>
     </NotificationWrapper>
   ) : null;
 });
@@ -102,18 +102,20 @@ const translateAnimationOut = keyframes`
     }
 `;
 
-const NotificationWrapper = styled(FlexContainer)<{isSuccessfull: boolean; show: boolean; }>`
+const NotificationWrapper = styled(FlexContainer)<{
+  isSuccessfull: boolean;
+  show: boolean;
+}>`
   width: 100%;
   max-width: 400px;
   animation: ${(props) =>
       props.show ? translateAnimationIn : translateAnimationOut}
     0.5s ease;
 
-    background-color: ${Colors.NOTIFICATION_BG};
+  background-color: ${Colors.NOTIFICATION_BG};
 
-    @supports ((-webkit-backdrop-filter: none) or (backdrop-filter: none)) {
-    background-color: rgba(35,38,47,0.9);
+  @supports ((-webkit-backdrop-filter: none) or (backdrop-filter: none)) {
+    background-color: rgba(35, 38, 47, 0.9);
     backdrop-filter: blur(12px);
   }
-    
 `;

@@ -7,9 +7,6 @@ import IconBack from '../assets/svg/icon-back-btn.svg';
 import { ButtonWithoutStyles } from '../styles/ButtonWithoutStyles';
 import SvgIcon from './SvgIcon';
 import { useHistory } from 'react-router-dom';
-import { Observer } from 'mobx-react-lite';
-import NotificationPopup from './NotificationPopup';
-import { useStores } from '../hooks/useStores';
 
 interface Props {
   pageTitle?: string;
@@ -18,9 +15,7 @@ interface Props {
 const BackFlowLayout: FC<Props> = (props) => {
   const { children, pageTitle } = props;
   const { goBack } = useHistory();
-  const {notificationStore} = useStores();
 
-  const comeBack = () => goBack();
   return (
     <FlexContainer
       position="relative"
@@ -28,24 +23,8 @@ const BackFlowLayout: FC<Props> = (props) => {
       width="100vw"
       flexDirection="column"
     >
-      <FlexContainer
-        position="absolute"
-        top="10px"
-        left="16px"
-        right="16px"
-        zIndex="100"
-        justifyContent="center"
-      >
-        <Observer>
-          {() => (
-            <NotificationPopup
-              show={notificationStore.isActiveNotification}
-            ></NotificationPopup>
-          )}
-        </Observer>
-      </FlexContainer>
       <PageHeaderWrap>
-        <BackButton onClick={comeBack}>
+        <BackButton onClick={goBack}>
           <SvgIcon
             {...IconBack}
             fillColor="rgba(255, 255, 255, 0.6)"
