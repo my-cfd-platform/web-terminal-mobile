@@ -5,7 +5,6 @@ const CopyPlugin = require('copy-webpack-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
 
 module.exports = (env, argv) => {
-  console.log(process.env);
   return {
     mode: argv.mode,
     entry: {

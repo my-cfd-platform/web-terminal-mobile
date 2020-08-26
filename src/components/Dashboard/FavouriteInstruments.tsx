@@ -7,9 +7,13 @@ import { FlexContainer } from '../../styles/FlexContainer';
 import SvgIcon from '../SvgIcon';
 import IconAddInstruments from '../../assets/svg/icon-add-instrument.svg';
 import InstrumentBadge from './InstrumentBadge';
+import { ButtonWithoutStyles } from '../../styles/ButtonWithoutStyles';
+import { useHistory } from 'react-router-dom';
+import Page from '../../constants/Pages';
 
 const FavouriteInstruments = observer(() => {
   const { instrumentsStore, badRequestPopupStore, mainAppStore } = useStores();
+  const { push } = useHistory();
   const fetchFavoriteInstruments = useCallback(
     async (accountId: string, type: AccountTypeEnum) => {
       try {
@@ -18,9 +22,11 @@ const FavouriteInstruments = observer(() => {
           accountId,
         });
         instrumentsStore.setActiveInstrumentsIds(response);
-        instrumentsStore.switchInstrument(
-          response[0] || instrumentsStore.instruments[0].instrumentItem.id
-        );
+        if (!instrumentsStore.activeInstrument) {
+          instrumentsStore.switchInstrument(
+            response[0] || instrumentsStore.instruments[0].instrumentItem.id
+          );
+        }
       } catch (error) {
         badRequestPopupStore.openModal();
         badRequestPopupStore.setMessage(error);
@@ -28,6 +34,10 @@ const FavouriteInstruments = observer(() => {
     },
     []
   );
+
+  const gotoMarkets = () => {
+    push(Page.MARKETS);
+  };
 
   useEffect(() => {
     if (mainAppStore.activeAccountId && instrumentsStore.instruments.length) {
@@ -44,14 +54,16 @@ const FavouriteInstruments = observer(() => {
   return (
     <FlexContainer marginBottom="14px" padding="16px 0">
       <FlexContainer padding="0 16px" marginRight="8px">
-        <SvgIcon
-          {...IconAddInstruments}
-          width={48}
-          height={48}
-          fillColor="#fffccc"
-        />
+        <ButtonWithoutStyles onClick={gotoMarkets}>
+          <SvgIcon
+            {...IconAddInstruments}
+            width={48}
+            height={48}
+            fillColor="#fffccc"
+          />
+        </ButtonWithoutStyles>
       </FlexContainer>
-      <FlexContainer flexWrap="nowrap">
+      <FlexContainer flexWrap="nowrap" overflow="auto">
         {instrumentsStore.activeInstruments.map((item) => (
           <FlexContainer marginRight="8px" key={item.instrumentItem.id}>
             <InstrumentBadge

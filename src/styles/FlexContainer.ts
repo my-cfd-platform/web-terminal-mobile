@@ -35,6 +35,7 @@ export interface FlexContainerProps {
   hasError?: boolean;
   flex?: string;
   opacity?: string;
+  order?: string;
 }
 
 export const FlexContainer = styled.div<FlexContainerProps>`
@@ -66,4 +67,5 @@ export const FlexContainer = styled.div<FlexContainerProps>`
   border: ${(props) => props.border};
   box-shadow: ${(props) => props.boxShadow};
   opacity: ${(props) => props.opacity};
+  order: ${(props) => props.order};
 `;

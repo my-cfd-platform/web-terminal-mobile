@@ -61,7 +61,14 @@ export class InstrumentsStore implements ContextProps {
         (a, b) =>
           this.activeInstrumentsIds.indexOf(a.instrumentItem.id) -
           this.activeInstrumentsIds.indexOf(b.instrumentItem.id)
-      );
+      )
+      .sort((a, b) => {
+        if (a.instrumentItem.id == this.activeInstrument?.instrumentItem.id) {
+          return -1;
+        }
+        return 0;
+      });
+
     return filteredActiveInstruments;
   }
 
@@ -160,6 +167,7 @@ export class InstrumentsStore implements ContextProps {
   // TODO: refactor, too heavy
   @action
   switchInstrument = async (instrumentId: string) => {
+    console.log('instrumentId', instrumentId);
     const newActiveInstrument =
       this.instruments.find(
         (item) => item.instrumentItem.id === instrumentId
@@ -167,23 +175,31 @@ export class InstrumentsStore implements ContextProps {
     if (newActiveInstrument) {
       this.addActiveInstrumentId(instrumentId);
       this.activeInstrument = newActiveInstrument;
-      const tvWidget = this.rootStore.tradingViewStore.tradingWidget?.chart();
-      if (tvWidget) {
-        tvWidget.setSymbol(instrumentId, () => {
-          tvWidget.setResolution(
-            supportedResolutions[newActiveInstrument.resolution],
-            () => {
-              if (newActiveInstrument.interval) {
-                const fromTo = {
-                  from: getIntervalByKey(newActiveInstrument.interval),
-                  to: moment().valueOf(),
-                };
-                tvWidget.setVisibleRange(fromTo);
-              }
-            }
-          );
-          tvWidget.setChartType(newActiveInstrument.chartType);
-        });
+      if (this.rootStore.tradingViewStore.tradingWidget) {
+        this.rootStore.tradingViewStore.tradingWidget
+          .chart()
+          .setSymbol(instrumentId, () => {
+            this.rootStore.tradingViewStore.tradingWidget
+              ?.chart()
+              .setResolution(
+                supportedResolutions[newActiveInstrument.resolution],
+                () => {
+                  if (newActiveInstrument.interval) {
+                    const fromTo = {
+                      from: getIntervalByKey(newActiveInstrument.interval),
+                      to: moment().valueOf(),
+                    };
+                    this.rootStore.tradingViewStore.tradingWidget
+                      ?.chart()
+                      .setVisibleRange(fromTo);
+                  }
+                }
+              );
+
+            this.rootStore.tradingViewStore.tradingWidget
+              ?.chart()
+              .setChartType(newActiveInstrument.chartType);
+          });
       }
     }
   };

@@ -3,7 +3,6 @@ import { useParams, useHistory } from 'react-router-dom';
 import { PortfolioTabEnum } from '../enums/PortfolioTabEnum';
 import { FlexContainer } from '../styles/FlexContainer';
 import PortfolioTypeTabs from '../components/Portfolio/PortfolioTypeTabs';
-import DashboardLayout from '../components/DashboardLayout';
 import Page from '../constants/Pages';
 import { PrimaryTextSpan } from '../styles/TextsElements';
 import Colors from '../constants/Colors';
@@ -55,66 +54,56 @@ const Portfolio = () => {
   }, [type]);
 
   return (
-    <DashboardLayout>
-      <FlexContainer flexDirection="column" width="100%">
+    <FlexContainer flexDirection="column" width="100%">
+      <FlexContainer
+        padding="0 16px"
+        flexDirection="column"
+        position="relative"
+        marginBottom="32px"
+        width="100%"
+      >
         <FlexContainer
-          padding="0 16px"
-          flexDirection="column"
-          position="relative"
-          marginBottom="32px"
-          width="100%"
+          padding="20px 0 12px"
+          justifyContent="space-between"
+          alignItems="center"
         >
-          <FlexContainer
-            padding="20px 0 12px"
-            justifyContent="space-between"
-            alignItems="center"
-          >
-            <PrimaryTextSpan color="#ffffff" fontWeight={600} fontSize="24px">
-              {t('Portfolio')}
-            </PrimaryTextSpan>
+          <PrimaryTextSpan color="#ffffff" fontWeight={600} fontSize="24px">
+            {t('Portfolio')}
+          </PrimaryTextSpan>
 
-            <FlexContainer
-              flexDirection="column"
-              flex="1"
-              alignItems="flex-end"
+          <FlexContainer flexDirection="column" flex="1" alignItems="flex-end">
+            <Observer>
+              {() => (
+                <PrimaryTextSpan fontSize="16px" fontWeight={500}>
+                  {mainAppStore.activeAccount?.symbol}
+                  {quotesStore.invest.toFixed(2)}
+                </PrimaryTextSpan>
+              )}
+            </Observer>
+            <PrimaryTextSpan
+              fontSize="13px"
+              fontWeight={500}
+              color={profit >= 0 ? Colors.ACCENT_BLUE : Colors.RED}
             >
-              <Observer>
-                {() => (
-                  <PrimaryTextSpan fontSize="16px" fontWeight={500}>
-                    {mainAppStore.activeAccount?.symbol}
-                    {quotesStore.invest.toFixed(2)}
-                  </PrimaryTextSpan>
-                )}
-              </Observer>
-              <PrimaryTextSpan
-                fontSize="13px"
-                fontWeight={500}
-                color={profit >= 0 ? Colors.ACCENT_BLUE : Colors.RED}
-              >
-                {getNumberSign(profit)}
-                {mainAppStore.activeAccount?.symbol}
-                {Math.abs(profit).toFixed(2)}
-              </PrimaryTextSpan>
-            </FlexContainer>
+              {getNumberSign(profit)}
+              {mainAppStore.activeAccount?.symbol}
+              {Math.abs(profit).toFixed(2)}
+            </PrimaryTextSpan>
           </FlexContainer>
-          <PortfolioTypeTabs />
         </FlexContainer>
-
-        <FlexContainer maxHeight="calc(100% - 130px)" flexDirection="column">
-          <Observer>
-            {() => (
-              <FlexContainer
-                height="100%"
-                overflow="auto"
-                flexDirection="column"
-              >
-                {renderTabsByType()}
-              </FlexContainer>
-            )}
-          </Observer>
-        </FlexContainer>
+        <PortfolioTypeTabs />
       </FlexContainer>
-    </DashboardLayout>
+
+      <FlexContainer maxHeight="calc(100% - 130px)" flexDirection="column">
+        <Observer>
+          {() => (
+            <FlexContainer height="100%" overflow="auto" flexDirection="column">
+              {renderTabsByType()}
+            </FlexContainer>
+          )}
+        </Observer>
+      </FlexContainer>
+    </FlexContainer>
   );
 };
 

@@ -1,7 +1,6 @@
 import React, { useState, useEffect, ChangeEvent } from 'react';
 import { FlexContainer } from '../styles/FlexContainer';
 import { PrimaryTextSpan } from '../styles/TextsElements';
-import DashboardLayout from '../components/DashboardLayout';
 import SearchPanel from '../components/SearchPanel';
 import MarketsGroupList from '../components/Markets/MarketsGroupList';
 import { Observer } from 'mobx-react-lite';
@@ -25,7 +24,7 @@ const Markets = () => {
   const { t } = useTranslation();
 
   return (
-    <DashboardLayout>
+    <>
       <FlexContainer flexDirection="column" width="100vw">
         <FlexContainer padding="20px 0 32px" flexDirection="column">
           <FlexContainer
@@ -94,7 +93,7 @@ const Markets = () => {
           </MarketsWrapper>
         </FlexContainer>
       </FlexContainer>
-    </DashboardLayout>
+    </>
   );
 };
 

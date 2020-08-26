@@ -8,7 +8,6 @@ import ImageContainer from '../ImageContainer';
 import { useStores } from '../../hooks/useStores';
 import { getNumberSign } from '../../helpers/getNumberSign';
 import Colors from '../../constants/Colors';
-import { ButtonWithoutStyles } from '../../styles/ButtonWithoutStyles';
 import { useHistory } from 'react-router-dom';
 import Page from '../../constants/Pages';
 
@@ -25,6 +24,9 @@ const InstrumentMarkets: FC<Props> = observer((props) => {
   const { push } = useHistory();
 
   const setInstrumentActive = () => {
+    if (instrumentsStore.activeInstrumentsIds.indexOf(id) > -1) {
+      instrumentsStore.activeInstrumentsIds.push(id);
+    }
     instrumentsStore.switchInstrument(id);
     push(Page.DASHBOARD);
   };

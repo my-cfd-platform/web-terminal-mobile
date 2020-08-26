@@ -1,5 +1,4 @@
 import React, { useEffect } from 'react';
-import DashboardLayout from '../components/DashboardLayout';
 import { useStores } from '../hooks/useStores';
 import Topics from '../constants/websocketTopics';
 import { ResponseFromWebsocket } from '../types/ResponseFromWebsocket';
@@ -9,8 +8,6 @@ import {
   InstrumentModelWSDTO,
   PriceChangeWSDTO,
 } from '../types/InstrumentsTypes';
-import { Observer } from 'mobx-react-lite';
-import ChartContainer from '../containers/ChartContainer';
 import FavouriteInstruments from '../components/Dashboard/FavouriteInstruments';
 import { FlexContainer } from '../styles/FlexContainer';
 import ActiveInstrument from '../components/Dashboard/ActiveInstrument';
@@ -85,31 +82,19 @@ const Dashboard = () => {
   }, [mainAppStore.activeAccount]);
 
   return (
-    <DashboardLayout>
-      <FlexContainer flexDirection="column" width="100%">
+    <>
+      <FlexContainer flexDirection="column" width="100%" order="1">
         <FavouriteInstruments />
         <ActiveInstrument />
-        <Observer>
-          {() => (
-            <>
-              {instrumentsStore.activeInstrument && (
-                <ChartContainer
-                  instrumentId={
-                    instrumentsStore.activeInstrument.instrumentItem.id
-                  }
-                  instruments={instrumentsStore.instruments}
-                ></ChartContainer>
-              )}
-            </>
-          )}
-        </Observer>
+      </FlexContainer>
+      <FlexContainer flexDirection="column" width="100%" order="3">
         <TimeScaleWrapper></TimeScaleWrapper>
         <FlexContainer padding="0 16px">
           <SellButton handleClick={() => {}} />
           <BuyButton handleClick={() => {}} />
         </FlexContainer>
       </FlexContainer>
-    </DashboardLayout>
+    </>
   );
 };
 
