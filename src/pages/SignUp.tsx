@@ -131,112 +131,105 @@ const SignUp = () => {
   };
 
   return (
-    <SignFlowLayout>
+    <FlexContainer
+      flexDirection="column"
+      width="100%"
+      height="100%"
+      alignItems="center"
+      justifyContent="space-between"
+    >
       <CustomForm noValidate onSubmit={handleSubmit}>
-        <FlexContainer
-          flexDirection="column"
-          width="100%"
-          alignItems="center"
-          justifyContent="space-between"
-          minHeight="calc(100vh - 100px)"
-          maxHeight="calc(100vh - 100px)"
-        >
-          <FlexContainer
-            flexDirection="column"
-            alignItems="center"
-            width="100%"
-          >
-            <SignTypeTabs />
+        <FlexContainer flexDirection="column" alignItems="center" width="100%">
+          <SignTypeTabs />
 
-            <InputField
-              id={Fields.EMAIL}
-              name={Fields.EMAIL}
-              onChange={handleChange}
-              value={values.email || ''}
-              placeholder="Email"
-              type="email"
-              hasError={!!(touched.email && errors.email)}
-              errorText={errors.email}
-            />
-            <InputField
-              id={Fields.PASSWORD}
-              name={Fields.PASSWORD}
-              value={values.password || ''}
-              onChange={handleChange}
-              placeholder="Password"
-              type="password"
-              hasError={!!(touched.email && errors.email)}
-              errorText={errors.email}
-            />
+          <InputField
+            id={Fields.EMAIL}
+            name={Fields.EMAIL}
+            onChange={handleChange}
+            value={values.email || ''}
+            placeholder="Email"
+            type="email"
+            hasError={!!(touched.email && errors.email)}
+            errorText={errors.email}
+          />
+          <InputField
+            id={Fields.PASSWORD}
+            name={Fields.PASSWORD}
+            value={values.password || ''}
+            onChange={handleChange}
+            placeholder="Password"
+            type="password"
+            hasError={!!(touched.email && errors.email)}
+            errorText={errors.email}
+          />
 
-            <FlexContainer padding="14px 16px 0" marginBottom="24px">
-              <Checkbox
-                id="user-agreements"
-                checked={values.userAgreement}
-                onChange={handleChangeUserAgreements(setFieldValue)}
-                hasError={!!(validateAssigments && errors.userAgreement)}
-                errorText={errors.userAgreement}
+          <FlexContainer padding="14px 16px 0" marginBottom="24px">
+            <Checkbox
+              id="user-agreements"
+              checked={values.userAgreement}
+              onChange={handleChangeUserAgreements(setFieldValue)}
+              hasError={!!(validateAssigments && errors.userAgreement)}
+              errorText={errors.userAgreement}
+            >
+              <PrimaryTextSpan
+                color={Colors.INPUT_LABEL_TEXT}
+                fontSize="11px"
+                lineHeight="1.6"
               >
-                <PrimaryTextSpan
-                  color={Colors.INPUT_LABEL_TEXT}
-                  fontSize="11px"
-                  lineHeight="1.6"
-                >
-                  I’m 18 years old, and agree to &nbsp;
-                  <StyledLink fontSize="11px" to={Page.SIGN_IN}>
-                    Terms & Conditions
-                  </StyledLink>
-                  &nbsp; and &nbsp;
-                  <StyledLink fontSize="11px" to={Page.SIGN_IN}>
-                    Privacy Policy
-                  </StyledLink>
-                  &nbsp;
-                </PrimaryTextSpan>
-              </Checkbox>
-            </FlexContainer>
+                I’m 18 years old, and agree to &nbsp;
+                <StyledLink fontSize="11px" to={Page.SIGN_IN}>
+                  Terms & Conditions
+                </StyledLink>
+                &nbsp; and &nbsp;
+                <StyledLink fontSize="11px" to={Page.SIGN_IN}>
+                  Privacy Policy
+                </StyledLink>
+                &nbsp;
+              </PrimaryTextSpan>
+            </Checkbox>
+          </FlexContainer>
+        </FlexContainer>
+
+        <FlexContainer flexDirection="column">
+          <FlexContainer width="100vw" padding="0 16px" marginBottom="26px">
+            <PrimaryButton
+              padding="12px"
+              type="submit"
+              width="100%"
+              disabled={isSubmitting}
+              onClick={handlerClickSubmit}
+            >
+              <PrimaryTextSpan
+                color={Colors.BLACK}
+                fontWeight="bold"
+                fontSize="16px"
+              >
+                Sign Up
+              </PrimaryTextSpan>
+            </PrimaryButton>
           </FlexContainer>
 
-          <FlexContainer flexDirection="column">
-            <FlexContainer width="100vw" padding="0 16px" marginBottom="26px">
-              <PrimaryButton
-                padding="12px"
-                type="submit"
-                width="100%"
-                disabled={isSubmitting}
-                onClick={handlerClickSubmit}
-              >
-                <PrimaryTextSpan
-                  color={Colors.BLACK}
-                  fontWeight="bold"
-                  fontSize="16px"
-                >
-                  Sign Up
-                </PrimaryTextSpan>
-              </PrimaryButton>
-            </FlexContainer>
-
-            <FlexContainer
-              alignItems="center"
-              justifyContent="center"
-              padding="0 0 40px 0"
-            >
-              <PrimaryTextSpan color={Colors.INPUT_LABEL_TEXT}>
-                Already have account?
-              </PrimaryTextSpan>
-              &nbsp;
-              <StyledLink to={Page.SIGN_IN}>Log In</StyledLink>
-            </FlexContainer>
+          <FlexContainer
+            alignItems="center"
+            justifyContent="center"
+            padding="0 0 40px 0"
+          >
+            <PrimaryTextSpan color={Colors.INPUT_LABEL_TEXT}>
+              Already have account?
+            </PrimaryTextSpan>
+            &nbsp;
+            <StyledLink to={Page.SIGN_IN}>Log In</StyledLink>
           </FlexContainer>
         </FlexContainer>
       </CustomForm>
-    </SignFlowLayout>
+    </FlexContainer>
   );
 };
 
 export default SignUp;
 
 const CustomForm = styled.form`
-  width: 100%;
+  margin: 0;
 `;
 
 const StyledLink = styled(Link)<{ fontSize?: string }>`

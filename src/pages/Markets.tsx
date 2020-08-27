@@ -100,7 +100,7 @@ const Markets = () => {
 const MarketsWrapper = styled(FlexContainer)`
   overflow-y: auto;
   width: 100vw;
-  max-height: calc(100vh - 264px);
+  max-height: calc(var(--vh, 1vh) * 100 - 264px);
 
   ::-webkit-scrollbar {
     width: 4px;

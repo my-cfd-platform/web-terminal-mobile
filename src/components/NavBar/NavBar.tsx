@@ -2,30 +2,28 @@ import React from 'react';
 import styled from '@emotion/styled';
 import { FlexContainer } from '../../styles/FlexContainer';
 import AccountsSwitchLink from './AccountsSwitchLink';
-import { Link } from 'react-router-dom';
+import { Link, useParams, useRouteMatch } from 'react-router-dom';
 import Colors from '../../constants/Colors';
 import Page from '../../constants/Pages';
 import AccountLabel from './AccountLabel';
 
 const NavBar = () => {
   return (
-    <NavBarWrap>
+    <FlexContainer
+      width="100vw"
+      position="relative"
+      alignItems="center"
+      justifyContent="center"
+      height="48px"
+    >
       <AccountLabel />
       <AccountsSwitchLink />
       <DepositLink to={Page.DEPOSIT}>Deposit</DepositLink>
-    </NavBarWrap>
+    </FlexContainer>
   );
 };
 
 export default NavBar;
-
-const NavBarWrap = styled(FlexContainer)`
-  width: 100vw;
-  height: 48px;
-  align-items: center;
-  justify-content: center;
-  position: relative;
-`;
 
 const DepositLink = styled(Link)`
   font-size: 16px;

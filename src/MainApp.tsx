@@ -33,6 +33,8 @@ const MainApp: FC = () => {
         i18n.changeLanguage(mainAppStore.lang);
       }
     });
+    let vh = window.innerHeight * 0.01;
+    document.documentElement.style.setProperty('--vh', `${vh}px`);
   }, []);
 
   return (
