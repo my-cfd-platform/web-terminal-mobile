@@ -29,7 +29,7 @@ const ActivePositionItem: FC<Props> = ({ position }) => {
   return (
     <InstrumentItem to={`${Page.PORTFOLIO_MAIN}/${type}/${id}`}>
       <FlexContainer width="48px" height="48px" marginRight="16px">
-        <ImageContainer instrumentId={id.toString()} />
+        <ImageContainer instrumentId={instrument} />
       </FlexContainer>
 
       <FlexContainer flexDirection="column" justifyContent="center">

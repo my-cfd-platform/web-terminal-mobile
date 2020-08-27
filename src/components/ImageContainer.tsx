@@ -1,13 +1,14 @@
-import React from 'react';
+import React, { FC } from 'react';
 import styled from '@emotion/styled';
 import { getImageSource } from '../helpers/getImageSource';
 import { useStores } from '../hooks/useStores';
+import { observer } from 'mobx-react-lite';
 
 interface Props {
   instrumentId: string;
 }
 
-function ImageContainer(props: Props) {
+const ImageContainer: FC<Props> = observer((props) => {
   const { instrumentId } = props;
   const { mainAppStore } = useStores();
 
@@ -16,7 +17,7 @@ function ImageContainer(props: Props) {
       src={`${mainAppStore.tradingUrl}${getImageSource(instrumentId)}`}
     />
   );
-}
+});
 
 export default ImageContainer;
 
