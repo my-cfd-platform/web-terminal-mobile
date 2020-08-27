@@ -24,7 +24,7 @@ const ChartContainer: FC = observer(() => {
 
   const match = useRouteMatch(Page.DASHBOARD);
   // TODO: think how to improve logic
-  
+
   useEffect(() => {
     if (
       !tradingViewStore.tradingWidget &&
@@ -128,13 +128,15 @@ const ChartContainer: FC = observer(() => {
       height="100%"
       id={containerId}
       order="2"
-      overflowContainer={match?.isExact ? 'visible' : 'hidden'}
+      display={match?.isExact ? 'flex' : 'none'}
     />
   );
 });
 
 export default ChartContainer;
 
-const ChartElement = styled(FlexContainer)<{ overflowContainer: string }>`
-  visibility: ${(props) => props.overflowContainer};
+const ChartElement = styled(FlexContainer)<{
+  display: 'flex' | 'none';
+}>`
+  display: ${(props) => props.display};
 `;

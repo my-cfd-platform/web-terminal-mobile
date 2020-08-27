@@ -19,7 +19,7 @@ const BackFlowLayout: FC<Props> = (props) => {
   return (
     <FlexContainer
       position="relative"
-      minHeight="100vh"
+      height="100%"
       width="100vw"
       flexDirection="column"
     >
