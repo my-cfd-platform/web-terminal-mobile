@@ -143,7 +143,6 @@ const SignIn = () => {
           <LinkForgot to={Page.FORGOT_PASSWORD}>Forgot password?</LinkForgot>
         </FlexContainer>
       </FlexContainer>
-
       <FlexContainer flexDirection="column">
         <FlexContainer width="100vw" padding="0 16px" marginBottom="26px">
           <PrimaryButton
