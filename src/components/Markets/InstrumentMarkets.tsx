@@ -1,9 +1,9 @@
-import React, { FC, useRef } from 'react';
+import React, { FC } from 'react';
 import { InstrumentModelWSDTO } from '../../types/InstrumentsTypes';
 import { observer, Observer } from 'mobx-react-lite';
 import styled from '@emotion/styled';
 import { FlexContainer } from '../../styles/FlexContainer';
-import { PrimaryTextSpan, QuoteText } from '../../styles/TextsElements';
+import { PrimaryTextSpan } from '../../styles/TextsElements';
 import ImageContainer from '../ImageContainer';
 import { useStores } from '../../hooks/useStores';
 import { getNumberSign } from '../../helpers/getNumberSign';
@@ -17,7 +17,7 @@ interface Props {
 
 const InstrumentMarkets: FC<Props> = observer((props) => {
   const {
-    instrument: { base, id, name, quote, digits, groupId },
+    instrument: { id, name, digits, groupId },
   } = props;
 
   const { quotesStore, instrumentsStore } = useStores();

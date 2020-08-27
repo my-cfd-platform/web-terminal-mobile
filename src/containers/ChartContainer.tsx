@@ -17,21 +17,14 @@ import { useRouteMatch } from 'react-router-dom';
 import Page from '../constants/Pages';
 import styled from '@emotion/styled';
 
-function getLanguageFromURL(): LanguageCode | null {
-  const regex = new RegExp('[\\?&]lang=([^&#]*)');
-  const results = regex.exec(location.search);
-  return results === null
-    ? null
-    : (decodeURIComponent(results[1].replace(/\+/g, ' ')) as LanguageCode);
-}
-
 const containerId = 'tv_chart_container';
 
 const ChartContainer: FC = observer(() => {
   const { mainAppStore, tradingViewStore, instrumentsStore } = useStores();
 
   const match = useRouteMatch(Page.DASHBOARD);
-
+  // TODO: think how to improve logic
+  
   useEffect(() => {
     if (
       !tradingViewStore.tradingWidget &&
@@ -116,7 +109,7 @@ const ChartContainer: FC = observer(() => {
           'timeScale.rightOffset': 5,
         },
       };
-
+      console.log('widget init');
       const tvWidget = new widget(widgetOptions);
       tvWidget.onChartReady(async () => {
         tradingViewStore.tradingWidget = tvWidget;
