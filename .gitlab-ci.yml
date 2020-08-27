@@ -6,7 +6,7 @@ variables:
   K8S_DEV_NAMESPACE: simple-trading-dev
   K8S_DEV_CONTEXT: SimpleTradingDevKubernetes
   BUILD_FOLDER: wwwroot
-  KUBERNETES_APP_SELECTOR_NAME: simple-trading-web-terminal-mobile
+  KUBERNETES_APP_SELECTOR_NAME: web-terminal-mobile
 
 stages:
   - build
