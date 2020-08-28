@@ -7,10 +7,6 @@ import { useStores } from '../hooks/useStores';
 import LoaderFullscreen from '../components/LoaderFullscreen';
 import { Observer } from 'mobx-react-lite';
 import NotificationPopup from '../components/NotificationPopup';
-import NotificationActivePositionPopup from '../components/NotificationActivePositionPopup';
-import ChartContainer from '../containers/ChartContainer';
-import NavBar from '../components/NavBar/NavBar';
-import NavigationPanel from '../components/NavigationPanel';
 import AuthorizedContainer from '../containers/AuthorizedContainer';
 import SignFlowLayout from '../components/SignFlowLayout';
 

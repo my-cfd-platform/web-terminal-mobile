@@ -105,7 +105,6 @@ const Portfolio = () => {
               </FlexContainer>
             )}
           </Observer>
-          x
         </OverflowContainer>
       </FlexContainer>
     </>

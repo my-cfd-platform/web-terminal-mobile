@@ -32,8 +32,6 @@ const Page = {
   NEWS: '/news',
 
   ACCOUNTS_SWITCH: '/accounts',
-  DEPOSIT: '/deposit',
-
 };
 
 Object.freeze(Page);
