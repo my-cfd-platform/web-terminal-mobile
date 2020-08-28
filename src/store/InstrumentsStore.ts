@@ -8,7 +8,10 @@ import {
 import { RootStore } from './RootStore';
 import { SortByMarketsEnum } from '../enums/SortByMarketsEnum';
 import { SeriesStyle } from '../vendor/charting_library/charting_library.min';
-import { supportedResolutions } from '../constants/supportedTimeScales';
+import {
+  supportedResolutions,
+  supportedInterval,
+} from '../constants/supportedTimeScales';
 import { getIntervalByKey } from '../helpers/getIntervalByKey';
 import moment from 'moment';
 import { AccountTypeEnum } from '../enums/AccountTypeEnum';
@@ -79,8 +82,8 @@ export class InstrumentsStore implements ContextProps {
         <IActiveInstrument>{
           chartType: SeriesStyle.Area,
           instrumentItem: item,
-          interval: '1D',
-          resolution: '1 minute',
+          interval: supportedInterval['15m'],
+          resolution: '1m',
         }
     );
   };
@@ -167,7 +170,6 @@ export class InstrumentsStore implements ContextProps {
   // TODO: refactor, too heavy
   @action
   switchInstrument = async (instrumentId: string) => {
-    console.log('instrumentId', instrumentId);
     const newActiveInstrument =
       this.instruments.find(
         (item) => item.instrumentItem.id === instrumentId

@@ -81,8 +81,8 @@ class DataFeedService implements IBasicDataFeed {
           ?.instrumentItem.digits || 2),
       has_intraday: true,
       intraday_multipliers: [
-        supportedResolutions['1 minute'],
-        supportedResolutions['1 hour'],
+        supportedResolutions['1m'],
+        supportedResolutions['1h'],
       ],
       has_weekly_and_monthly: true,
       has_no_volume: true,
@@ -121,8 +121,8 @@ class DataFeedService implements IBasicDataFeed {
         this.nextTimeTries = 0;
       } else {
         switch (resolution) {
-          case supportedResolutions['1 minute']:
-          case supportedResolutions['5 minutes']:
+          case supportedResolutions['1m']:
+          case supportedResolutions['5m']:
             this.nextTimeTries = this.nextTimeTries + 1;
             console.log(this.nextTimeTries);
             onResult(bars, {
@@ -195,7 +195,7 @@ class DataFeedService implements IBasicDataFeed {
       //     intervalBack: 1,
       //   };
 
-      case supportedResolutions['1 month']:
+      case supportedResolutions['1M']:
         return {
           resolutionBack: 'M' as ResolutionBackValues,
           intervalBack: 2,
