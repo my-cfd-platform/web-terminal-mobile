@@ -9,6 +9,7 @@ import Portfolio from "../pages/Portfolio";
 import PositionDetails from "../pages/PositionDetails";
 import AccountProfile from '../pages/AccountProfile';
 import News from '../pages/News';
+import ChartSetting from '../pages/ChartSetting';
 
 export enum RouteLayoutType {
   Authorized,
@@ -43,6 +44,14 @@ const routesList = [
   {
     component: Dashboard,
     path: Page.DASHBOARD,
+    exact: true,
+    strict: true,
+    layoutType: RouteLayoutType.Authorized,
+  },
+
+  {
+    component: ChartSetting,
+    path: Page.CHART_SETTING,
     exact: true,
     strict: true,
     layoutType: RouteLayoutType.Authorized,
