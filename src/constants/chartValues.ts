@@ -8,8 +8,8 @@ import IconLineChart from '../assets/svg/icon-chart-line-style.svg';
 import IconCandleChart from '../assets/svg/icon-chart-candle.svg';
 import IconBarChart from '../assets/svg/icon-chart-bars.svg';
 
-export const BASIC_RESOLUTION_KEY: SupportedResolutionsType = '1 minute';
-export const BASIC_INTERVAL = supportedInterval['1D'];
+export const BASIC_RESOLUTION_KEY: SupportedResolutionsType = '1m';
+export const BASIC_INTERVAL = supportedInterval['15m'];
 
 export const getChartIconByType = (chartType: SeriesStyle) => {
   switch (chartType) {

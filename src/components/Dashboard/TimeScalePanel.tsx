@@ -9,7 +9,6 @@ import {
   SupportedResolutionsType,
   supportedResolutions,
 } from '../../constants/supportedTimeScales';
-import { ObjectKeys } from '../../helpers/objectKeys';
 import styled from '@emotion/styled';
 import moment from 'moment';
 import { IActiveInstrument } from '../../types/InstrumentsTypes';
@@ -18,45 +17,39 @@ import { observer } from 'mobx-react-lite';
 const TimeScalePanel = observer(() => {
   const { instrumentsStore, tradingViewStore } = useStores();
 
-  const handleChangeResolution = (
-    newInterval: SupportedIntervalsType
-  ) => () => {
+  const handleChangeInterval = (newInterval: SupportedIntervalsType) => () => {
     let from = moment();
-    let newResolutionKey: SupportedResolutionsType = '1 minute';
+    let newResolutionKey: SupportedResolutionsType = '1m';
+
     switch (newInterval) {
-      case supportedInterval['1D']:
-        from = moment().subtract(1, 'd');
-        newResolutionKey = '1 minute';
+      case supportedInterval['15m']:
+        from = moment().subtract(15, 'minutes');
+        newResolutionKey = '1m';
         break;
 
-      case supportedInterval['5D']:
-        from = moment().subtract(5, 'd');
-        newResolutionKey = '30 minutes';
+      case supportedInterval['1h']:
+        from = moment().subtract(1, 'hours');
+        newResolutionKey = '5m';
+        break;
+
+      case supportedInterval['4h']:
+        from = moment().subtract(4, 'hours');
+        newResolutionKey = '15m';
+        break;
+
+      case supportedInterval['1d']:
+        from = moment().subtract(1, 'days');
+        newResolutionKey = '1h';
+        break;
+
+      case supportedInterval['1W']:
+        from = moment().subtract(1, 'weeks');
+        newResolutionKey = '4h';
         break;
 
       case supportedInterval['1M']:
-        from = moment().subtract(1, 'M');
-        newResolutionKey = '1 hour';
-        break;
-
-      case supportedInterval['YTD']:
-        from = moment().subtract(new Date().getUTCMonth(), 'M');
-        newResolutionKey = '1 day';
-        break;
-
-      case supportedInterval['1Y']:
-        from = moment().subtract(1, 'year');
-        newResolutionKey = '1 day';
-        break;
-
-      case supportedInterval['3Y']:
-        from = moment().subtract(1, 'y');
-        newResolutionKey = '1 month';
-        break;
-
-      case supportedInterval['All']:
-        from = moment().subtract(1, 'y');
-        newResolutionKey = '1 month';
+        from = moment().subtract(1, 'months');
+        newResolutionKey = '1d';
         break;
 
       default:
@@ -70,7 +63,8 @@ const TimeScalePanel = observer(() => {
       ...instrumentsStore.activeInstrument,
       interval: newInterval,
     };
-    if (newResolutionKey === instrumentsStore.activeInstrument!.resolution) {
+
+    if (newResolutionKey === instrumentsStore.activeInstrument.resolution) {
       tradingViewStore.tradingWidget?.chart().setVisibleRange({
         from: from.valueOf(),
         to: moment().valueOf(),
@@ -91,12 +85,11 @@ const TimeScalePanel = observer(() => {
 
   return (
     <FlexContainer>
-      {ObjectKeys(supportedInterval).map((key) => (
-        <TimeScaleButton key={key} onClick={handleChangeResolution(key)}>
+      {Object.entries(supportedInterval).map(([key, value]: any) => (
+        <TimeScaleButton key={key} onClick={handleChangeInterval(value)}>
           <PrimaryTextSpan
             color={
-              instrumentsStore.activeInstrument?.interval ===
-              supportedInterval[key]
+              instrumentsStore.activeInstrument?.interval === value
                 ? '#fffccc'
                 : 'rgba(196, 196, 196, 0.5)'
             }

@@ -7,10 +7,54 @@ import { ButtonWithoutStyles } from '../styles/ButtonWithoutStyles';
 import SvgIcon from '../components/SvgIcon';
 
 import IconArea from '../assets/svg/chart-types/icon-area.svg';
-import IconLine from '../assets/svg/chart-types/icon-line.png';
+import IconLine from '../assets/svg_no_compress/icon-line.svg';
 import IconCandle from '../assets/svg/chart-types/icon-candle.svg';
 import Colors from '../constants/Colors';
-const ChartSetting = () => {
+import { useTranslation } from 'react-i18next';
+import { observer } from 'mobx-react-lite';
+import { useStores } from '../hooks/useStores';
+import { SeriesStyle } from '../vendor/charting_library/charting_library.min';
+import {
+  SupportedResolutionsType,
+  supportedResolutions,
+} from '../constants/supportedTimeScales';
+import { IActiveInstrument } from '../types/InstrumentsTypes';
+import { ObjectKeys } from '../helpers/objectKeys';
+import { useHistory } from 'react-router-dom';
+
+const ChartSetting = observer(() => {
+  const { t } = useTranslation();
+  const { instrumentsStore, tradingViewStore } = useStores();
+  const { goBack } = useHistory();
+
+  const handleChangeResolution = (
+    resolutionKey: SupportedResolutionsType
+  ) => () => {
+    tradingViewStore.tradingWidget
+      ?.chart()
+      .setResolution(supportedResolutions[resolutionKey], () => {
+        if (instrumentsStore.activeInstrument) {
+          instrumentsStore.editActiveInstrument({
+            ...instrumentsStore.activeInstrument,
+            resolution: resolutionKey,
+            interval: null,
+          });
+        }
+        goBack();
+      });
+  };
+  const handleChangeChartType = (chartType: SeriesStyle) => () => {
+    if (instrumentsStore.activeInstrument) {
+      tradingViewStore.tradingWidget?.chart().setChartType(chartType);
+      const newActiveInstrument: IActiveInstrument = {
+        ...instrumentsStore.activeInstrument,
+        chartType: chartType,
+      };
+      instrumentsStore.editActiveInstrument(newActiveInstrument);
+      goBack();
+    }
+  };
+
   return (
     <BackFlowLayout pageTitle="Chart Settings">
       <FlexContainer flexDirection="column" padding="0 16px">
@@ -20,18 +64,34 @@ const ChartSetting = () => {
             color="rgba(255, 255, 255, 0.4)"
             textTransform="uppercase"
           >
-            Chart type
+            {t('Chart type')}
           </PrimaryTextSpan>
         </FlexContainer>
         <FlexContainer marginBottom="40px">
-          <TypeButton onClick={() => {}} isActive={false}>
-            <img src={IconLine} alt="" />
+          <TypeButton
+            onClick={handleChangeChartType(SeriesStyle.Line)}
+            isActive={
+              instrumentsStore.activeInstrument?.chartType === SeriesStyle.Line
+            }
+          >
+            <SvgIcon {...IconLine} fillColor="#23262F" />
           </TypeButton>
-          <TypeButton onClick={() => {}} isActive={false}>
-            <SvgIcon {...IconCandle} />
+          <TypeButton
+            onClick={handleChangeChartType(SeriesStyle.Candles)}
+            isActive={
+              instrumentsStore.activeInstrument?.chartType ===
+              SeriesStyle.Candles
+            }
+          >
+            <SvgIcon {...IconCandle} fillColor="#23262F" />
           </TypeButton>
-          <TypeButton onClick={() => {}} isActive={true}>
-            <SvgIcon {...IconArea} />
+          <TypeButton
+            onClick={handleChangeChartType(SeriesStyle.Area)}
+            isActive={
+              instrumentsStore.activeInstrument?.chartType === SeriesStyle.Area
+            }
+          >
+            <SvgIcon {...IconArea} fillColor="#23262F" />
           </TypeButton>
         </FlexContainer>
 
@@ -41,26 +101,24 @@ const ChartSetting = () => {
             color="rgba(255, 255, 255, 0.4)"
             textTransform="uppercase"
           >
-            Time frame
+            {t('Time frame')}
           </PrimaryTextSpan>
         </FlexContainer>
         <FlexContainer marginBottom="40px">
-          <TimeFrameButton onClick={() => {}} isActive={true}>
-            1m
-          </TimeFrameButton>
-
-          <TimeFrameButton onClick={() => {}} isActive={false}>
-            5m
-          </TimeFrameButton>
-
-          <TimeFrameButton onClick={() => {}} isActive={false}>
-            30m
-          </TimeFrameButton>
+          {ObjectKeys(supportedResolutions).map((key) => (
+            <TimeFrameButton
+              onClick={handleChangeResolution(key)}
+              key={key}
+              isActive={key === instrumentsStore.activeInstrument?.resolution}
+            >
+              {key}
+            </TimeFrameButton>
+          ))}
         </FlexContainer>
       </FlexContainer>
     </BackFlowLayout>
   );
-};
+});
 
 export default ChartSetting;
 
@@ -79,10 +137,10 @@ const TypeButton = styled(ButtonWithoutStyles)<{ isActive: boolean }>`
   }
 `;
 
-
 const TimeFrameButton = styled(ButtonWithoutStyles)<{ isActive: boolean }>`
   font-size: 16px;
-  color: ${(props) => props.isActive ? Colors.ACCENT : 'rgba(196, 196, 196, 0.5)'};
+  color: ${(props) =>
+    props.isActive ? Colors.ACCENT : 'rgba(196, 196, 196, 0.5)'};
 
   &:not(:last-of-type) {
     margin-right: 24px;
