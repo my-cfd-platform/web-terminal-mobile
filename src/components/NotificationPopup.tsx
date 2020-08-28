@@ -56,7 +56,6 @@ const NotificationPopup: FC<Props> = observer(() => {
       boxShadow="0px 4px 8px rgba(41, 42, 57, 0.09), 0px 8px 16px rgba(37, 38, 54, 0.24)"
       borderRadius="4px"
       isSuccessfull={notificationStore.isSuccessfull}
-      alignItems="center"
       padding="12px 16px"
       position="fixed"
       top="8px"
@@ -68,12 +67,13 @@ const NotificationPopup: FC<Props> = observer(() => {
       onAnimationEnd={onAnimationEnd}
     >
       <PrimaryTextSpan
-        color={Colors.RED}
+        color={notificationStore.isSuccessfull ? Colors.ACCENT_BLUE :Colors.RED}
         fontSize="16px"
         fontWeight="bold"
         marginBottom="12px"
       >
-        {t('Error')}!
+          {notificationStore.isSuccessfull ? t('Successful') : t('Error')}
+        
       </PrimaryTextSpan>
       <PrimaryTextSpan fontSize="13px" color="#fff">
         {notificationStore.notificationMessage}
