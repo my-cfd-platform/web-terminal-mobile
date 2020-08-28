@@ -58,23 +58,33 @@ const NotificationPopup: FC<Props> = observer(() => {
       isSuccessfull={notificationStore.isSuccessfull}
       padding="12px 16px"
       position="fixed"
+      flexDirection="column"
       top="8px"
       right="8px"
       left="8px"
-      flexDirection="column"
       zIndex="101"
       show={notificationStore.isActiveNotification}
       onAnimationEnd={onAnimationEnd}
     >
-      <PrimaryTextSpan
-        color={notificationStore.isSuccessfull ? Colors.ACCENT_BLUE :Colors.RED}
-        fontSize="16px"
-        fontWeight="bold"
-        marginBottom="12px"
-      >
-          {notificationStore.isSuccessfull ? t('Successful') : t('Error')}
-        
-      </PrimaryTextSpan>
+      {notificationStore.isSuccessfull ? (
+        <PrimaryTextSpan
+          color={Colors.ACCENT_BLUE}
+          fontSize="16px"
+          fontWeight="bold"
+          marginBottom="12px"
+        >
+          {t('Success')}!
+        </PrimaryTextSpan>
+      ) : (
+        <PrimaryTextSpan
+          color={Colors.RED}
+          fontSize="16px"
+          fontWeight="bold"
+          marginBottom="12px"
+        >
+          {t('Error')}!
+        </PrimaryTextSpan>
+      )}
       <PrimaryTextSpan fontSize="13px" color="#fff">
         {notificationStore.notificationMessage}
       </PrimaryTextSpan>
