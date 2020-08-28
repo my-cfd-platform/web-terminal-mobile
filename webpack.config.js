@@ -112,8 +112,8 @@ module.exports = (env, argv) => {
         // TODO: exlude api auth string "auth"
         API_DEPOSIT_STRING:
           argv.mode === 'production'
-            ? JSON.stringify('/deposit')
-            : JSON.stringify('http://localhost:5680/deposit'),
+            ? JSON.stringify('/mobile-deposit')
+            : JSON.stringify('http://localhost:8081'),
         API_WITHDRAWAL_STRING:
           argv.mode === 'production'
             ? JSON.stringify('/withdrawal')
