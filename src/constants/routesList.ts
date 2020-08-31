@@ -13,6 +13,7 @@ import ChartSetting from '../pages/ChartSetting';
 import OrderPage from '../pages/OrderPage';
 import AccountBalanceHistory from '../pages/AccountBalanceHistory';
 import AccountWithdraw from '../pages/AccountWithdraw';
+import AccountAboutUs from '../pages/AccountAboutUs';
 
 export enum RouteLayoutType {
   Authorized,
@@ -132,6 +133,14 @@ const routesList = [
   {
     component: AccountWithdraw,
     path: Page.ACCOUNT_WITHDRAW,
+    exact: true,
+    strict: true,
+    layoutType: RouteLayoutType.Authorized,
+  },
+
+  {
+    component: AccountAboutUs,
+    path: Page.ACCOUNT_ABOUT_US,
     exact: true,
     strict: true,
     layoutType: RouteLayoutType.Authorized,

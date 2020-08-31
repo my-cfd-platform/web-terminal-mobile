@@ -22,7 +22,7 @@ interface PrimaryTextType {
   textDecoration?: 'underline';
   textTransform?: 'capitalize' | 'lowercase' | 'uppercase';
   whiteSpace?: 'nowrap' | 'pre' | 'normal';
-  textAlign?: 'left' | 'center' | 'right';
+  textAlign?: 'left' | 'center' | 'right' | 'justify';
   textOverflow?: 'ellipsis';
   overflow?: 'hidden';
   width?: string;

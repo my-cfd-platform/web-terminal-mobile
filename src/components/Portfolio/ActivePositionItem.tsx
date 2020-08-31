@@ -77,9 +77,10 @@ const InstrumentItem = styled(Link)`
   width: 100%;
   padding: 16px;
   transition: all 0.4s ease;
-
+  text-decoration: none;
   &:hover,
   &:focus {
     background-color: rgba(42, 45, 56, 0.9);
+    text-decoration: none;
   }
 `;
