@@ -10,9 +10,17 @@ import InstrumentBadge from './InstrumentBadge';
 import { ButtonWithoutStyles } from '../../styles/ButtonWithoutStyles';
 import { useHistory } from 'react-router-dom';
 import Page from '../../constants/Pages';
+import Topics from '../../constants/websocketTopics';
+import { ResponseFromWebsocket } from '../../types/ResponseFromWebsocket';
+import { BidAskModelWSDTO } from '../../types/BidAsk';
 
 const FavouriteInstruments = observer(() => {
-  const { instrumentsStore, badRequestPopupStore, mainAppStore } = useStores();
+  const {
+    instrumentsStore,
+    badRequestPopupStore,
+    mainAppStore,
+    quotesStore,
+  } = useStores();
   const { push } = useHistory();
   const fetchFavoriteInstruments = useCallback(
     async (accountId: string, type: AccountTypeEnum) => {
@@ -50,6 +58,20 @@ const FavouriteInstruments = observer(() => {
       );
     }
   }, [instrumentsStore.instruments, mainAppStore.activeAccountId]);
+
+  useEffect(() => {
+    mainAppStore.activeSession?.on(
+      Topics.BID_ASK,
+      (response: ResponseFromWebsocket<BidAskModelWSDTO[]>) => {
+        if (!response.data.length) {
+          return;
+        }
+        response.data.forEach((item) => {
+          quotesStore.setQuote(item);
+        });
+      }
+    );
+  }, [mainAppStore.activeSession, instrumentsStore.activeInstrument]);
 
   return (
     <FlexContainer marginBottom="14px" padding="16px 0">
