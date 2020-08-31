@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import { useStores } from '../hooks/useStores';
-import { Observer } from 'mobx-react-lite';
 import styled from '@emotion/styled';
 import * as yup from 'yup';
 import { FormikHelpers, useFormik } from 'formik';
@@ -15,11 +14,9 @@ import Fields from '../constants/fields';
 import validationInputTexts from '../constants/validationInputTexts';
 import apiResponseCodeMessages from '../constants/apiResponseCodeMessages';
 
-import SignFlowLayout from '../components/SignFlowLayout';
 import SignTypeTabs from '../components/SignTypeTabs';
 import InputField from '../components/InputField';
 import Checkbox from '../components/Checkbox';
-import NotificationPopup from '../components/NotificationPopup';
 
 import { FlexContainer } from '../styles/FlexContainer';
 import { PrimaryButton } from '../styles/Buttons';
@@ -234,18 +231,6 @@ const CustomForm = styled.form`
 
 const StyledLink = styled(Link)<{ fontSize?: string }>`
   font-size: ${(props) => props.fontSize || '13px'};
-  color: ${Colors.ACCENT};
-  text-decoration: none;
-  font-weight: 500;
-  transition: all 0.4s ease;
-  &:hover {
-    text-decoration: none;
-    color: #ffffff;
-  }
-`;
-
-const LinkForgot = styled(Link)`
-  font-size: 13px;
   color: ${Colors.ACCENT};
   text-decoration: none;
   font-weight: 500;

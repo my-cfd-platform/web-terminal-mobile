@@ -99,25 +99,37 @@ const NotificationActivePositionPopup: FC<Props> = observer(() => {
           </FlexContainer>
         </FlexContainer>
         <FlexContainer alignItems="center">
-          <PrimaryTextSpan color="#ffffff" fontSize="13px">
-            {t('Position Close')}:&nbsp;
-          </PrimaryTextSpan>
-          <PrimaryTextSpan
-            fontSize="13px"
-            color={
-              activePositionNotificationStore.notificationMessageData.equity > 0
-                ? Colors.ACCENT_BLUE
-                : Colors.RED
-            }
-          >
-            {getNumberSign(
-              activePositionNotificationStore.notificationMessageData.equity
-            )}
-            {mainAppStore.activeAccount?.symbol}
-            {Math.abs(
-              activePositionNotificationStore.notificationMessageData.equity
-            )}
-          </PrimaryTextSpan>
+          {activePositionNotificationStore.notificationMessageData.type ===
+          'close' ? (
+            <>
+              <PrimaryTextSpan color="#ffffff" fontSize="13px">
+                {t('Position Close')}:&nbsp;
+              </PrimaryTextSpan>
+              <PrimaryTextSpan
+                fontSize="13px"
+                color={
+                  activePositionNotificationStore.notificationMessageData
+                    .equity > 0
+                    ? Colors.ACCENT_BLUE
+                    : Colors.RED
+                }
+              >
+                {getNumberSign(
+                  activePositionNotificationStore.notificationMessageData.equity
+                )}
+                {mainAppStore.activeAccount?.symbol}
+                {Math.abs(
+                  activePositionNotificationStore.notificationMessageData.equity
+                )}
+              </PrimaryTextSpan>
+            </>
+          ) : (
+            <>
+              <PrimaryTextSpan color="#ffffff" fontSize="13px">
+                {t('Position opened')}.
+              </PrimaryTextSpan>
+            </>
+          )}
         </FlexContainer>
       </FlexContainer>
     </NotificationWrapper>

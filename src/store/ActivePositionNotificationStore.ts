@@ -14,6 +14,7 @@ export class ActivePositionNotificationStore implements ContextProps {
     instrumentGroup: '',
     instrumentName: '',
     instrumentId: '',
+    type: 'close',
   };
   @observable isActiveNotification: boolean = false;
   @observable isSuccessfull: boolean = false;
