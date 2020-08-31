@@ -35,7 +35,6 @@ const Page = {
   DEPOSIT: '/deposit',
 
   CHART_SETTING: '/chart-setting',
-
 };
 
 Object.freeze(Page);

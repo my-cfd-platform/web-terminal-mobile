@@ -10,6 +10,7 @@ import { observer } from 'mobx-react-lite';
 const ActiveInstrument: FC = observer(() => {
   const { instrumentsStore } = useStores();
   const handleCheckFavourite = () => {};
+  
   return (
     <FlexContainer
       justifyContent="space-between"
