@@ -150,7 +150,9 @@ const SignIn = () => {
           justifyContent="center"
           marginBottom="24px"
         >
-          <LinkForgot to={Page.FORGOT_PASSWORD}>Forgot password?</LinkForgot>
+          <LinkForgot to={Page.FORGOT_PASSWORD}>
+            {t('Forgot password?')}
+          </LinkForgot>
         </FlexContainer>
       </FlexContainer>
       <FlexContainer flexDirection="column">
@@ -167,7 +169,7 @@ const SignIn = () => {
               fontWeight="bold"
               fontSize="16px"
             >
-              Log In
+              {t('Log In')}
             </PrimaryTextSpan>
           </PrimaryButton>
         </FlexContainer>
