@@ -79,6 +79,7 @@ const SignIn = () => {
     values,
     validateForm,
     handleChange,
+    handleBlur,
     errors,
     touched,
     submitForm,
@@ -129,10 +130,12 @@ const SignIn = () => {
             errorText={errors.email}
             value={values.email || ''}
             onChange={handleChange}
+            onBlur={handleBlur}
           />
           <InputField
             name={Fields.PASSWORD}
             onChange={handleChange}
+            onBlur={handleBlur}
             value={values.password || ''}
             id={Fields.PASSWORD}
             type="password"
@@ -154,7 +157,7 @@ const SignIn = () => {
         <FlexContainer width="100vw" padding="0 16px" marginBottom="26px">
           <PrimaryButton
             padding="12px"
-            type="submit"
+            type="button"
             width="100%"
             onClick={handlerClickSubmit}
             disabled={isSubmitting}

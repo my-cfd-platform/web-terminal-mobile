@@ -91,6 +91,7 @@ const SignUp = () => {
     setFieldValue,
     validateForm,
     handleSubmit,
+    handleBlur,
     handleChange,
     errors,
     touched,
@@ -117,6 +118,7 @@ const SignUp = () => {
 
   const handlerClickSubmit = async () => {
     const curErrors = await validateForm();
+    console.log(curErrors);
     const curErrorsKeys = Object.keys(curErrors);
     if (curErrorsKeys.length) {
       const el = document.getElementById(curErrorsKeys[0]);
@@ -153,6 +155,7 @@ const SignUp = () => {
             id={Fields.EMAIL}
             name={Fields.EMAIL}
             onChange={handleChange}
+            onBlur={handleBlur}
             value={values.email || ''}
             placeholder="Email"
             type="email"
@@ -164,10 +167,11 @@ const SignUp = () => {
             name={Fields.PASSWORD}
             value={values.password || ''}
             onChange={handleChange}
+            onBlur={handleBlur}
             placeholder="Password"
             type="password"
-            hasError={!!(touched.email && errors.email)}
-            errorText={errors.email}
+            hasError={!!(touched.password && errors.password)}
+            errorText={errors.password}
           />
           <FlexContainer padding="14px 16px 0" marginBottom="24px">
             <Checkbox
@@ -207,7 +211,7 @@ const SignUp = () => {
         <FlexContainer width="100vw" padding="0 16px" marginBottom="26px">
           <PrimaryButton
             padding="12px"
-            type="submit"
+            type="button"
             width="100%"
             disabled={isSubmitting}
             onClick={handlerClickSubmit}
