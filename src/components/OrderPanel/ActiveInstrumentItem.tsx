@@ -27,7 +27,7 @@ const ActiveInstrumentItem: FC<Props> = observer(({ type }) => {
   return (
     <InstrumentItem to={`${Page.ORDER_MAIN}/${type}/${id}`}>
       <FlexContainer width="48px" height="48px" marginRight="16px">
-        <ImageContainer instrumentId={name} />
+        <ImageContainer instrumentId={id} />
       </FlexContainer>
 
       <FlexContainer flexDirection="column" justifyContent="center">
