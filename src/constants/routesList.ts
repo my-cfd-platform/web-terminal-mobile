@@ -4,12 +4,14 @@ import SignUp from '../pages/SignUp';
 import SingIn from '../pages/SignIn';
 import ForgotPassword from '../pages/ForgotPassword';
 import Markets from '../pages/Markets';
-import AccountsPage from "../pages/AccountsPage";
-import Portfolio from "../pages/Portfolio";
-import PositionDetails from "../pages/PositionDetails";
+import AccountsPage from '../pages/AccountsPage';
+import Portfolio from '../pages/Portfolio';
+import PositionDetails from '../pages/PositionDetails';
 import AccountProfile from '../pages/AccountProfile';
 import News from '../pages/News';
 import ChartSetting from '../pages/ChartSetting';
+import AccountBalanceHistory from '../pages/AccountBalanceHistory';
+import AccountWithdraw from '../pages/AccountWithdraw';
 
 export enum RouteLayoutType {
   Authorized,
@@ -107,6 +109,20 @@ const routesList = [
     component: News,
     path: Page.NEWS,
     exact: false,
+    strict: true,
+    layoutType: RouteLayoutType.Authorized,
+  },
+  {
+    component: AccountBalanceHistory,
+    path: Page.ACCOUNT_BALANCE_HISTORY,
+    exact: true,
+    strict: true,
+    layoutType: RouteLayoutType.Authorized,
+  },
+  {
+    component: AccountWithdraw,
+    path: Page.ACCOUNT_WITHDRAW,
+    exact: true,
     strict: true,
     layoutType: RouteLayoutType.Authorized,
   },
