@@ -31,7 +31,7 @@ const BackFlowLayout: FC<Props> = (props) => {
             hoverFillColor="#ffffff"
           />
         </BackButton>
-        <PrimaryTextSpan fontSize="16px" color="#ffffff">
+        <PrimaryTextSpan fontSize="16px" color="#ffffff" textTransform="capitalize">
           {pageTitle}
         </PrimaryTextSpan>
       </PageHeaderWrap>
