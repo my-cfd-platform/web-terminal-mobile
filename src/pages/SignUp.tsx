@@ -22,6 +22,8 @@ import { FlexContainer } from '../styles/FlexContainer';
 import { PrimaryButton } from '../styles/Buttons';
 import { PrimaryTextSpan } from '../styles/TextsElements';
 import { useTranslation } from 'react-i18next';
+import LoaderForComponents from '../components/LoaderForComponents';
+import { Observer } from 'mobx-react-lite';
 
 const SignUp = () => {
   const { push } = useHistory();
@@ -58,7 +60,7 @@ const SignUp = () => {
     { setStatus, setSubmitting }: FormikHelpers<UserRegistration>
   ) => {
     setSubmitting(true);
-    mainAppStore.isInitLoading = true;
+    mainAppStore.isLoading = true;
 
     try {
       const result = await mainAppStore.signUp({
@@ -70,7 +72,7 @@ const SignUp = () => {
         notificationStore.notificationMessage = apiResponseCodeMessages[result];
         notificationStore.isSuccessfull = false;
         notificationStore.openNotification();
-        mainAppStore.isInitLoading = false;
+        mainAppStore.isLoading = false;
       } else {
         push(Page.DASHBOARD);
       }
@@ -79,7 +81,7 @@ const SignUp = () => {
       badRequestPopupStore.setMessage(error);
       setStatus(error);
       setSubmitting(false);
-      mainAppStore.isInitLoading = false;
+      mainAppStore.isLoading = false;
     }
   };
 
@@ -137,6 +139,13 @@ const SignUp = () => {
       alignItems="center"
       justifyContent="space-between"
     >
+      <Observer>
+        {() => (
+          <LoaderForComponents
+            isLoading={mainAppStore.isLoading}
+          ></LoaderForComponents>
+        )}
+      </Observer>
       <FlexContainer flexDirection="column" alignItems="center" width="100%">
         <SignTypeTabs />
         <CustomForm noValidate onSubmit={handleSubmit}>

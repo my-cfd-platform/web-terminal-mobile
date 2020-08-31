@@ -17,6 +17,8 @@ import validationInputTexts from '../constants/validationInputTexts';
 import { useStores } from '../hooks/useStores';
 import { OperationApiResponseCodes } from '../enums/OperationApiResponseCodes';
 import apiResponseCodeMessages from '../constants/apiResponseCodeMessages';
+import { Observer } from 'mobx-react-lite';
+import LoaderForComponents from '../components/LoaderForComponents';
 
 const SignIn = () => {
   const { t } = useTranslation();
@@ -40,7 +42,7 @@ const SignIn = () => {
   const { mainAppStore, notificationStore, badRequestPopupStore } = useStores();
 
   const handleSubmitForm = async (credentials: UserAuthenticate) => {
-    mainAppStore.isInitLoading = true;
+    mainAppStore.isLoading = true;
     try {
       const result = await mainAppStore.signIn(credentials);
       if (result !== OperationApiResponseCodes.Ok) {
@@ -49,7 +51,7 @@ const SignIn = () => {
         );
         notificationStore.isSuccessfull = false;
         notificationStore.openNotification();
-        mainAppStore.isInitLoading = false;
+        mainAppStore.isLoading = false;
 
         // mixpanel.track(mixpanelEvents.LOGIN_FAILED, {
         //   [mixapanelProps.BRAND_NAME]: mainAppStore.initModel.brandName.toLowerCase(),
@@ -67,10 +69,9 @@ const SignIn = () => {
         // });
       }
     } catch (error) {
-      mainAppStore.isInitLoading = false;
       badRequestPopupStore.openModal();
       badRequestPopupStore.setMessage(error);
-      mainAppStore.isInitLoading = false;
+      mainAppStore.isLoading = false;
     }
   };
 
@@ -108,6 +109,13 @@ const SignIn = () => {
       alignItems="center"
       justifyContent="space-between"
     >
+      <Observer>
+        {() => (
+          <LoaderForComponents
+            isLoading={mainAppStore.isLoading}
+          ></LoaderForComponents>
+        )}
+      </Observer>
       <FlexContainer flexDirection="column" alignItems="center" width="100%">
         <SignTypeTabs />
 
@@ -167,10 +175,10 @@ const SignIn = () => {
           padding="0 0 40px 0"
         >
           <PrimaryTextSpan color={Colors.INPUT_LABEL_TEXT}>
-            Don`t have an account yet?
+            {t('Don`t have an account yet?')}
           </PrimaryTextSpan>
           &nbsp;
-          <StyledLink to={Page.SIGN_UP}>Sign Up</StyledLink>
+          <StyledLink to={Page.SIGN_UP}>{t('Sign Up')}</StyledLink>
         </FlexContainer>
       </FlexContainer>
     </FlexContainer>
