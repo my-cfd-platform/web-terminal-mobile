@@ -10,6 +10,7 @@ import PositionDetails from '../pages/PositionDetails';
 import AccountProfile from '../pages/AccountProfile';
 import News from '../pages/News';
 import ChartSetting from '../pages/ChartSetting';
+import OrderPage from '../pages/OrderPage';
 import AccountBalanceHistory from '../pages/AccountBalanceHistory';
 import AccountWithdraw from '../pages/AccountWithdraw';
 
@@ -112,6 +113,15 @@ const routesList = [
     strict: true,
     layoutType: RouteLayoutType.Authorized,
   },
+
+  {
+    component: OrderPage,
+    path: Page.ORDER,
+    exact: false,
+    strict: true,
+    layoutType: RouteLayoutType.Authorized,
+  },
+  
   {
     component: AccountBalanceHistory,
     path: Page.ACCOUNT_BALANCE_HISTORY,
