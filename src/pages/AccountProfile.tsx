@@ -11,14 +11,16 @@ import { getProcessId } from '../helpers/getProcessId';
 import { Link } from 'react-router-dom';
 import { ButtonWithoutStyles } from '../styles/ButtonWithoutStyles';
 import Colors from '../constants/Colors';
+import { useTranslation } from 'react-i18next';
+import Page from '../constants/Pages';
+
 
 import IconArrowLink from '../assets/svg/profile/icon-arrow-link.svg';
 import IconDeposit from '../assets/svg/profile/icon-deposit.svg';
 import IconWithdraw from '../assets/svg/profile/icon-withdrawal.svg';
 import IconBalanceHistory from '../assets/svg/profile/icon-balance-history.svg';
 import IconLogout from '../assets/svg/profile/icon-logout.svg';
-import { useTranslation } from 'react-i18next';
-import Page from '../constants/Pages';
+import IconAboutUs from '../assets/svg/profile/icon-about.svg'
 
 const AccountProfile = () => {
   const { mainAppStore } = useStores();
@@ -188,6 +190,30 @@ const AccountProfile = () => {
             {t('Settings')}
           </PrimaryTextSpan>
         </FlexContainer>
+
+        <ProfileMenuLink to={Page.ACCOUNT_ABOUT_US}>
+          <FlexContainer alignItems="center">
+            <FlexContainer
+              width="28px"
+              height="28px"
+              backgroundColor="#77787E"
+              borderRadius="50%"
+              justifyContent="center"
+              alignItems="center"
+              marginRight="14px"
+            >
+              <SvgIcon {...IconAboutUs} fillColor="#ffffff" />
+            </FlexContainer>
+            <PrimaryTextSpan
+              color="#ffffff"
+              fontSize="16px"
+              fontWeight="normal"
+            >
+              {t('About us')}
+            </PrimaryTextSpan>
+          </FlexContainer>
+          <SvgIcon {...IconArrowLink} fillColor="rgba(196, 196, 196, 0.5)" />
+        </ProfileMenuLink>
 
         <ProfileMenuButton onClick={handleLogout}>
           <FlexContainer alignItems="center">
