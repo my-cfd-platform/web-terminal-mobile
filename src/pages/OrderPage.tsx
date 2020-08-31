@@ -404,7 +404,7 @@ const OrderPage = () => {
               </PrimaryTextSpan>
             </FlexContainer>
 
-            <MultiplierSelect {...getFieldProps(Fields.MULTIPLIER)}>
+            <MultiplierSelect dir="rtl" {...getFieldProps(Fields.MULTIPLIER)}>
               {instrument()
                 .multiplier.slice()
                 .sort((a, b) => b - a)
