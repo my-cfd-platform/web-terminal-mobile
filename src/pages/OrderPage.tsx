@@ -14,7 +14,6 @@ import { useTranslation } from 'react-i18next';
 import { PrimaryTextSpan } from '../styles/TextsElements';
 import styled from '@emotion/styled';
 import { ButtonWithoutStyles } from '../styles/ButtonWithoutStyles';
-import ConfirmationPopup from '../components/ConfirmationPopup';
 import Colors from '../constants/Colors';
 import { Observer } from 'mobx-react-lite';
 import { css } from '@emotion/core';
