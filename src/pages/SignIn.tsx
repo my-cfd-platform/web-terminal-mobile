@@ -2,7 +2,6 @@ import React from 'react';
 import * as yup from 'yup';
 import { useFormik } from 'formik';
 import { FlexContainer } from '../styles/FlexContainer';
-import SignFlowLayout from '../components/SignFlowLayout';
 import SignTypeTabs from '../components/SignTypeTabs';
 import styled from '@emotion/styled';
 import InputField from '../components/InputField';
@@ -102,83 +101,79 @@ const SignIn = () => {
   };
 
   return (
-    <SignFlowLayout>
-      <FlexContainer
-        flexDirection="column"
-        width="100%"
-        alignItems="center"
-        justifyContent="space-between"
-        minHeight="calc(100vh - 100px)"
-        maxHeight="calc(100vh - 100px)"
-      >
-        <FlexContainer flexDirection="column" alignItems="center" width="100%">
-          <SignTypeTabs />
+    <FlexContainer
+      flexDirection="column"
+      width="100%"
+      height="100%"
+      alignItems="center"
+      justifyContent="space-between"
+    >
+      <FlexContainer flexDirection="column" alignItems="center" width="100%">
+        <SignTypeTabs />
 
-          <CustomForm>
-            <InputField
-              id={Fields.EMAIL}
-              name={Fields.EMAIL}
-              placeholder="Email"
-              type="email"
-              hasError={!!(touched.email && errors.email)}
-              errorText={errors.email}
-              value={values.email || ''}
-              onChange={handleChange}
-            />
-            <InputField
-              name={Fields.PASSWORD}
-              onChange={handleChange}
-              value={values.password || ''}
-              id={Fields.PASSWORD}
-              type="password"
-              placeholder="Password"
-              hasError={!!(touched.password && errors.password)}
-              errorText={errors.password}
-            />
-          </CustomForm>
+        <CustomForm>
+          <InputField
+            id={Fields.EMAIL}
+            name={Fields.EMAIL}
+            placeholder="Email"
+            type="email"
+            hasError={!!(touched.email && errors.email)}
+            errorText={errors.email}
+            value={values.email || ''}
+            onChange={handleChange}
+          />
+          <InputField
+            name={Fields.PASSWORD}
+            onChange={handleChange}
+            value={values.password || ''}
+            id={Fields.PASSWORD}
+            type="password"
+            placeholder="Password"
+            hasError={!!(touched.password && errors.password)}
+            errorText={errors.password}
+          />
+        </CustomForm>
 
-          <FlexContainer
-            alignItems="center"
-            justifyContent="center"
-            marginBottom="24px"
-          >
-            <LinkForgot to={Page.FORGOT_PASSWORD}>Forgot password?</LinkForgot>
-          </FlexContainer>
-        </FlexContainer>
-
-        <FlexContainer flexDirection="column">
-          <FlexContainer width="100vw" padding="0 16px" marginBottom="26px">
-            <PrimaryButton
-              padding="12px"
-              type="submit"
-              width="100%"
-              onClick={handlerClickSubmit}
-              disabled={isSubmitting}
-            >
-              <PrimaryTextSpan
-                color={Colors.BLACK}
-                fontWeight="bold"
-                fontSize="16px"
-              >
-                Log In
-              </PrimaryTextSpan>
-            </PrimaryButton>
-          </FlexContainer>
-
-          <FlexContainer
-            alignItems="center"
-            justifyContent="center"
-            padding="0 0 40px 0"
-          >
-            <PrimaryTextSpan color={Colors.INPUT_LABEL_TEXT}>
-              Don`t have an account yet?
-            </PrimaryTextSpan>
-            &nbsp;
-            <StyledLink to={Page.SIGN_UP}>Sign Up</StyledLink>
-          </FlexContainer>
+        <FlexContainer
+          alignItems="center"
+          justifyContent="center"
+          marginBottom="24px"
+        >
+          <LinkForgot to={Page.FORGOT_PASSWORD}>Forgot password?</LinkForgot>
         </FlexContainer>
       </FlexContainer>
-    </SignFlowLayout>
+      <FlexContainer flexDirection="column">
+        <FlexContainer width="100vw" padding="0 16px" marginBottom="26px">
+          <PrimaryButton
+            padding="12px"
+            type="submit"
+            width="100%"
+            onClick={handlerClickSubmit}
+            disabled={isSubmitting}
+          >
+            <PrimaryTextSpan
+              color={Colors.BLACK}
+              fontWeight="bold"
+              fontSize="16px"
+            >
+              Log In
+            </PrimaryTextSpan>
+          </PrimaryButton>
+        </FlexContainer>
+
+        <FlexContainer
+          alignItems="center"
+          justifyContent="center"
+          padding="0 0 40px 0"
+        >
+          <PrimaryTextSpan color={Colors.INPUT_LABEL_TEXT}>
+            Don`t have an account yet?
+          </PrimaryTextSpan>
+          &nbsp;
+          <StyledLink to={Page.SIGN_UP}>Sign Up</StyledLink>
+        </FlexContainer>
+      </FlexContainer>
+    </FlexContainer>
   );
 };
 

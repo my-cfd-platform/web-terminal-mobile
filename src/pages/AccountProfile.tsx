@@ -20,7 +20,6 @@ import IconLogout from '../assets/svg/profile/icon-logout.svg';
 import { useTranslation } from 'react-i18next';
 import Page from '../constants/Pages';
 
-
 const AccountProfile = () => {
   const { mainAppStore } = useStores();
   const { t } = useTranslation();
@@ -42,6 +41,17 @@ const AccountProfile = () => {
     }
     fetchPersonalData();
   }, []);
+
+  const urlParams = new URLSearchParams();
+
+  const [parsedParams, setParsedParams] = useState('');
+
+  useEffect(() => {
+    urlParams.set('token', mainAppStore.token);
+    urlParams.set('active_account_id', mainAppStore.activeAccountId);
+    urlParams.set('lang', mainAppStore.lang);
+    setParsedParams(urlParams.toString());
+  }, [mainAppStore.token, mainAppStore.lang, mainAppStore.activeAccountId]);
 
   return (
     <FlexContainer flexDirection="column">
@@ -94,7 +104,7 @@ const AccountProfile = () => {
           </PrimaryTextSpan>
         </FlexContainer>
 
-        <ProfileMenuLink to={Page.DEPOSIT}>
+        <ProfileMenuA href={`${API_DEPOSIT_STRING}/?${parsedParams}`}>
           <FlexContainer alignItems="center">
             <FlexContainer
               width="28px"
@@ -116,7 +126,7 @@ const AccountProfile = () => {
             </PrimaryTextSpan>
           </FlexContainer>
           <SvgIcon {...IconArrowLink} fillColor="rgba(196, 196, 196, 0.5)" />
-        </ProfileMenuLink>
+        </ProfileMenuA>
 
         <ProfileMenuLink to={Page.ACCOUNT_WITHDRAW}>
           <FlexContainer alignItems="center">
@@ -202,7 +212,6 @@ const AccountProfile = () => {
           </FlexContainer>
           <SvgIcon {...IconArrowLink} fillColor="rgba(196, 196, 196, 0.5)" />
         </ProfileMenuButton>
-
       </FlexContainer>
     </FlexContainer>
   );
@@ -213,6 +222,20 @@ export default AccountProfile;
 const UserPhoto = styled(FlexContainer)``;
 
 const ProfileMenuLink = styled(Link)`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 50px;
+  padding: 8px 16px;
+  text-decoration: none;
+  background-color: rgba(42, 45, 56, 0.5);
+  margin-bottom: 1px;
+  &:hover {
+    text-decoration: none;
+  }
+`;
+
+const ProfileMenuA = styled.a`
   display: flex;
   align-items: center;
   justify-content: space-between;

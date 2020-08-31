@@ -2,8 +2,6 @@ import React, { FC } from 'react';
 import { Link } from 'react-router-dom';
 import { FlexContainer } from '../styles/FlexContainer';
 import styled from '@emotion/styled';
-import ButtonAppleStoreImage from '../assets/images/button-apple-store.png';
-import ButtonGoogleStoreImage from '../assets/images/button-google-store.png';
 import Logo from './Logo';
 import { useStores } from '../hooks/useStores';
 import { useTranslation } from 'react-i18next';
@@ -12,34 +10,34 @@ import LogoMonfex from '../assets/images/logo.png';
 
 interface Props {}
 
-const SignFlowLayout: FC<Props> = props => {
+const SignFlowLayout: FC<Props> = (props) => {
   const { children } = props;
   const { mainAppStore } = useStores();
-  const { t } = useTranslation();
 
   return (
-    <FlexContainer
+    <WrapperLayoutFix
       flexDirection="column"
       alignItems="center"
-      justifyContent="space-between"
+      height="100%"
       width="100vw"
-      height="100vh"
       position="relative"
     >
-      <FlexContainer flexDirection="column" width="100vw">
-        <FlexContainer justifyContent="center" alignItems="center" padding="30px 0" minHeight="100px">
-          <FlexContainer width="230px">
-            <Observer>
-              {() => <Logo src={mainAppStore.initModel.logo || LogoMonfex} />}
-            </Observer>
-          </FlexContainer>
+      <FlexContainer
+        justifyContent="center"
+        alignItems="center"
+        padding="30px 0"
+        minHeight="100px"
+      >
+        <FlexContainer width="230px">
+          <Observer>
+            {() => <Logo src={mainAppStore.initModel.logo || LogoMonfex} />}
+          </Observer>
         </FlexContainer>
-
-        <FlexContainer flexDirection="column">{children}</FlexContainer>
       </FlexContainer>
-
-      
-    </FlexContainer>
+      <FlexContainer flexDirection="column" height="100%">
+        {children}
+      </FlexContainer>
+    </WrapperLayoutFix>
   );
 };
 
@@ -72,4 +70,9 @@ const LinkItem = styled.a`
   :hover {
     color: #00ffdd;
   }
+`;
+
+const WrapperLayoutFix = styled(FlexContainer)`
+  height: 100vh;
+  height: calc(var(--vh, 1vh) * 100);
 `;

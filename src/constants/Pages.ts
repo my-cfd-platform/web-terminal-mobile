@@ -33,6 +33,10 @@ const Page = {
 
   ACCOUNTS_SWITCH: '/accounts',
   DEPOSIT: '/deposit',
+  CHART_SETTING: '/chart-setting',
+
+  ORDER_MAIN: '/order',
+  ORDER: '/order/:type/:id',
 
 };
 

@@ -7,10 +7,8 @@ import { useStores } from '../hooks/useStores';
 import LoaderFullscreen from '../components/LoaderFullscreen';
 import { Observer } from 'mobx-react-lite';
 import NotificationPopup from '../components/NotificationPopup';
-import NotificationActivePositionPopup from '../components/NotificationActivePositionPopup';
-import ChartContainer from '../containers/ChartContainer';
-import NavBar from '../components/NavBar/NavBar';
-import NavigationPanel from '../components/NavigationPanel';
+import AuthorizedContainer from '../containers/AuthorizedContainer';
+import SignFlowLayout from '../components/SignFlowLayout';
 
 const RoutingLayout: FC = () => {
   const location = useLocation();
@@ -33,33 +31,14 @@ const RoutingLayout: FC = () => {
   switch (layoutType) {
     case RouteLayoutType.Authorized:
       return (
-        <FlexContainer
-          position="relative"
-          width="100vw"
-          height="100vh"
-          flexDirection="column"
-          overflow="hidden"
-        >
-          <Observer>
-            {() => (
-              <>
-                <NotificationPopup></NotificationPopup>
-                <NotificationActivePositionPopup></NotificationActivePositionPopup>
-              </>
-            )}
-          </Observer>
-          <NavBar />
-          <FlexContainer height="calc(100vh - 128px)" flexDirection="column">
-            <Observer>{() => <Switch>{allRoutes}</Switch>}</Observer>
-            <Observer>{() => <ChartContainer />}</Observer>
-          </FlexContainer>
-          <NavigationPanel />
-        </FlexContainer>
+        <AuthorizedContainer>
+          <Observer>{() => <Switch>{allRoutes}</Switch>}</Observer>
+        </AuthorizedContainer>
       );
 
     case RouteLayoutType.SignFlow:
       return (
-        <FlexContainer height="100vh" width="100%">
+        <SignFlowLayout>
           <Observer>{() => <NotificationPopup></NotificationPopup>}</Observer>
           <Observer>
             {() => (
@@ -71,7 +50,7 @@ const RoutingLayout: FC = () => {
               </>
             )}
           </Observer>
-        </FlexContainer>
+        </SignFlowLayout>
       );
 
     default:

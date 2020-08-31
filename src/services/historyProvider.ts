@@ -16,7 +16,7 @@ const history: HistoryObj = {};
 
 export default {
   history,
-  getBars: async function(
+  getBars: async function (
     resolution: ResolutionString,
     rangeStartDate: number,
     rangeEndDate: number,
@@ -25,19 +25,19 @@ export default {
     let resolutionEnum = CandleTypeEnum.Min;
     // https://monfex.atlassian.net/wiki/spaces/PROD/pages/163938392/Settings
     switch (resolution) {
-      case supportedResolutions['1 minute']:
+      case supportedResolutions['1m']:
         resolutionEnum = CandleTypeEnum.Min;
         break;
 
-      case supportedResolutions['1 hour']:
+      case supportedResolutions['1h']:
         resolutionEnum = CandleTypeEnum.Hour;
         break;
 
-      case supportedResolutions['1 day']:
+      case supportedResolutions['1d']:
         resolutionEnum = CandleTypeEnum.Day;
         break;
 
-      case supportedResolutions['1 month']:
+      case supportedResolutions['1M']:
         resolutionEnum = CandleTypeEnum.Month;
         break;
 
@@ -53,7 +53,7 @@ export default {
       toDate: rangeEndDate,
       instrumentId,
     };
-    
+
     return API.getPriceHistory(params);
   },
 };

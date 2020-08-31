@@ -8,6 +8,7 @@ import styled from '@emotion/styled';
 import InstrumentMarkets from '../components/Markets/InstrumentMarkets';
 import { useStores } from '../hooks/useStores';
 import { useTranslation } from 'react-i18next';
+import { FULL_VH } from '../constants/global';
 
 const Markets = () => {
   const [acitveSearch, toggleSearch] = useState(false);
@@ -100,7 +101,7 @@ const Markets = () => {
 const MarketsWrapper = styled(FlexContainer)`
   overflow-y: auto;
   width: 100vw;
-  max-height: calc(100vh - 264px);
+  max-height: calc(${FULL_VH} - 264px);
 
   ::-webkit-scrollbar {
     width: 4px;

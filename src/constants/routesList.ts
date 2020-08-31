@@ -4,11 +4,15 @@ import SignUp from '../pages/SignUp';
 import SingIn from '../pages/SignIn';
 import ForgotPassword from '../pages/ForgotPassword';
 import Markets from '../pages/Markets';
-import AccountsPage from "../pages/AccountsPage";
-import Portfolio from "../pages/Portfolio";
-import PositionDetails from "../pages/PositionDetails";
+import AccountsPage from '../pages/AccountsPage';
+import Portfolio from '../pages/Portfolio';
+import PositionDetails from '../pages/PositionDetails';
 import AccountProfile from '../pages/AccountProfile';
 import News from '../pages/News';
+import ChartSetting from '../pages/ChartSetting';
+import OrderPage from '../pages/OrderPage';
+import AccountBalanceHistory from '../pages/AccountBalanceHistory';
+import AccountWithdraw from '../pages/AccountWithdraw';
 
 export enum RouteLayoutType {
   Authorized,
@@ -31,7 +35,7 @@ const routesList = [
     path: Page.SIGN_UP,
     exact: true,
     strict: true,
-    layoutType: RouteLayoutType.Public,
+    layoutType: RouteLayoutType.SignFlow,
   },
   {
     component: ForgotPassword,
@@ -43,6 +47,14 @@ const routesList = [
   {
     component: Dashboard,
     path: Page.DASHBOARD,
+    exact: true,
+    strict: true,
+    layoutType: RouteLayoutType.Authorized,
+  },
+
+  {
+    component: ChartSetting,
+    path: Page.CHART_SETTING,
     exact: true,
     strict: true,
     layoutType: RouteLayoutType.Authorized,
@@ -98,6 +110,29 @@ const routesList = [
     component: News,
     path: Page.NEWS,
     exact: false,
+    strict: true,
+    layoutType: RouteLayoutType.Authorized,
+  },
+
+  {
+    component: OrderPage,
+    path: Page.ORDER,
+    exact: false,
+    strict: true,
+    layoutType: RouteLayoutType.Authorized,
+  },
+  
+  {
+    component: AccountBalanceHistory,
+    path: Page.ACCOUNT_BALANCE_HISTORY,
+    exact: true,
+    strict: true,
+    layoutType: RouteLayoutType.Authorized,
+  },
+  {
+    component: AccountWithdraw,
+    path: Page.ACCOUNT_WITHDRAW,
+    exact: true,
     strict: true,
     layoutType: RouteLayoutType.Authorized,
   },

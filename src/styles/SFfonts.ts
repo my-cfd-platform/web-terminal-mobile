@@ -26,7 +26,7 @@ export const SFfonts = css`
   @font-face {
     font-family: 'sf_ui_text';
     src: url(${MediumWoff2}) format('woff2'), url(${MediumWoff}) format('woff');
-    font-weight: normal;
+    font-weight: medium;
     font-style: normal;
   }
 

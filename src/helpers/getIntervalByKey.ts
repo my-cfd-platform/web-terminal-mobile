@@ -7,32 +7,28 @@ import moment from 'moment';
 export const getIntervalByKey = (interval: SupportedIntervalsType) => {
   let from = moment();
   switch (interval) {
-    case supportedInterval['1D']:
-      from = moment().subtract(1, 'd');
+    case supportedInterval['15m']:
+      from = moment().subtract(15, 'minutes');
       break;
 
-    case supportedInterval['5D']:
-      from = moment().subtract(5, 'd');
+    case supportedInterval['1h']:
+      from = moment().subtract(1, 'hours');
+      break;
+
+    case supportedInterval['4h']:
+      from = moment().subtract(4, 'hours');
+      break;
+
+    case supportedInterval['1d']:
+      from = moment().subtract(1, 'days');
+      break;
+
+    case supportedInterval['1W']:
+      from = moment().subtract(1, 'weeks');
       break;
 
     case supportedInterval['1M']:
-      from = moment().subtract(1, 'M');
-      break;
-
-    case supportedInterval['YTD']:
-      from = moment().subtract(new Date().getUTCMonth(), 'M');
-      break;
-
-    case supportedInterval['1Y']:
-      from = moment().subtract(1, 'year');
-      break;
-
-    case supportedInterval['3Y']:
-      from = moment().subtract(1, 'y');
-      break;
-
-    case supportedInterval['All']:
-      from = moment().subtract(1, 'y');
+      from = moment().subtract(1, 'months');
       break;
   }
 

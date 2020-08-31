@@ -22,6 +22,7 @@ import ImageContainer from '../ImageContainer';
 import apiResponseCodeMessages from '../../constants/apiResponseCodeMessages';
 import Page from '../../constants/Pages';
 import { PortfolioTabEnum } from '../../enums/PortfolioTabEnum';
+import { TpSlTypeEnum } from '../../enums/TpSlTypeEnum';
 
 interface Props {
   positionId: number;
@@ -81,6 +82,7 @@ const ActivePositionsDetails: FC<Props> = observer((props) => {
                 (item) => item.id === instrumentItem.id
               )?.name || '',
             instrumentId: instrumentItem.id,
+            type: 'close',
           };
           activePositionNotificationStore.isSuccessfull = true;
           activePositionNotificationStore.openNotification();
@@ -192,6 +194,78 @@ const ActivePositionsDetails: FC<Props> = observer((props) => {
                 {t('Position ID')}
               </PrimaryTextSpan>
               <PrimaryTextSpan fontSize="16px">{position.id}</PrimaryTextSpan>
+            </FlexContainer>
+          </FlexContainer>
+
+          <FlexContainer flexDirection="column" marginBottom="20px">
+            <FlexContainer padding="12px 16px 0" marginBottom="8px">
+              <PrimaryTextSpan
+                color="rgba(255, 255, 255, 0.4)"
+                fontSize="13px"
+                textTransform="uppercase"
+              >
+                {t('Settings')}
+              </PrimaryTextSpan>
+            </FlexContainer>
+
+            <FlexContainer
+              backgroundColor="rgba(42, 45, 56, 0.5)"
+              height="50px"
+              justifyContent="space-between"
+              alignItems="center"
+              padding="0 16px"
+              marginBottom="1px"
+            >
+              <PrimaryTextSpan color="#ffffff" fontSize="16px">
+                {t('Stop Loss')}
+              </PrimaryTextSpan>
+
+              <PrimaryTextSpan color="rgba(196, 196, 196, 0.5)" fontSize="16px">
+                {position.sl !== null ? (
+                  <>
+                    {position.slType !== TpSlTypeEnum.Price &&
+                      position.sl < 0 &&
+                      '-'}
+                    {position.slType !== TpSlTypeEnum.Price &&
+                      mainAppStore.activeAccount?.symbol}
+                    {position.slType === TpSlTypeEnum.Price
+                      ? Math.abs(position.sl)
+                      : Math.abs(position.sl).toFixed(2)}
+                  </>
+                ) : (
+                  t('Add')
+                )}
+              </PrimaryTextSpan>
+            </FlexContainer>
+
+            <FlexContainer
+              backgroundColor="rgba(42, 45, 56, 0.5)"
+              height="50px"
+              justifyContent="space-between"
+              alignItems="center"
+              padding="0 16px"
+              marginBottom="1px"
+            >
+              <PrimaryTextSpan color="#ffffff" fontSize="16px">
+                {t('Take Profit')}
+              </PrimaryTextSpan>
+
+              <PrimaryTextSpan color="rgba(196, 196, 196, 0.5)" fontSize="16px">
+                {position.tp !== null ? (
+                  <>
+                    {position.tpType !== TpSlTypeEnum.Price &&
+                      position.tp < 0 &&
+                      '-'}
+                    {position.tpType !== TpSlTypeEnum.Price &&
+                      mainAppStore.activeAccount?.symbol}
+                    {position.tpType === TpSlTypeEnum.Price
+                      ? Math.abs(position.tp)
+                      : Math.abs(position.tp).toFixed(2)}
+                  </>
+                ) : (
+                  t('Add')
+                )}
+              </PrimaryTextSpan>
             </FlexContainer>
           </FlexContainer>
 

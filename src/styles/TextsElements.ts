@@ -12,6 +12,7 @@ interface PrimaryTextType {
     | '14px'
     | '16px'
     | '10px'
+    | '18px'
     | '20px'
     | '24px'
     | '30px';

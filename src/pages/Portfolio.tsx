@@ -14,6 +14,7 @@ import { useTranslation } from 'react-i18next';
 import ActivePositions from '../components/Portfolio/ActivePositions';
 import PendingOrders from '../components/Portfolio/PendingOrders';
 import ClosedPositions from '../components/Portfolio/ClosedPositions';
+import styled from '@emotion/styled';
 
 const Portfolio = () => {
   const { type } = useParams();
@@ -54,7 +55,7 @@ const Portfolio = () => {
   }, [type]);
 
   return (
-    <FlexContainer flexDirection="column" width="100%">
+    <>
       <FlexContainer
         padding="0 16px"
         flexDirection="column"
@@ -62,11 +63,7 @@ const Portfolio = () => {
         marginBottom="32px"
         width="100%"
       >
-        <FlexContainer
-          padding="20px 0 12px"
-          justifyContent="space-between"
-          alignItems="center"
-        >
+        <FlexContainer justifyContent="space-between" alignItems="center">
           <PrimaryTextSpan color="#ffffff" fontWeight={600} fontSize="24px">
             {t('Portfolio')}
           </PrimaryTextSpan>
@@ -74,37 +71,49 @@ const Portfolio = () => {
           <FlexContainer flexDirection="column" flex="1" alignItems="flex-end">
             <Observer>
               {() => (
-                <PrimaryTextSpan fontSize="16px" fontWeight={500}>
-                  {mainAppStore.activeAccount?.symbol}
-                  {quotesStore.invest.toFixed(2)}
-                </PrimaryTextSpan>
+                <>
+                  <PrimaryTextSpan
+                    fontSize="16px"
+                    fontWeight={500}
+                    marginBottom="2px"
+                  >
+                    {mainAppStore.activeAccount?.symbol}
+                    {quotesStore.invest.toFixed(2)}
+                  </PrimaryTextSpan>
+                  <PrimaryTextSpan
+                    fontSize="13px"
+                    fontWeight={500}
+                    color={profit >= 0 ? Colors.ACCENT_BLUE : Colors.RED}
+                  >
+                    {getNumberSign(profit)}
+                    {mainAppStore.activeAccount?.symbol}
+                    {Math.abs(profit).toFixed(2)}
+                  </PrimaryTextSpan>
+                </>
               )}
             </Observer>
-            <PrimaryTextSpan
-              fontSize="13px"
-              fontWeight={500}
-              color={profit >= 0 ? Colors.ACCENT_BLUE : Colors.RED}
-            >
-              {getNumberSign(profit)}
-              {mainAppStore.activeAccount?.symbol}
-              {Math.abs(profit).toFixed(2)}
-            </PrimaryTextSpan>
           </FlexContainer>
         </FlexContainer>
         <PortfolioTypeTabs />
       </FlexContainer>
-
-      <FlexContainer maxHeight="calc(100% - 130px)" flexDirection="column">
-        <Observer>
-          {() => (
-            <FlexContainer height="100%" overflow="auto" flexDirection="column">
-              {renderTabsByType()}
-            </FlexContainer>
-          )}
-        </Observer>
+      <FlexContainer minHeight="0px" flex="1">
+        <OverflowContainer>
+          <Observer>
+            {() => (
+              <FlexContainer flexDirection="column" height="1000px">
+                {renderTabsByType()}
+              </FlexContainer>
+            )}
+          </Observer>
+        </OverflowContainer>
       </FlexContainer>
-    </FlexContainer>
+    </>
   );
 };
 
 export default Portfolio;
+
+const OverflowContainer = styled.div`
+  flex: 1;
+  overflow: auto;
+`;
