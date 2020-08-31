@@ -205,14 +205,33 @@ const OrderPage = () => {
     try {
       const response = await API.openPosition(modelToSubmit);
       if (response.result === OperationApiResponseCodes.Ok) {
+        const instrumentItem = instrumentsStore.instruments.find(
+          (item) => item.instrumentItem.id === instrument().id
+        )?.instrumentItem;
+
+        if (instrumentItem) {
+          activePositionNotificationStore.notificationMessageData = {
+            equity: 0,
+            instrumentName: instrumentItem.name,
+            instrumentGroup:
+              instrumentsStore.instrumentGroups.find(
+                (item) => item.id === instrumentItem.id
+              )?.name || '',
+            instrumentId: instrumentItem.id,
+            type: 'open',
+          };
+          activePositionNotificationStore.isSuccessfull = true;
+          activePositionNotificationStore.openNotification();
+        }
         push(Page.DASHBOARD);
+      } else {
+        notificationStore.notificationMessage = t(
+          apiResponseCodeMessages[response.result]
+        );
+        notificationStore.isSuccessfull = false;
+        notificationStore.openNotification();
       }
-      notificationStore.notificationMessage = t(
-        apiResponseCodeMessages[response.result]
-      );
-      notificationStore.isSuccessfull =
-        response.result === OperationApiResponseCodes.Ok;
-      notificationStore.openNotification();
+
       resetForm();
     } catch (error) {}
   };

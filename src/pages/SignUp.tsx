@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import { useStores } from '../hooks/useStores';
-import { Observer } from 'mobx-react-lite';
 import styled from '@emotion/styled';
 import * as yup from 'yup';
 import { FormikHelpers, useFormik } from 'formik';
@@ -15,20 +14,20 @@ import Fields from '../constants/fields';
 import validationInputTexts from '../constants/validationInputTexts';
 import apiResponseCodeMessages from '../constants/apiResponseCodeMessages';
 
-import SignFlowLayout from '../components/SignFlowLayout';
 import SignTypeTabs from '../components/SignTypeTabs';
 import InputField from '../components/InputField';
 import Checkbox from '../components/Checkbox';
-import NotificationPopup from '../components/NotificationPopup';
 
 import { FlexContainer } from '../styles/FlexContainer';
 import { PrimaryButton } from '../styles/Buttons';
 import { PrimaryTextSpan } from '../styles/TextsElements';
+import { useTranslation } from 'react-i18next';
 
 const SignUp = () => {
   const { push } = useHistory();
   const [validateAssigments, setValitdateAssigments] = useState(false);
   const { mainAppStore, notificationStore, badRequestPopupStore } = useStores();
+  const { t } = useTranslation();
 
   const validationSchema = yup.object().shape<UserRegistration>({
     email: yup
@@ -138,10 +137,9 @@ const SignUp = () => {
       alignItems="center"
       justifyContent="space-between"
     >
-      <CustomForm noValidate onSubmit={handleSubmit}>
-        <FlexContainer flexDirection="column" alignItems="center" width="100%">
-          <SignTypeTabs />
-
+      <FlexContainer flexDirection="column" alignItems="center" width="100%">
+        <SignTypeTabs />
+        <CustomForm noValidate onSubmit={handleSubmit}>
           <InputField
             id={Fields.EMAIL}
             name={Fields.EMAIL}
@@ -162,7 +160,6 @@ const SignUp = () => {
             hasError={!!(touched.email && errors.email)}
             errorText={errors.email}
           />
-
           <FlexContainer padding="14px 16px 0" marginBottom="24px">
             <Checkbox
               id="user-agreements"
@@ -176,52 +173,58 @@ const SignUp = () => {
                 fontSize="11px"
                 lineHeight="1.6"
               >
-                I’m 18 years old, and agree to &nbsp;
-                <StyledLink fontSize="11px" to={Page.SIGN_IN}>
-                  Terms & Conditions
-                </StyledLink>
-                &nbsp; and &nbsp;
-                <StyledLink fontSize="11px" to={Page.SIGN_IN}>
-                  Privacy Policy
-                </StyledLink>
+                {t('I’m 18 years old, and agree to')} &nbsp;
+                <StyledLinkAnchor
+                  fontSize="11px"
+                  href={mainAppStore.initModel.termsUrl}
+                >
+                  {t('Terms & Conditions')}
+                </StyledLinkAnchor>
+                &nbsp; {t('and')} &nbsp;
+                <StyledLinkAnchor
+                  fontSize="11px"
+                  href={mainAppStore.initModel.policyUrl}
+                >
+                  {t('Privacy Policy')}
+                </StyledLinkAnchor>
                 &nbsp;
               </PrimaryTextSpan>
             </Checkbox>
           </FlexContainer>
-        </FlexContainer>
+        </CustomForm>
+      </FlexContainer>
 
-        <FlexContainer flexDirection="column">
-          <FlexContainer width="100vw" padding="0 16px" marginBottom="26px">
-            <PrimaryButton
-              padding="12px"
-              type="submit"
-              width="100%"
-              disabled={isSubmitting}
-              onClick={handlerClickSubmit}
-            >
-              <PrimaryTextSpan
-                color={Colors.BLACK}
-                fontWeight="bold"
-                fontSize="16px"
-              >
-                Sign Up
-              </PrimaryTextSpan>
-            </PrimaryButton>
-          </FlexContainer>
-
-          <FlexContainer
-            alignItems="center"
-            justifyContent="center"
-            padding="0 0 40px 0"
+      <FlexContainer flexDirection="column">
+        <FlexContainer width="100vw" padding="0 16px" marginBottom="26px">
+          <PrimaryButton
+            padding="12px"
+            type="submit"
+            width="100%"
+            disabled={isSubmitting}
+            onClick={handlerClickSubmit}
           >
-            <PrimaryTextSpan color={Colors.INPUT_LABEL_TEXT}>
-              Already have account?
+            <PrimaryTextSpan
+              color={Colors.BLACK}
+              fontWeight="bold"
+              fontSize="16px"
+            >
+              {t('Sign Up')}
             </PrimaryTextSpan>
-            &nbsp;
-            <StyledLink to={Page.SIGN_IN}>Log In</StyledLink>
-          </FlexContainer>
+          </PrimaryButton>
         </FlexContainer>
-      </CustomForm>
+
+        <FlexContainer
+          alignItems="center"
+          justifyContent="center"
+          padding="0 0 40px 0"
+        >
+          <PrimaryTextSpan color={Colors.INPUT_LABEL_TEXT}>
+            {t('Already have account?')}
+          </PrimaryTextSpan>
+          &nbsp;
+          <StyledLink to={Page.SIGN_IN}>{t('Log In')}</StyledLink>
+        </FlexContainer>
+      </FlexContainer>
     </FlexContainer>
   );
 };
@@ -244,8 +247,8 @@ const StyledLink = styled(Link)<{ fontSize?: string }>`
   }
 `;
 
-const LinkForgot = styled(Link)`
-  font-size: 13px;
+const StyledLinkAnchor = styled.a<{ fontSize?: string }>`
+  font-size: ${(props) => props.fontSize || '13px'};
   color: ${Colors.ACCENT};
   text-decoration: none;
   font-weight: 500;

@@ -82,6 +82,7 @@ const ActivePositionsDetails: FC<Props> = observer((props) => {
                 (item) => item.id === instrumentItem.id
               )?.name || '',
             instrumentId: instrumentItem.id,
+            type: 'close',
           };
           activePositionNotificationStore.isSuccessfull = true;
           activePositionNotificationStore.openNotification();

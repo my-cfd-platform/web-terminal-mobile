@@ -36,7 +36,7 @@ const routesList = [
     path: Page.SIGN_UP,
     exact: true,
     strict: true,
-    layoutType: RouteLayoutType.Public,
+    layoutType: RouteLayoutType.SignFlow,
   },
   {
     component: ForgotPassword,

@@ -2,7 +2,6 @@ import React from 'react';
 import * as yup from 'yup';
 import { useFormik } from 'formik';
 import { FlexContainer } from '../styles/FlexContainer';
-import SignFlowLayout from '../components/SignFlowLayout';
 import SignTypeTabs from '../components/SignTypeTabs';
 import styled from '@emotion/styled';
 import InputField from '../components/InputField';
