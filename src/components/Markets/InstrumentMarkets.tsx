@@ -88,7 +88,7 @@ const InstrumentItem = styled(FlexContainer)`
   background-color: rgba(42, 45, 56, 0.5);
   flex-wrap: wrap;
   transition: all 0.4s ease;
-  height: 80px;
+  min-height: 80px;
 
   &:hover,
   &:focus {
