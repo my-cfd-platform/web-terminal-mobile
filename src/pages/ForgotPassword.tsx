@@ -156,7 +156,7 @@ const ForgotPassword = () => {
           {!isSuccessful && (
             <PrimaryButton
               padding="12px"
-              type="submit"
+              type="button"
               width="100%"
               onClick={handlerClickSubmit}
               disabled={isSubmitting}

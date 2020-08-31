@@ -1,4 +1,4 @@
-import React, { ChangeEvent } from 'react';
+import React, { ChangeEvent, FC } from 'react';
 import { Input } from '../styles/Input';
 import styled from '@emotion/styled';
 import { FlexContainer } from '../styles/FlexContainer';
@@ -13,19 +13,22 @@ interface InputFieldProps {
   hasError?: boolean;
   errorText?: string;
   onChange?: (e: ChangeEvent<HTMLInputElement>) => void;
+  onBlur?: (e: React.FocusEvent<HTMLInputElement>) => void;
   value: string;
 }
 
-const InputField = ({
+const InputField: FC<InputFieldProps> = ({
   id,
   placeholder,
   type = 'text',
   pattern,
   onChange,
+  onBlur,
   hasError = false,
   errorText = '',
-  value
-}: InputFieldProps) => {
+  value,
+}) => {
+  console.log(hasError, errorText);
   return (
     <InputWrap>
       <CustomInput
@@ -36,7 +39,8 @@ const InputField = ({
         pattern={pattern}
         name={name}
         onChange={onChange}
-        borderColor={hasError && Colors.RED || ""}
+        borderColor={(hasError && Colors.RED) || ''}
+        onBlur={onBlur}
       />
       {hasError && <ErrorText>{errorText}</ErrorText>}
     </InputWrap>

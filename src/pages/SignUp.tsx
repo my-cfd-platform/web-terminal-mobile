@@ -22,6 +22,8 @@ import { FlexContainer } from '../styles/FlexContainer';
 import { PrimaryButton } from '../styles/Buttons';
 import { PrimaryTextSpan } from '../styles/TextsElements';
 import { useTranslation } from 'react-i18next';
+import LoaderForComponents from '../components/LoaderForComponents';
+import { Observer } from 'mobx-react-lite';
 
 const SignUp = () => {
   const { push } = useHistory();
@@ -58,7 +60,7 @@ const SignUp = () => {
     { setStatus, setSubmitting }: FormikHelpers<UserRegistration>
   ) => {
     setSubmitting(true);
-    mainAppStore.isInitLoading = true;
+    mainAppStore.isLoading = true;
 
     try {
       const result = await mainAppStore.signUp({
@@ -70,7 +72,7 @@ const SignUp = () => {
         notificationStore.notificationMessage = apiResponseCodeMessages[result];
         notificationStore.isSuccessfull = false;
         notificationStore.openNotification();
-        mainAppStore.isInitLoading = false;
+        mainAppStore.isLoading = false;
       } else {
         push(Page.DASHBOARD);
       }
@@ -79,7 +81,7 @@ const SignUp = () => {
       badRequestPopupStore.setMessage(error);
       setStatus(error);
       setSubmitting(false);
-      mainAppStore.isInitLoading = false;
+      mainAppStore.isLoading = false;
     }
   };
 
@@ -89,6 +91,7 @@ const SignUp = () => {
     setFieldValue,
     validateForm,
     handleSubmit,
+    handleBlur,
     handleChange,
     errors,
     touched,
@@ -115,6 +118,7 @@ const SignUp = () => {
 
   const handlerClickSubmit = async () => {
     const curErrors = await validateForm();
+    console.log(curErrors);
     const curErrorsKeys = Object.keys(curErrors);
     if (curErrorsKeys.length) {
       const el = document.getElementById(curErrorsKeys[0]);
@@ -137,6 +141,13 @@ const SignUp = () => {
       alignItems="center"
       justifyContent="space-between"
     >
+      <Observer>
+        {() => (
+          <LoaderForComponents
+            isLoading={mainAppStore.isLoading}
+          ></LoaderForComponents>
+        )}
+      </Observer>
       <FlexContainer flexDirection="column" alignItems="center" width="100%">
         <SignTypeTabs />
         <CustomForm noValidate onSubmit={handleSubmit}>
@@ -144,6 +155,7 @@ const SignUp = () => {
             id={Fields.EMAIL}
             name={Fields.EMAIL}
             onChange={handleChange}
+            onBlur={handleBlur}
             value={values.email || ''}
             placeholder="Email"
             type="email"
@@ -155,10 +167,11 @@ const SignUp = () => {
             name={Fields.PASSWORD}
             value={values.password || ''}
             onChange={handleChange}
+            onBlur={handleBlur}
             placeholder="Password"
             type="password"
-            hasError={!!(touched.email && errors.email)}
-            errorText={errors.email}
+            hasError={!!(touched.password && errors.password)}
+            errorText={errors.password}
           />
           <FlexContainer padding="14px 16px 0" marginBottom="24px">
             <Checkbox
@@ -198,7 +211,7 @@ const SignUp = () => {
         <FlexContainer width="100vw" padding="0 16px" marginBottom="26px">
           <PrimaryButton
             padding="12px"
-            type="submit"
+            type="button"
             width="100%"
             disabled={isSubmitting}
             onClick={handlerClickSubmit}
