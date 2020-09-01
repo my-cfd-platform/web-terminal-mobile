@@ -63,19 +63,57 @@ const SignUp = () => {
     mainAppStore.isLoading = true;
 
     try {
-      const result = await mainAppStore.signUp({
-        email,
-        password,
-        captcha: 'qewqeqwe',
+      grecaptcha.ready(function () {
+        grecaptcha
+          .execute(RECAPTCHA_KEY, {
+            action: 'submit',
+          })
+          .then(
+            async function (captcha: any) {
+              try {
+                const result = await mainAppStore.signUp({
+                  email,
+                  password,
+                  captcha,
+                });
+                if (result !== OperationApiResponseCodes.Ok) {
+                  notificationStore.notificationMessage =
+                    apiResponseCodeMessages[result];
+                  notificationStore.isSuccessfull = false;
+                  notificationStore.openNotification();
+                  mainAppStore.isLoading = false;
+                } else {
+                  push(Page.DASHBOARD);
+                }
+              } catch (error) {
+                badRequestPopupStore.openModal();
+                badRequestPopupStore.setMessage(error);
+                setStatus(error);
+                setSubmitting(false);
+                mainAppStore.isLoading = false;
+              }
+            },
+            () => {
+              badRequestPopupStore.openModal();
+              badRequestPopupStore.setMessage(
+                t(
+                  apiResponseCodeMessages[
+                    OperationApiResponseCodes.TechnicalError
+                  ]
+                )
+              );
+              setStatus(
+                t(
+                  apiResponseCodeMessages[
+                    OperationApiResponseCodes.TechnicalError
+                  ]
+                )
+              );
+              setSubmitting(false);
+              mainAppStore.isLoading = false;
+            }
+          );
       });
-      if (result !== OperationApiResponseCodes.Ok) {
-        notificationStore.notificationMessage = apiResponseCodeMessages[result];
-        notificationStore.isSuccessfull = false;
-        notificationStore.openNotification();
-        mainAppStore.isLoading = false;
-      } else {
-        push(Page.DASHBOARD);
-      }
     } catch (error) {
       badRequestPopupStore.openModal();
       badRequestPopupStore.setMessage(error);
