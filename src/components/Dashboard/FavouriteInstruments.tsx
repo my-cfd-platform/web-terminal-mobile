@@ -43,6 +43,34 @@ const FavouriteInstruments = observer(() => {
     []
   );
 
+  const handleRemoveInstrument = (itemId: string) => async () => {
+    let indexEl = instrumentsStore.activeInstrumentsIds.findIndex(
+      (id) => id === itemId
+    );
+
+    const newInstruments = instrumentsStore.activeInstrumentsIds.filter(
+      (id) => id !== itemId
+    );
+    try {
+      const response = await API.postFavoriteInstrumets({
+        accountId: mainAppStore.activeAccount!.id,
+        type: mainAppStore.activeAccount!.isLive
+          ? AccountTypeEnum.Live
+          : AccountTypeEnum.Demo,
+        instruments: newInstruments,
+      });
+      instrumentsStore.setActiveInstrumentsIds(response);
+
+      if (instrumentsStore.activeInstrument?.instrumentItem.id === itemId) {
+        indexEl = indexEl ? indexEl - 1 : 0;
+        instrumentsStore.switchInstrument(response[indexEl]);
+      }
+    } catch (error) {
+      badRequestPopupStore.openModal();
+      badRequestPopupStore.setMessage(error);
+    }
+  };
+
   const gotoMarkets = () => {
     push(Page.MARKETS);
   };
@@ -86,9 +114,15 @@ const FavouriteInstruments = observer(() => {
         </ButtonWithoutStyles>
       </FlexContainer>
       <FlexContainer flexWrap="nowrap" overflow="auto">
-        {instrumentsStore.activeInstruments.map((item) => (
+        {instrumentsStore.activeInstruments.map((item, index) => (
           <FlexContainer marginRight="8px" key={item.instrumentItem.id}>
             <InstrumentBadge
+              removable={
+                instrumentsStore.activeInstruments.length > 1 &&
+                item.instrumentItem.id ===
+                  instrumentsStore.activeInstrument?.instrumentItem.id
+              }
+              onRemove={handleRemoveInstrument(item.instrumentItem.id)}
               instrumentId={item.instrumentItem.id}
               instrumentName={item.instrumentItem.name}
               isActive={
