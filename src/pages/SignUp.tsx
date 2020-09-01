@@ -96,6 +96,7 @@ const SignUp = () => {
     errors,
     touched,
     isSubmitting,
+    submitForm,
   } = useFormik({
     initialValues,
     onSubmit: handleSubmitForm,
@@ -117,6 +118,7 @@ const SignUp = () => {
   };
 
   const handlerClickSubmit = async () => {
+    submitForm();
     const curErrors = await validateForm();
     console.log(curErrors);
     const curErrorsKeys = Object.keys(curErrors);
