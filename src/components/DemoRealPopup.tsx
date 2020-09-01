@@ -75,6 +75,7 @@ const DemoRealPopup = () => {
       backgroundColor="#1C1F26"
       flexDirection="column"
       justifyContent="space-between"
+      zIndex="103"
     >
       <FlexContainer flexDirection="column" alignItems="center">
         <SuccessImageWrapper src={SuccessImage} />
