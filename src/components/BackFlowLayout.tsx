@@ -7,6 +7,7 @@ import IconBack from '../assets/svg/icon-back-btn.svg';
 import { ButtonWithoutStyles } from '../styles/ButtonWithoutStyles';
 import SvgIcon from './SvgIcon';
 import { useHistory } from 'react-router-dom';
+import { FULL_VH } from '../constants/global';
 
 interface Props {
   pageTitle?: string;
@@ -19,7 +20,7 @@ const BackFlowLayout: FC<Props> = (props) => {
   return (
     <FlexContainer
       position="relative"
-      height="100%"
+      height={`calc(${FULL_VH})`}
       width="100vw"
       flexDirection="column"
     >

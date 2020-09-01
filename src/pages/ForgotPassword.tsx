@@ -25,6 +25,7 @@ import { PrimaryButton } from '../styles/Buttons';
 
 import CheckDone from '../assets/images/success-send.png';
 import Page from '../constants/Pages';
+import LoaderForComponents from '../components/LoaderForComponents';
 
 const ForgotPassword = () => {
   const { t } = useTranslation();
@@ -103,6 +104,7 @@ const ForgotPassword = () => {
         flexDirection="column"
         justifyContent="space-between"
       >
+        {isLoading && <LoaderForComponents isLoading={isLoading} />}
 
         <FlexContainer
           flexDirection="column"
@@ -166,7 +168,7 @@ const ForgotPassword = () => {
                 fontWeight="bold"
                 fontSize="16px"
               >
-                Confirm
+                {t('Confirm')}
               </PrimaryTextSpan>
             </PrimaryButton>
           )}
