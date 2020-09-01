@@ -26,6 +26,10 @@ const AccountsPage = () => {
   const [total, setTotal] = useState(quotesStore.total);
 
   const handleSwitch = (accId: string) => {
+    if (mainAppStore.activeAccount?.id === accId) {
+      return;
+    }
+    
     mainAppStore.activeSession?.send(Topics.SET_ACTIVE_ACCOUNT, {
       [Fields.ACCOUNT_ID]: accId,
     });

@@ -96,6 +96,7 @@ const SignUp = () => {
     errors,
     touched,
     isSubmitting,
+    submitForm,
   } = useFormik({
     initialValues,
     onSubmit: handleSubmitForm,
@@ -131,6 +132,7 @@ const SignUp = () => {
       setValitdateAssigments(true);
       setFieldError(Fields.USER_AGREEMENT, '');
     }
+    submitForm();
   };
 
   return (

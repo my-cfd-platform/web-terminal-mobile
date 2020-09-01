@@ -9,6 +9,7 @@ import { Observer } from 'mobx-react-lite';
 import NotificationPopup from '../components/NotificationPopup';
 import AuthorizedContainer from '../containers/AuthorizedContainer';
 import SignFlowLayout from '../components/SignFlowLayout';
+import { FULL_VH } from '../constants/global';
 
 const RoutingLayout: FC = () => {
   const location = useLocation();
@@ -55,7 +56,7 @@ const RoutingLayout: FC = () => {
 
     default:
       return (
-        <FlexContainer height="100vh" width="100%">
+        <FlexContainer maxHeight={`calc(${FULL_VH})`} height={`calc(${FULL_VH})`} width="100%">
           <Observer>
             {() => (
               <>

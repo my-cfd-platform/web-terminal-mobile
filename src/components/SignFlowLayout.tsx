@@ -7,6 +7,7 @@ import { useStores } from '../hooks/useStores';
 import { useTranslation } from 'react-i18next';
 import { Observer } from 'mobx-react-lite';
 import LogoMonfex from '../assets/images/logo.png';
+import { FULL_VH } from '../constants/global';
 
 interface Props {}
 
@@ -19,6 +20,7 @@ const SignFlowLayout: FC<Props> = (props) => {
       flexDirection="column"
       alignItems="center"
       height="100%"
+      maxHeight={`calc(${FULL_VH})`}
       width="100vw"
       position="relative"
     >

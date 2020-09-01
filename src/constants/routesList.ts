@@ -14,6 +14,7 @@ import OrderPage from '../pages/OrderPage';
 import AccountBalanceHistory from '../pages/AccountBalanceHistory';
 import AccountWithdraw from '../pages/AccountWithdraw';
 import AccountAboutUs from '../pages/AccountAboutUs';
+import RecoveryPassword from '../pages/RecoveryPassword';
 
 export enum RouteLayoutType {
   Authorized,
@@ -45,6 +46,16 @@ const routesList = [
     strict: true,
     layoutType: RouteLayoutType.Public,
   },
+
+
+  {
+    component: RecoveryPassword,
+    path: Page.RESET_PASSWORD,
+    exact: true,
+    strict: true,
+    layoutType: RouteLayoutType.Public,
+  },
+
   {
     component: Dashboard,
     path: Page.DASHBOARD,
@@ -145,6 +156,7 @@ const routesList = [
     strict: true,
     layoutType: RouteLayoutType.Authorized,
   },
+
 ];
 
 export default routesList;
