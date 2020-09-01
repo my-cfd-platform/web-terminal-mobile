@@ -118,7 +118,6 @@ const SignUp = () => {
   };
 
   const handlerClickSubmit = async () => {
-    submitForm();
     const curErrors = await validateForm();
     console.log(curErrors);
     const curErrorsKeys = Object.keys(curErrors);
@@ -133,6 +132,7 @@ const SignUp = () => {
       setValitdateAssigments(true);
       setFieldError(Fields.USER_AGREEMENT, '');
     }
+    submitForm();
   };
 
   return (
