@@ -61,7 +61,7 @@ const InstumentCloseButton = styled(ButtonWithoutStyles)`
   align-items: center;
   justify-content: center;
   position: absolute;
-  bottom: 0;
-  right: 0;
+  bottom: -6px;
+  right: -8px;
   z-index: 1;
 `;
