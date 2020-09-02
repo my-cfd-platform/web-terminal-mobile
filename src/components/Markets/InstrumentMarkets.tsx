@@ -84,8 +84,6 @@ export default InstrumentMarkets;
 const InstrumentItem = styled(FlexContainer)`
   width: 100%;
   padding: 16px;
-  margin-bottom: 2px;
-  background-color: rgba(42, 45, 56, 0.5);
   flex-wrap: wrap;
   transition: all 0.4s ease;
   min-height: 80px;
