@@ -79,7 +79,11 @@ const DemoRealPopup = () => {
         justifyContent="space-between"
         zIndex="103"
       >
-        <FlexContainer flexDirection="column" alignItems="center">
+        <FlexContainer
+          flexDirection="column"
+          alignItems="center"
+          padding="60px 0 0 0"
+        >
           <SuccessImageWrapper src={SuccessImage} />
           <PrimaryTextSpan
             color="#fff"
@@ -126,7 +130,7 @@ const PracticeOnDemoButton = styled(ButtonWithoutStyles)`
 `;
 
 const InvestRealFunds = styled(ButtonWithoutStyles)`
-  background-color: ${Colors.RED};
+  background-color: ${Colors.ACCENT_BLUE};
   border-radius: 10px;
   height: 56px;
   padding: 20px;
