@@ -23,6 +23,7 @@ import apiResponseCodeMessages from '../../constants/apiResponseCodeMessages';
 import Page from '../../constants/Pages';
 import { PortfolioTabEnum } from '../../enums/PortfolioTabEnum';
 import { TpSlTypeEnum } from '../../enums/TpSlTypeEnum';
+import styled from '@emotion/styled';
 
 interface Props {
   positionId: number;
@@ -139,7 +140,7 @@ const ActivePositionsDetails: FC<Props> = observer((props) => {
                 {t('Opening time')}
               </PrimaryTextSpan>
               <PrimaryTextSpan fontSize="16px">
-                {moment(position.openDate).format('DD MMM, HH:mm:ss')}
+                {moment(position.openDate).format('HH:mm, DD MMM YYYY')}
               </PrimaryTextSpan>
             </FlexContainer>
 
@@ -151,9 +152,48 @@ const ActivePositionsDetails: FC<Props> = observer((props) => {
               <PrimaryTextSpan color="#fff" fontSize="16px">
                 {t('Opening Price')}
               </PrimaryTextSpan>
+
+              <FlexContainer alignItems="center">
+                <QuoteTextLabel
+                  operation={position.operation}
+                  marginRight="8px"
+                >
+                  <PrimaryTextSpan
+                    color={
+                      position.operation === AskBidEnum.Buy
+                        ? '#000000'
+                        : '#ffffff'
+                    }
+                    fontSize="13px"
+                    textTransform="uppercase"
+                  >
+                    {t(position.operation === AskBidEnum.Buy ? 'Buy' : 'Sell')}
+                  </PrimaryTextSpan>
+                </QuoteTextLabel>
+                <PrimaryTextSpan fontSize="16px">
+                  {position.openPrice.toFixed(
+                    getPressision(position.instrument)
+                  )}
+                </PrimaryTextSpan>
+              </FlexContainer>
+            </FlexContainer>
+
+            <FlexContainer
+              width="100%"
+              padding="8px 16px"
+              justifyContent="space-between"
+            >
+              <PrimaryTextSpan color="#fff" fontSize="16px">
+                {t('Current price')}
+              </PrimaryTextSpan>
               <PrimaryTextSpan fontSize="16px">
-                {t('at')}{' '}
-                {position.openPrice.toFixed(getPressision(position.instrument))}
+                {position.operation === AskBidEnum.Sell
+                  ? instrumentsStore.instruments.find(
+                      (item) => item.instrumentItem.id === position.instrument
+                    )?.instrumentItem.ask
+                  : instrumentsStore.instruments.find(
+                      (item) => item.instrumentItem.id === position.instrument
+                    )?.instrumentItem.bid}
               </PrimaryTextSpan>
             </FlexContainer>
 
@@ -293,3 +333,11 @@ const ActivePositionsDetails: FC<Props> = observer((props) => {
 });
 
 export default ActivePositionsDetails;
+
+const QuoteTextLabel = styled(FlexContainer)<{ operation?: number }>`
+  background-color: ${(props) =>
+    props.operation === AskBidEnum.Buy ? Colors.ACCENT_BLUE : Colors.RED};
+  border-radius: 4px;
+  padding: 4px 16px;
+  font-size: 13px;
+`;

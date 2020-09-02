@@ -69,11 +69,16 @@ const Markets = () => {
                   {() => (
                     <>
                       {instrumentsStore.filteredInstrumentsSearch.map(
-                        (instrument) => (
-                          <InstrumentMarkets
-                            instrument={instrument}
-                            key={instrument.id}
-                          ></InstrumentMarkets>
+                        (item) => (
+                          <FlexContainer
+                            marginBottom="2px"
+                            backgroundColor="rgba(42, 45, 56, 0.5)"
+                          >
+                            <InstrumentMarkets
+                              instrument={item}
+                              key={item.id}
+                            ></InstrumentMarkets>
+                          </FlexContainer>
                         )
                       )}
                     </>
@@ -85,7 +90,15 @@ const Markets = () => {
                 {() => (
                   <>
                     {instrumentsStore.sortedInstruments.map((item) => (
-                      <InstrumentMarkets instrument={item} key={item.id} />
+                      <FlexContainer
+                        marginBottom="2px"
+                        backgroundColor="rgba(42, 45, 56, 0.5)"
+                      >
+                        <InstrumentMarkets
+                          instrument={item}
+                          key={item.id}
+                        ></InstrumentMarkets>
+                      </FlexContainer>
                     ))}
                   </>
                 )}
