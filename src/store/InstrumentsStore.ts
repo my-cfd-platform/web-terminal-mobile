@@ -62,8 +62,8 @@ export class InstrumentsStore implements ContextProps {
       .slice()
       .sort(
         (a, b) =>
-          this.activeInstrumentsIds.indexOf(a.instrumentItem.id) -
-          this.activeInstrumentsIds.indexOf(b.instrumentItem.id)
+          this.activeInstrumentsIds.indexOf(b.instrumentItem.id) -
+          this.activeInstrumentsIds.indexOf(a.instrumentItem.id)
       );
     // .sort((a, b) => {
     //   if (a.instrumentItem.id == this.activeInstrument?.instrumentItem.id) {
