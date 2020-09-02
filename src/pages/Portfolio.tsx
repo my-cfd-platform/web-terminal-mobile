@@ -100,7 +100,7 @@ const Portfolio = () => {
         <OverflowContainer>
           <Observer>
             {() => (
-              <FlexContainer flexDirection="column" height="1000px">
+              <FlexContainer flexDirection="column">
                 {renderTabsByType()}
               </FlexContainer>
             )}
