@@ -10,6 +10,7 @@ import NotificationPopup from '../components/NotificationPopup';
 import AuthorizedContainer from '../containers/AuthorizedContainer';
 import SignFlowLayout from '../components/SignFlowLayout';
 import { FULL_VH } from '../constants/global';
+import DemoRealPopup from '../components/DemoRealPopup';
 
 const RoutingLayout: FC = () => {
   const location = useLocation();
@@ -33,6 +34,15 @@ const RoutingLayout: FC = () => {
     case RouteLayoutType.Authorized:
       return (
         <AuthorizedContainer>
+          <Observer>
+            {() => (
+              <>
+                {mainAppStore.isDemoRealPopup && (
+                  <DemoRealPopup></DemoRealPopup>
+                )}
+              </>
+            )}
+          </Observer>
           <Observer>{() => <Switch>{allRoutes}</Switch>}</Observer>
         </AuthorizedContainer>
       );
@@ -56,7 +66,11 @@ const RoutingLayout: FC = () => {
 
     default:
       return (
-        <FlexContainer maxHeight={`calc(${FULL_VH})`} height={`calc(${FULL_VH})`} width="100%">
+        <FlexContainer
+          maxHeight={`calc(${FULL_VH})`}
+          height={`calc(${FULL_VH})`}
+          width="100%"
+        >
           <Observer>
             {() => (
               <>

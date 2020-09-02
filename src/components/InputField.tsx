@@ -28,7 +28,6 @@ const InputField: FC<InputFieldProps> = ({
   errorText = '',
   value,
 }) => {
-  console.log(hasError, errorText);
   return (
     <InputWrap>
       <CustomInput

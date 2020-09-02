@@ -64,13 +64,13 @@ export class InstrumentsStore implements ContextProps {
         (a, b) =>
           this.activeInstrumentsIds.indexOf(a.instrumentItem.id) -
           this.activeInstrumentsIds.indexOf(b.instrumentItem.id)
-      )
-      .sort((a, b) => {
-        if (a.instrumentItem.id == this.activeInstrument?.instrumentItem.id) {
-          return -1;
-        }
-        return 0;
-      });
+      );
+    // .sort((a, b) => {
+    //   if (a.instrumentItem.id == this.activeInstrument?.instrumentItem.id) {
+    //     return -1;
+    //   }
+    //   return 0;
+    // });
 
     return filteredActiveInstruments;
   }
