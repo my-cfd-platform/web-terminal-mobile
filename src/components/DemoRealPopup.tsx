@@ -78,6 +78,7 @@ const DemoRealPopup = () => {
         flexDirection="column"
         justifyContent="space-between"
         zIndex="103"
+        padding="24px 0"
       >
         <FlexContainer
           flexDirection="column"
