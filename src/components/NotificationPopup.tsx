@@ -7,6 +7,7 @@ import { observer } from 'mobx-react-lite';
 import Colors from '../constants/Colors';
 import { PrimaryTextSpan } from '../styles/TextsElements';
 import { useTranslation } from 'react-i18next';
+import { useSwipeable } from 'react-swipeable';
 
 interface Props {}
 
@@ -25,6 +26,10 @@ const NotificationPopup: FC<Props> = observer(() => {
       setRender(true);
     }
   }, [notificationStore.isActiveNotification]);
+
+  const handlers = useSwipeable({
+    onSwipedUp: () => notificationStore.closeNotification()
+  });
 
   const onAnimationEnd = () => {
     if (!notificationStore.isActiveNotification) {
@@ -65,6 +70,7 @@ const NotificationPopup: FC<Props> = observer(() => {
       zIndex="101"
       show={notificationStore.isActiveNotification}
       onAnimationEnd={onAnimationEnd}
+      {...handlers}
     >
       {notificationStore.isSuccessfull ? (
         <PrimaryTextSpan
