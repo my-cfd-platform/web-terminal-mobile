@@ -15,6 +15,7 @@ import AccountBalanceHistory from '../pages/AccountBalanceHistory';
 import AccountWithdraw from '../pages/AccountWithdraw';
 import AccountAboutUs from '../pages/AccountAboutUs';
 import RecoveryPassword from '../pages/RecoveryPassword';
+import LpLogin from '../pages/LpLogin';
 
 export enum RouteLayoutType {
   Authorized,
@@ -156,7 +157,13 @@ const routesList = [
     strict: true,
     layoutType: RouteLayoutType.Authorized,
   },
-
+  {
+    component: LpLogin,
+    path: Page.LP_LOGIN,
+    exact: true,
+    strict: true,
+    layoutType: RouteLayoutType.Public,
+  },
 ];
 
 export default routesList;
