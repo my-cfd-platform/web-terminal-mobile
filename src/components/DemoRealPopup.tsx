@@ -11,6 +11,7 @@ import API from '../helpers/API';
 import KeysInApi from '../constants/keysInApi';
 import Topics from '../constants/websocketTopics';
 import Fields from '../constants/fields';
+import Modal from './Modal';
 
 const DemoRealPopup = () => {
   const { mainAppStore, badRequestPopupStore } = useStores();
@@ -66,48 +67,50 @@ const DemoRealPopup = () => {
     }
   };
   return (
-    <FlexContainer
-      position="fixed"
-      top="0"
-      left="0"
-      right="0"
-      bottom="0"
-      backgroundColor="#1C1F26"
-      flexDirection="column"
-      justifyContent="space-between"
-      zIndex="103"
-    >
-      <FlexContainer flexDirection="column" alignItems="center">
-        <SuccessImageWrapper src={SuccessImage} />
-        <PrimaryTextSpan
-          color="#fff"
-          fontSize="18px"
-          marginBottom="8px"
-          fontWeight={500}
-        >
-          {t('Congratulations!')}
-        </PrimaryTextSpan>
-        <PrimaryTextSpan color="rgba(196, 196, 196, 0.5)" fontSize="13px">
-          {t('You have been successfully registered')}
-        </PrimaryTextSpan>
-      </FlexContainer>
-      <FlexContainer justifyContent="space-between">
-        <PracticeOnDemoButton onClick={selectDemoAccount}>
-          <PrimaryTextSpan fontSize="13px" fontWeight="bold" color="#fff">
-            {t('Practice on Demo')}
-          </PrimaryTextSpan>
-        </PracticeOnDemoButton>
-        <InvestRealFunds onClick={selectRealAccount}>
+    <Modal>
+      <FlexContainer
+        position="fixed"
+        top="0"
+        left="0"
+        right="0"
+        bottom="0"
+        backgroundColor="#1C1F26"
+        flexDirection="column"
+        justifyContent="space-between"
+        zIndex="103"
+      >
+        <FlexContainer flexDirection="column" alignItems="center">
+          <SuccessImageWrapper src={SuccessImage} />
           <PrimaryTextSpan
-            fontSize="13px"
-            fontWeight="bold"
-            color={Colors.BLACK}
+            color="#fff"
+            fontSize="18px"
+            marginBottom="8px"
+            fontWeight={500}
           >
-            {t('Deposit')}
+            {t('Congratulations!')}
           </PrimaryTextSpan>
-        </InvestRealFunds>
+          <PrimaryTextSpan color="rgba(196, 196, 196, 0.5)" fontSize="13px">
+            {t('You have been successfully registered')}
+          </PrimaryTextSpan>
+        </FlexContainer>
+        <FlexContainer justifyContent="space-between">
+          <PracticeOnDemoButton onClick={selectDemoAccount}>
+            <PrimaryTextSpan fontSize="13px" fontWeight="bold" color="#fff">
+              {t('Practice on Demo')}
+            </PrimaryTextSpan>
+          </PracticeOnDemoButton>
+          <InvestRealFunds onClick={selectRealAccount}>
+            <PrimaryTextSpan
+              fontSize="13px"
+              fontWeight="bold"
+              color={Colors.BLACK}
+            >
+              {t('Deposit')}
+            </PrimaryTextSpan>
+          </InvestRealFunds>
+        </FlexContainer>
       </FlexContainer>
-    </FlexContainer>
+    </Modal>
   );
 };
 
