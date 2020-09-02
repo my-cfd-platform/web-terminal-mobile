@@ -83,6 +83,7 @@ const SignUp = () => {
                   notificationStore.openNotification();
                   mainAppStore.isLoading = false;
                 } else {
+                  mainAppStore.isDemoRealPopup = true;
                   push(Page.DASHBOARD);
                 }
               } catch (error) {
