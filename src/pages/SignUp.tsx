@@ -157,7 +157,6 @@ const SignUp = () => {
 
   const handlerClickSubmit = async () => {
     const curErrors = await validateForm();
-    console.log(curErrors);
     const curErrorsKeys = Object.keys(curErrors);
     if (curErrorsKeys.length) {
       const el = document.getElementById(curErrorsKeys[0]);
