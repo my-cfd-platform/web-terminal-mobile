@@ -42,6 +42,26 @@ const MainApp: FC = () => {
       const vh = window.innerHeight * 0.01;
       document.documentElement.style.setProperty('--vh', `${vh}px`);
     });
+    // resumeEvent();
+    // window.addEventListener('resume', () => {
+    //   alert('Resumed');
+    // });
+  }, []);
+
+  useEffect(() => {
+    function handleVisibilityChange() {
+      if (document.hidden) {
+        mainAppStore.startSignalRTimer();
+      } else {
+        mainAppStore.stopSignalRTimer();
+      }
+    }
+
+    document.addEventListener(
+      'visibilitychange',
+      handleVisibilityChange,
+      false
+    );
   }, []);
 
   return (

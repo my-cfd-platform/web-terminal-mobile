@@ -113,6 +113,7 @@ const ChartContainer: FC = observer(() => {
       const tvWidget = new widget(widgetOptions);
       tvWidget.onChartReady(async () => {
         tradingViewStore.tradingWidget = tvWidget;
+        mainAppStore.isLoading = false;
       });
     }
   }, [
@@ -129,7 +130,6 @@ const ChartContainer: FC = observer(() => {
       id={containerId}
       order="2"
       display={match?.isExact ? 'flex' : 'none'}
-
     />
   );
 });

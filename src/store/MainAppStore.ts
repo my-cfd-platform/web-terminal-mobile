@@ -53,11 +53,13 @@ interface MainAppStoreProps {
   initModel: InitModel;
   lang: CountriesEnum;
   activeAccountId: string;
+  connectionSignalRTimer: NodeJS.Timeout | null;
 }
 
 // TODO: think about application initialization
 // describe step by step init, loaders, async behaviour in app
 // think about loader flags - global, local
+const FIFTEEN_MINUTES = 900000;
 
 export class MainAppStore implements MainAppStoreProps {
   @observable initModel: InitModel = {
@@ -98,6 +100,7 @@ export class MainAppStore implements MainAppStoreProps {
   connectTimeOut = '';
   @observable socketError = false;
   @observable activeAccountId: string = '';
+  @observable connectionSignalRTimer: NodeJS.Timeout | null = null;
 
   constructor(rootStore: RootStore) {
     this.rootStore = rootStore;
@@ -246,6 +249,20 @@ export class MainAppStore implements MainAppStoreProps {
     }
   };
 
+  @action
+  startSignalRTimer = () => {
+    this.connectionSignalRTimer = setTimeout(() => {
+      this.activeSession?.stop();
+    }, FIFTEEN_MINUTES);
+  };
+
+  @action
+  stopSignalRTimer = () => {
+    if (this.connectionSignalRTimer) {
+      clearTimeout(this.connectionSignalRTimer);
+    }
+  };
+
   postRefreshToken = async (refreshToken = this.refreshToken) => {
     try {
       const result = await API.refreshToken({ refreshToken });
@@ -365,6 +382,7 @@ export class MainAppStore implements MainAppStoreProps {
   signOut = () => {
     localStorage.removeItem(LOCAL_STORAGE_TOKEN_KEY);
     localStorage.removeItem(LOCAL_STORAGE_REFRESH_TOKEN_KEY);
+    this.activeSession?.stop();
     this.token = '';
     this.refreshToken = '';
     this.isAuthorized = false;

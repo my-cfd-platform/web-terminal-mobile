@@ -3,14 +3,14 @@ import { useStores } from '../../hooks/useStores';
 import { useTranslation } from 'react-i18next';
 import moment from 'moment';
 import API from '../../helpers/API';
-import { Observer } from 'mobx-react-lite';
+import { observer } from 'mobx-react-lite';
 import InfinityScrollList from '../InfinityScrollList';
 import ClosedPositionItem from './ClosedPositionItem';
 import EmptyListText from '../EmptyListText';
 import LoaderForComponents from '../LoaderForComponents';
 import { FlexContainer } from '../../styles/FlexContainer';
 
-const ClosedPositions = () => {
+const ClosedPositions = observer(() => {
   const { mainAppStore, historyStore, dateRangeStore } = useStores();
   const { t } = useTranslation();
 
@@ -60,56 +60,46 @@ const ClosedPositions = () => {
   }, []);
 
   return (
-    <Observer>
-      {() => (
-        <>
-          <LoaderForComponents isLoading={isLoading} />
+    <>
+      <LoaderForComponents isLoading={isLoading} />
 
-          {!isLoading && (
-            <>
-              {historyStore.positionsHistoryReport.positionsHistory.length ? (
-                <InfinityScrollList
-                  getData={fetchPositionsHistory}
-                  listData={
-                    historyStore.positionsHistoryReport.positionsHistory
-                  }
-                  isFetching={isLoading}
-                  // WATCH CLOSELY
-                  noMoreData={
-                    historyStore.positionsHistoryReport.totalItems <=
-                    historyStore.positionsHistoryReport.page *
-                      historyStore.positionsHistoryReport.pageSize
-                  }
-                >
-                  {historyStore.positionsHistoryReport.positionsHistory.map(
-                    (item) => (
-                      <FlexContainer
-                        key={item.id}
-                        marginBottom="2px"
-                        backgroundColor="rgba(42, 45, 56, 0.5)"
-                      >
-                        <ClosedPositionItem
-                          key={item.id}
-                          tradingHistoryItem={item}
-                          currencySymbol={
-                            mainAppStore.activeAccount?.symbol || ''
-                          }
-                        />
-                      </FlexContainer>
-                    )
-                  )}
-                </InfinityScrollList>
-              ) : (
-                <EmptyListText
-                  text={t("You haven't opened any positions yet")}
-                />
+      {!isLoading && (
+        <>
+          {historyStore.positionsHistoryReport.positionsHistory.length ? (
+            <InfinityScrollList
+              getData={fetchPositionsHistory}
+              listData={historyStore.positionsHistoryReport.positionsHistory}
+              isFetching={isLoading}
+              // WATCH CLOSELY
+              noMoreData={
+                historyStore.positionsHistoryReport.totalItems <=
+                historyStore.positionsHistoryReport.page *
+                  historyStore.positionsHistoryReport.pageSize
+              }
+            >
+              {historyStore.positionsHistoryReport.positionsHistory.map(
+                (item) => (
+                  <FlexContainer
+                    key={item.id}
+                    marginBottom="2px"
+                    backgroundColor="rgba(42, 45, 56, 0.5)"
+                  >
+                    <ClosedPositionItem
+                      key={item.id}
+                      tradingHistoryItem={item}
+                      currencySymbol={mainAppStore.activeAccount?.symbol || ''}
+                    />
+                  </FlexContainer>
+                )
               )}
-            </>
+            </InfinityScrollList>
+          ) : (
+            <EmptyListText text={t("You haven't opened any positions yet")} />
           )}
         </>
       )}
-    </Observer>
+    </>
   );
-};
+});
 
 export default ClosedPositions;

@@ -6,20 +6,22 @@ import ImageContainer from '../ImageContainer';
 import { PrimaryTextSpan } from '../../styles/TextsElements';
 import { useStores } from '../../hooks/useStores';
 import ActivePositionPnL from './ActivePositionPnL';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useParams, useHistory } from 'react-router-dom';
 import Page from '../../constants/Pages';
 import { PositionHistoryDTO } from '../../types/HistoryReportTypes';
 import { calculateInPercent } from '../../helpers/calculateInPercent';
 import { AskBidEnum } from '../../enums/AskBid';
 import Colors from '../../constants/Colors';
+import { ButtonWithoutStyles } from '../../styles/ButtonWithoutStyles';
 
 interface Props {
   tradingHistoryItem: PositionHistoryDTO;
   currencySymbol: string;
 }
 
-const ActivePositionItem: FC<Props> = ({ tradingHistoryItem }) => {
-  const { mainAppStore, instrumentsStore } = useStores();
+const ActivePositionItem: FC<Props> = ({ tradingHistoryItem, currencySymbol }) => {
+  const { mainAppStore, instrumentsStore, historyStore } = useStores();
+  const { push } = useHistory();
   const { type } = useParams();
   const {
     id,
@@ -39,8 +41,13 @@ const ActivePositionItem: FC<Props> = ({ tradingHistoryItem }) => {
     return groupId.toLowerCase();
   };
 
+  const handleClickOpen = () => {
+    historyStore.setActiveHistoryItem(tradingHistoryItem);
+    push(`${Page.PORTFOLIO_MAIN}/${type}/${id}`);
+  }
+  
   return (
-    <InstrumentItem to={`${Page.PORTFOLIO_MAIN}/${type}/${id}`}>
+    <InstrumentItem onClick={handleClickOpen}>
       <FlexContainer width="48px" height="48px" marginRight="16px">
         <ImageContainer instrumentId={instrument} />
       </FlexContainer>
@@ -77,9 +84,9 @@ const ActivePositionItem: FC<Props> = ({ tradingHistoryItem }) => {
           {tradingHistoryItem.investmentAmount.toFixed(2)}
         </PrimaryTextSpan>
 
-        <QuoteTextLabel isGrowth={isBuy}>
-          {profit >= 0 ? '+' : ''}
-          {calculateInPercent(investmentAmount, profit)}%
+        <QuoteTextLabel isGrowth={profit >= 0}>
+          {profit >= 0 ? '+' : '-'}
+          {currencySymbol}{Math.abs(profit)}
         </QuoteTextLabel>
       </FlexContainer>
     </InstrumentItem>
@@ -88,7 +95,7 @@ const ActivePositionItem: FC<Props> = ({ tradingHistoryItem }) => {
 
 export default ActivePositionItem;
 
-const InstrumentItem = styled(Link)`
+const InstrumentItem = styled(ButtonWithoutStyles)`
   display: flex;
   flex-wrap: wrap;
   width: 100%;

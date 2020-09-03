@@ -26,6 +26,9 @@ const Portfolio = () => {
 
   const renderTabsByType = () => {
     switch (type) {
+      case PortfolioTabEnum.ACTIVE:
+        return <ActivePositions />;
+
       case PortfolioTabEnum.CLOSED:
         return <ClosedPositions />;
 
