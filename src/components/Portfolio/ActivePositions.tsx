@@ -4,8 +4,9 @@ import { useStores } from '../../hooks/useStores';
 import ActivePositionItem from './ActivePositionItem';
 import EmptyListText from '../EmptyListText';
 import { FlexContainer } from '../../styles/FlexContainer';
+import { observer } from 'mobx-react-lite';
 
-const ActivePositions = () => {
+const ActivePositions = observer(() => {
   const { t } = useTranslation();
 
   const { quotesStore } = useStores();
@@ -27,6 +28,6 @@ const ActivePositions = () => {
       )}
     </>
   );
-};
+});
 
 export default ActivePositions;
