@@ -187,7 +187,7 @@ const ClosedPositionsDetails = (props: Props) => {
               {t('Closing Reason')}
             </PrimaryTextSpan>
             <PrimaryTextSpan fontSize="16px">
-              {closingReasonText[position.closeReason]}
+              {t(closingReasonText[position.closeReason])}
             </PrimaryTextSpan>
           </FlexContainer>
 
