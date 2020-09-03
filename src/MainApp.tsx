@@ -12,6 +12,7 @@ import { useTranslation } from 'react-i18next';
 import { autorun } from 'mobx';
 import Colors from './constants/Colors';
 import { SFfonts } from './styles/SFfonts';
+import resumeEvent from './events/resumeEvent';
 
 const MainApp: FC = () => {
   const { mainAppStore } = useStores();
@@ -41,6 +42,10 @@ const MainApp: FC = () => {
     window.addEventListener('resize', () => {
       const vh = window.innerHeight * 0.01;
       document.documentElement.style.setProperty('--vh', `${vh}px`);
+    });
+    resumeEvent();
+    window.addEventListener('resume', () => {
+      alert('Resumed');
     });
   }, []);
 
