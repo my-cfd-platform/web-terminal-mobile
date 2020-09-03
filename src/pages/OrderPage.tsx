@@ -98,7 +98,7 @@ const OrderPage = () => {
             }`,
             (value) => {
               if (value) {
-                return value < (mainAppStore.activeAccount?.balance || 0);
+                return value <= (mainAppStore.activeAccount?.balance || 0);
               }
               return true;
             }
