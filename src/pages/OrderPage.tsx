@@ -98,7 +98,7 @@ const OrderPage = () => {
             }`,
             (value) => {
               if (value) {
-                return value < (mainAppStore.activeAccount?.balance || 0);
+                return value <= (mainAppStore.activeAccount?.balance || 0);
               }
               return true;
             }
@@ -354,9 +354,10 @@ const OrderPage = () => {
 
             <Input
               {...getFieldProps(Fields.AMOUNT)}
+              type="text"
+              inputMode="decimal"
               onBeforeInput={investOnBeforeInputHandler}
               onChange={investOnChangeHandler}
-              pattern="[0-9]*"
             />
           </InputWrap>
 
@@ -489,7 +490,7 @@ const MultiplierSelect = styled.select`
 `;
 const MultiplierSelectValue = styled.option``;
 
-const Input = styled.input<{ autocomplete?: string }>`
+const Input = styled.input<{ autocomplete?: string}>`
   background-color: transparent;
   outline: none;
   border: none;

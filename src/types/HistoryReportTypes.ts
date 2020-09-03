@@ -1,3 +1,4 @@
+import { ClosingReasonEnum } from './../enums/ClosingReasonEnum';
 import { AskBidEnum } from '../enums/AskBid';
 
 export interface PositionsHistoryReportDTO {
@@ -23,7 +24,7 @@ export interface PositionHistoryDTO {
   openPrice: number;
   closePrice: number;
   leverage: number;
-  closeReason: number;
+  closeReason: ClosingReasonEnum;
   operation: AskBidEnum;
   swap: number;
 }
