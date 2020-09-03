@@ -18,7 +18,7 @@ interface Props {
   currencySymbol: string;
 }
 
-const ActivePositionItem: FC<Props> = ({ tradingHistoryItem }) => {
+const ActivePositionItem: FC<Props> = ({ tradingHistoryItem, currencySymbol }) => {
   const { mainAppStore, instrumentsStore } = useStores();
   const { type } = useParams();
   const {
@@ -77,9 +77,9 @@ const ActivePositionItem: FC<Props> = ({ tradingHistoryItem }) => {
           {tradingHistoryItem.investmentAmount.toFixed(2)}
         </PrimaryTextSpan>
 
-        <QuoteTextLabel isGrowth={isBuy}>
+        <QuoteTextLabel isGrowth={profit >= 0}>
           {profit >= 0 ? '+' : ''}
-          {calculateInPercent(investmentAmount, profit)}%
+          {currencySymbol}{profit}
         </QuoteTextLabel>
       </FlexContainer>
     </InstrumentItem>

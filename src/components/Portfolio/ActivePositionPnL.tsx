@@ -59,7 +59,7 @@ const ActivePositionPnL: FC<Props> = ({ position }) => {
   }, []);
 
   return (
-    <QuoteTextLabel isGrowth={isBuy}>
+    <QuoteTextLabel isGrowth={statePnL >= 0}>
       {getNumberSign(statePnL)}
       {mainAppStore.activeAccount?.symbol}
       {Math.abs(statePnL).toFixed(2)}
