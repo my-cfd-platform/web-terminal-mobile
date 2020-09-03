@@ -9,7 +9,7 @@ import ImageContainer from './ImageContainer';
 import { PrimaryTextSpan } from '../styles/TextsElements';
 import { useTranslation } from 'react-i18next';
 import { getNumberSign } from '../helpers/getNumberSign';
-import {useSwipeable} from "react-swipeable";
+import { useSwipeable } from 'react-swipeable';
 
 interface Props {}
 
@@ -30,7 +30,7 @@ const NotificationActivePositionPopup: FC<Props> = observer(() => {
   }, [activePositionNotificationStore.isActiveNotification]);
 
   const handlers = useSwipeable({
-    onSwipedUp: () => activePositionNotificationStore.closeNotification()
+    onSwipedUp: () => activePositionNotificationStore.closeNotification(),
   });
 
   const onAnimationEnd = () => {
