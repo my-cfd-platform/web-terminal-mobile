@@ -355,7 +355,7 @@ const OrderPage = () => {
             <Input
               {...getFieldProps(Fields.AMOUNT)}
               type="text"
-              inputmode="decimal"
+              inputMode="decimal"
               onBeforeInput={investOnBeforeInputHandler}
               onChange={investOnChangeHandler}
             />
@@ -490,7 +490,7 @@ const MultiplierSelect = styled.select`
 `;
 const MultiplierSelectValue = styled.option``;
 
-const Input = styled.input<{ autocomplete?: string, inputmode?: string; }>`
+const Input = styled.input<{ autocomplete?: string}>`
   background-color: transparent;
   outline: none;
   border: none;
