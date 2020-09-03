@@ -356,7 +356,7 @@ const OrderPage = () => {
               {...getFieldProps(Fields.AMOUNT)}
               onBeforeInput={investOnBeforeInputHandler}
               onChange={investOnChangeHandler}
-              pattern="[0-9]*"
+              pattern="[.0-9]*"
             />
           </InputWrap>
 
