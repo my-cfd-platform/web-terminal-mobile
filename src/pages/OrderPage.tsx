@@ -304,6 +304,7 @@ const OrderPage = () => {
   const investOnChangeHandler = (e: ChangeEvent<HTMLInputElement>) => {
     let filteredValue: any = e.target.value.replace(',', '.');
     setFieldValue(Fields.AMOUNT, filteredValue);
+    setFieldError(Fields.AMOUNT, '');
   };
 
   const {
