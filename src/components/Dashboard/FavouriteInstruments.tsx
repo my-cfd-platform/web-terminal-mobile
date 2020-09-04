@@ -43,14 +43,10 @@ const FavouriteInstruments = observer(() => {
         badRequestPopupStore.setMessage(error);
       }
     },
-    [instrumentsStore.activeInstrument]
+    [instrumentsStore.activeInstrument, instrumentsStore.activeInstrumentsIds]
   );
 
   const handleRemoveInstrument = (itemId: string) => async () => {
-    let indexEl = instrumentsStore.activeInstrumentsIds.findIndex(
-      (id) => id === itemId
-    );
-
     const newInstruments = instrumentsStore.activeInstrumentsIds.filter(
       (id) => id !== itemId
     );
@@ -65,8 +61,7 @@ const FavouriteInstruments = observer(() => {
       instrumentsStore.setActiveInstrumentsIds(response);
 
       if (instrumentsStore.activeInstrument?.instrumentItem.id === itemId) {
-        indexEl = indexEl ? indexEl - 1 : 0;
-        instrumentsStore.switchInstrument(response[indexEl]);
+        instrumentsStore.switchInstrument(response[response.length - 1]);
       }
     } catch (error) {
       badRequestPopupStore.openModal();

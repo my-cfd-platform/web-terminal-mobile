@@ -48,9 +48,8 @@ const MarketsGroupList = () => {
 export default MarketsGroupList;
 
 const ListWrap = styled(FlexContainer)`
-  padding: 24px 0 0;
+  padding: 24px 16px 0 0;
   overflow-x: auto;
-  padding-right: 16px;
 `;
 
 const MarketButton = styled(ButtonWithoutStyles)<{ isActive: boolean }>`
