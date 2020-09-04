@@ -1,4 +1,4 @@
-import React, { useEffect, useState, FC } from 'react';
+import React, { useEffect, useState, FC, useCallback } from 'react';
 import { FlexContainer } from '../../styles/FlexContainer';
 import ActivePositionItem from '../Portfolio/ActivePositionItem';
 import { PrimaryTextSpan } from '../../styles/TextsElements';
@@ -100,6 +100,21 @@ const ActivePositionsDetails: FC<Props> = observer((props) => {
     } catch (error) {}
   };
 
+
+  const getCurrentPrice = useCallback(() => {
+    switch (position?.operation) {
+      case AskBidEnum.Sell:
+        return instrumentsStore.instruments.find(
+          (item) => item.instrumentItem.id === position.instrument
+        )?.instrumentItem.ask
+    
+      default:
+        return instrumentsStore.instruments.find(
+          (item) => item.instrumentItem.id === position?.instrument
+        )?.instrumentItem.bid;
+    }
+  }, [position, instrumentsStore.instruments]);
+
   useEffect(() => {
     const positionById = quotesStore.activePositions?.find(
       (item) => item.id === +positionId
@@ -137,7 +152,7 @@ const ActivePositionsDetails: FC<Props> = observer((props) => {
               justifyContent="space-between"
             >
               <PrimaryTextSpan color="#fff" fontSize="16px">
-                {t('Opening time')}
+                {t('Opening Time')}
               </PrimaryTextSpan>
               <PrimaryTextSpan fontSize="16px">
                 {moment(position.openDate).format('HH:mm, DD MMM YYYY')}
@@ -184,16 +199,10 @@ const ActivePositionsDetails: FC<Props> = observer((props) => {
               justifyContent="space-between"
             >
               <PrimaryTextSpan color="#fff" fontSize="16px">
-                {t('Current price')}
+                {t('Current Price')}
               </PrimaryTextSpan>
               <PrimaryTextSpan fontSize="16px">
-                {position.operation === AskBidEnum.Sell
-                  ? instrumentsStore.instruments.find(
-                      (item) => item.instrumentItem.id === position.instrument
-                    )?.instrumentItem.ask
-                  : instrumentsStore.instruments.find(
-                      (item) => item.instrumentItem.id === position.instrument
-                    )?.instrumentItem.bid}
+                {getCurrentPrice()}
               </PrimaryTextSpan>
             </FlexContainer>
 
