@@ -448,11 +448,13 @@ export class MainAppStore implements MainAppStoreProps {
     localStorage.removeItem(LOCAL_STORAGE_TOKEN_KEY);
     localStorage.removeItem(LOCAL_STORAGE_REFRESH_TOKEN_KEY);
     this.activeSession?.stop();
+    this.activeSession = undefined;
     this.token = '';
     this.refreshToken = '';
     this.isAuthorized = false;
     this.rootStore.quotesStore.activePositions = [];
     this.rootStore.quotesStore.pendingOrders = [];
+    this.rootStore.tradingViewStore.tradingWidget = undefined;
     delete Axios.defaults.headers[RequestHeaders.AUTHORIZATION];
     this.activeAccount = undefined;
     this.activeAccountId = '';
