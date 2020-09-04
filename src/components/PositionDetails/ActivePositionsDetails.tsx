@@ -214,11 +214,11 @@ const ActivePositionsDetails: FC<Props> = observer((props) => {
                     <>
                       {position.operation === AskBidEnum.Buy
                         ? quotesStore.quotes[
-                            activeInstrument()?.id
-                          ].bid.c.toFixed(activeInstrument()?.digits)
+                            activeInstrument().id
+                          ].bid.c.toFixed(activeInstrument().digits)
                         : quotesStore.quotes[
-                            activeInstrument()?.id
-                          ].ask.c.toFixed(activeInstrument()?.digits)}
+                            activeInstrument().id
+                          ].ask.c.toFixed(activeInstrument().digits)}
                     </>
                   )}
                 </Observer>
@@ -297,7 +297,9 @@ const ActivePositionsDetails: FC<Props> = observer((props) => {
                     {position.slType !== TpSlTypeEnum.Price &&
                       mainAppStore.activeAccount?.symbol}
                     {position.slType === TpSlTypeEnum.Price
-                      ? Math.abs(position.sl).toFixed(getPressision(position.instrument))
+                      ? Math.abs(position.sl).toFixed(
+                          getPressision(position.instrument)
+                        )
                       : Math.abs(position.sl).toFixed(2)}
                   </>
                 ) : (
@@ -327,7 +329,9 @@ const ActivePositionsDetails: FC<Props> = observer((props) => {
                     {position.tpType !== TpSlTypeEnum.Price &&
                       mainAppStore.activeAccount?.symbol}
                     {position.tpType === TpSlTypeEnum.Price
-                      ? Math.abs(position.tp).toFixed(getPressision(position.instrument))
+                      ? Math.abs(position.tp).toFixed(
+                          getPressision(position.instrument)
+                        )
                       : Math.abs(position.tp).toFixed(2)}
                   </>
                 ) : (
