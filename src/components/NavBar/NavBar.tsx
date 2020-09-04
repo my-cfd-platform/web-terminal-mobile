@@ -18,6 +18,7 @@ const NavBar = observer(() => {
     urlParams.set('token', mainAppStore.token);
     urlParams.set('active_account_id', mainAppStore.activeAccountId);
     urlParams.set('lang', mainAppStore.lang);
+    urlParams.set('env', 'web_mob');
     setParsedParams(urlParams.toString());
   }, [mainAppStore.token, mainAppStore.lang, mainAppStore.activeAccountId]);
   return (
