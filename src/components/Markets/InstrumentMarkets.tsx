@@ -24,9 +24,6 @@ const InstrumentMarkets: FC<Props> = observer((props) => {
   const { push } = useHistory();
 
   const setInstrumentActive = () => {
-    if (instrumentsStore.activeInstrumentsIds.indexOf(id) > -1) {
-      instrumentsStore.activeInstrumentsIds.push(id);
-    }
     instrumentsStore.switchInstrument(id);
     push(Page.DASHBOARD);
   };

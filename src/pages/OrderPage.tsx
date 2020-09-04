@@ -77,19 +77,31 @@ const OrderPage = () => {
       yup.object().shape({
         investmentAmount: yup
           .number()
-          .min(
-            +instrument().minOperationVolume / +values.multiplier,
+          .test(
+            Fields.AMOUNT,
             `${t('Minimum trade volume')} $${+instrument()
               .minOperationVolume}. ${t(
               'Please increase your trade amount or multiplier'
-            )}.`
+            )}.`,
+            function (value) {
+              if (value) {
+                return value >= (+instrument().minOperationVolume / +this.parent[Fields.MULTIPLIER]);
+              }
+              return true;
+            }
           )
-          .max(
-            +instrument().maxOperationVolume / +values.multiplier,
+          .test(
+            Fields.AMOUNT,
             `${t('Maximum trade volume')} $${+instrument()
               .maxOperationVolume}. ${t(
               'Please decrease your trade amount or multiplier'
-            )}.`
+            )}.`,
+            function (value) {
+              if (value) {
+                return value <= (+instrument().maxOperationVolume / +this.parent[Fields.MULTIPLIER]);
+              }
+              return true;
+            }
           )
           .test(
             Fields.AMOUNT,

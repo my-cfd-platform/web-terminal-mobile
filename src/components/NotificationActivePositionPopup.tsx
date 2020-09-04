@@ -126,7 +126,7 @@ const NotificationActivePositionPopup: FC<Props> = observer(() => {
                 {mainAppStore.activeAccount?.symbol}
                 {Math.abs(
                   activePositionNotificationStore.notificationMessageData.equity
-                )}
+                ).toFixed(2)}
               </PrimaryTextSpan>
             </>
           ) : (

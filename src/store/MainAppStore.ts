@@ -25,13 +25,18 @@ import { PersonalDataKYCEnum } from '../enums/PersonalDataKYCEnum';
 import mixpanel from 'mixpanel-browser';
 import mixpanelEvents from '../constants/mixpanelEvents';
 import injectInerceptors from '../http/interceptors';
-import { InstrumentModelWSDTO } from '../types/InstrumentsTypes';
+import {
+  InstrumentModelWSDTO,
+  PriceChangeWSDTO,
+} from '../types/InstrumentsTypes';
 import { AskBidEnum } from '../enums/AskBid';
 import { ServerError } from '../types/ServerErrorType';
 import apiResponseCodeMessages from '../constants/apiResponseCodeMessages';
 import { InitModel } from '../types/InitAppTypes';
 import { CountriesEnum } from '../enums/CountriesEnum';
 import mixapanelProps from '../constants/mixpanelProps';
+import { PositionModelWSDTO } from '../types/Positions';
+import { PendingOrderWSDTO } from '../types/PendingOrdersTypes';
 
 interface MainAppStoreProps {
   token: string;
@@ -232,6 +237,66 @@ export class MainAppStore implements MainAppStoreProps {
       console.log('websocket error: ', error);
       console.log('=====/=====');
     });
+
+    connection.on(
+      Topics.ACTIVE_POSITIONS,
+      (response: ResponseFromWebsocket<PositionModelWSDTO[]>) => {
+        if (response.accountId === this.activeAccountId) {
+          this.rootStore.quotesStore.activePositions = response.data;
+        }
+      }
+    );
+
+    connection.on(
+      Topics.PENDING_ORDERS,
+      (response: ResponseFromWebsocket<PendingOrderWSDTO[]>) => {
+        if (this.activeAccountId === response.accountId) {
+          this.rootStore.quotesStore.pendingOrders = response.data;
+        }
+      }
+    );
+
+    connection.on(
+      Topics.INSTRUMENT_GROUPS,
+      (response: ResponseFromWebsocket<InstrumentModelWSDTO[]>) => {
+        if (this.activeAccountId === response.accountId) {
+          this.rootStore.instrumentsStore.instrumentGroups = response.data;
+          if (response.data.length) {
+            this.rootStore.instrumentsStore.activeInstrumentGroupId =
+              response.data[0].id;
+          }
+        }
+      }
+    );
+
+    connection.on(
+      Topics.PRICE_CHANGE,
+      (response: ResponseFromWebsocket<PriceChangeWSDTO[]>) => {
+        this.rootStore.instrumentsStore.setPricesChanges(response.data);
+      }
+    );
+
+    connection.on(
+      Topics.UPDATE_ACTIVE_POSITION,
+      (response: ResponseFromWebsocket<PositionModelWSDTO>) => {
+        if (response.accountId === this.activeAccountId) {
+          this.rootStore.quotesStore.activePositions = this.rootStore.quotesStore.activePositions.map(
+            (item) => (item.id === response.data.id ? response.data : item)
+          );
+        }
+      }
+    );
+
+    connection.on(
+      Topics.UPDATE_PENDING_ORDER,
+      (response: ResponseFromWebsocket<PendingOrderWSDTO>) => {
+        if (response.accountId === this.activeAccountId) {
+          this.rootStore.quotesStore.pendingOrders = this.rootStore.quotesStore.pendingOrders.map(
+            (item) => (item.id === response.data.id ? response.data : item)
+          );
+        }
+      }
+    );
   };
 
   fetchTradingUrl = async (token = this.token) => {
@@ -383,11 +448,13 @@ export class MainAppStore implements MainAppStoreProps {
     localStorage.removeItem(LOCAL_STORAGE_TOKEN_KEY);
     localStorage.removeItem(LOCAL_STORAGE_REFRESH_TOKEN_KEY);
     this.activeSession?.stop();
+    this.activeSession = undefined;
     this.token = '';
     this.refreshToken = '';
     this.isAuthorized = false;
     this.rootStore.quotesStore.activePositions = [];
     this.rootStore.quotesStore.pendingOrders = [];
+    this.rootStore.tradingViewStore.tradingWidget = undefined;
     delete Axios.defaults.headers[RequestHeaders.AUTHORIZATION];
     this.activeAccount = undefined;
     this.activeAccountId = '';

@@ -112,7 +112,7 @@ export class InstrumentsStore implements ContextProps {
   };
 
   @action
-  addActiveInstrumentId = (activeInstrumentId: string) => {
+  addActiveInstrumentId = async (activeInstrumentId: string) => {
     if (this.activeInstrumentsIds.includes(activeInstrumentId)) {
       return;
     }
@@ -122,7 +122,7 @@ export class InstrumentsStore implements ContextProps {
     } else {
       this.activeInstrumentsIds.push(activeInstrumentId);
     }
-    API.postFavoriteInstrumets({
+    return await API.postFavoriteInstrumets({
       accountId: this.rootStore.mainAppStore.activeAccount!.id,
       type: this.rootStore.mainAppStore.activeAccount!.isLive
         ? AccountTypeEnum.Live
@@ -175,34 +175,36 @@ export class InstrumentsStore implements ContextProps {
         (item) => item.instrumentItem.id === instrumentId
       ) || this.instruments[0];
     if (newActiveInstrument) {
-      this.addActiveInstrumentId(instrumentId);
-      this.activeInstrument = newActiveInstrument;
-      if (this.rootStore.tradingViewStore.tradingWidget) {
-        this.rootStore.tradingViewStore.tradingWidget
-          .chart()
-          .setSymbol(instrumentId, () => {
-            this.rootStore.tradingViewStore.tradingWidget
-              ?.chart()
-              .setResolution(
-                supportedResolutions[newActiveInstrument.resolution],
-                () => {
-                  if (newActiveInstrument.interval) {
-                    const fromTo = {
-                      from: getIntervalByKey(newActiveInstrument.interval),
-                      to: moment().valueOf(),
-                    };
-                    this.rootStore.tradingViewStore.tradingWidget
-                      ?.chart()
-                      .setVisibleRange(fromTo);
+      try {
+        await this.addActiveInstrumentId(instrumentId);
+        this.activeInstrument = newActiveInstrument;
+        if (this.rootStore.tradingViewStore.tradingWidget) {
+          this.rootStore.tradingViewStore.tradingWidget
+            .chart()
+            .setSymbol(instrumentId, () => {
+              this.rootStore.tradingViewStore.tradingWidget
+                ?.chart()
+                .setResolution(
+                  supportedResolutions[newActiveInstrument.resolution],
+                  () => {
+                    if (newActiveInstrument.interval) {
+                      const fromTo = {
+                        from: getIntervalByKey(newActiveInstrument.interval),
+                        to: moment().valueOf(),
+                      };
+                      this.rootStore.tradingViewStore.tradingWidget
+                        ?.chart()
+                        .setVisibleRange(fromTo);
+                    }
                   }
-                }
-              );
+                );
 
-            this.rootStore.tradingViewStore.tradingWidget
-              ?.chart()
-              .setChartType(newActiveInstrument.chartType);
-          });
-      }
+              this.rootStore.tradingViewStore.tradingWidget
+                ?.chart()
+                .setChartType(newActiveInstrument.chartType);
+            });
+        }
+      } catch (error) {}
     }
   };
 

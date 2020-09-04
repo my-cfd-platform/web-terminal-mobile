@@ -32,7 +32,10 @@ const FavouriteInstruments = observer(() => {
         instrumentsStore.setActiveInstrumentsIds(response);
         if (!instrumentsStore.activeInstrument) {
           instrumentsStore.switchInstrument(
-            response[0] || instrumentsStore.instruments[0].instrumentItem.id
+            response[response.length - 1] ||
+              instrumentsStore.instruments[
+                instrumentsStore.instruments.length - 1
+              ].instrumentItem.id
           );
         }
       } catch (error) {
@@ -40,14 +43,10 @@ const FavouriteInstruments = observer(() => {
         badRequestPopupStore.setMessage(error);
       }
     },
-    []
+    [instrumentsStore.activeInstrument, instrumentsStore.activeInstrumentsIds]
   );
 
   const handleRemoveInstrument = (itemId: string) => async () => {
-    let indexEl = instrumentsStore.activeInstrumentsIds.findIndex(
-      (id) => id === itemId
-    );
-
     const newInstruments = instrumentsStore.activeInstrumentsIds.filter(
       (id) => id !== itemId
     );
@@ -62,8 +61,7 @@ const FavouriteInstruments = observer(() => {
       instrumentsStore.setActiveInstrumentsIds(response);
 
       if (instrumentsStore.activeInstrument?.instrumentItem.id === itemId) {
-        indexEl = indexEl ? indexEl - 1 : 0;
-        instrumentsStore.switchInstrument(response[indexEl]);
+        instrumentsStore.switchInstrument(response[response.length - 1]);
       }
     } catch (error) {
       badRequestPopupStore.openModal();
@@ -76,7 +74,7 @@ const FavouriteInstruments = observer(() => {
   };
 
   useEffect(() => {
-    if (mainAppStore.activeAccountId && instrumentsStore.instruments.length) {
+    if (mainAppStore.activeAccountId) {
       fetchFavoriteInstruments(
         mainAppStore.activeAccountId,
         // sh@t from backend
@@ -85,7 +83,7 @@ const FavouriteInstruments = observer(() => {
           : AccountTypeEnum.Demo
       );
     }
-  }, [instrumentsStore.instruments, mainAppStore.activeAccountId]);
+  }, [mainAppStore.activeAccountId]);
 
   useEffect(() => {
     mainAppStore.activeSession?.on(

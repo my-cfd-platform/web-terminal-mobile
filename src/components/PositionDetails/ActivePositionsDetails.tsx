@@ -8,7 +8,7 @@ import { useTranslation } from 'react-i18next';
 import useInstrument from '../../hooks/useInstrument';
 import { getNumberSign } from '../../helpers/getNumberSign';
 import { useStores } from '../../hooks/useStores';
-import { observer } from 'mobx-react-lite';
+import { observer, Observer } from 'mobx-react-lite';
 import Colors from '../../constants/Colors';
 import ClosePositionButton from '../ClosePositionButton';
 import { getProcessId } from '../../helpers/getProcessId';
@@ -42,6 +42,14 @@ const ActivePositionsDetails: FC<Props> = observer((props) => {
   const { push } = useHistory();
 
   const [position, setPosition] = useState<PositionModelWSDTO>();
+
+  const activeInstrument = useCallback(() => {
+    return (
+      instrumentsStore.instruments.find(
+        (item) => item.instrumentItem.id === position?.instrument
+      )?.instrumentItem || instrumentsStore.instruments[0].instrumentItem
+    );
+  }, [position]);
 
   const closePosition = async () => {
     if (!position) {
@@ -100,14 +108,13 @@ const ActivePositionsDetails: FC<Props> = observer((props) => {
     } catch (error) {}
   };
 
-
   const getCurrentPrice = useCallback(() => {
     switch (position?.operation) {
       case AskBidEnum.Sell:
         return instrumentsStore.instruments.find(
           (item) => item.instrumentItem.id === position.instrument
-        )?.instrumentItem.ask
-    
+        )?.instrumentItem.ask;
+
       default:
         return instrumentsStore.instruments.find(
           (item) => item.instrumentItem.id === position?.instrument
@@ -202,7 +209,19 @@ const ActivePositionsDetails: FC<Props> = observer((props) => {
                 {t('Current Price')}
               </PrimaryTextSpan>
               <PrimaryTextSpan fontSize="16px">
-                {getCurrentPrice()}
+                <Observer>
+                  {() => (
+                    <>
+                      {position.operation === AskBidEnum.Buy
+                        ? quotesStore.quotes[
+                            activeInstrument().id
+                          ].bid.c.toFixed(activeInstrument().digits)
+                        : quotesStore.quotes[
+                            activeInstrument().id
+                          ].ask.c.toFixed(activeInstrument().digits)}
+                    </>
+                  )}
+                </Observer>
               </PrimaryTextSpan>
             </FlexContainer>
 
@@ -278,7 +297,9 @@ const ActivePositionsDetails: FC<Props> = observer((props) => {
                     {position.slType !== TpSlTypeEnum.Price &&
                       mainAppStore.activeAccount?.symbol}
                     {position.slType === TpSlTypeEnum.Price
-                      ? Math.abs(position.sl)
+                      ? Math.abs(position.sl).toFixed(
+                          getPressision(position.instrument)
+                        )
                       : Math.abs(position.sl).toFixed(2)}
                   </>
                 ) : (
@@ -308,7 +329,9 @@ const ActivePositionsDetails: FC<Props> = observer((props) => {
                     {position.tpType !== TpSlTypeEnum.Price &&
                       mainAppStore.activeAccount?.symbol}
                     {position.tpType === TpSlTypeEnum.Price
-                      ? Math.abs(position.tp)
+                      ? Math.abs(position.tp).toFixed(
+                          getPressision(position.instrument)
+                        )
                       : Math.abs(position.tp).toFixed(2)}
                   </>
                 ) : (

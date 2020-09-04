@@ -27,7 +27,6 @@ import styled from '@emotion/styled';
 import { PendingOrderWSDTO } from '../../types/PendingOrdersTypes';
 import PendingOrderItem from '../Portfolio/PendingOrderItem';
 
-
 interface Props {
   positionId: number;
 }
@@ -53,6 +52,14 @@ const PendingPositionsDetails: FC<Props> = observer((props) => {
       processId: getProcessId(),
     });
   };
+
+  const activeInstrument = useCallback(() => {
+    return (
+      instrumentsStore.instruments.find(
+        (item) => item.instrumentItem.id === position?.instrument
+      )?.instrumentItem || instrumentsStore.instruments[0].instrumentItem
+    );
+  }, [position]);
 
   const getInstrument = useCallback(() => {
     const instrument =
@@ -86,8 +93,12 @@ const PendingPositionsDetails: FC<Props> = observer((props) => {
           overflow="auto"
           width="100%"
         >
-          
-          {position && <PendingOrderItem pendingOrder={position} currencySymbol={mainAppStore.activeAccount?.symbol || ''} />}
+          {position && (
+            <PendingOrderItem
+              pendingOrder={position}
+              currencySymbol={mainAppStore.activeAccount?.symbol || ''}
+            />
+          )}
 
           <FlexContainer flexDirection="column" marginBottom="20px">
             <FlexContainer padding="12px 16px 0" marginBottom="8px">
@@ -159,13 +170,13 @@ const PendingPositionsDetails: FC<Props> = observer((props) => {
                 <Observer>
                   {() => (
                     <>
-                      {position.operation === AskBidEnum.Sell
-                  ? instrumentsStore.instruments.find(
-                      (item) => item.instrumentItem.id === position.instrument
-                    )?.instrumentItem.ask
-                  : instrumentsStore.instruments.find(
-                      (item) => item.instrumentItem.id === position.instrument
-                    )?.instrumentItem.bid}
+                      {position.operation === AskBidEnum.Buy
+                        ? quotesStore.quotes[
+                            activeInstrument().id
+                          ].bid.c.toFixed(activeInstrument().digits)
+                        : quotesStore.quotes[
+                            activeInstrument().id
+                          ].ask.c.toFixed(activeInstrument().digits)}
                     </>
                   )}
                 </Observer>
@@ -229,7 +240,9 @@ const PendingPositionsDetails: FC<Props> = observer((props) => {
                     {position.slType !== TpSlTypeEnum.Price &&
                       mainAppStore.activeAccount?.symbol}
                     {position.slType === TpSlTypeEnum.Price
-                      ? Math.abs(position.sl)
+                      ? Math.abs(position.sl).toFixed(
+                          getPressision(position.instrument)
+                        )
                       : Math.abs(position.sl).toFixed(2)}
                   </>
                 ) : (
@@ -259,7 +272,9 @@ const PendingPositionsDetails: FC<Props> = observer((props) => {
                     {position.tpType !== TpSlTypeEnum.Price &&
                       mainAppStore.activeAccount?.symbol}
                     {position.tpType === TpSlTypeEnum.Price
-                      ? Math.abs(position.tp)
+                      ? Math.abs(position.tp).toFixed(
+                          getPressision(position.instrument)
+                        )
                       : Math.abs(position.tp).toFixed(2)}
                   </>
                 ) : (
