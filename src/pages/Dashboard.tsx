@@ -20,68 +20,6 @@ import Page from '../constants/Pages';
 const Dashboard = () => {
   const { mainAppStore, quotesStore, instrumentsStore } = useStores();
   const { push } = useHistory();
-  useEffect(() => {
-    if (mainAppStore.activeAccount) {
-      mainAppStore.activeSession?.on(
-        Topics.ACTIVE_POSITIONS,
-        (response: ResponseFromWebsocket<PositionModelWSDTO[]>) => {
-          if (response.accountId === mainAppStore.activeAccount?.id) {
-            quotesStore.activePositions = response.data;
-          }
-        }
-      );
-
-      mainAppStore.activeSession?.on(
-        Topics.PENDING_ORDERS,
-        (response: ResponseFromWebsocket<PendingOrderWSDTO[]>) => {
-          if (mainAppStore.activeAccount?.id === response.accountId) {
-            quotesStore.pendingOrders = response.data;
-          }
-        }
-      );
-
-      mainAppStore.activeSession?.on(
-        Topics.INSTRUMENT_GROUPS,
-        (response: ResponseFromWebsocket<InstrumentModelWSDTO[]>) => {
-          if (mainAppStore.activeAccount?.id === response.accountId) {
-            instrumentsStore.instrumentGroups = response.data;
-            if (response.data.length) {
-              instrumentsStore.activeInstrumentGroupId = response.data[0].id;
-            }
-          }
-        }
-      );
-
-      mainAppStore.activeSession?.on(
-        Topics.PRICE_CHANGE,
-        (response: ResponseFromWebsocket<PriceChangeWSDTO[]>) => {
-          instrumentsStore.setPricesChanges(response.data);
-        }
-      );
-
-      mainAppStore.activeSession?.on(
-        Topics.UPDATE_ACTIVE_POSITION,
-        (response: ResponseFromWebsocket<PositionModelWSDTO>) => {
-          if (response.accountId === mainAppStore.activeAccount?.id) {
-            quotesStore.activePositions = quotesStore.activePositions.map(
-              (item) => (item.id === response.data.id ? response.data : item)
-            );
-          }
-        }
-      );
-
-      mainAppStore.activeSession?.on(
-        Topics.UPDATE_PENDING_ORDER,
-        (response: ResponseFromWebsocket<PendingOrderWSDTO>) => {
-          if (response.accountId === mainAppStore.activeAccount?.id) {
-            quotesStore.pendingOrders = quotesStore.pendingOrders.map((item) =>
-              item.id === response.data.id ? response.data : item
-            );
-          }
-        }
-      );
-    }
-  }, [mainAppStore.activeAccount]);
 
   const handleClickBuy = () =>
     push(
