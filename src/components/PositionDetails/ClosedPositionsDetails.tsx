@@ -15,6 +15,7 @@ import styled from '@emotion/styled';
 import { AskBidEnum } from '../../enums/AskBid';
 import Colors from '../../constants/Colors';
 import closingReasonText from '../../constants/ClosingReasonText';
+import ClosedPositionItem from '../Portfolio/ClosedPositionItem';
 
 interface Props {
   positionId: number;
@@ -47,22 +48,10 @@ const ClosedPositionsDetails = (props: Props) => {
           overflow="auto"
           width="100%"
         >
-          <Observer>
-            {() => (
-              <>
-                {
-                  <InstrumentMarkets
-                    instrument={
-                      instrumentsStore.instruments.find(
-                        (item) => item.instrumentItem.id === position.instrument
-                      )?.instrumentItem ||
-                      instrumentsStore.instruments[0].instrumentItem
-                    }
-                  />
-                }
-              </>
-            )}
-          </Observer>
+          <ClosedPositionItem
+            currencySymbol={mainAppStore.activeAccount?.symbol || ''}
+            tradingHistoryItem={position}
+          />
 
           <FlexContainer padding="12px 16px 0" marginBottom="8px">
             <PrimaryTextSpan
@@ -80,10 +69,10 @@ const ClosedPositionsDetails = (props: Props) => {
             justifyContent="space-between"
           >
             <PrimaryTextSpan color="#fff" fontSize="16px">
-              {t('Opening time')}
+              {t('Opening Time')}
             </PrimaryTextSpan>
             <PrimaryTextSpan fontSize="16px">
-            {moment(position.openDate).format('HH:mm, DD MMM YYYY')}
+              {moment(position.openDate).format('HH:mm, DD MMM YYYY')}
             </PrimaryTextSpan>
           </FlexContainer>
 
@@ -93,62 +82,57 @@ const ClosedPositionsDetails = (props: Props) => {
             justifyContent="space-between"
           >
             <PrimaryTextSpan color="#fff" fontSize="16px">
-              {t('Closing time')}
+              {t('Closing Time')}
             </PrimaryTextSpan>
             <PrimaryTextSpan fontSize="16px">
-            {moment(position.closeDate).format('HH:mm, DD MMM YYYY')}
+              {moment(position.closeDate).format('HH:mm, DD MMM YYYY')}
             </PrimaryTextSpan>
           </FlexContainer>
 
           <FlexContainer
-              width="100%"
-              padding="8px 16px"
-              justifyContent="space-between"
-            >
-              <PrimaryTextSpan color="#fff" fontSize="16px">
-                {t('Opening Price')}
-              </PrimaryTextSpan>
+            width="100%"
+            padding="8px 16px"
+            justifyContent="space-between"
+          >
+            <PrimaryTextSpan color="#fff" fontSize="16px">
+              {t('Opening Price')}
+            </PrimaryTextSpan>
 
-              <FlexContainer alignItems="center">
-                <QuoteTextLabel
-                  operation={position.operation}
-                  marginRight="8px"
+            <FlexContainer alignItems="center">
+              <QuoteTextLabel operation={position.operation} marginRight="8px">
+                <PrimaryTextSpan
+                  color={
+                    position.operation === AskBidEnum.Buy
+                      ? '#000000'
+                      : '#ffffff'
+                  }
+                  fontSize="13px"
+                  textTransform="uppercase"
                 >
-                  <PrimaryTextSpan
-                    color={
-                      position.operation === AskBidEnum.Buy
-                        ? '#000000'
-                        : '#ffffff'
-                    }
-                    fontSize="13px"
-                    textTransform="uppercase"
-                  >
-                    {t(position.operation === AskBidEnum.Buy ? 'Buy' : 'Sell')}
-                  </PrimaryTextSpan>
-                </QuoteTextLabel>
-                <PrimaryTextSpan fontSize="16px">
-                  {position.openPrice.toFixed(
-                    getPressision(position.instrument)
-                  )}
+                  {t(position.operation === AskBidEnum.Buy ? 'Buy' : 'Sell')}
                 </PrimaryTextSpan>
-              </FlexContainer>
-            </FlexContainer>
-
-            <FlexContainer
-              width="100%"
-              padding="8px 16px"
-              justifyContent="space-between"
-            >
-              <PrimaryTextSpan color="#fff" fontSize="16px">
-                {t('Closing Price')}
-              </PrimaryTextSpan>
-
+              </QuoteTextLabel>
               <PrimaryTextSpan fontSize="16px">
-                  {position.closePrice.toFixed(
-                    getPressision(position.instrument)
-                  )}
-                </PrimaryTextSpan>
+                {mainAppStore.activeAccount?.symbol}
+                {position.openPrice.toFixed(getPressision(position.instrument))}
+              </PrimaryTextSpan>
             </FlexContainer>
+          </FlexContainer>
+
+          <FlexContainer
+            width="100%"
+            padding="8px 16px"
+            justifyContent="space-between"
+          >
+            <PrimaryTextSpan color="#fff" fontSize="16px">
+              {t('Closing Price')}
+            </PrimaryTextSpan>
+
+            <PrimaryTextSpan fontSize="16px">
+              {mainAppStore.activeAccount?.symbol}
+              {position.closePrice.toFixed(getPressision(position.instrument))}
+            </PrimaryTextSpan>
+          </FlexContainer>
 
           <FlexContainer
             width="100%"
@@ -208,7 +192,6 @@ const ClosedPositionsDetails = (props: Props) => {
 };
 
 export default ClosedPositionsDetails;
-
 
 const QuoteTextLabel = styled(FlexContainer)<{ operation?: number }>`
   background-color: ${(props) =>
