@@ -2,11 +2,11 @@ import { ClosingReasonEnum } from "../enums/ClosingReasonEnum";
 
 const closingReasonText = {
   [ClosingReasonEnum.None]: 'None',
-  [ClosingReasonEnum.ClientCommand]: 'By User',
-  [ClosingReasonEnum.StopOut]: 'By Stop out',
-  [ClosingReasonEnum.TakeProfit]: 'By Take profit',
-  [ClosingReasonEnum.StopLoss]: 'By Stop loss',
-  [ClosingReasonEnum.Canceled]: 'By canceled',
+  [ClosingReasonEnum.ClientCommand]: 'By user',
+  [ClosingReasonEnum.StopOut]: 'Stop Out',
+  [ClosingReasonEnum.TakeProfit]: 'Take Profit',
+  [ClosingReasonEnum.StopLoss]: 'Stop Loss',
+  [ClosingReasonEnum.Canceled]: 'Canceled',
 }
 
 Object.freeze(closingReasonText);

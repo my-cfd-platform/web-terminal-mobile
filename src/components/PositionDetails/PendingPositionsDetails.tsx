@@ -54,6 +54,14 @@ const PendingPositionsDetails: FC<Props> = observer((props) => {
     });
   };
 
+  const activeInstrument = useCallback(() => {
+    return (
+      instrumentsStore.instruments.find(
+        (item) => item.instrumentItem.id === position?.instrument
+      )?.instrumentItem || instrumentsStore.instruments[0].instrumentItem
+    );
+  }, [position]);
+
   const getInstrument = useCallback(() => {
     const instrument =
       instrumentsStore.instruments.find(
@@ -156,16 +164,16 @@ const PendingPositionsDetails: FC<Props> = observer((props) => {
                 {t('Current Price')}
               </PrimaryTextSpan>
               <PrimaryTextSpan fontSize="16px">
-                <Observer>
+              <Observer>
                   {() => (
                     <>
-                      {position.operation === AskBidEnum.Sell
-                  ? instrumentsStore.instruments.find(
-                      (item) => item.instrumentItem.id === position.instrument
-                    )?.instrumentItem.ask
-                  : instrumentsStore.instruments.find(
-                      (item) => item.instrumentItem.id === position.instrument
-                    )?.instrumentItem.bid}
+                      {position.operation === AskBidEnum.Buy
+                        ? quotesStore.quotes[
+                            activeInstrument()?.id
+                          ].bid.c.toFixed(activeInstrument()?.digits)
+                        : quotesStore.quotes[
+                            activeInstrument()?.id
+                          ].ask.c.toFixed(activeInstrument()?.digits)}
                     </>
                   )}
                 </Observer>
