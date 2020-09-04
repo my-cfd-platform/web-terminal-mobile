@@ -73,6 +73,7 @@ const Markets = () => {
                           <FlexContainer
                             marginBottom="2px"
                             backgroundColor="rgba(42, 45, 56, 0.5)"
+                            minHeight="80px"
                           >
                             <InstrumentMarkets
                               instrument={item}
@@ -93,6 +94,7 @@ const Markets = () => {
                       <FlexContainer
                         marginBottom="2px"
                         backgroundColor="rgba(42, 45, 56, 0.5)"
+                        minHeight="80px"
                       >
                         <InstrumentMarkets
                           instrument={item}
