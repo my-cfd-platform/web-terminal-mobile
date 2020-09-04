@@ -12,7 +12,13 @@ import styled from '@emotion/styled';
 import { FULL_VH } from '../constants/global';
 
 const AuthorizedContainer: FC = ({ children }) => {
-  const match = useRouteMatch([Page.POSITION_DETAILS, Page.CHART_SETTING, Page.ORDER, Page.ACCOUNT_ABOUT_US]);
+  const match = useRouteMatch([
+    Page.POSITION_DETAILS,
+    Page.CHART_SETTING,
+    Page.ORDER,
+    Page.ACCOUNT_ABOUT_US,
+    Page.ACCOUNTS_SWITCH,
+  ]);
   const showNavbarAndNav = !match?.isExact;
 
   return (
