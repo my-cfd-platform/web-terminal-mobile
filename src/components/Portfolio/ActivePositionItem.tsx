@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, { FC, useCallback } from 'react';
 import { PositionModelWSDTO } from '../../types/Positions';
 import styled from '@emotion/styled';
 import { FlexContainer } from '../../styles/FlexContainer';
@@ -26,6 +26,10 @@ const ActivePositionItem: FC<Props> = ({ position }) => {
     return groupId.toLowerCase();
   };
 
+  const activeInstrument = useCallback(() => {
+    return instrumentsStore.instruments.find(item => item.instrumentItem.id === instrument)?.instrumentItem;
+  }, [position]);
+
   return (
     <InstrumentItem to={`${Page.PORTFOLIO_MAIN}/${type}/${id}`}>
       <FlexContainer width="48px" height="48px" marginRight="16px">
@@ -40,7 +44,7 @@ const ActivePositionItem: FC<Props> = ({ position }) => {
           lineHeight="1"
           marginBottom="6px"
         >
-          {instrument}
+          {activeInstrument()?.name}
         </PrimaryTextSpan>
         <PrimaryTextSpan
           color="rgba(255, 255, 255, 0.4)"

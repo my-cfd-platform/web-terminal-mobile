@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, { FC, useCallback } from 'react';
 import { PositionModelWSDTO } from '../../types/Positions';
 import styled from '@emotion/styled';
 import { FlexContainer } from '../../styles/FlexContainer';
@@ -19,7 +19,7 @@ interface Props {
   currencySymbol: string;
 }
 
-const ActivePositionItem: FC<Props> = ({ tradingHistoryItem, currencySymbol }) => {
+const ClosedPositionItem: FC<Props> = ({ tradingHistoryItem, currencySymbol }) => {
   const { mainAppStore, instrumentsStore, historyStore } = useStores();
   const { push } = useHistory();
   const { type } = useParams();
@@ -41,6 +41,10 @@ const ActivePositionItem: FC<Props> = ({ tradingHistoryItem, currencySymbol }) =
     return groupId.toLowerCase();
   };
 
+  const activeInstrument = useCallback(() => {
+    return instrumentsStore.instruments.find(item => item.instrumentItem.id === instrument)?.instrumentItem;
+  }, [tradingHistoryItem]);
+
   const handleClickOpen = () => {
     historyStore.setActiveHistoryItem(tradingHistoryItem);
     push(`${Page.PORTFOLIO_MAIN}/${type}/${id}`);
@@ -52,7 +56,7 @@ const ActivePositionItem: FC<Props> = ({ tradingHistoryItem, currencySymbol }) =
         <ImageContainer instrumentId={instrument} />
       </FlexContainer>
 
-      <FlexContainer flexDirection="column" justifyContent="center">
+      <FlexContainer flexDirection="column" justifyContent="center" alignItems="flex-start">
         <PrimaryTextSpan
           color="#ffffff"
           fontSize="16px"
@@ -60,7 +64,7 @@ const ActivePositionItem: FC<Props> = ({ tradingHistoryItem, currencySymbol }) =
           lineHeight="1"
           marginBottom="6px"
         >
-          {instrument}
+          {activeInstrument()?.name}
         </PrimaryTextSpan>
         <PrimaryTextSpan
           color="rgba(255, 255, 255, 0.4)"
@@ -93,7 +97,7 @@ const ActivePositionItem: FC<Props> = ({ tradingHistoryItem, currencySymbol }) =
   );
 };
 
-export default ActivePositionItem;
+export default ClosedPositionItem;
 
 const InstrumentItem = styled(ButtonWithoutStyles)`
   display: flex;
