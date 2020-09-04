@@ -74,10 +74,10 @@ const Markets = () => {
                             marginBottom="2px"
                             backgroundColor="rgba(42, 45, 56, 0.5)"
                             minHeight="80px"
+                            key={item.id}
                           >
                             <InstrumentMarkets
                               instrument={item}
-                              key={item.id}
                             ></InstrumentMarkets>
                           </FlexContainer>
                         )
@@ -95,10 +95,10 @@ const Markets = () => {
                         marginBottom="2px"
                         backgroundColor="rgba(42, 45, 56, 0.5)"
                         minHeight="80px"
+                        key={item.id}
                       >
                         <InstrumentMarkets
                           instrument={item}
-                          key={item.id}
                         ></InstrumentMarkets>
                       </FlexContainer>
                     ))}
