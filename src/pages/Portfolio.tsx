@@ -24,21 +24,19 @@ const Portfolio = observer(() => {
   const { quotesStore, mainAppStore } = useStores();
   const [profit, setProfit] = useState(quotesStore.profit);
 
-  const [tabType, setTabType] = useState(type);
-
   const renderTabsByType = () => {
     switch (type) {
       case PortfolioTabEnum.ACTIVE:
-        return <Observer>{() => <ActivePositions />}</Observer>;
+        return <ActivePositions />;
 
       case PortfolioTabEnum.CLOSED:
-        return <Observer>{() => <ClosedPositions />}</Observer>;
+        return <ClosedPositions />;
 
       case PortfolioTabEnum.PENDING:
-        return <Observer>{() => <PendingOrders />}</Observer>;
+        return <PendingOrders />;
 
       default:
-        return <Observer>{() => <ActivePositions />}</Observer>;
+        return <ActivePositions />;
     }
   };
 

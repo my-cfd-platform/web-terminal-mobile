@@ -98,8 +98,8 @@ export class MainAppStore implements MainAppStoreProps {
   @observable isInterceptorsInjected = false;
   @observable profilePhone = '';
   @observable lang = CountriesEnum.EN;
-  token = '';
-  refreshToken = '';
+  @observable token = '';
+  @observable refreshToken = '';
   rootStore: RootStore;
   signalRReconnectTimeOut = '';
   connectTimeOut = '';
