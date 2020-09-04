@@ -98,7 +98,7 @@ const DemoRealPopup = () => {
             {t('You have been successfully registered')}
           </PrimaryTextSpan>
         </FlexContainer>
-        <FlexContainer justifyContent="space-between">
+        <FlexContainer justifyContent="space-between" padding="0 24px">
           <PracticeOnDemoButton onClick={selectDemoAccount}>
             <PrimaryTextSpan fontSize="13px" fontWeight="bold" color="#fff">
               {t('Practice on Demo')}
