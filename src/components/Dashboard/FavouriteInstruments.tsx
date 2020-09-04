@@ -32,7 +32,10 @@ const FavouriteInstruments = observer(() => {
         instrumentsStore.setActiveInstrumentsIds(response);
         if (!instrumentsStore.activeInstrument) {
           instrumentsStore.switchInstrument(
-            response[0] || instrumentsStore.instruments[0].instrumentItem.id
+            response[response.length - 1] ||
+              instrumentsStore.instruments[
+                instrumentsStore.instruments.length - 1
+              ].instrumentItem.id
           );
         }
       } catch (error) {
@@ -40,7 +43,7 @@ const FavouriteInstruments = observer(() => {
         badRequestPopupStore.setMessage(error);
       }
     },
-    []
+    [instrumentsStore.activeInstrument]
   );
 
   const handleRemoveInstrument = (itemId: string) => async () => {
@@ -76,7 +79,7 @@ const FavouriteInstruments = observer(() => {
   };
 
   useEffect(() => {
-    if (mainAppStore.activeAccountId && instrumentsStore.instruments.length) {
+    if (mainAppStore.activeAccountId) {
       fetchFavoriteInstruments(
         mainAppStore.activeAccountId,
         // sh@t from backend
@@ -85,7 +88,7 @@ const FavouriteInstruments = observer(() => {
           : AccountTypeEnum.Demo
       );
     }
-  }, [instrumentsStore.instruments, mainAppStore.activeAccountId]);
+  }, [mainAppStore.activeAccountId]);
 
   useEffect(() => {
     mainAppStore.activeSession?.on(

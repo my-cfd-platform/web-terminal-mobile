@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useStores } from '../../hooks/useStores';
 import ActivePositionItem from './ActivePositionItem';
@@ -13,8 +13,8 @@ const ActivePositions = observer(() => {
 
   return (
     <>
-      {quotesStore.sortedActivePositions.length ? (
-        quotesStore.sortedActivePositions.map((item) => (
+      {quotesStore.activePositions.length ? (
+        quotesStore.activePositions.map((item) => (
           <FlexContainer
             key={item.id}
             marginBottom="2px"

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { useParams, useHistory } from 'react-router-dom';
 import { PortfolioTabEnum } from '../enums/PortfolioTabEnum';
 import { FlexContainer } from '../styles/FlexContainer';
@@ -9,14 +9,14 @@ import Colors from '../constants/Colors';
 import { reaction } from 'mobx';
 import { useStores } from '../hooks/useStores';
 import { getNumberSign } from '../helpers/getNumberSign';
-import { Observer } from 'mobx-react-lite';
+import { Observer, observer } from 'mobx-react-lite';
 import { useTranslation } from 'react-i18next';
 import ActivePositions from '../components/Portfolio/ActivePositions';
 import PendingOrders from '../components/Portfolio/PendingOrders';
 import ClosedPositions from '../components/Portfolio/ClosedPositions';
 import styled from '@emotion/styled';
 
-const Portfolio = () => {
+const Portfolio = observer(() => {
   const { type } = useParams();
   const { push } = useHistory();
   const { t } = useTranslation();
@@ -24,19 +24,21 @@ const Portfolio = () => {
   const { quotesStore, mainAppStore } = useStores();
   const [profit, setProfit] = useState(quotesStore.profit);
 
+  const [tabType, setTabType] = useState(type);
+
   const renderTabsByType = () => {
     switch (type) {
       case PortfolioTabEnum.ACTIVE:
-        return <ActivePositions />;
+        return <Observer>{() => <ActivePositions />}</Observer>;
 
       case PortfolioTabEnum.CLOSED:
-        return <ClosedPositions />;
+        return <Observer>{() => <ClosedPositions />}</Observer>;
 
       case PortfolioTabEnum.PENDING:
-        return <PendingOrders />;
+        return <Observer>{() => <PendingOrders />}</Observer>;
 
       default:
-        return <ActivePositions />;
+        return <Observer>{() => <ActivePositions />}</Observer>;
     }
   };
 
@@ -101,18 +103,14 @@ const Portfolio = () => {
       </FlexContainer>
       <FlexContainer minHeight="0px" flex="1">
         <OverflowContainer>
-          <Observer>
-            {() => (
-              <FlexContainer flexDirection="column">
-                {renderTabsByType()}
-              </FlexContainer>
-            )}
-          </Observer>
+          <FlexContainer flexDirection="column">
+            {renderTabsByType()}
+          </FlexContainer>
         </OverflowContainer>
       </FlexContainer>
     </>
   );
-};
+});
 
 export default Portfolio;
 
