@@ -25,17 +25,23 @@ const ConfirmEmail = () => {
           setIsSuccessfull(false);
         }
       })
-      .catch(error => {
+      .catch((error) => {
         setIsSuccessfull(false);
       })
       .finally(() => {
         setIsLoading(false);
       });
   }, []);
-  
+
   return (
-    <FlexContainer flexDirection="column" width="100%" alignItems="center" justifyContent="center" padding="16px">
-<LoaderFullscreen isLoading={isLoading} />
+    <FlexContainer
+      flexDirection="column"
+      width="100%"
+      alignItems="center"
+      justifyContent="center"
+      padding="16px"
+    >
+      <LoaderFullscreen isLoading={isLoading} />
       <FlexContainer width="100%" flexDirection="column" alignItems="center">
         {isSuccessful ? (
           <>
@@ -47,7 +53,11 @@ const ConfirmEmail = () => {
             >
               {t('Thank you!')}
             </PrimaryTextParagraph>
-            <PrimaryTextParagraph color="#fffccc" marginBottom="24px" textAlign="center">
+            <PrimaryTextParagraph
+              color="#fffccc"
+              marginBottom="24px"
+              textAlign="center"
+            >
               {t('You have successfully verified your email.')}
             </PrimaryTextParagraph>
           </>
@@ -61,7 +71,11 @@ const ConfirmEmail = () => {
             >
               {t('Email verification failed')}
             </PrimaryTextParagraph>
-            <PrimaryTextParagraph color="#fffccc" marginBottom="24px" textAlign="center">
+            <PrimaryTextParagraph
+              color="#fffccc"
+              marginBottom="24px"
+              textAlign="center"
+            >
               {t(
                 'This link has been expired. Please log in to request a new verification email.'
               )}
@@ -79,7 +93,6 @@ const ConfirmEmail = () => {
 };
 
 export default ConfirmEmail;
-
 
 const LinkToDashboard = styled(Link)`
   border-radius: 4px;
