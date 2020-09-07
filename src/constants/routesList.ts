@@ -16,6 +16,7 @@ import AccountWithdraw from '../pages/AccountWithdraw';
 import AccountAboutUs from '../pages/AccountAboutUs';
 import RecoveryPassword from '../pages/RecoveryPassword';
 import LpLogin from '../pages/LpLogin';
+import ConfirmEmail from '../pages/ConfirmEmail';
 
 export enum RouteLayoutType {
   Authorized,
@@ -53,6 +54,14 @@ const routesList = [
     component: RecoveryPassword,
     path: Page.RESET_PASSWORD,
     exact: true,
+    strict: true,
+    layoutType: RouteLayoutType.Public,
+  },
+
+  {
+    component: ConfirmEmail,
+    path: Page.EMAIL_CONFIRMATION,
+    exact: false,
     strict: true,
     layoutType: RouteLayoutType.Public,
   },
