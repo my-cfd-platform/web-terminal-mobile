@@ -100,7 +100,12 @@ const DemoRealPopup = () => {
         </FlexContainer>
         <FlexContainer justifyContent="space-between" padding="0 24px">
           <PracticeOnDemoButton onClick={selectDemoAccount}>
-            <PrimaryTextSpan fontSize="13px" fontWeight="bold" color="#fff">
+            <PrimaryTextSpan
+              fontSize="13px"
+              fontWeight="bold"
+              color="#fff"
+              whiteSpace="nowrap"
+            >
               {t('Practice on Demo')}
             </PrimaryTextSpan>
           </PracticeOnDemoButton>

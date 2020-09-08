@@ -13,6 +13,7 @@ import Page from '../../constants/Pages';
 import Topics from '../../constants/websocketTopics';
 import { ResponseFromWebsocket } from '../../types/ResponseFromWebsocket';
 import { BidAskModelWSDTO } from '../../types/BidAsk';
+import styled from '@emotion/styled';
 
 const FavouriteInstruments = observer(() => {
   const {
@@ -111,7 +112,7 @@ const FavouriteInstruments = observer(() => {
           />
         </ButtonWithoutStyles>
       </FlexContainer>
-      <FlexContainer flexWrap="nowrap" overflow="auto">
+      <InstrumentListWrap flexWrap="nowrap">
         {instrumentsStore.activeInstruments.map((item, index) => (
           <FlexContainer marginRight="8px" key={item.instrumentItem.id}>
             <InstrumentBadge
@@ -130,9 +131,26 @@ const FavouriteInstruments = observer(() => {
             />
           </FlexContainer>
         ))}
-      </FlexContainer>
+      </InstrumentListWrap>
     </FlexContainer>
   );
 });
 
 export default FavouriteInstruments;
+
+const InstrumentListWrap = styled(FlexContainer)`
+  overflow-y: hidden;
+  overflow-x: auto;
+  &::-webkit-scrollbar {
+    width: 1px;
+  }
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: transparent;
+  }
+  &::-webkit-scrollbar-thumb:hover {
+    background: transparent;
+  }
+`;
