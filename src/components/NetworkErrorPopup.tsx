@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useCallback } from 'react';
 import Modal from './Modal';
 import styled from '@emotion/styled';
 import { keyframes } from '@emotion/core';
@@ -19,11 +19,11 @@ const NetworkErrorPopup = observer(() => {
     window.location.reload();
   };
 
-  const handleVisibilityChange = () => {
+  const handleVisibilityChange = useCallback(() => {
     if (!document.hidden && mainAppStore.socketError) {
       window.location.reload();
     }
-  };
+  }, [mainAppStore.socketError]);
 
   useEffect(() => {
     window.addEventListener('offline', handleLostConnection);
