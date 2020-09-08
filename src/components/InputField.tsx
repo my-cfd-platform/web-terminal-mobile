@@ -30,7 +30,7 @@ const InputField: FC<InputFieldProps> = ({
 }) => {
   return (
     <InputWrap>
-      <CustomInput
+      <Input
         value={value}
         id={id}
         placeholder={placeholder}
@@ -59,5 +59,3 @@ const ErrorText = styled(FlexContainer)`
   padding: 8px 16px 14px;
   line-height: 1.4;
 `;
-
-const CustomInput = styled(Input)``;

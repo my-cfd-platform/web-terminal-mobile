@@ -41,9 +41,11 @@ export const Input = styled.input<InputProps>`
   &:-webkit-autofill:focus,
   &:-webkit-autofill:valid,
   &:-webkit-autofill:active {
-    font-size: ${props => props?.fontSize || "16px"};
-    -webkit-text-fill-color: #fffccc;
-    -webkit-box-shadow: 0 0 0px 1000px ${Colors.INPUT_BG} inset;
-    transition: background-color 5000s ease-in-out 0s;
+    font-size: ${props => props?.fontSize || "16px"} !important;
+    -webkit-text-fill-color: #fffccc !important;
+    box-shadow: 0 0 0px 1000px rgba(42, 45, 56, 0.5) inset !important;
+    -webkit-box-shadow: 0 0 0px 1000px rgba(42, 45, 56, 0.5) inset !important;
+    transition: background-color 5000s ease-in-out 0s  !important;
+    background-clip: content-box !important;
   }
 `;
