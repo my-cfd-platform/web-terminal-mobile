@@ -45,7 +45,7 @@ export const Input = styled.input<InputProps>`
     -webkit-text-fill-color: #fffccc !important;
     background-color: ${Colors.INPUT_BG} !important;
     font-size: ${props => props?.fontSize || "16px"};
-    box-shadow: 0 0 0 1000px ${Colors.INPUT_BG} inset !important;
     -webkit-box-shadow: 0 0 0 1000px ${Colors.INPUT_BG} inset !important;
+    background-clip: content-box !important;
   }
 `;
