@@ -141,4 +141,16 @@ export default FavouriteInstruments;
 const InstrumentListWrap = styled(FlexContainer)`
   overflow-y: hidden;
   overflow-x: auto;
+  &::-webkit-scrollbar {
+    width: 1px;
+  }
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: transparent;
+  }
+  &::-webkit-scrollbar-thumb:hover {
+    background: transparent;
+  }
 `;
