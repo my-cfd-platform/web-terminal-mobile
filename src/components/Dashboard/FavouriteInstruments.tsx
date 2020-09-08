@@ -142,7 +142,8 @@ const InstrumentListWrap = styled(FlexContainer)`
   overflow-y: hidden;
   overflow-x: auto;
   &::-webkit-scrollbar {
-    width: 1px;
+    width: 0px;
+    opacity: 0;
   }
   &::-webkit-scrollbar-track {
     background: transparent;
