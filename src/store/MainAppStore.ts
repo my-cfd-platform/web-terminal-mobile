@@ -158,10 +158,10 @@ export class MainAppStore implements MainAppStoreProps {
     connectToWebocket();
 
     connection.on(Topics.UNAUTHORIZED, () => {
-      localStorage.removeItem(LOCAL_STORAGE_TOKEN_KEY);
       this.isInitLoading = false;
       this.isLoading = false;
       this.isAuthorized = false;
+      this.token = '';
     });
 
     connection.on(
