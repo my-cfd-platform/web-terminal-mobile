@@ -42,52 +42,54 @@ const ConfirmEmail = () => {
       padding="16px"
     >
       <LoaderFullscreen isLoading={isLoading} />
-      <FlexContainer width="100%" flexDirection="column" alignItems="center">
-        {isSuccessful ? (
-          <>
-            <PrimaryTextParagraph
-              color="#fffccc"
-              fontSize="24px"
-              fontWeight="bold"
-              marginBottom="24px"
-            >
-              {t('Thank you!')}
-            </PrimaryTextParagraph>
-            <PrimaryTextParagraph
-              color="#fffccc"
-              marginBottom="24px"
-              textAlign="center"
-            >
-              {t('You have successfully verified your email.')}
-            </PrimaryTextParagraph>
-          </>
-        ) : (
-          <>
-            <PrimaryTextParagraph
-              color="#fffccc"
-              fontSize="24px"
-              fontWeight="bold"
-              marginBottom="24px"
-            >
-              {t('Email verification failed')}
-            </PrimaryTextParagraph>
-            <PrimaryTextParagraph
-              color="#fffccc"
-              marginBottom="24px"
-              textAlign="center"
-            >
-              {t(
-                'This link has been expired. Please log in to request a new verification email.'
-              )}
-            </PrimaryTextParagraph>
-          </>
-        )}
-        <LinkToDashboard to={Page.DASHBOARD}>
-          <PrimaryTextSpan color="#003a38" fontWeight="bold">
-            {t('Go to Platform')}
-          </PrimaryTextSpan>
-        </LinkToDashboard>
-      </FlexContainer>
+      {
+        !isLoading && <FlexContainer width="100%" flexDirection="column" alignItems="center">
+          {isSuccessful ? (
+            <>
+              <PrimaryTextParagraph
+                color="#fffccc"
+                fontSize="24px"
+                fontWeight="bold"
+                marginBottom="24px"
+              >
+                {t('Thank you!')}
+              </PrimaryTextParagraph>
+              <PrimaryTextParagraph
+                color="#fffccc"
+                marginBottom="24px"
+                textAlign="center"
+              >
+                {t('You have successfully verified your email.')}
+              </PrimaryTextParagraph>
+            </>
+          ) : (
+            <>
+              <PrimaryTextParagraph
+                color="#fffccc"
+                fontSize="24px"
+                fontWeight="bold"
+                marginBottom="24px"
+              >
+                {t('Email verification failed')}
+              </PrimaryTextParagraph>
+              <PrimaryTextParagraph
+                color="#fffccc"
+                marginBottom="24px"
+                textAlign="center"
+              >
+                {t(
+                  'This link has been expired. Please log in to request a new verification email.'
+                )}
+              </PrimaryTextParagraph>
+            </>
+          )}
+          <LinkToDashboard to={Page.DASHBOARD}>
+            <PrimaryTextSpan color="#003a38" fontWeight="bold">
+              {t('Go to Platform')}
+            </PrimaryTextSpan>
+          </LinkToDashboard>
+        </FlexContainer>
+      }
     </FlexContainer>
   );
 };
