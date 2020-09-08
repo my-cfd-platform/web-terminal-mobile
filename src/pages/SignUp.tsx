@@ -229,7 +229,7 @@ const SignUp = () => {
                 {t('I’m 18 years old, and agree to')} &nbsp;
                 <StyledLinkAnchor
                   fontSize="11px"
-                  href="https://www.monfex.com/terms-of-service"
+                  href={mainAppStore.initModel.termsUrl}
                 >
                   {t('Terms & Conditions')}
                 </StyledLinkAnchor>
