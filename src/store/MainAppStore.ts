@@ -3,6 +3,7 @@ import {
   LOCAL_STORAGE_REFRESH_TOKEN_KEY,
   LOCAL_STORAGE_LANGUAGE,
 } from './../constants/global';
+import axios from 'axios';
 import {
   UserAuthenticate,
   UserRegistration,
@@ -159,10 +160,21 @@ export class MainAppStore implements MainAppStoreProps {
     connectToWebocket();
 
     connection.on(Topics.UNAUTHORIZED, () => {
-      this.isInitLoading = false;
-      this.isLoading = false;
-      this.isAuthorized = false;
-      this.token = '';
+      if (this.refreshToken) {
+        this.postRefreshToken().then(() => {
+          axios.defaults.headers[RequestHeaders.AUTHORIZATION] = this.token;
+
+          if (IS_LIVE) {
+            this.fetchTradingUrl();
+          } else {
+            this.setTradingUrl('/');
+            injectInerceptors('/', this);
+            this.handleInitConnection();
+          }
+        });
+      } else {
+        this.signOut();
+      }
     });
 
     connection.on(

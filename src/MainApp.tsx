@@ -18,6 +18,7 @@ import API from './helpers/API';
 const MainApp: FC = () => {
   const { mainAppStore, instrumentsStore, badRequestPopupStore } = useStores();
   const { t, i18n } = useTranslation();
+  
   const fetchFavoriteInstruments = useCallback(async () => {
     const accountType = mainAppStore.activeAccount?.isLive
       ? AccountTypeEnum.Live
