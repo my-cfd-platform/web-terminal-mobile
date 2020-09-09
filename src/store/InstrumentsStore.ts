@@ -120,7 +120,10 @@ export class InstrumentsStore implements ContextProps {
     if (this.activeInstrumentsIds.length > 6) {
       this.activeInstrumentsIds[6] = activeInstrumentId;
     } else {
-      this.activeInstrumentsIds.push(activeInstrumentId);
+      this.activeInstrumentsIds = [
+        activeInstrumentId,
+        ...this.activeInstrumentsIds,
+      ];
     }
     return await API.postFavoriteInstrumets({
       accountId: this.rootStore.mainAppStore.activeAccount!.id,
