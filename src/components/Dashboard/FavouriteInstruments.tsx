@@ -144,6 +144,7 @@ const InstrumentListWrap = styled(FlexContainer)`
   -webkit-overflow-scrolling:touch;
   &::-webkit-scrollbar {
     width: 0px;
+    height: 0px;
     opacity: 0;
   }
   &::-webkit-scrollbar-track {
