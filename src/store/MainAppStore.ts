@@ -37,6 +37,7 @@ import { CountriesEnum } from '../enums/CountriesEnum';
 import mixapanelProps from '../constants/mixpanelProps';
 import { PositionModelWSDTO } from '../types/Positions';
 import { PendingOrderWSDTO } from '../types/PendingOrdersTypes';
+import { BidAskModelWSDTO } from '../types/BidAsk';
 
 interface MainAppStoreProps {
   token: string;
@@ -297,6 +298,18 @@ export class MainAppStore implements MainAppStoreProps {
         }
       }
     );
+
+    connection.on(
+      Topics.BID_ASK,
+      (response: ResponseFromWebsocket<BidAskModelWSDTO[]>) => {
+        if (!response.data.length) {
+          return;
+        }
+        response.data.forEach((item) => {
+          this.rootStore.quotesStore.setQuote(item);
+        });
+      }
+    );
   };
 
   fetchTradingUrl = async (token = this.token) => {
@@ -359,7 +372,6 @@ export class MainAppStore implements MainAppStoreProps {
         this.isDemoRealPopup = true;
       }
       this.isInitLoading = false;
-      this.isLoading = false;
     } catch (error) {
       this.isLoading = false;
       this.rootStore.badRequestPopupStore.setMessage(error);

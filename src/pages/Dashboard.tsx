@@ -16,6 +16,8 @@ import SellButton from '../components/Dashboard/SellButton';
 import TimeScaleWrapper from '../components/Dashboard/TimeScaleWrapper';
 import { useHistory } from 'react-router-dom';
 import Page from '../constants/Pages';
+import LoaderFullscreen from '../components/LoaderFullscreen';
+import { Observer } from 'mobx-react-lite';
 
 const Dashboard = () => {
   const { mainAppStore, quotesStore, instrumentsStore } = useStores();
@@ -32,6 +34,17 @@ const Dashboard = () => {
 
   return (
     <>
+      <Observer>
+        {() => (
+          <>
+            {mainAppStore.isLoading && (
+              <LoaderFullscreen
+                isLoading={mainAppStore.isLoading}
+              ></LoaderFullscreen>
+            )}
+          </>
+        )}
+      </Observer>
       <FlexContainer flexDirection="column" width="100%" order="1">
         <FavouriteInstruments />
         <ActiveInstrument />
