@@ -384,6 +384,7 @@ export class MainAppStore implements MainAppStoreProps {
         this.activeAccountId = activeAccount.id;
       } else {
         this.isDemoRealPopup = true;
+        this.isLoading = false;
       }
       this.isInitLoading = false;
     } catch (error) {
