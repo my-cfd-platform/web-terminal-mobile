@@ -345,7 +345,7 @@ export class MainAppStore implements MainAppStoreProps {
   @action
   setSignUpFlag = (value: boolean) => {
     this.signUpFlag = value;
-  }
+  };
 
   @action
   startSignalRTimer = () => {
@@ -361,8 +361,10 @@ export class MainAppStore implements MainAppStoreProps {
     }
   };
 
-  postRefreshToken = async (refreshToken = this.refreshToken) => {
+  postRefreshToken = async () => {
+    const refreshToken = `${this.refreshToken}`;
     try {
+      this.refreshToken = '';
       const result = await API.refreshToken({ refreshToken });
       if (result.refreshToken) {
         this.setRefreshToken(result.refreshToken);
