@@ -8,6 +8,7 @@ import Logo from './Logo';
 import { useStores } from '../hooks/useStores';
 import { useTranslation } from 'react-i18next';
 import LogoMonfex from '../assets/images/logo.png';
+
 interface Props {
   isLoading: boolean;
 }
@@ -69,7 +70,7 @@ const fadeOut = keyframes`
 `;
 
 const FixedContainerWrapper = styled.div<{ isLoading: boolean }>`
-  animation: ${props =>
+  animation: ${(props) =>
     !props.isLoading &&
     css`
       ${fadeOut} 0.5s linear forwards

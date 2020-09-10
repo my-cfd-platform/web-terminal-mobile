@@ -109,7 +109,6 @@ const ChartContainer: FC = observer(() => {
           'timeScale.rightOffset': 5,
         },
       };
-      console.log('widget init');
       const tvWidget = new widget(widgetOptions);
       tvWidget.onChartReady(async () => {
         tradingViewStore.tradingWidget = tvWidget;

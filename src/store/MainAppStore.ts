@@ -3,6 +3,7 @@ import {
   LOCAL_STORAGE_REFRESH_TOKEN_KEY,
   LOCAL_STORAGE_LANGUAGE,
 } from './../constants/global';
+import axios from 'axios';
 import {
   UserAuthenticate,
   UserRegistration,
@@ -37,6 +38,7 @@ import { CountriesEnum } from '../enums/CountriesEnum';
 import mixapanelProps from '../constants/mixpanelProps';
 import { PositionModelWSDTO } from '../types/Positions';
 import { PendingOrderWSDTO } from '../types/PendingOrdersTypes';
+import { BidAskModelWSDTO } from '../types/BidAsk';
 
 interface MainAppStoreProps {
   token: string;
@@ -159,10 +161,21 @@ export class MainAppStore implements MainAppStoreProps {
     connectToWebocket();
 
     connection.on(Topics.UNAUTHORIZED, () => {
-      this.isInitLoading = false;
-      this.isLoading = false;
-      this.isAuthorized = false;
-      this.token = '';
+      if (this.refreshToken) {
+        this.postRefreshToken().then(() => {
+          axios.defaults.headers[RequestHeaders.AUTHORIZATION] = this.token;
+
+          if (IS_LIVE) {
+            this.fetchTradingUrl();
+          } else {
+            this.setTradingUrl('/');
+            injectInerceptors('/', this);
+            this.handleInitConnection();
+          }
+        });
+      } else {
+        this.signOut();
+      }
     });
 
     connection.on(
@@ -235,6 +248,8 @@ export class MainAppStore implements MainAppStoreProps {
           apiResponseCodeMessages[OperationApiResponseCodes.TechnicalError]
       );
       this.socketError = true;
+      this.isLoading = false;
+      this.isInitLoading = false;
       console.log('websocket error: ', error);
       console.log('=====/=====');
     });
@@ -296,6 +311,18 @@ export class MainAppStore implements MainAppStoreProps {
             (item) => (item.id === response.data.id ? response.data : item)
           );
         }
+      }
+    );
+
+    connection.on(
+      Topics.BID_ASK,
+      (response: ResponseFromWebsocket<BidAskModelWSDTO[]>) => {
+        if (!response.data.length) {
+          return;
+        }
+        response.data.forEach((item) => {
+          this.rootStore.quotesStore.setQuote(item);
+        });
       }
     );
   };
@@ -363,9 +390,9 @@ export class MainAppStore implements MainAppStoreProps {
         this.activeAccountId = activeAccount.id;
       } else {
         this.isDemoRealPopup = true;
+        this.isLoading = false;
       }
       this.isInitLoading = false;
-      this.isLoading = false;
     } catch (error) {
       this.isLoading = false;
       this.rootStore.badRequestPopupStore.setMessage(error);

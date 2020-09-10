@@ -11,10 +11,11 @@ export interface InputProps {
 export const Input = styled.input<InputProps>`
   width: 100%;
   border: none;
-  height: ${props => props?.height || "50px"};
-  padding: ${props => props?.padding || "14px 16px 14px"};
-  font-size: ${props => props?.fontSize || "16px"};
-  border-bottom: ${props => `${props.borderColor || Colors.DARK_BLACK} 2px solid`};
+  height: ${(props) => props.height || '50px'};
+  padding: ${(props) => props.padding || '14px 16px 14px'};
+  font-size: ${(props) => props.fontSize || '16px'};
+  border-bottom: ${(props) =>
+    `${props.borderColor || Colors.DARK_BLACK} 2px solid`};
 
   background-color: ${Colors.INPUT_BG};
   color: ${Colors.ACCENT};
@@ -24,15 +25,16 @@ export const Input = styled.input<InputProps>`
   box-shadow: none;
   appearance: none;
   outline: none;
-  
-  transition: all .4s ease;
+
+  transition: all 0.4s ease;
   &:focus {
     background-color: ${Colors.INPUT_FOCUS_BG};
   }
   &::placeholder {
     color: ${Colors.INPUT_LABEL_TEXT};
   }
-  &:active, &:focus {
+  &:active,
+  &:focus {
     outline: none;
   }
 
@@ -41,11 +43,11 @@ export const Input = styled.input<InputProps>`
   &:-webkit-autofill:focus,
   &:-webkit-autofill:valid,
   &:-webkit-autofill:active {
-    font-size: ${props => props?.fontSize || "16px"} !important;
+    font-size: ${(props) => props.fontSize || '16px'} !important;
     -webkit-text-fill-color: #fffccc !important;
-    box-shadow: 0 0 0px 1000px rgba(42, 45, 56, 0.5) inset !important;
-    -webkit-box-shadow: 0 0 0px 1000px rgba(42, 45, 56, 0.5) inset !important;
-    transition: background-color 5000s ease-in-out 0s  !important;
+    box-shadow: 0 0 0px 1000px #1d2026 inset !important;
+    -webkit-box-shadow: 0 0 0px 1000px #1d2026 inset !important;
+    transition: background-color 5000s linear 0s !important;
     background-clip: content-box !important;
   }
 `;

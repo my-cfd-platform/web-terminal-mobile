@@ -1,13 +1,5 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { useStores } from '../hooks/useStores';
-import Topics from '../constants/websocketTopics';
-import { ResponseFromWebsocket } from '../types/ResponseFromWebsocket';
-import { PositionModelWSDTO } from '../types/Positions';
-import { PendingOrderWSDTO } from '../types/PendingOrdersTypes';
-import {
-  InstrumentModelWSDTO,
-  PriceChangeWSDTO,
-} from '../types/InstrumentsTypes';
 import FavouriteInstruments from '../components/Dashboard/FavouriteInstruments';
 import { FlexContainer } from '../styles/FlexContainer';
 import ActiveInstrument from '../components/Dashboard/ActiveInstrument';
@@ -16,9 +8,11 @@ import SellButton from '../components/Dashboard/SellButton';
 import TimeScaleWrapper from '../components/Dashboard/TimeScaleWrapper';
 import { useHistory } from 'react-router-dom';
 import Page from '../constants/Pages';
+import LoaderFullscreen from '../components/LoaderFullscreen';
+import { Observer } from 'mobx-react-lite';
 
 const Dashboard = () => {
-  const { mainAppStore, quotesStore, instrumentsStore } = useStores();
+  const { mainAppStore, instrumentsStore } = useStores();
   const { push } = useHistory();
 
   const handleClickBuy = () =>
@@ -32,6 +26,17 @@ const Dashboard = () => {
 
   return (
     <>
+      <Observer>
+        {() => (
+          <>
+            {mainAppStore.isLoading && (
+              <LoaderFullscreen
+                isLoading={mainAppStore.isLoading}
+              ></LoaderFullscreen>
+            )}
+          </>
+        )}
+      </Observer>
       <FlexContainer flexDirection="column" width="100%" order="1">
         <FavouriteInstruments />
         <ActiveInstrument />

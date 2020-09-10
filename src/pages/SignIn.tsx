@@ -60,6 +60,7 @@ const SignIn = () => {
         );
         notificationStore.isSuccessfull = false;
         notificationStore.openNotification();
+        mainAppStore.isLoading = false;
 
         mixpanel.track(mixpanelEvents.LOGIN_FAILED, {
           [mixapanelProps.BRAND_NAME]: mainAppStore.initModel.brandName.toLowerCase(),
@@ -76,6 +77,7 @@ const SignIn = () => {
           [mixapanelProps.BRAND_NAME]: mainAppStore.initModel.brandName.toLowerCase(),
         });
       }
+      mainAppStore.isLoading = false;
     } catch (error) {
       badRequestPopupStore.openModal();
       badRequestPopupStore.setMessage(error);

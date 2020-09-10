@@ -114,15 +114,15 @@ export class InstrumentsStore implements ContextProps {
   @action
   addActiveInstrumentId = async (activeInstrumentId: string) => {
     if (this.activeInstrumentsIds.includes(activeInstrumentId)) {
-      return;
+      return Promise.resolve();
     }
 
     if (this.activeInstrumentsIds.length > 6) {
       this.activeInstrumentsIds[6] = activeInstrumentId;
     } else {
       this.activeInstrumentsIds = [
-        activeInstrumentId,
         ...this.activeInstrumentsIds,
+        activeInstrumentId,
       ];
     }
     return await API.postFavoriteInstrumets({
@@ -177,6 +177,7 @@ export class InstrumentsStore implements ContextProps {
       this.instruments.find(
         (item) => item.instrumentItem.id === instrumentId
       ) || this.instruments[0];
+
     if (newActiveInstrument) {
       try {
         await this.addActiveInstrumentId(instrumentId);
