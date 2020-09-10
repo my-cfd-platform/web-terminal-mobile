@@ -24,6 +24,9 @@ import Page from '../../constants/Pages';
 import { PortfolioTabEnum } from '../../enums/PortfolioTabEnum';
 import { TpSlTypeEnum } from '../../enums/TpSlTypeEnum';
 import styled from '@emotion/styled';
+import mixpanel from 'mixpanel-browser';
+import mixpanelEvents from '../../constants/mixpanelEvents';
+import mixapanelProps from '../../constants/mixpanelProps';
 
 interface Props {
   positionId: number;
@@ -96,9 +99,37 @@ const ActivePositionsDetails: FC<Props> = observer((props) => {
           activePositionNotificationStore.isSuccessfull = true;
           activePositionNotificationStore.openNotification();
         }
-
+        mixpanel.track(mixpanelEvents.CLOSE_ORDER, {
+          [mixapanelProps.AMOUNT]: position.investmentAmount,
+          [mixapanelProps.ACCOUNT_CURRENCY]:
+          mainAppStore.activeAccount?.currency || '',
+          [mixapanelProps.INSTRUMENT_ID]: position.instrument,
+          [mixapanelProps.MULTIPLIER]: position.multiplier,
+          [mixapanelProps.TREND]:
+              position.operation === AskBidEnum.Buy ? 'buy' : 'sell',
+          [mixapanelProps.SLTP]: !!(position.sl || position.tp),
+          [mixapanelProps.ACCOUNT_ID]: mainAppStore.activeAccount?.id || '',
+          [mixapanelProps.ACCOUNT_TYPE]: mainAppStore.activeAccount?.isLive
+              ? 'real'
+              : 'demo',
+        });
         push(`${Page.PORTFOLIO_MAIN}/${PortfolioTabEnum.ACTIVE}`);
       } else {
+        mixpanel.track(mixpanelEvents.CLOSE_ORDER_FAILED, {
+          [mixapanelProps.AMOUNT]: position.investmentAmount,
+          [mixapanelProps.ACCOUNT_CURRENCY]:
+          mainAppStore.activeAccount?.currency || '',
+          [mixapanelProps.INSTRUMENT_ID]: position.instrument,
+          [mixapanelProps.MULTIPLIER]: position.multiplier,
+          [mixapanelProps.TREND]:
+              position.operation === AskBidEnum.Buy ? 'buy' : 'sell',
+          [mixapanelProps.SLTP]: !!(position.sl || position.tp),
+          [mixapanelProps.ACCOUNT_ID]: mainAppStore.activeAccount?.id || '',
+          [mixapanelProps.ACCOUNT_TYPE]: mainAppStore.activeAccount?.isLive
+              ? 'real'
+              : 'demo',
+          [mixapanelProps.ERROR_TEXT]: apiResponseCodeMessages[response.result],
+        });
         notificationStore.notificationMessage = t(
           apiResponseCodeMessages[response.result]
         );
