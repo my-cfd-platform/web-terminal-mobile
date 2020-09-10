@@ -35,7 +35,7 @@ const RoutingLayout: FC = () => {
     case RouteLayoutType.Authorized:
       return (
         <AuthorizedContainer>
-          <NetworkErrorPopup />
+          <Observer>{() => <NetworkErrorPopup />}</Observer>
           <Observer>
             {() => (
               <>
@@ -52,7 +52,7 @@ const RoutingLayout: FC = () => {
     case RouteLayoutType.SignFlow:
       return (
         <SignFlowLayout>
-          <NetworkErrorPopup />
+          <Observer>{() => <NetworkErrorPopup />}</Observer>
           <Observer>{() => <NotificationPopup></NotificationPopup>}</Observer>
           <Observer>
             {() => (
@@ -74,7 +74,7 @@ const RoutingLayout: FC = () => {
           height={`calc(${FULL_VH})`}
           width="100%"
         >
-          <NetworkErrorPopup />
+          <Observer>{() => <NetworkErrorPopup />}</Observer>
           <Observer>
             {() => (
               <>
