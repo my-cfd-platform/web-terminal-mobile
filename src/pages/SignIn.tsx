@@ -67,6 +67,7 @@ const SignIn = () => {
         //   [mixapanelProps.BRAND_NAME]: mainAppStore.initModel.brandName.toLowerCase(),
         // });
       }
+      mainAppStore.isLoading = false;
     } catch (error) {
       badRequestPopupStore.openModal();
       badRequestPopupStore.setMessage(error);
