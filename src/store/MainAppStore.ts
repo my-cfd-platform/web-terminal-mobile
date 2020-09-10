@@ -247,6 +247,8 @@ export class MainAppStore implements MainAppStoreProps {
           apiResponseCodeMessages[OperationApiResponseCodes.TechnicalError]
       );
       this.socketError = true;
+      this.isLoading = false;
+      this.isInitLoading = false;
       console.log('websocket error: ', error);
       console.log('=====/=====');
     });
