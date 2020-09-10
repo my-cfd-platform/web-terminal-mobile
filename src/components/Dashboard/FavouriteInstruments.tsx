@@ -17,6 +17,12 @@ const FavouriteInstruments = observer(() => {
   const { push } = useHistory();
 
   const handleRemoveInstrument = (itemId: string) => async () => {
+    const indexEl = instrumentsStore.activeInstrumentsIds.findIndex(
+      (id) => id === itemId
+    );
+    const newActiveInstrument =
+      instrumentsStore.activeInstrumentsIds[indexEl + 1];
+
     const newInstruments = instrumentsStore.activeInstrumentsIds.filter(
       (id) => id !== itemId
     );
@@ -30,9 +36,9 @@ const FavouriteInstruments = observer(() => {
       });
       instrumentsStore.setActiveInstrumentsIds(response);
 
-      if (instrumentsStore.activeInstrument?.instrumentItem.id === itemId) {
-        instrumentsStore.switchInstrument(response[response.length - 1]);
-      }
+      instrumentsStore.switchInstrument(
+        newActiveInstrument || response[response.length - 1]
+      );
     } catch (error) {
       badRequestPopupStore.openModal();
       badRequestPopupStore.setMessage(error);
