@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import * as yup from 'yup';
 import { useFormik } from 'formik';
 import { FlexContainer } from '../styles/FlexContainer';
@@ -19,6 +19,9 @@ import { OperationApiResponseCodes } from '../enums/OperationApiResponseCodes';
 import apiResponseCodeMessages from '../constants/apiResponseCodeMessages';
 import { Observer } from 'mobx-react-lite';
 import LoaderForComponents from '../components/LoaderForComponents';
+import mixpanel from 'mixpanel-browser';
+import mixpanelEvents from '../constants/mixpanelEvents';
+import mixapanelProps from '../constants/mixpanelProps';
 
 const SignIn = () => {
   const { t } = useTranslation();
@@ -33,6 +36,12 @@ const SignIn = () => {
       .min(8, t(validationInputTexts.PASSWORD_MIN_CHARACTERS))
       .max(40, t(validationInputTexts.PASSWORD_MAX_CHARACTERS)),
   });
+
+  useEffect(() => {
+    mixpanel.track(mixpanelEvents.LOGIN_VIEW, {
+      [mixapanelProps.BRAND_NAME]: mainAppStore.initModel.brandName.toLowerCase(),
+    });
+  }, []);
 
   const initialValues: UserAuthenticate = {
     email: '',
@@ -52,20 +61,21 @@ const SignIn = () => {
         notificationStore.isSuccessfull = false;
         notificationStore.openNotification();
         mainAppStore.isLoading = false;
-        // mixpanel.track(mixpanelEvents.LOGIN_FAILED, {
-        //   [mixapanelProps.BRAND_NAME]: mainAppStore.initModel.brandName.toLowerCase(),
-        //   [mixapanelProps.ERROR_TEXT]: t(apiResponseCodeMessages[result]),
-        //   [mixapanelProps.EMAIL]: credentials.email,
-        // });
+
+        mixpanel.track(mixpanelEvents.LOGIN_FAILED, {
+          [mixapanelProps.BRAND_NAME]: mainAppStore.initModel.brandName.toLowerCase(),
+          [mixapanelProps.ERROR_TEXT]: t(apiResponseCodeMessages[result]),
+          [mixapanelProps.EMAIL]: credentials.email,
+        });
       }
       if (result === OperationApiResponseCodes.Ok) {
-        // mixpanel.people.union({
-        //   [mixapanelProps.BRAND_NAME]: mainAppStore.initModel.brandName.toLowerCase(),
-        //   [mixapanelProps.PLATFORMS_USED]: 'web',
-        // });
-        // mixpanel.track(mixpanelEvents.LOGIN_VIEW, {
-        //   [mixapanelProps.BRAND_NAME]: mainAppStore.initModel.brandName.toLowerCase(),
-        // });
+        mixpanel.people.union({
+          [mixapanelProps.BRAND_NAME]: mainAppStore.initModel.brandName.toLowerCase(),
+          [mixapanelProps.PLATFORMS_USED]: 'mobile',
+        });
+        mixpanel.track(mixpanelEvents.LOGIN_VIEW, {
+          [mixapanelProps.BRAND_NAME]: mainAppStore.initModel.brandName.toLowerCase(),
+        });
       }
       mainAppStore.isLoading = false;
     } catch (error) {
