@@ -18,7 +18,7 @@ import API from './helpers/API';
 const MainApp: FC = () => {
   const { mainAppStore, instrumentsStore, badRequestPopupStore } = useStores();
   const { t, i18n } = useTranslation();
-  
+
   const fetchFavoriteInstruments = useCallback(async () => {
     const accountType = mainAppStore.activeAccount?.isLive
       ? AccountTypeEnum.Live
@@ -29,7 +29,7 @@ const MainApp: FC = () => {
         type: accountType,
         accountId: mainAppStore.activeAccountId,
       });
-      instrumentsStore.setActiveInstrumentsIds(response);
+      instrumentsStore.setActiveInstrumentsIds(response.reverse());
       // https://monfex.atlassian.net/browse/WEBT-475
       // if app is reinitializing, we should wait widget first
       if (instrumentsStore.activeInstrument) {
