@@ -21,6 +21,9 @@ import API from '../helpers/API';
 import { OpenPositionModelFormik } from '../types/Positions';
 import { OperationApiResponseCodes } from '../enums/OperationApiResponseCodes';
 import apiResponseCodeMessages from '../constants/apiResponseCodeMessages';
+import mixpanel from 'mixpanel-browser';
+import mixpanelEvents from '../constants/mixpanelEvents';
+import mixapanelProps from '../constants/mixpanelProps';
 import Page from '../constants/Pages';
 
 const PRECISION_USD = 2;
@@ -234,8 +237,38 @@ const OrderPage = () => {
           activePositionNotificationStore.isSuccessfull = true;
           activePositionNotificationStore.openNotification();
         }
+        mixpanel.track(mixpanelEvents.MARKET_ORDER, {
+          [mixapanelProps.AMOUNT]: otherValues.investmentAmount,
+          [mixapanelProps.ACCOUNT_CURRENCY]:
+          mainAppStore.activeAccount?.currency || '',
+          [mixapanelProps.INSTRUMENT_ID]: otherValues.instrumentId,
+          [mixapanelProps.MULTIPLIER]: otherValues.multiplier,
+          [mixapanelProps.TREND]: AskBidEnum.Buy ? 'buy' : 'sell',
+          [mixapanelProps.SLTP]: !!(otherValues.sl || otherValues.tp),
+          [mixapanelProps.AVAILABLE_BALANCE]: mainAppStore.activeAccount?.balance,
+          [mixapanelProps.ACCOUNT_ID]: mainAppStore.activeAccount?.id || '',
+          [mixapanelProps.ACCOUNT_TYPE]: mainAppStore.activeAccount?.isLive
+              ? 'real'
+              : 'demo',
+        });
         push(Page.DASHBOARD);
       } else {
+        mixpanel.track(mixpanelEvents.MARKET_ORDER_FAILED, {
+          [mixapanelProps.AMOUNT]: otherValues.investmentAmount,
+          [mixapanelProps.ACCOUNT_CURRENCY]:
+          mainAppStore.activeAccount?.currency || '',
+          [mixapanelProps.INSTRUMENT_ID]: otherValues.instrumentId,
+          [mixapanelProps.MULTIPLIER]: otherValues.multiplier,
+          [mixapanelProps.TREND]: AskBidEnum.Buy ? 'buy' : 'sell',
+          [mixapanelProps.SLTP]: !!(otherValues.sl || otherValues.tp),
+          [mixapanelProps.AVAILABLE_BALANCE]: mainAppStore.activeAccount?.balance,
+          [mixapanelProps.ACCOUNT_ID]: mainAppStore.activeAccount?.id || '',
+          [mixapanelProps.ACCOUNT_TYPE]: mainAppStore.activeAccount?.isLive
+              ? 'real'
+              : 'demo',
+          [mixapanelProps.ERROR_TEXT]:
+              apiResponseCodeMessages[response.result],
+        });
         notificationStore.notificationMessage = t(
           apiResponseCodeMessages[response.result]
         );

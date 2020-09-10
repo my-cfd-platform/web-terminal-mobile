@@ -1,9 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import * as yup from 'yup';
 import { FormikHelpers, useFormik } from 'formik';
 import styled from '@emotion/styled';
 import { useTranslation } from 'react-i18next';
 import { useHistory, Link } from 'react-router-dom';
+import mixpanel from 'mixpanel-browser';
+import mixpanelEvents from '../constants/mixpanelEvents';
+import mixapanelProps from '../constants/mixpanelProps';
 
 import { useStores } from '../hooks/useStores';
 import API from '../helpers/API';
@@ -57,6 +60,9 @@ const ForgotPassword = () => {
 
       if (result.result === OperationApiResponseCodes.Ok) {
         setIsSuccessfull(true);
+        mixpanel.track(mixpanelEvents.FORGOT_PASSWORD_SUBMIT, {
+          [mixapanelProps.BRAND_NAME]: mainAppStore.initModel.brandName.toLowerCase(),
+        });
       } else {
         setSubmitting(false);
         setIsSuccessfull(false);
@@ -67,6 +73,12 @@ const ForgotPassword = () => {
       setIsLoading(false);
     }
   };
+
+  useEffect(() => {
+    mixpanel.track(mixpanelEvents.FORGOT_PASSWORD_VIEW, {
+      [mixapanelProps.BRAND_NAME]: mainAppStore.initModel.brandName.toLowerCase(),
+    });
+  }, []);
 
   const {
     values,

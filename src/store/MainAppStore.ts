@@ -108,6 +108,7 @@ export class MainAppStore implements MainAppStoreProps {
   @observable socketError = false;
   @observable activeAccountId: string = '';
   @observable connectionSignalRTimer: NodeJS.Timeout | null = null;
+  @observable signUpFlag: boolean = false;
 
   constructor(rootStore: RootStore) {
     this.rootStore = rootStore;
@@ -342,6 +343,11 @@ export class MainAppStore implements MainAppStoreProps {
   };
 
   @action
+  setSignUpFlag = (value: boolean) => {
+    this.signUpFlag = value;
+  }
+
+  @action
   startSignalRTimer = () => {
     this.connectionSignalRTimer = setTimeout(() => {
       this.activeSession?.stop();
@@ -417,7 +423,9 @@ export class MainAppStore implements MainAppStoreProps {
       this.setTokenHandler(response.data.token);
       this.fetchTradingUrl(response.data.token);
       this.setRefreshToken(response.data.refreshToken);
-      mixpanel.track(mixpanelEvents.LOGIN);
+      mixpanel.track(mixpanelEvents.LOGIN, {
+        [mixapanelProps.BRAND_NAME]: this.initModel.brandName.toLowerCase(),
+      });
     }
 
     if (

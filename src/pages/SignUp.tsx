@@ -4,6 +4,9 @@ import { useStores } from '../hooks/useStores';
 import styled from '@emotion/styled';
 import * as yup from 'yup';
 import { FormikHelpers, useFormik } from 'formik';
+import mixpanel from 'mixpanel-browser';
+import mixpanelEvents from '../constants/mixpanelEvents';
+import mixapanelProps from '../constants/mixpanelProps';
 
 import { UserRegistration } from '../types/UserInfo';
 import { OperationApiResponseCodes } from '../enums/OperationApiResponseCodes';
@@ -82,7 +85,18 @@ const SignUp = () => {
                   notificationStore.isSuccessfull = false;
                   notificationStore.openNotification();
                   mainAppStore.isLoading = false;
+                  mixpanel.track(mixpanelEvents.SIGN_UP_FAILED, {
+                    [mixapanelProps.BRAND_NAME]: mainAppStore.initModel.brandName.toLowerCase(),
+                    [mixapanelProps.ERROR_TEXT]: t(
+                        apiResponseCodeMessages[result]
+                    ),
+                    [mixapanelProps.EMAIL]: values.email,
+                  });
                 } else {
+                  mainAppStore.setSignUpFlag(true);
+                  mixpanel.track(mixpanelEvents.SIGN_UP, {
+                    [mixapanelProps.BRAND_NAME]: mainAppStore.initModel.brandName.toLowerCase(),
+                  });
                   mainAppStore.isDemoRealPopup = true;
                   push(Page.DASHBOARD);
                 }
