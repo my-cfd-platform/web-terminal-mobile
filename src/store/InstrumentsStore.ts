@@ -121,8 +121,8 @@ export class InstrumentsStore implements ContextProps {
       this.activeInstrumentsIds[6] = activeInstrumentId;
     } else {
       this.activeInstrumentsIds = [
-        activeInstrumentId,
         ...this.activeInstrumentsIds,
+        activeInstrumentId,
       ];
     }
     return await API.postFavoriteInstrumets({
