@@ -3,5 +3,6 @@ export interface NotificationPositionData {
   instrumentGroup: string;
   instrumentId: string;
   equity: number;
+  percentPL?: number;
   type: 'close' | 'open';
 }

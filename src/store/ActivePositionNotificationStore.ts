@@ -11,6 +11,7 @@ interface ContextProps {
 export class ActivePositionNotificationStore implements ContextProps {
   @observable notificationMessageData: NotificationPositionData = {
     equity: 0,
+    percentPL: 0,
     instrumentGroup: '',
     instrumentName: '',
     instrumentId: '',
