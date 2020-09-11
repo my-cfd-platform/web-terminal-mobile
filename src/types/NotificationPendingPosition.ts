@@ -1,8 +1,8 @@
-export interface NotificationPositionData {
+export interface NotificationPendingPositionData {
   instrumentName: string;
   instrumentGroup: string;
   instrumentId: string;
-  equity: number;
-  percentPL?: number;
+  investmentAmount: number;
+  openPrice: number;
   type: 'close' | 'open';
 }

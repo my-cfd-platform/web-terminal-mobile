@@ -14,7 +14,7 @@ const ActivePositions = observer(() => {
   return (
     <>
       {quotesStore.activePositions.length ? (
-        quotesStore.activePositions.map((item) => (
+        quotesStore.sortedActivePositions.map((item) => (
           <FlexContainer
             key={item.id}
             marginBottom="2px"

@@ -15,54 +15,54 @@ interface Props {}
 
 // TODO: can i do it without should render?
 
-const NotificationActivePositionPopup: FC<Props> = observer(() => {
-  const { activePositionNotificationStore, mainAppStore } = useStores();
+const NotificationPendingPositionPopup: FC<Props> = observer(() => {
+  const { pendingPositionNotificationStore, mainAppStore } = useStores();
   const { t } = useTranslation();
 
   const [shouldRender, setRender] = useState(
-    activePositionNotificationStore.isActiveNotification
+      pendingPositionNotificationStore.isActiveNotification
   );
 
   useEffect(() => {
-    if (activePositionNotificationStore.isActiveNotification) {
+    if (pendingPositionNotificationStore.isActiveNotification) {
       setRender(true);
     }
-  }, [activePositionNotificationStore.isActiveNotification]);
+  }, [pendingPositionNotificationStore.isActiveNotification]);
 
   const handlers = useSwipeable({
-    onSwipedUp: () => activePositionNotificationStore.closeNotification(),
+    onSwipedUp: () => pendingPositionNotificationStore.closeNotification(),
   });
 
   const onAnimationEnd = () => {
-    if (!activePositionNotificationStore.isActiveNotification) {
+    if (!pendingPositionNotificationStore.isActiveNotification) {
       setRender(false);
     }
   };
 
   const closeNotification = () => {
-    if (activePositionNotificationStore.timer) {
-      clearTimeout(activePositionNotificationStore.timer);
+    if (pendingPositionNotificationStore.timer) {
+      clearTimeout(pendingPositionNotificationStore.timer);
     }
-    activePositionNotificationStore.closeNotification();
+    pendingPositionNotificationStore.closeNotification();
   };
 
   useEffect(() => {
-    if (activePositionNotificationStore.isActiveNotification) {
-      if (activePositionNotificationStore.timer) {
-        clearTimeout(activePositionNotificationStore.timer);
+    if (pendingPositionNotificationStore.isActiveNotification) {
+      if (pendingPositionNotificationStore.timer) {
+        clearTimeout(pendingPositionNotificationStore.timer);
       }
-      activePositionNotificationStore.timer = setTimeout(() => {
-        activePositionNotificationStore.closeNotification();
+      pendingPositionNotificationStore.timer = setTimeout(() => {
+        pendingPositionNotificationStore.closeNotification();
       }, 2000);
     }
     return;
-  }, [activePositionNotificationStore.isActiveNotification]);
+  }, [pendingPositionNotificationStore.isActiveNotification]);
 
   return shouldRender ? (
     <NotificationWrapper
       boxShadow="0px 4px 8px rgba(41, 42, 57, 0.09), 0px 8px 16px rgba(37, 38, 54, 0.24)"
       borderRadius="4px"
-      isSuccessfull={activePositionNotificationStore.isSuccessfull}
+      isSuccessfull={pendingPositionNotificationStore.isSuccessfull}
       padding="12px 16px"
       position="fixed"
       top="8px"
@@ -71,7 +71,7 @@ const NotificationActivePositionPopup: FC<Props> = observer(() => {
       flexDirection="column"
       alignItems="flex-start"
       zIndex="101"
-      show={activePositionNotificationStore.isActiveNotification}
+      show={pendingPositionNotificationStore.isActiveNotification}
       onAnimationEnd={onAnimationEnd}
       {...handlers}
     >
@@ -80,7 +80,7 @@ const NotificationActivePositionPopup: FC<Props> = observer(() => {
           <FlexContainer width="24px" height="24px" marginRight="8px">
             <ImageContainer
               instrumentId={
-                activePositionNotificationStore.notificationMessageData
+                pendingPositionNotificationStore.notificationMessageData
                   .instrumentId
               }
             />
@@ -88,7 +88,7 @@ const NotificationActivePositionPopup: FC<Props> = observer(() => {
           <FlexContainer flexDirection="column" justifyContent="center">
             <PrimaryTextSpan color="#ffffff" fontSize="10px">
               {
-                activePositionNotificationStore.notificationMessageData
+                pendingPositionNotificationStore.notificationMessageData
                   .instrumentName
               }
             </PrimaryTextSpan>
@@ -98,57 +98,37 @@ const NotificationActivePositionPopup: FC<Props> = observer(() => {
               textTransform="capitalize"
             >
               {
-                activePositionNotificationStore.notificationMessageData
+                pendingPositionNotificationStore.notificationMessageData
                   .instrumentGroup
               }
             </PrimaryTextSpan>
           </FlexContainer>
         </FlexContainer>
         <FlexContainer alignItems="center">
-          {activePositionNotificationStore.notificationMessageData.type ===
-          'close' ? (
-            <>
-              <PrimaryTextSpan color="#ffffff" fontSize="13px">
-                {t('Position Close')}:&nbsp;
-              </PrimaryTextSpan>
-              <PrimaryTextSpan
-                fontSize="13px"
-                color={
-                  activePositionNotificationStore.notificationMessageData
-                    .equity > 0
-                    ? Colors.ACCENT_BLUE
-                    : Colors.RED
-                }
-              >
-                {getNumberSign(
-                  activePositionNotificationStore.notificationMessageData.equity
-                )}
-                {mainAppStore.activeAccount?.symbol}
-                {Math.abs(
-                  activePositionNotificationStore.notificationMessageData.equity
-                ).toFixed(2)}
-                &nbsp; (&nbsp;
-                {
-                  activePositionNotificationStore.notificationMessageData
-                    .percentPL
-                }
-                %&nbsp;)
-              </PrimaryTextSpan>
-            </>
-          ) : (
-            <>
-              <PrimaryTextSpan color="#ffffff" fontSize="13px">
-                {t('Position opened')}.
-              </PrimaryTextSpan>
-            </>
-          )}
+          <>
+            <PrimaryTextSpan color="#ffffff" fontSize="13px">
+              {t('Position Close')}:&nbsp;
+            </PrimaryTextSpan>
+            <PrimaryTextSpan
+              fontSize="13px"
+              color="#ffffff"
+            >
+              {mainAppStore.activeAccount?.symbol}
+              {Math.abs(
+                  pendingPositionNotificationStore.notificationMessageData.investmentAmount
+              ).toFixed(2)}
+              &nbsp; (at &nbsp;{
+                pendingPositionNotificationStore.notificationMessageData.openPrice.toFixed(2)
+              })
+            </PrimaryTextSpan>
+          </>
         </FlexContainer>
       </FlexContainer>
     </NotificationWrapper>
   ) : null;
 });
 
-export default NotificationActivePositionPopup;
+export default NotificationPendingPositionPopup;
 
 const translateAnimationIn = keyframes`
     from {
