@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import { useStores } from '../hooks/useStores';
 import styled from '@emotion/styled';
@@ -137,6 +137,12 @@ const SignUp = () => {
       mainAppStore.isLoading = false;
     }
   };
+
+  useEffect(() => {
+    mixpanel.track(mixpanelEvents.SIGN_UP_VIEW, {
+      [mixapanelProps.BRAND_NAME]: mainAppStore.initModel.brandName.toLowerCase(),
+    });
+  }, []);
 
   const {
     values,
