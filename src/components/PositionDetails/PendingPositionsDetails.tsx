@@ -38,19 +38,47 @@ const PendingPositionsDetails: FC<Props> = observer((props) => {
     mainAppStore,
     quotesStore,
     notificationStore,
-    activePositionNotificationStore,
+    pendingPositionNotificationStore,
     instrumentsStore,
   } = useStores();
   const { push } = useHistory();
 
   const [position, setPosition] = useState<PendingOrderWSDTO>();
 
-  const handleCloseOrder = () => {
-    API.removePendingOrder({
-      accountId: mainAppStore.activeAccount!.id,
-      orderId: position?.id || 0,
-      processId: getProcessId(),
-    });
+  const handleCloseOrder = async () => {
+    try {
+      const response = await API.removePendingOrder({
+        accountId: mainAppStore.activeAccount!.id,
+        orderId: position?.id || 0,
+        processId: getProcessId(),
+      });
+
+      if (response.result === OperationApiResponseCodes.Ok) {
+        const instrumentItem = instrumentsStore.instruments.find(
+            (item) => item.instrumentItem.id === position?.instrument
+        )?.instrumentItem;
+
+        if (instrumentItem) {
+          pendingPositionNotificationStore.notificationMessageData = {
+            investmentAmount: position?.investmentAmount || 0,
+            openPrice: position?.openPrice || 0,
+            instrumentName: instrumentItem.name,
+            instrumentGroup:
+                instrumentsStore.instrumentGroups.find(
+                    (item) => item.id === instrumentItem.id
+                )?.name || '',
+            instrumentId: instrumentItem.id,
+            type: 'close',
+          };
+          pendingPositionNotificationStore.isSuccessfull = true;
+          pendingPositionNotificationStore.openNotification();
+        }
+        push(`${Page.PORTFOLIO_MAIN}/${PortfolioTabEnum.PENDING}`);
+      } else {
+        notificationStore.isSuccessfull = false;
+        notificationStore.openNotification();
+      }
+    } catch (error) {}
   };
 
   const activeInstrument = useCallback(() => {
@@ -296,6 +324,9 @@ const PendingPositionsDetails: FC<Props> = observer((props) => {
                 {position.instrument}
               </PrimaryTextSpan>
               &nbsp; position for&nbsp;
+              <PrimaryTextSpan color="#ffffff">
+                {mainAppStore.activeAccount?.symbol}{position.investmentAmount.toFixed(2)}
+              </PrimaryTextSpan>
             </ClosePositionButton>
           </FlexContainer>
         </FlexContainer>

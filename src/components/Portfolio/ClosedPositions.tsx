@@ -21,7 +21,7 @@ const ClosedPositions = observer(() => {
       try {
         const response = await API.getPositionsHistory({
           accountId: mainAppStore.activeAccount!.id,
-          startDate: dateRangeStore.startDate.valueOf(),
+          startDate: 0,
           endDate: moment().valueOf(),
           page: isScrolling ? historyStore.positionsHistoryReport.page + 1 : 1,
           pageSize: 20,

@@ -1,17 +1,17 @@
 import { observable, action } from 'mobx';
-import { NotificationPositionData } from '../types/NotificationPosition';
+import { NotificationPendingPositionData } from '../types/NotificationPendingPosition';
 
 interface ContextProps {
-  notificationMessageData: NotificationPositionData;
+  notificationMessageData: NotificationPendingPositionData;
   isActiveNotification: boolean;
   isSuccessfull: boolean;
   timer?: NodeJS.Timeout;
 }
 
-export class ActivePositionNotificationStore implements ContextProps {
-  @observable notificationMessageData: NotificationPositionData = {
-    equity: 0,
-    percentPL: 0,
+export class PendingPositionNotificationStore implements ContextProps {
+  @observable notificationMessageData: NotificationPendingPositionData = {
+    openPrice: 0,
+    investmentAmount: 0,
     instrumentGroup: '',
     instrumentName: '',
     instrumentId: '',
@@ -32,7 +32,7 @@ export class ActivePositionNotificationStore implements ContextProps {
   };
 
   @action
-  setNotification = (notification: NotificationPositionData) => {
+  setNotification = (notification: NotificationPendingPositionData) => {
     this.notificationMessageData = notification;
   };
 }

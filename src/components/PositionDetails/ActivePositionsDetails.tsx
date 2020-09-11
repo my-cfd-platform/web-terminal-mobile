@@ -27,6 +27,7 @@ import styled from '@emotion/styled';
 import mixpanel from 'mixpanel-browser';
 import mixpanelEvents from '../../constants/mixpanelEvents';
 import mixapanelProps from '../../constants/mixpanelProps';
+import { calculateInPercent } from '../../helpers/calculateInPercent';
 
 interface Props {
   positionId: number;
@@ -62,7 +63,7 @@ const ActivePositionsDetails: FC<Props> = observer((props) => {
     try {
       const isBuy = position.operation === AskBidEnum.Buy;
       const equity =
-        position.investmentAmount +
+        
         calculateFloatingProfitAndLoss({
           investment: position.investmentAmount,
           multiplier: position.multiplier,
@@ -73,7 +74,7 @@ const ActivePositionsDetails: FC<Props> = observer((props) => {
             : quotesStore.quotes[position.instrument].ask.c,
           openPrice: position.openPrice,
         });
-
+      const percentPL = calculateInPercent(position.investmentAmount, equity)
       const response = await API.closePosition({
         accountId: mainAppStore.activeAccount!.id,
         positionId: position.id,
@@ -88,6 +89,7 @@ const ActivePositionsDetails: FC<Props> = observer((props) => {
         if (instrumentItem) {
           activePositionNotificationStore.notificationMessageData = {
             equity: equity,
+            percentPL: +percentPL,
             instrumentName: instrumentItem.name,
             instrumentGroup:
               instrumentsStore.instrumentGroups.find(

@@ -3,6 +3,7 @@ import { FlexContainer } from '../styles/FlexContainer';
 import { Observer } from 'mobx-react-lite';
 import NotificationPopup from '../components/NotificationPopup';
 import NotificationActivePositionPopup from '../components/NotificationActivePositionPopup';
+import NotificationPendingPositionPopup from '../components/NotificationPendingPositionPopup';
 import NavBar from '../components/NavBar/NavBar';
 import ChartContainer from './ChartContainer';
 import NavigationPanel from '../components/NavigationPanel';
@@ -33,6 +34,7 @@ const AuthorizedContainer: FC = ({ children }) => {
           <>
             <NotificationPopup></NotificationPopup>
             <NotificationActivePositionPopup></NotificationActivePositionPopup>
+            <NotificationPendingPositionPopup></NotificationPendingPositionPopup>
           </>
         )}
       </Observer>
