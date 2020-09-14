@@ -245,7 +245,9 @@ const OrderPage = () => {
           [mixapanelProps.MULTIPLIER]: otherValues.multiplier,
           [mixapanelProps.TREND]: type,
           [mixapanelProps.SLTP]: !!(otherValues.sl || otherValues.tp),
-          [mixapanelProps.AVAILABLE_BALANCE]: mainAppStore.activeAccount?.balance,
+          [mixapanelProps.AVAILABLE_BALANCE]: mainAppStore.activeAccount?.balance
+              ? mainAppStore.activeAccount?.balance + otherValues.investmentAmount
+              : 0,
           [mixapanelProps.ACCOUNT_ID]: mainAppStore.activeAccount?.id || '',
           [mixapanelProps.ACCOUNT_TYPE]: mainAppStore.activeAccount?.isLive
               ? 'real'
