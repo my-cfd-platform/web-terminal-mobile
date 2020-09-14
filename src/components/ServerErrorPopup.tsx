@@ -9,6 +9,9 @@ import Modal from './Modal';
 
 const ServerErrorPopup = () => {
   const { t } = useTranslation();
+  const reloadPage = () => {
+    window.location.reload();
+  };
   //Please wait while we processing your request. Click "Reload" if the request failed to be processed.
   return (
     <Modal>
@@ -50,7 +53,7 @@ const ServerErrorPopup = () => {
           alignItems="center"
           padding="10px 0"
         >
-          <ButtonWithoutStyles onClick={window.location.reload}>
+          <ButtonWithoutStyles onClick={reloadPage}>
             <PrimaryTextSpan fontSize="16px" color="#fff">
               {t('Reload')}
             </PrimaryTextSpan>

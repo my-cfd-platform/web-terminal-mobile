@@ -38,10 +38,10 @@ const RoutingLayout: FC = () => {
         <AuthorizedContainer>
           <Observer>
             {() => (
-              <>{serverErrorPopupStore.isActive && <NetworkErrorPopup />}</>
+              <>{serverErrorPopupStore.isActive && <ServerErrorPopup />}</>
             )}
           </Observer>
-          <Observer>{() => <ServerErrorPopup></ServerErrorPopup>}</Observer>
+          <Observer>{() => <NetworkErrorPopup></NetworkErrorPopup>}</Observer>
           <Observer>
             {() => (
               <>
@@ -61,7 +61,7 @@ const RoutingLayout: FC = () => {
           <Observer>{() => <NetworkErrorPopup />}</Observer>
           <Observer>
             {() => (
-              <>{serverErrorPopupStore.isActive && <NetworkErrorPopup />}</>
+              <>{serverErrorPopupStore.isActive && <ServerErrorPopup />}</>
             )}
           </Observer>
           <Observer>{() => <NotificationPopup></NotificationPopup>}</Observer>
