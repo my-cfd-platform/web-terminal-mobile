@@ -34,7 +34,9 @@ const injectInerceptors = (tradingUrl: string, mainAppStore: MainAppStore) => {
       if (error.response?.status === 500 || error.response?.status === 400) {
         setTimeout(() => {
           axios.request(error.config);
-          mainAppStore.rootStore.serverErrorPopupStore.openModal();
+          if (!mainAppStore.rootStore.serverErrorPopupStore.isActive) {
+            mainAppStore.rootStore.serverErrorPopupStore.openModal();
+          }
         }, +mainAppStore.connectTimeOut);
         mainAppStore.isLoading = false;
       } else if (error.response?.status === 401) {
