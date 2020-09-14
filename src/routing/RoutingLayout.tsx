@@ -16,7 +16,7 @@ import ServerErrorPopup from '../components/ServerErrorPopup';
 
 const RoutingLayout: FC = () => {
   const location = useLocation();
-  const { mainAppStore } = useStores();
+  const { mainAppStore, serverErrorPopupStore } = useStores();
 
   const allRoutes = routesList.map((route) => (
     <RouteWrapper key={route.path} {...route} />
@@ -36,7 +36,11 @@ const RoutingLayout: FC = () => {
     case RouteLayoutType.Authorized:
       return (
         <AuthorizedContainer>
-          <Observer>{() => <NetworkErrorPopup />}</Observer>
+          <Observer>
+            {() => (
+              <>{serverErrorPopupStore.isActive && <NetworkErrorPopup />}</>
+            )}
+          </Observer>
           <Observer>{() => <ServerErrorPopup></ServerErrorPopup>}</Observer>
           <Observer>
             {() => (
@@ -55,7 +59,11 @@ const RoutingLayout: FC = () => {
       return (
         <SignFlowLayout>
           <Observer>{() => <NetworkErrorPopup />}</Observer>
-          <Observer>{() => <ServerErrorPopup></ServerErrorPopup>}</Observer>
+          <Observer>
+            {() => (
+              <>{serverErrorPopupStore.isActive && <NetworkErrorPopup />}</>
+            )}
+          </Observer>
           <Observer>{() => <NotificationPopup></NotificationPopup>}</Observer>
           <Observer>
             {() => (
@@ -77,7 +85,11 @@ const RoutingLayout: FC = () => {
           height={`calc(${FULL_VH})`}
           width="100%"
         >
-          <Observer>{() => <ServerErrorPopup></ServerErrorPopup>}</Observer>
+          <Observer>
+            {() => (
+              <>{serverErrorPopupStore.isActive && <NetworkErrorPopup />}</>
+            )}
+          </Observer>
           <Observer>{() => <NetworkErrorPopup />}</Observer>
           <Observer>
             {() => (

@@ -12,7 +12,7 @@ const ServerErrorPopup = () => {
   //Please wait while we processing your request. Click "Reload" if the request failed to be processed.
   return (
     <Modal>
-      <Wrapper>
+      <Wrapper zIndex="103">
         <FlexContainer
           flexDirection="column"
           padding="20px"
@@ -23,6 +23,7 @@ const ServerErrorPopup = () => {
             fontSize="20px"
             fontWeight="bold"
             marginBottom="16px"
+            textAlign="center"
           >
             {t('Something went wrong')}
           </PrimaryTextSpan>
@@ -30,6 +31,7 @@ const ServerErrorPopup = () => {
             color="rgba(255, 255, 255, 0.5)"
             fontSize="16px"
             marginBottom="16px"
+            textAlign="center"
           >
             {t('Please wait while we processing your request')}.
           </PrimaryTextSpan>
@@ -37,12 +39,17 @@ const ServerErrorPopup = () => {
             color="rgba(255, 255, 255, 0.5)"
             fontSize="16px"
             marginBottom="20px"
+            textAlign="center"
           >
             {t('Click "Reload" if the request failed to be processed')}.
           </PrimaryTextSpan>
           <LoaderComponent />
         </FlexContainer>
-        <FlexContainer flexDirection="column" alignItems="center">
+        <FlexContainer
+          flexDirection="column"
+          alignItems="center"
+          padding="10px 0"
+        >
           <ButtonWithoutStyles onClick={window.location.reload}>
             <PrimaryTextSpan fontSize="16px" color="#fff">
               {t('Reload')}
