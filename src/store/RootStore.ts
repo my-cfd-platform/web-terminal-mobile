@@ -15,6 +15,7 @@ import { WithdrawalStore } from './WithdrawalStore';
 import { DateRangeAccountBalanceStore } from './DateRangeAccountBalanceStore';
 import { ActivePositionNotificationStore } from './ActivePositionNotificationStore';
 import { PendingPositionNotificationStore } from './PendingPositionNotificationStore';
+import { ServerErrorPopupStore } from './ServerErrorPopupStore';
 
 export class RootStore {
   quotesStore: QuotesStore;
@@ -34,6 +35,7 @@ export class RootStore {
   withdrawalStore: WithdrawalStore;
   activePositionNotificationStore: ActivePositionNotificationStore;
   pendingPositionNotificationStore: PendingPositionNotificationStore;
+  serverErrorPopupStore: ServerErrorPopupStore;
 
   constructor() {
     this.quotesStore = new QuotesStore(this);
@@ -53,5 +55,6 @@ export class RootStore {
     this.withdrawalStore = new WithdrawalStore();
     this.activePositionNotificationStore = new ActivePositionNotificationStore();
     this.pendingPositionNotificationStore = new PendingPositionNotificationStore();
+    this.serverErrorPopupStore = new ServerErrorPopupStore();
   }
 }

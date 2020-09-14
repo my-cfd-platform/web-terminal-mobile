@@ -12,6 +12,7 @@ import SignFlowLayout from '../components/SignFlowLayout';
 import { FULL_VH } from '../constants/global';
 import DemoRealPopup from '../components/DemoRealPopup';
 import NetworkErrorPopup from '../components/NetworkErrorPopup';
+import ServerErrorPopup from '../components/ServerErrorPopup';
 
 const RoutingLayout: FC = () => {
   const location = useLocation();
@@ -36,6 +37,7 @@ const RoutingLayout: FC = () => {
       return (
         <AuthorizedContainer>
           <Observer>{() => <NetworkErrorPopup />}</Observer>
+          <Observer>{() => <ServerErrorPopup></ServerErrorPopup>}</Observer>
           <Observer>
             {() => (
               <>
@@ -53,6 +55,7 @@ const RoutingLayout: FC = () => {
       return (
         <SignFlowLayout>
           <Observer>{() => <NetworkErrorPopup />}</Observer>
+          <Observer>{() => <ServerErrorPopup></ServerErrorPopup>}</Observer>
           <Observer>{() => <NotificationPopup></NotificationPopup>}</Observer>
           <Observer>
             {() => (
@@ -74,6 +77,7 @@ const RoutingLayout: FC = () => {
           height={`calc(${FULL_VH})`}
           width="100%"
         >
+          <Observer>{() => <ServerErrorPopup></ServerErrorPopup>}</Observer>
           <Observer>{() => <NetworkErrorPopup />}</Observer>
           <Observer>
             {() => (

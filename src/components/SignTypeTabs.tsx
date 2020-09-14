@@ -3,7 +3,6 @@ import { FlexContainer } from '../styles/FlexContainer';
 import styled from '@emotion/styled';
 import { NavLink } from 'react-router-dom';
 import Page from '../constants/Pages';
-import { PrimaryTextSpan } from '../styles/TextsElements';
 import { useTranslation } from 'react-i18next';
 import Colors from '../constants/Colors';
 
