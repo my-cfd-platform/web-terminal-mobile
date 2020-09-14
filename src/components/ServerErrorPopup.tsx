@@ -70,6 +70,6 @@ const Wrapper = styled(FlexContainer)`
   position: fixed;
   background-color: #23262f;
   border-radius: 14px;
-  width: 270px;
+  width: calc(100vw - 60px);
   flex-direction: column;
 `;
