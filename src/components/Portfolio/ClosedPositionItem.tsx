@@ -90,7 +90,7 @@ const ClosedPositionItem: FC<Props> = ({ tradingHistoryItem, currencySymbol }) =
 
         <QuoteTextLabel isGrowth={profit >= 0}>
           {profit >= 0 ? '+' : '-'}
-          {currencySymbol}{Math.abs(profit)}
+          {currencySymbol}{Math.abs(profit).toFixed(2)}
         </QuoteTextLabel>
       </FlexContainer>
     </InstrumentItem>
