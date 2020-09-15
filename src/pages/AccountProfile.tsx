@@ -13,9 +13,6 @@ import { ButtonWithoutStyles } from '../styles/ButtonWithoutStyles';
 import Colors from '../constants/Colors';
 import { useTranslation } from 'react-i18next';
 import Page from '../constants/Pages';
-import KYCStatus from '../constants/KYCStatus';
-import mixpanel from 'mixpanel-browser';
-import mixapanelProps from '../constants/mixpanelProps';
 
 
 import IconArrowLink from '../assets/svg/profile/icon-arrow-link.svg';
@@ -38,21 +35,6 @@ const AccountProfile = () => {
     async function fetchPersonalData() {
       try {
         const response = await API.getPersonalData(getProcessId());
-        mainAppStore.signUpFlag ? mixpanel.alias(response.data.id) : mixpanel.identify(response.data.id);
-        mixpanel.people.set({
-          [mixapanelProps.PHONE]: response.data.phone || '',
-          [mixapanelProps.EMAIL]: response.data.email || '',
-          [mixapanelProps.BRAND_NAME]: mainAppStore.initModel.brandName.toLowerCase(),
-          [mixapanelProps.TRADER_ID]: response.data.id || '',
-          [mixapanelProps.FIRST_NAME]: response.data.firstName || '',
-          [mixapanelProps.KYC_STATUS]: KYCStatus[response.data.kyc],
-          [mixapanelProps.LAST_NAME]: response.data.lastName || '',
-        });
-        mixpanel.people.union({
-          [mixapanelProps.PLATFORMS_USED]: 'mobile',
-          [mixapanelProps.BRAND_NAME]: mainAppStore.initModel.brandName.toLowerCase(),
-        })
-        mainAppStore.setSignUpFlag(false);
         setEmail(response.data.email || '');
         setName(
           `${response.data.firstName || ''} ${response.data.lastName || ''}`
