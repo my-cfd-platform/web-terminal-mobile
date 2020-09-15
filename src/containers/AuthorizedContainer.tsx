@@ -17,6 +17,7 @@ import mixpanel from 'mixpanel-browser';
 import mixapanelProps from '../constants/mixpanelProps';
 import KYCStatus from '../constants/KYCStatus';
 import { useStores } from '../hooks/useStores';
+import DepositPaymentResultPopup from '../components/DepositPaymentResultPopup/DepositPaymentResultPopup';
 
 const AuthorizedContainer: FC = ({ children }) => {
   const match = useRouteMatch([
@@ -66,6 +67,11 @@ const AuthorizedContainer: FC = ({ children }) => {
             <NotificationPopup></NotificationPopup>
             <NotificationActivePositionPopup></NotificationActivePositionPopup>
             <NotificationPendingPositionPopup></NotificationPendingPositionPopup>
+            {mainAppStore.activeAccount && (
+              <>
+                <DepositPaymentResultPopup />
+              </>
+            )}
           </>
         )}
       </Observer>
