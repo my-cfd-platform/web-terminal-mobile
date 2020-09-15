@@ -55,7 +55,7 @@ const ServerErrorPopup = () => {
             padding="10px 0"
           >
             <ButtonWithoutStyles onClick={reloadPage}>
-              <PrimaryTextSpan fontSize="16px" color="#fff">
+              <PrimaryTextSpan fontSize="20px" color="#fff">
                 {t('Reload')}
               </PrimaryTextSpan>
             </ButtonWithoutStyles>
@@ -73,6 +73,7 @@ const Wrapper = styled(FlexContainer)`
   border-radius: 14px;
   width: calc(100vw - 60px);
   flex-direction: column;
+  border-bottom: 1px solid #1d1e23;
 `;
 
 const ModalBody = styled(FlexContainer)`

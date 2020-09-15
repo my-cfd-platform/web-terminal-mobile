@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, { FC, useEffect } from 'react';
 import { FlexContainer } from '../styles/FlexContainer';
 import { Observer } from 'mobx-react-lite';
 import NotificationPopup from '../components/NotificationPopup';
@@ -11,6 +11,13 @@ import { useRouteMatch } from 'react-router-dom';
 import Page from '../constants/Pages';
 import styled from '@emotion/styled';
 import { FULL_VH } from '../constants/global';
+import API from '../helpers/API';
+import { getProcessId } from '../helpers/getProcessId';
+import mixpanel from 'mixpanel-browser';
+import mixapanelProps from '../constants/mixpanelProps';
+import KYCStatus from '../constants/KYCStatus';
+import { useStores } from '../hooks/useStores';
+import DepositPaymentResultPopup from '../components/DepositPaymentResultPopup/DepositPaymentResultPopup';
 
 const AuthorizedContainer: FC = ({ children }) => {
   const match = useRouteMatch([
@@ -20,7 +27,32 @@ const AuthorizedContainer: FC = ({ children }) => {
     Page.ACCOUNT_ABOUT_US,
     Page.ACCOUNTS_SWITCH,
   ]);
+  const { mainAppStore } = useStores();
   const showNavbarAndNav = !match?.isExact;
+
+  useEffect(() => {
+    async function fetchPersonalData() {
+      try {
+        const response = await API.getPersonalData(getProcessId());
+        mainAppStore.signUpFlag ? mixpanel.alias(response.data.id) : mixpanel.identify(response.data.id);
+        mixpanel.people.set({
+          [mixapanelProps.PHONE]: response.data.phone || '',
+          [mixapanelProps.EMAIL]: response.data.email || '',
+          [mixapanelProps.BRAND_NAME]: mainAppStore.initModel.brandName.toLowerCase(),
+          [mixapanelProps.TRADER_ID]: response.data.id || '',
+          [mixapanelProps.FIRST_NAME]: response.data.firstName || '',
+          [mixapanelProps.KYC_STATUS]: KYCStatus[response.data.kyc],
+          [mixapanelProps.LAST_NAME]: response.data.lastName || '',
+        });
+        mixpanel.people.union({
+          [mixapanelProps.PLATFORMS_USED]: 'mobile',
+          [mixapanelProps.BRAND_NAME]: mainAppStore.initModel.brandName.toLowerCase(),
+        })
+        mainAppStore.setSignUpFlag(false);
+      } catch (error) {}
+    }
+    fetchPersonalData();
+  }, []);
 
   return (
     <WrapperLayoutFix
@@ -35,6 +67,11 @@ const AuthorizedContainer: FC = ({ children }) => {
             <NotificationPopup></NotificationPopup>
             <NotificationActivePositionPopup></NotificationActivePositionPopup>
             <NotificationPendingPositionPopup></NotificationPendingPositionPopup>
+            {mainAppStore.activeAccount && (
+              <>
+                <DepositPaymentResultPopup />
+              </>
+            )}
           </>
         )}
       </Observer>
