@@ -23,17 +23,17 @@ const apiResponseCodeMessages = {
     'Insufficient funds to open a position.',
   [OperationApiResponseCodes.NoLiquidity]:
     'No liquidity for this asset. Please try again later.',
-  [OperationApiResponseCodes.PositionNotFound]: 'Position is not found.',
+  [OperationApiResponseCodes.PositionNotFound]: 'The position is not found.',
   [OperationApiResponseCodes.TpIsTooClose]:
     'Take profit level is too close to the current price.',
   [OperationApiResponseCodes.SlIsTooClose]:
     'Stop loss level is too close to the current price.',
   [OperationApiResponseCodes.PendingOrderNotFound]:
     'The position is not found.',
-  [OperationApiResponseCodes.AccountNotFound]: 'Account is not found.',
-  [OperationApiResponseCodes.InstrumentNotFound]: 'Asset is not found.',
+  [OperationApiResponseCodes.AccountNotFound]: 'The account is not found.',
+  [OperationApiResponseCodes.InstrumentNotFound]: 'The asset is not found.',
   [OperationApiResponseCodes.InstrumentCanNotBeUsed]:
-    'Asset is not available now.',
+    'The asset is not available now.',
   [OperationApiResponseCodes.OperationIsNotPossibleDuringSwap]:
     'Operation is not possible during the swap.',
   [OperationApiResponseCodes.MaxAmountPendingOrders]:
