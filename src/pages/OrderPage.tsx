@@ -42,6 +42,11 @@ const OrderPage = () => {
   } = useStores();
   const { push } = useHistory();
 
+  const getActiveAccountBalance = useCallback(
+      () => mainAppStore.activeAccount?.balance,
+      [mainAppStore.activeAccount]
+  );
+
   // TODO: Refactor
   const instrument = useCallback(() => {
     return (
@@ -217,6 +222,7 @@ const OrderPage = () => {
       investmentAmount: +otherValues.investmentAmount,
     };
     try {
+      const balanceBeforeOrder = getActiveAccountBalance();
       const response = await API.openPosition(modelToSubmit);
       if (response.result === OperationApiResponseCodes.Ok) {
         const instrumentItem = instrumentsStore.instruments.find(
@@ -245,9 +251,7 @@ const OrderPage = () => {
           [mixapanelProps.MULTIPLIER]: otherValues.multiplier,
           [mixapanelProps.TREND]: type,
           [mixapanelProps.SLTP]: !!(otherValues.sl || otherValues.tp),
-          [mixapanelProps.AVAILABLE_BALANCE]: mainAppStore.activeAccount?.balance
-              ? mainAppStore.activeAccount?.balance + otherValues.investmentAmount
-              : 0,
+          [mixapanelProps.AVAILABLE_BALANCE]: balanceBeforeOrder,
           [mixapanelProps.ACCOUNT_ID]: mainAppStore.activeAccount?.id || '',
           [mixapanelProps.ACCOUNT_TYPE]: mainAppStore.activeAccount?.isLive
               ? 'real'
@@ -263,7 +267,7 @@ const OrderPage = () => {
           [mixapanelProps.MULTIPLIER]: otherValues.multiplier,
           [mixapanelProps.TREND]: type,
           [mixapanelProps.SLTP]: !!(otherValues.sl || otherValues.tp),
-          [mixapanelProps.AVAILABLE_BALANCE]: mainAppStore.activeAccount?.balance,
+          [mixapanelProps.AVAILABLE_BALANCE]: balanceBeforeOrder,
           [mixapanelProps.ACCOUNT_ID]: mainAppStore.activeAccount?.id || '',
           [mixapanelProps.ACCOUNT_TYPE]: mainAppStore.activeAccount?.isLive
               ? 'real'
