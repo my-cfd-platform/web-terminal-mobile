@@ -10,6 +10,12 @@ const injectInerceptors = (tradingUrl: string, mainAppStore: MainAppStore) => {
   axios.interceptors.response.use(
     function (config: AxiosResponse) {
       if (config.data.result === OperationApiResponseCodes.TechnicalError) {
+        setTimeout(() => {
+          axios.request(config);
+          if (!mainAppStore.rootStore.serverErrorPopupStore.isActive) {
+            mainAppStore.rootStore.serverErrorPopupStore.openModal();
+          }
+        }, +mainAppStore.connectTimeOut);
         return Promise.reject(
           apiResponseCodeMessages[OperationApiResponseCodes.TechnicalError]
         );
@@ -19,6 +25,12 @@ const injectInerceptors = (tradingUrl: string, mainAppStore: MainAppStore) => {
         OperationApiResponseCodes.InvalidUserNameOrPassword
       ) {
         mainAppStore.signOut();
+      }
+
+      if (config.data.result === OperationApiResponseCodes.Ok) {
+        if (mainAppStore.rootStore.serverErrorPopupStore.isActive) {
+          mainAppStore.rootStore.serverErrorPopupStore.closeModal();
+        }
       }
       return config;
     },
