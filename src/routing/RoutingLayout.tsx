@@ -12,10 +12,11 @@ import SignFlowLayout from '../components/SignFlowLayout';
 import { FULL_VH } from '../constants/global';
 import DemoRealPopup from '../components/DemoRealPopup';
 import NetworkErrorPopup from '../components/NetworkErrorPopup';
+import ServerErrorPopup from '../components/ServerErrorPopup';
 
 const RoutingLayout: FC = () => {
   const location = useLocation();
-  const { mainAppStore } = useStores();
+  const { mainAppStore, serverErrorPopupStore } = useStores();
 
   const allRoutes = routesList.map((route) => (
     <RouteWrapper key={route.path} {...route} />
@@ -35,7 +36,12 @@ const RoutingLayout: FC = () => {
     case RouteLayoutType.Authorized:
       return (
         <AuthorizedContainer>
-          <Observer>{() => <NetworkErrorPopup />}</Observer>
+          <Observer>
+            {() => (
+              <>{serverErrorPopupStore.isActive && <ServerErrorPopup />}</>
+            )}
+          </Observer>
+          <Observer>{() => <NetworkErrorPopup></NetworkErrorPopup>}</Observer>
           <Observer>
             {() => (
               <>
@@ -53,6 +59,11 @@ const RoutingLayout: FC = () => {
       return (
         <SignFlowLayout>
           <Observer>{() => <NetworkErrorPopup />}</Observer>
+          <Observer>
+            {() => (
+              <>{serverErrorPopupStore.isActive && <ServerErrorPopup />}</>
+            )}
+          </Observer>
           <Observer>{() => <NotificationPopup></NotificationPopup>}</Observer>
           <Observer>
             {() => (
@@ -74,6 +85,11 @@ const RoutingLayout: FC = () => {
           height={`calc(${FULL_VH})`}
           width="100%"
         >
+          <Observer>
+            {() => (
+              <>{serverErrorPopupStore.isActive && <NetworkErrorPopup />}</>
+            )}
+          </Observer>
           <Observer>{() => <NetworkErrorPopup />}</Observer>
           <Observer>
             {() => (

@@ -1,12 +1,12 @@
 import { observable, action } from 'mobx';
 
 interface ContextProps {
-  requsetMessage?: string;
+  requestMessage?: string;
   isActive: boolean;
 }
 
 export class BadRequestPopupStore implements ContextProps {
-  @observable requsetMessage: string = '';
+  @observable requestMessage: string = '';
   @observable isActive: boolean = false;
   @observable isNetworkError: boolean = false;
   @observable isRecconect: boolean = false;
@@ -51,9 +51,8 @@ export class BadRequestPopupStore implements ContextProps {
     this.isActive = !this.isNetworkError;
   };
 
-  // TODO: rewrite to actions
   @action
   setMessage = (message: string) => {
-    this.requsetMessage = message;
+    this.requestMessage = message;
   };
 }

@@ -31,11 +31,13 @@ const injectInerceptors = (tradingUrl: string, mainAppStore: MainAppStore) => {
           mainAppStore.rootStore.badRequestPopupStore.stopRecconect();
         }, +mainAppStore.connectTimeOut);
       }
-      if (error.response?.status === 500) {
-        mainAppStore.rootStore.badRequestPopupStore.setMessage(
-          error.response?.statusText
-        );
-        mainAppStore.rootStore.badRequestPopupStore.openModal();
+      if (error.response?.status === 500 || error.response?.status === 400) {
+        setTimeout(() => {
+          axios.request(error.config);
+          if (!mainAppStore.rootStore.serverErrorPopupStore.isActive) {
+            mainAppStore.rootStore.serverErrorPopupStore.openModal();
+          }
+        }, +mainAppStore.connectTimeOut);
         mainAppStore.isLoading = false;
       } else if (error.response?.status === 401) {
         if (mainAppStore.refreshToken) {
