@@ -109,7 +109,6 @@ module.exports = (env, argv) => {
           argv.mode === 'production'
             ? JSON.stringify('')
             : JSON.stringify('http://localhost:5679'),
-        // TODO: exlude api auth string "auth"
         API_DEPOSIT_STRING:
           argv.mode === 'production'
             ? JSON.stringify('/mobile-deposit')
