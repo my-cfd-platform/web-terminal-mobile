@@ -37,15 +37,10 @@ const ServerErrorPopup = () => {
               marginBottom="16px"
               textAlign="center"
             >
-              {t('Please wait while we processing your request')}.
-            </PrimaryTextSpan>
-            <PrimaryTextSpan
-              color="rgba(255, 255, 255, 0.5)"
-              fontSize="16px"
-              marginBottom="20px"
-              textAlign="center"
-            >
-              {t('Click "Reload" if the request failed to be processed')}.
+              {t(
+                'Please wait while we processing your request or click "Reload"'
+              )}
+              .
             </PrimaryTextSpan>
             <LoaderComponent />
           </MainTextContainer>
