@@ -16,11 +16,14 @@ const NavBar = observer(() => {
 
   useEffect(() => {
     urlParams.set('token', mainAppStore.token);
-    urlParams.set('active_account_id', mainAppStore.activeAccountId);
+    urlParams.set(
+      'active_account_id',
+      mainAppStore.accounts.find((item) => item.isLive)?.id || ''
+    );
     urlParams.set('lang', mainAppStore.lang);
     urlParams.set('env', 'web_mob');
     setParsedParams(urlParams.toString());
-  }, [mainAppStore.token, mainAppStore.lang, mainAppStore.activeAccountId]);
+  }, [mainAppStore.token, mainAppStore.lang, mainAppStore.accounts]);
   return (
     <FlexContainer
       width="100vw"
