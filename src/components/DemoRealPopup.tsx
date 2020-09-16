@@ -21,13 +21,10 @@ const DemoRealPopup = () => {
 
   useEffect(() => {
     urlParams.set('token', mainAppStore.token);
-    urlParams.set(
-      'active_account_id',
-      mainAppStore.accounts.find((item) => item.isLive)?.id || ''
-    );
+    urlParams.set('active_account_id', mainAppStore.activeAccountId);
     urlParams.set('lang', mainAppStore.lang);
     setParsedParams(urlParams.toString());
-  }, [mainAppStore.token, mainAppStore.lang, mainAppStore.accounts]);
+  }, [mainAppStore.token, mainAppStore.lang, mainAppStore.activeAccountId]);
 
   const selectDemoAccount = async () => {
     const acc = mainAppStore.accounts.find((item) => !item.isLive);

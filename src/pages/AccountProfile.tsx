@@ -14,12 +14,13 @@ import Colors from '../constants/Colors';
 import { useTranslation } from 'react-i18next';
 import Page from '../constants/Pages';
 
+
 import IconArrowLink from '../assets/svg/profile/icon-arrow-link.svg';
 import IconDeposit from '../assets/svg/profile/icon-deposit.svg';
 import IconWithdraw from '../assets/svg/profile/icon-withdrawal.svg';
 import IconBalanceHistory from '../assets/svg/profile/icon-balance-history.svg';
 import IconLogout from '../assets/svg/profile/icon-logout.svg';
-import IconAboutUs from '../assets/svg/profile/icon-about.svg';
+import IconAboutUs from '../assets/svg/profile/icon-about.svg'
 
 const AccountProfile = () => {
   const { mainAppStore } = useStores();
@@ -49,13 +50,10 @@ const AccountProfile = () => {
 
   useEffect(() => {
     urlParams.set('token', mainAppStore.token);
-    urlParams.set(
-      'active_account_id',
-      mainAppStore.accounts.find((item) => item.isLive)?.id || ''
-    );
+    urlParams.set('active_account_id', mainAppStore.activeAccountId);
     urlParams.set('lang', mainAppStore.lang);
     setParsedParams(urlParams.toString());
-  }, [mainAppStore.token, mainAppStore.lang, mainAppStore.accounts]);
+  }, [mainAppStore.token, mainAppStore.lang, mainAppStore.activeAccountId]);
 
   return (
     <FlexContainer flexDirection="column">
