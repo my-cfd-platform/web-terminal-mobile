@@ -22,8 +22,10 @@ const NetworkErrorPopup = observer(() => {
   };
 
   const handleVisibilityChange = useCallback(() => {
-    window.location.reload();
-  }, [mainAppStore.socketError]);
+    if (!document.hidden && mainAppStore.socketError) {
+      window.location.reload();
+    }
+  }, [mainAppStore.socketError, document.hidden]);
 
   useEffect(() => {
     window.addEventListener('offline', handleLostConnection);
