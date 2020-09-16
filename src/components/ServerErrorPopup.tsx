@@ -17,7 +17,7 @@ const ServerErrorPopup = () => {
     <Modal>
       <ModalBody zIndex="103">
         <Wrapper>
-          <FlexContainer
+          <MainTextContainer
             flexDirection="column"
             padding="20px"
             alignItems="center"
@@ -37,18 +37,13 @@ const ServerErrorPopup = () => {
               marginBottom="16px"
               textAlign="center"
             >
-              {t('Please wait while we processing your request')}.
-            </PrimaryTextSpan>
-            <PrimaryTextSpan
-              color="rgba(255, 255, 255, 0.5)"
-              fontSize="16px"
-              marginBottom="20px"
-              textAlign="center"
-            >
-              {t('Click "Reload" if the request failed to be processed')}.
+              {t(
+                'Please wait while we processing your request or click "Reload"'
+              )}
+              .
             </PrimaryTextSpan>
             <LoaderComponent />
-          </FlexContainer>
+          </MainTextContainer>
           <FlexContainer
             flexDirection="column"
             alignItems="center"
@@ -73,7 +68,6 @@ const Wrapper = styled(FlexContainer)`
   border-radius: 14px;
   width: calc(100vw - 60px);
   flex-direction: column;
-  border-bottom: 1px solid #1d1e23;
 `;
 
 const ModalBody = styled(FlexContainer)`
@@ -86,7 +80,11 @@ const ModalBody = styled(FlexContainer)`
   bottom: 0;
   background-color: #23262f;
   @supports ((-webkit-backdrop-filter: none) or (backdrop-filter: none)) {
-    background-color: rgba(35, 38, 47, 0.7);
+    background-color: rgba(18, 21, 28, 0.8);
     backdrop-filter: blur(12px);
   }
+`;
+
+const MainTextContainer = styled(FlexContainer)`
+  border-bottom: 1px solid #1d1e23;
 `;
