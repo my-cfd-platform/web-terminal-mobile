@@ -12,7 +12,6 @@ const ServerErrorPopup = () => {
   const reloadPage = () => {
     window.location.reload();
   };
-  //Please wait while we processing your request. Click "Reload" if the request failed to be processed.
   return (
     <Modal>
       <ModalBody zIndex="103">
