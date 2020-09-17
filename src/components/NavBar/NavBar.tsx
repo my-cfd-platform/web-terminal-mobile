@@ -9,7 +9,7 @@ import { observer } from 'mobx-react-lite';
 import { useTranslation } from 'react-i18next';
 
 const NavBar = observer(() => {
-  const { mainAppStore } = useStores();
+  const { mainAppStore, userProfileStore } = useStores();
   const urlParams = new URLSearchParams();
   const { t } = useTranslation();
   const [parsedParams, setParsedParams] = useState('');
@@ -22,8 +22,9 @@ const NavBar = observer(() => {
     );
     urlParams.set('lang', mainAppStore.lang);
     urlParams.set('env', 'web_mob');
+    urlParams.set('trader_id', userProfileStore.userProfileId || '');
     setParsedParams(urlParams.toString());
-  }, [mainAppStore.token, mainAppStore.lang, mainAppStore.accounts]);
+  }, [mainAppStore.token, mainAppStore.lang, mainAppStore.accounts, userProfileStore.userProfileId]);
   return (
     <FlexContainer
       width="100vw"
