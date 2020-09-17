@@ -16,6 +16,7 @@ import { DateRangeAccountBalanceStore } from './DateRangeAccountBalanceStore';
 import { ActivePositionNotificationStore } from './ActivePositionNotificationStore';
 import { PendingPositionNotificationStore } from './PendingPositionNotificationStore';
 import { ServerErrorPopupStore } from './ServerErrorPopupStore';
+import { UserProfileStore } from './UserProfileStore';
 
 export class RootStore {
   quotesStore: QuotesStore;
@@ -36,6 +37,7 @@ export class RootStore {
   activePositionNotificationStore: ActivePositionNotificationStore;
   pendingPositionNotificationStore: PendingPositionNotificationStore;
   serverErrorPopupStore: ServerErrorPopupStore;
+  userProfileStore: UserProfileStore;
 
   constructor() {
     this.quotesStore = new QuotesStore(this);
@@ -56,5 +58,6 @@ export class RootStore {
     this.activePositionNotificationStore = new ActivePositionNotificationStore();
     this.pendingPositionNotificationStore = new PendingPositionNotificationStore();
     this.serverErrorPopupStore = new ServerErrorPopupStore();
+    this.userProfileStore = new UserProfileStore();
   }
 }

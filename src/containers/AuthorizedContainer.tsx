@@ -27,7 +27,7 @@ const AuthorizedContainer: FC = ({ children }) => {
     Page.ACCOUNT_ABOUT_US,
     Page.ACCOUNTS_SWITCH,
   ]);
-  const { mainAppStore } = useStores();
+  const { mainAppStore, userProfileStore } = useStores();
   const showNavbarAndNav = !match?.isExact;
 
   useEffect(() => {
@@ -35,6 +35,7 @@ const AuthorizedContainer: FC = ({ children }) => {
       try {
         const response = await API.getPersonalData(getProcessId());
         mainAppStore.signUpFlag ? mixpanel.alias(response.data.id) : mixpanel.identify(response.data.id);
+        userProfileStore.setUser(response.data);
         mixpanel.people.set({
           [mixapanelProps.PHONE]: response.data.phone || '',
           [mixapanelProps.EMAIL]: response.data.email || '',
