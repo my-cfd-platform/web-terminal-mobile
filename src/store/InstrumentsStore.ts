@@ -203,7 +203,9 @@ export class InstrumentsStore implements ContextProps {
     } else {
       // Safari strange behaviour fix
       setTimeout(() => {
-        this.switchInstrument(this.activeInstrumentsIds[0]);
+        this.switchInstrument(
+          this.activeInstrumentsIds[this.activeInstrumentsIds.length - 1]
+        );
       }, 0);
     }
   };
