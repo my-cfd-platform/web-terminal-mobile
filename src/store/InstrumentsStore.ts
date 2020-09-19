@@ -89,14 +89,6 @@ export class InstrumentsStore implements ContextProps {
   };
 
   @action
-  setActiveInstrument = (activeInstrumentId: string) => {
-    this.activeInstrument =
-      this.instruments.find(
-        (item) => item.instrumentItem.id === activeInstrumentId
-      ) || this.instruments[0];
-  };
-
-  @action
   editActiveInstrument = (activeInstrument: IActiveInstrument) => {
     this.instruments = this.instruments.map((item) =>
       item.instrumentItem.id === activeInstrument.instrumentItem.id
@@ -186,6 +178,7 @@ export class InstrumentsStore implements ContextProps {
           this.rootStore.tradingViewStore.tradingWidget
             .chart()
             .setSymbol(instrumentId, () => {
+              this.rootStore.mainAppStore.isLoading = false;
               this.rootStore.tradingViewStore.tradingWidget
                 ?.chart()
                 .setResolution(
@@ -202,7 +195,6 @@ export class InstrumentsStore implements ContextProps {
                     }
                   }
                 );
-
               this.rootStore.tradingViewStore.tradingWidget
                 ?.chart()
                 .setChartType(newActiveInstrument.chartType);
