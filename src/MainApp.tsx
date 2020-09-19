@@ -33,15 +33,18 @@ const MainApp: FC = () => {
       });
       instrumentsStore.setActiveInstrumentsIds(response.reverse());
 
+      // https://monfex.atlassian.net/browse/WEBT-475
+      // if app is reinitializing, we should wait widget first
+      if (instrumentsStore.activeInstrument) {
+        mainAppStore.isLoading = false;
+      }
+
       if (!response.length) {
         throw new Error(
           t(apiResponseCodeMessages[OperationApiResponseCodes.TechnicalError])
         );
       }
       instrumentsStore.switchInstrument(response[response.length - 1]);
-      // https://monfex.atlassian.net/browse/WEBT-475
-      // if app is reinitializing, we should wait widget first
-      mainAppStore.isLoading = false;
     } catch (error) {
       mainAppStore.isLoading = false;
       badRequestPopupStore.openModal();
