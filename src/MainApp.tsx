@@ -14,6 +14,8 @@ import Colors from './constants/Colors';
 import { SFfonts } from './styles/SFfonts';
 import { AccountTypeEnum } from './enums/AccountTypeEnum';
 import API from './helpers/API';
+import apiResponseCodeMessages from './constants/apiResponseCodeMessages';
+import { OperationApiResponseCodes } from './enums/OperationApiResponseCodes';
 
 const MainApp: FC = () => {
   const { mainAppStore, instrumentsStore, badRequestPopupStore } = useStores();
@@ -34,6 +36,11 @@ const MainApp: FC = () => {
       // if app is reinitializing, we should wait widget first
       if (instrumentsStore.activeInstrument) {
         mainAppStore.isLoading = false;
+      }
+      if (!response.length) {
+        throw new Error(
+          t(apiResponseCodeMessages[OperationApiResponseCodes.TechnicalError])
+        );
       }
       instrumentsStore.switchInstrument(response[response.length - 1]);
     } catch (error) {

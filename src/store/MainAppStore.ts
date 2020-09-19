@@ -90,7 +90,7 @@ export class MainAppStore implements MainAppStoreProps {
   @observable isLoading = true;
   @observable isInitLoading = true;
   @observable isDemoRealPopup = false;
-  @observable isAuthorized = false;
+  @observable isAuthorized = true;
   @observable activeSession?: HubConnection;
   @observable activeAccount?: AccountModelWebSocketDTO;
   @observable accounts: AccountModelWebSocketDTO[] = [];
@@ -203,10 +203,7 @@ export class MainAppStore implements MainAppStoreProps {
     connection.on(
       Topics.INSTRUMENTS,
       (response: ResponseFromWebsocket<InstrumentModelWSDTO[]>) => {
-        if (
-          this.activeAccount &&
-          response.accountId === this.activeAccount.id
-        ) {
+        if (response.accountId === this.activeAccountId) {
           response.data.forEach((item) => {
             this.rootStore.quotesStore.setQuote({
               ask: {
