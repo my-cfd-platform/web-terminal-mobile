@@ -6,7 +6,6 @@ import RoutingLayout from './routing/RoutingLayout';
 import { BrowserRouter as Router } from 'react-router-dom';
 import 'react-dates/lib/css/_datepicker.css';
 import { useStores } from './hooks/useStores';
-import { Observer } from 'mobx-react-lite';
 import injectInerceptors from './http/interceptors';
 import { useTranslation } from 'react-i18next';
 import { autorun } from 'mobx';
@@ -25,7 +24,6 @@ const MainApp: FC = () => {
     const accountType = mainAppStore.activeAccount?.isLive
       ? AccountTypeEnum.Live
       : AccountTypeEnum.Demo;
-    mainAppStore.isLoading = true;
     try {
       const response = await API.getFavoriteInstrumets({
         type: accountType,
@@ -62,6 +60,7 @@ const MainApp: FC = () => {
     if (IS_LIVE) {
       mainAppStore.fetchTradingUrl();
     } else {
+      mainAppStore.isLoading = true;
       mainAppStore.setTradingUrl('/');
       injectInerceptors('/', mainAppStore);
       mainAppStore.handleInitConnection();
@@ -113,17 +112,9 @@ const MainApp: FC = () => {
         )}`}</title>
         <link rel="shortcut icon" href={mainAppStore.initModel.favicon} />
       </Helmet>
-      <Observer>
-        {() => (
-          <>
-            {!!mainAppStore.tradingUrl && (
-              <Router>
-                <RoutingLayout></RoutingLayout>
-              </Router>
-            )}
-          </>
-        )}
-      </Observer>
+      <Router>
+        <RoutingLayout></RoutingLayout>
+      </Router>
       <Global
         styles={css`
           ${reboot};

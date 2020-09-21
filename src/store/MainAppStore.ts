@@ -126,6 +126,7 @@ export class MainAppStore implements MainAppStoreProps {
       const initModel = await API.getInitModel();
       this.initModel = initModel;
     } catch (error) {
+      this.isInitLoading = false;
       this.rootStore.badRequestPopupStore.openModal();
       this.rootStore.badRequestPopupStore.setMessage(error);
     }
@@ -325,6 +326,7 @@ export class MainAppStore implements MainAppStoreProps {
   };
 
   fetchTradingUrl = async (token = this.token) => {
+    this.isLoading = true;
     try {
       const response = await API.getTradingUrl();
       this.setTradingUrl(response.tradingUrl);

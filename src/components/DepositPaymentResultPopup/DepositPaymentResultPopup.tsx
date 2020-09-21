@@ -50,6 +50,8 @@ const DepositPaymentResultPopup: FC = () => {
         );
       case 'fail':
         return <DepositPaymentFail />;
+      case 'failed':
+        return <DepositPaymentFail />;
       default:
         break;
     }
@@ -60,7 +62,7 @@ const DepositPaymentResultPopup: FC = () => {
   };
 
   if (
-    (queryParams.status === 'success' || queryParams.status === 'fail')
+    (queryParams.status === 'success' || queryParams.status === 'fail' || queryParams.status === 'failed')
   ) {
     return (
       <Modal>

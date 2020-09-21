@@ -31,7 +31,7 @@ const DEFAULT_INVEST_AMOUNT = 10;
 const MAX_INPUT_VALUE = 9999999.99;
 
 const OrderPage = () => {
-  const { type } = useParams();
+  const { type } = useParams<{ type: string }>();
   const { t } = useTranslation();
   const {
     mainAppStore,
@@ -43,8 +43,8 @@ const OrderPage = () => {
   const { push } = useHistory();
 
   const getActiveAccountBalance = useCallback(
-      () => mainAppStore.activeAccount?.balance,
-      [mainAppStore.activeAccount]
+    () => mainAppStore.activeAccount?.balance,
+    [mainAppStore.activeAccount]
   );
 
   // TODO: Refactor
@@ -93,7 +93,11 @@ const OrderPage = () => {
             )}.`,
             function (value) {
               if (value) {
-                return value >= (+instrument().minOperationVolume / +this.parent[Fields.MULTIPLIER]);
+                return (
+                  value >=
+                  +instrument().minOperationVolume /
+                    +this.parent[Fields.MULTIPLIER]
+                );
               }
               return true;
             }
@@ -106,7 +110,11 @@ const OrderPage = () => {
             )}.`,
             function (value) {
               if (value) {
-                return value <= (+instrument().maxOperationVolume / +this.parent[Fields.MULTIPLIER]);
+                return (
+                  value <=
+                  +instrument().maxOperationVolume /
+                    +this.parent[Fields.MULTIPLIER]
+                );
               }
               return true;
             }
@@ -246,7 +254,7 @@ const OrderPage = () => {
         mixpanel.track(mixpanelEvents.MARKET_ORDER, {
           [mixapanelProps.AMOUNT]: otherValues.investmentAmount,
           [mixapanelProps.ACCOUNT_CURRENCY]:
-          mainAppStore.activeAccount?.currency || '',
+            mainAppStore.activeAccount?.currency || '',
           [mixapanelProps.INSTRUMENT_ID]: otherValues.instrumentId,
           [mixapanelProps.MULTIPLIER]: otherValues.multiplier,
           [mixapanelProps.TREND]: type,
@@ -254,15 +262,16 @@ const OrderPage = () => {
           [mixapanelProps.AVAILABLE_BALANCE]: balanceBeforeOrder,
           [mixapanelProps.ACCOUNT_ID]: mainAppStore.activeAccount?.id || '',
           [mixapanelProps.ACCOUNT_TYPE]: mainAppStore.activeAccount?.isLive
-              ? 'real'
-              : 'demo',
+            ? 'real'
+            : 'demo',
         });
+        resetForm();
         push(Page.DASHBOARD);
       } else {
         mixpanel.track(mixpanelEvents.MARKET_ORDER_FAILED, {
           [mixapanelProps.AMOUNT]: otherValues.investmentAmount,
           [mixapanelProps.ACCOUNT_CURRENCY]:
-          mainAppStore.activeAccount?.currency || '',
+            mainAppStore.activeAccount?.currency || '',
           [mixapanelProps.INSTRUMENT_ID]: otherValues.instrumentId,
           [mixapanelProps.MULTIPLIER]: otherValues.multiplier,
           [mixapanelProps.TREND]: type,
@@ -270,19 +279,17 @@ const OrderPage = () => {
           [mixapanelProps.AVAILABLE_BALANCE]: balanceBeforeOrder,
           [mixapanelProps.ACCOUNT_ID]: mainAppStore.activeAccount?.id || '',
           [mixapanelProps.ACCOUNT_TYPE]: mainAppStore.activeAccount?.isLive
-              ? 'real'
-              : 'demo',
-          [mixapanelProps.ERROR_TEXT]:
-              apiResponseCodeMessages[response.result],
+            ? 'real'
+            : 'demo',
+          [mixapanelProps.ERROR_TEXT]: apiResponseCodeMessages[response.result],
         });
         notificationStore.notificationMessage = t(
           apiResponseCodeMessages[response.result]
         );
         notificationStore.isSuccessfull = false;
         notificationStore.openNotification();
+        resetForm();
       }
-
-      resetForm();
     } catch (error) {}
   };
 
@@ -542,7 +549,7 @@ const MultiplierSelect = styled.select`
 `;
 const MultiplierSelectValue = styled.option``;
 
-const Input = styled.input<{ autocomplete?: string}>`
+const Input = styled.input<{ autocomplete?: string }>`
   background-color: transparent;
   outline: none;
   border: none;
