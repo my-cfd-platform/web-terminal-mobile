@@ -122,7 +122,7 @@ module.exports = (env, argv) => {
         AUTH_TOKEN: JSON.stringify('TraderID'),
         CHARTING_LIBRARY_PATH:
           argv.mode === 'production'
-            ? JSON.stringify(path.resolve(__dirname, './charting_library/'))
+            ? JSON.stringify('/charting_library/')
             : JSON.stringify('/src/vendor/charting_library/'),
         IS_LIVE: argv.mode === 'production',
         MIXPANEL_TOKEN:
