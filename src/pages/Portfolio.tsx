@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useParams, useHistory } from 'react-router-dom';
 import { PortfolioTabEnum } from '../enums/PortfolioTabEnum';
 import { FlexContainer } from '../styles/FlexContainer';
@@ -17,7 +17,7 @@ import ClosedPositions from '../components/Portfolio/ClosedPositions';
 import styled from '@emotion/styled';
 
 const Portfolio = observer(() => {
-  const { type } = useParams();
+  const { type } = useParams<{ type: PortfolioTabEnum }>();
   const { push } = useHistory();
   const { t } = useTranslation();
 
