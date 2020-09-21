@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { useStores } from '../hooks/useStores';
 import FavouriteInstruments from '../components/Dashboard/FavouriteInstruments';
 import { FlexContainer } from '../styles/FlexContainer';
@@ -15,14 +15,17 @@ const Dashboard = () => {
   const { mainAppStore, instrumentsStore } = useStores();
   const { push } = useHistory();
 
-  const handleClickBuy = () =>
+  const handleClickBuy = () => {
     push(
       `${Page.ORDER_MAIN}/buy/${instrumentsStore.activeInstrument?.instrumentItem.id}`
     );
-  const handleClickSell = () =>
+  };
+
+  const handleClickSell = () => {
     push(
       `${Page.ORDER_MAIN}/sell/${instrumentsStore.activeInstrument?.instrumentItem.id}`
     );
+  };
 
   return (
     <>

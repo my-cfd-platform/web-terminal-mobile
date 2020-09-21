@@ -4,6 +4,7 @@ import Page from '../constants/Pages';
 import { RouteLayoutType } from '../constants/routesList';
 import { observer } from 'mobx-react-lite';
 import { useStores } from '../hooks/useStores';
+import { LAST_PAGE_VISITED } from '../constants/global';
 
 interface IProps {
   component: FunctionComponent<any>;
@@ -12,13 +13,14 @@ interface IProps {
 
 type Props = IProps;
 
-const RouteWrapper: FC<Props> = observer(props => {
+const RouteWrapper: FC<Props> = observer((props) => {
   const { component: Component, layoutType, ...otherProps } = props;
   const { mainAppStore } = useStores();
 
   if (layoutType !== RouteLayoutType.Public) {
     if (mainAppStore.isAuthorized && layoutType === RouteLayoutType.SignFlow) {
-      return <Redirect to={Page.DASHBOARD} />;
+      const lastPage = localStorage.getItem(LAST_PAGE_VISITED);
+      return <Redirect to={lastPage || Page.DASHBOARD} />;
     } else if (
       !mainAppStore.isAuthorized &&
       [RouteLayoutType.Authorized, RouteLayoutType.KYC].includes(layoutType)
@@ -29,7 +31,7 @@ const RouteWrapper: FC<Props> = observer(props => {
   return (
     <Route
       {...otherProps}
-      render={routeProps => <Component {...routeProps} />}
+      render={(routeProps) => <Component {...routeProps} />}
     />
   );
 });

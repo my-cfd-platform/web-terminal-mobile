@@ -1,4 +1,4 @@
-import React, { useEffect, useCallback } from 'react';
+import React, { useEffect } from 'react';
 import Modal from './Modal';
 import styled from '@emotion/styled';
 import { keyframes } from '@emotion/core';
@@ -9,7 +9,7 @@ import { observer } from 'mobx-react-lite';
 import { useTranslation } from 'react-i18next';
 
 const NetworkErrorPopup = observer(() => {
-  const { badRequestPopupStore, mainAppStore } = useStores();
+  const { badRequestPopupStore } = useStores();
   const { t } = useTranslation();
 
   const handleLostConnection = () => {
@@ -21,23 +21,13 @@ const NetworkErrorPopup = observer(() => {
     window.location.reload();
   };
 
-  const handleVisibilityChange = useCallback(() => {
-    window.location.reload();
-  }, [mainAppStore.socketError]);
-
   useEffect(() => {
     window.addEventListener('offline', handleLostConnection);
     window.addEventListener('online', handleSetConnection);
-    document.addEventListener(
-      'visibilitychange',
-      handleVisibilityChange,
-      false
-    );
 
     return () => {
       window.removeEventListener('offline', handleLostConnection);
       window.removeEventListener('online', handleSetConnection);
-      document.removeEventListener('visibilitychange', handleVisibilityChange);
     };
   }, []);
 

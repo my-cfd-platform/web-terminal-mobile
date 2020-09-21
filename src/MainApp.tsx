@@ -3,7 +3,7 @@ import { Global, css } from '@emotion/core';
 import { reboot } from './styles/reboot';
 import Helmet from 'react-helmet';
 import RoutingLayout from './routing/RoutingLayout';
-import { BrowserRouter as Router } from 'react-router-dom';
+import { BrowserRouter as Router, useLocation } from 'react-router-dom';
 import 'react-dates/lib/css/_datepicker.css';
 import { useStores } from './hooks/useStores';
 import { Observer } from 'mobx-react-lite';
@@ -16,10 +16,12 @@ import { AccountTypeEnum } from './enums/AccountTypeEnum';
 import API from './helpers/API';
 import apiResponseCodeMessages from './constants/apiResponseCodeMessages';
 import { OperationApiResponseCodes } from './enums/OperationApiResponseCodes';
+import { LAST_PAGE_VISITED } from './constants/global';
 
 const MainApp: FC = () => {
   const { mainAppStore, instrumentsStore, badRequestPopupStore } = useStores();
   const { t, i18n } = useTranslation();
+  const location = useLocation();
 
   const fetchFavoriteInstruments = useCallback(async () => {
     const accountType = mainAppStore.activeAccount?.isLive
@@ -91,11 +93,7 @@ const MainApp: FC = () => {
 
   useEffect(() => {
     function handleVisibilityChange() {
-      if (document.hidden) {
-        mainAppStore.startSignalRTimer();
-      } else {
-        mainAppStore.stopSignalRTimer();
-      }
+      window.location.reload();
     }
 
     document.addEventListener(
@@ -112,6 +110,10 @@ const MainApp: FC = () => {
       }
     });
   }, []);
+
+  useEffect(() => {
+    localStorage.setItem(LAST_PAGE_VISITED, location.pathname);
+  }, [location.pathname]);
 
   return (
     <>
