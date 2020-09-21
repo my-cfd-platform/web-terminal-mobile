@@ -10,7 +10,7 @@ import NavigationPanel from '../components/NavigationPanel';
 import { useRouteMatch } from 'react-router-dom';
 import Page from '../constants/Pages';
 import styled from '@emotion/styled';
-import { FULL_VH } from '../constants/global';
+import { FULL_VH, LAST_PAGE_VISITED } from '../constants/global';
 import API from '../helpers/API';
 import { getProcessId } from '../helpers/getProcessId';
 import mixpanel from 'mixpanel-browser';
@@ -34,7 +34,9 @@ const AuthorizedContainer: FC = ({ children }) => {
     async function fetchPersonalData() {
       try {
         const response = await API.getPersonalData(getProcessId());
-        mainAppStore.signUpFlag ? mixpanel.alias(response.data.id) : mixpanel.identify(response.data.id);
+        mainAppStore.signUpFlag
+          ? mixpanel.alias(response.data.id)
+          : mixpanel.identify(response.data.id);
         userProfileStore.setUser(response.data);
         mixpanel.people.set({
           [mixapanelProps.PHONE]: response.data.phone || '',
@@ -48,12 +50,16 @@ const AuthorizedContainer: FC = ({ children }) => {
         mixpanel.people.union({
           [mixapanelProps.PLATFORMS_USED]: 'mobile',
           [mixapanelProps.BRAND_NAME]: mainAppStore.initModel.brandName.toLowerCase(),
-        })
+        });
         mainAppStore.setSignUpFlag(false);
       } catch (error) {}
     }
     fetchPersonalData();
   }, []);
+
+  useEffect(() => {
+    localStorage.setItem(LAST_PAGE_VISITED, location.pathname);
+  }, [location.pathname]);
 
   return (
     <WrapperLayoutFix
