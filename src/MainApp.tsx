@@ -21,7 +21,6 @@ import { LAST_PAGE_VISITED } from './constants/global';
 const MainApp: FC = () => {
   const { mainAppStore, instrumentsStore, badRequestPopupStore } = useStores();
   const { t, i18n } = useTranslation();
-  const location = useLocation();
 
   const fetchFavoriteInstruments = useCallback(async () => {
     const accountType = mainAppStore.activeAccount?.isLive
