@@ -110,10 +110,6 @@ const MainApp: FC = () => {
     });
   }, []);
 
-  useEffect(() => {
-    localStorage.setItem(LAST_PAGE_VISITED, location.pathname);
-  }, [location.pathname]);
-
   return (
     <>
       <Helmet>
