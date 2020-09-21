@@ -3,7 +3,7 @@ import { Global, css } from '@emotion/core';
 import { reboot } from './styles/reboot';
 import Helmet from 'react-helmet';
 import RoutingLayout from './routing/RoutingLayout';
-import { BrowserRouter as Router, useLocation } from 'react-router-dom';
+import { BrowserRouter as Router } from 'react-router-dom';
 import 'react-dates/lib/css/_datepicker.css';
 import { useStores } from './hooks/useStores';
 import { Observer } from 'mobx-react-lite';
@@ -16,7 +16,6 @@ import { AccountTypeEnum } from './enums/AccountTypeEnum';
 import API from './helpers/API';
 import apiResponseCodeMessages from './constants/apiResponseCodeMessages';
 import { OperationApiResponseCodes } from './enums/OperationApiResponseCodes';
-import { LAST_PAGE_VISITED } from './constants/global';
 
 const MainApp: FC = () => {
   const { mainAppStore, instrumentsStore, badRequestPopupStore } = useStores();
@@ -84,10 +83,6 @@ const MainApp: FC = () => {
       const vh = window.innerHeight * 0.01;
       document.documentElement.style.setProperty('--vh', `${vh}px`);
     });
-    // resumeEvent();
-    // window.addEventListener('resume', () => {
-    //   alert('Resumed');
-    // });
   }, []);
 
   useEffect(() => {
@@ -129,7 +124,6 @@ const MainApp: FC = () => {
           </>
         )}
       </Observer>
-
       <Global
         styles={css`
           ${reboot};
