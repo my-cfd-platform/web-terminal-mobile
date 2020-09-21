@@ -8,12 +8,15 @@ import { useTranslation } from 'react-i18next';
 import { Observer } from 'mobx-react-lite';
 import LogoMonfex from '../assets/images/logo.png';
 import { FULL_VH } from '../constants/global';
+import NetworkErrorPopup from './NetworkErrorPopup';
+import NotificationPopup from './NotificationPopup';
+import ServerErrorPopup from './ServerErrorPopup';
 
 interface Props {}
 
 const SignFlowLayout: FC<Props> = (props) => {
   const { children } = props;
-  const { mainAppStore } = useStores();
+  const { mainAppStore, serverErrorPopupStore } = useStores();
 
   return (
     <WrapperLayoutFix
@@ -24,6 +27,11 @@ const SignFlowLayout: FC<Props> = (props) => {
       width="100vw"
       position="relative"
     >
+      <Observer>{() => <NetworkErrorPopup />}</Observer>
+      <Observer>
+        {() => <>{serverErrorPopupStore.isActive && <ServerErrorPopup />}</>}
+      </Observer>
+      <Observer>{() => <NotificationPopup></NotificationPopup>}</Observer>
       <FlexContainer
         justifyContent="center"
         alignItems="center"

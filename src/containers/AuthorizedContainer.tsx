@@ -18,6 +18,10 @@ import mixapanelProps from '../constants/mixpanelProps';
 import KYCStatus from '../constants/KYCStatus';
 import { useStores } from '../hooks/useStores';
 import DepositPaymentResultPopup from '../components/DepositPaymentResultPopup/DepositPaymentResultPopup';
+import LoaderFullscreen from '../components/LoaderFullscreen';
+import DemoRealPopup from '../components/DemoRealPopup';
+import NetworkErrorPopup from '../components/NetworkErrorPopup';
+import ServerErrorPopup from '../components/ServerErrorPopup';
 
 const AuthorizedContainer: FC = ({ children }) => {
   const match = useRouteMatch([
@@ -27,7 +31,7 @@ const AuthorizedContainer: FC = ({ children }) => {
     Page.ACCOUNT_ABOUT_US,
     Page.ACCOUNTS_SWITCH,
   ]);
-  const { mainAppStore, userProfileStore } = useStores();
+  const { mainAppStore, userProfileStore, serverErrorPopupStore } = useStores();
   const showNavbarAndNav = !match?.isExact;
 
   useEffect(() => {
@@ -80,6 +84,22 @@ const AuthorizedContainer: FC = ({ children }) => {
               </>
             )}
           </>
+        )}
+      </Observer>
+      <Observer>
+        {() => (
+          <LoaderFullscreen
+            isLoading={mainAppStore.isLoading}
+          ></LoaderFullscreen>
+        )}
+      </Observer>
+      <Observer>
+        {() => <>{serverErrorPopupStore.isActive && <ServerErrorPopup />}</>}
+      </Observer>
+      <Observer>{() => <NetworkErrorPopup></NetworkErrorPopup>}</Observer>
+      <Observer>
+        {() => (
+          <>{mainAppStore.isDemoRealPopup && <DemoRealPopup></DemoRealPopup>}</>
         )}
       </Observer>
       {showNavbarAndNav && <NavBar />}

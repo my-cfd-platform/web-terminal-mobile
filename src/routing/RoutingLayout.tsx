@@ -6,13 +6,10 @@ import { FlexContainer } from '../styles/FlexContainer';
 import { useStores } from '../hooks/useStores';
 import LoaderFullscreen from '../components/LoaderFullscreen';
 import { Observer } from 'mobx-react-lite';
-import NotificationPopup from '../components/NotificationPopup';
 import AuthorizedContainer from '../containers/AuthorizedContainer';
 import SignFlowLayout from '../components/SignFlowLayout';
 import { FULL_VH } from '../constants/global';
-import DemoRealPopup from '../components/DemoRealPopup';
 import NetworkErrorPopup from '../components/NetworkErrorPopup';
-import ServerErrorPopup from '../components/ServerErrorPopup';
 
 const RoutingLayout: FC = () => {
   const location = useLocation();
@@ -36,21 +33,6 @@ const RoutingLayout: FC = () => {
     case RouteLayoutType.Authorized:
       return (
         <AuthorizedContainer>
-          <Observer>
-            {() => (
-              <>{serverErrorPopupStore.isActive && <ServerErrorPopup />}</>
-            )}
-          </Observer>
-          <Observer>{() => <NetworkErrorPopup></NetworkErrorPopup>}</Observer>
-          <Observer>
-            {() => (
-              <>
-                {mainAppStore.isDemoRealPopup && (
-                  <DemoRealPopup></DemoRealPopup>
-                )}
-              </>
-            )}
-          </Observer>
           <Observer>{() => <Switch>{allRoutes}</Switch>}</Observer>
         </AuthorizedContainer>
       );
@@ -58,13 +40,6 @@ const RoutingLayout: FC = () => {
     case RouteLayoutType.SignFlow:
       return (
         <SignFlowLayout>
-          <Observer>{() => <NetworkErrorPopup />}</Observer>
-          <Observer>
-            {() => (
-              <>{serverErrorPopupStore.isActive && <ServerErrorPopup />}</>
-            )}
-          </Observer>
-          <Observer>{() => <NotificationPopup></NotificationPopup>}</Observer>
           <Observer>
             {() => (
               <>
