@@ -48,17 +48,19 @@ const ClosedPositionsDetails: FC<Props> = ({ positionId }) => {
   }, [historyStore.positionsHistoryReport]);
 
   useEffect(() => {
-    const currentHistoryPosition = historyStore.positionsHistoryReport.positionsHistory.find(
-      (item) => item.id === positionId
-    );
+    if (mainAppStore.activeAccountId) {
+      const currentHistoryPosition = historyStore.positionsHistoryReport.positionsHistory.find(
+        (item) => item.id === positionId
+      );
 
-    if (!currentHistoryPosition) {
-      fetchPositionHistory();
-    } else {
-      setIsLoading(false);
-      setPosition(currentHistoryPosition);
+      if (!currentHistoryPosition) {
+        fetchPositionHistory();
+      } else {
+        setIsLoading(false);
+        setPosition(currentHistoryPosition);
+      }
     }
-  }, []);
+  }, [mainAppStore.activeAccountId]);
 
   return (
     <>
