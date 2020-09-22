@@ -16,12 +16,13 @@ import { useHistory } from 'react-router-dom';
 import Page from '../../constants/Pages';
 import LoaderForComponents from '../LoaderForComponents';
 import { PortfolioTabEnum } from '../../enums/PortfolioTabEnum';
+import { observer } from 'mobx-react-lite';
 
 interface Props {
   positionId: number;
 }
 
-const ClosedPositionsDetails: FC<Props> = ({ positionId }) => {
+const ClosedPositionsDetails: FC<Props> = observer(({ positionId }) => {
   const { t } = useTranslation();
   const { getPressision } = useInstrument();
   const { mainAppStore, historyStore } = useStores();
@@ -52,7 +53,6 @@ const ClosedPositionsDetails: FC<Props> = ({ positionId }) => {
       const currentHistoryPosition = historyStore.positionsHistoryReport.positionsHistory.find(
         (item) => item.id === positionId
       );
-
       if (!currentHistoryPosition) {
         fetchPositionHistory();
       } else {
@@ -213,7 +213,7 @@ const ClosedPositionsDetails: FC<Props> = ({ positionId }) => {
       )}
     </>
   );
-};
+});
 
 export default ClosedPositionsDetails;
 
