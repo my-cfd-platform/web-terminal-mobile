@@ -14,7 +14,7 @@ import Fields from '../constants/fields';
 import Modal from './Modal';
 
 const DemoRealPopup = () => {
-  const { mainAppStore, badRequestPopupStore } = useStores();
+  const { mainAppStore, badRequestPopupStore, userProfileStore } = useStores();
   const urlParams = new URLSearchParams();
   const { t } = useTranslation();
   const [parsedParams, setParsedParams] = useState('');
@@ -26,6 +26,7 @@ const DemoRealPopup = () => {
       mainAppStore.accounts.find((item) => item.isLive)?.id || ''
     );
     urlParams.set('lang', mainAppStore.lang);
+    urlParams.set('trader_id', userProfileStore.userProfileId || '');
     setParsedParams(urlParams.toString());
   }, [mainAppStore.token, mainAppStore.lang, mainAppStore.accounts]);
 

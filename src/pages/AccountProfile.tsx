@@ -22,7 +22,7 @@ import IconLogout from '../assets/svg/profile/icon-logout.svg';
 import IconAboutUs from '../assets/svg/profile/icon-about.svg';
 
 const AccountProfile = () => {
-  const { mainAppStore } = useStores();
+  const { mainAppStore, userProfileStore } = useStores();
   const { t } = useTranslation();
 
   const [email, setEmail] = useState('');
@@ -53,6 +53,7 @@ const AccountProfile = () => {
       'active_account_id',
       mainAppStore.accounts.find((item) => item.isLive)?.id || ''
     );
+    urlParams.set('trader_id', userProfileStore.userProfileId || '');
     urlParams.set('lang', mainAppStore.lang);
     setParsedParams(urlParams.toString());
   }, [mainAppStore.token, mainAppStore.lang, mainAppStore.accounts]);
