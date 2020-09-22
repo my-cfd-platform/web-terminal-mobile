@@ -21,21 +21,12 @@ const DepositPaymentSuccess: FC<Props> = props => {
   return (
     <>
       <FlexContainer flexDirection="column" alignItems="center">
-        <FlexContainer marginBottom="40px">
+        <FlexContainer justifyContent={'center'} alignItems={'center'} marginBottom="40px">
           <img src={SuccessImage} width={138} />
         </FlexContainer>
         <SuccessText>{t('Success')}</SuccessText>
         <SuccessDescription>
           {t('The operation was succesful.')}
-          <br />
-          {t('The amount of')}{' '}
-          <AmountText>
-            {currencySymbol}
-            {amount?.toFixed(2)}
-          </AmountText>{' '}
-          {t('has been added to')}
-          <br />
-          {t('your account')}
         </SuccessDescription>
       </FlexContainer>
       <FlexContainer padding="0 16px" width="100%">
