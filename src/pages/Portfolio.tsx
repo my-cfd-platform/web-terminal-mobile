@@ -48,7 +48,10 @@ const Portfolio = observer(() => {
         delay: 2000,
       }
     );
-    return dispose;
+
+    return () => {
+      dispose();
+    };
   }, []);
 
   useEffect(() => {
