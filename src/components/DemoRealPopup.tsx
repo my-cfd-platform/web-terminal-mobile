@@ -25,7 +25,6 @@ const DemoRealPopup = () => {
       'active_account_id',
       mainAppStore.accounts.find((item) => item.isLive)?.id || ''
     );
-    urlParams.set('env', 'web_mob');
     urlParams.set('lang', mainAppStore.lang);
     urlParams.set('trader_id', userProfileStore.userProfileId || '');
     setParsedParams(urlParams.toString());

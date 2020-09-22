@@ -1,26 +1,14 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { useStores } from '../../hooks/useStores';
 import PendingOrderItem from './PendingOrderItem';
 import EmptyListText from '../EmptyListText';
 import { FlexContainer } from '../../styles/FlexContainer';
-import { PortfolioTabEnum } from '../../enums/PortfolioTabEnum';
 
 const PendingOrders = () => {
   const { t } = useTranslation();
 
-  const {
-    quotesStore,
-    mainAppStore,
-    historyStore,
-    portfolioNavLinksStore,
-  } = useStores();
-
-  useEffect(() => {
-    historyStore.clearPositionsHistory();
-    portfolioNavLinksStore.setPortfolioNavLink(PortfolioTabEnum.PENDING);
-  }, []);
-
+  const { quotesStore, mainAppStore } = useStores();
   return (
     <>
       {quotesStore.sortedPendingOrders.length ? (

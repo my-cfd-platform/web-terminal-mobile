@@ -1,68 +1,46 @@
-import React, { FC, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { FlexContainer } from '../../styles/FlexContainer';
+import ActivePositionItem from '../Portfolio/ActivePositionItem';
 import { PrimaryTextSpan } from '../../styles/TextsElements';
+import { PositionModelWSDTO } from '../../types/Positions';
 import moment from 'moment';
 import { useTranslation } from 'react-i18next';
 import useInstrument from '../../hooks/useInstrument';
 import { getNumberSign } from '../../helpers/getNumberSign';
 import { useStores } from '../../hooks/useStores';
+import { Observer } from 'mobx-react-lite';
 import { PositionHistoryDTO } from '../../types/HistoryReportTypes';
+import InstrumentMarkets from '../Markets/InstrumentMarkets';
 import styled from '@emotion/styled';
 import { AskBidEnum } from '../../enums/AskBid';
 import Colors from '../../constants/Colors';
 import closingReasonText from '../../constants/ClosingReasonText';
 import ClosedPositionItem from '../Portfolio/ClosedPositionItem';
-import { useHistory } from 'react-router-dom';
-import Page from '../../constants/Pages';
-import LoaderForComponents from '../LoaderForComponents';
 
 interface Props {
   positionId: number;
 }
-
-const ClosedPositionsDetails: FC<Props> = ({ positionId }) => {
+const ClosedPositionsDetails = (props: Props) => {
+  const { positionId } = props;
   const { t } = useTranslation();
   const { getPressision } = useInstrument();
-  const { mainAppStore, historyStore } = useStores();
-  const { push } = useHistory();
+  const {
+    mainAppStore,
+    instrumentsStore,
+    quotesStore,
+    historyStore,
+  } = useStores();
 
   const [position, setPosition] = useState<PositionHistoryDTO>();
-  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const currentHistoryPosition = historyStore.positionsHistoryReport.positionsHistory.find(
-      (item) => item.id === positionId
-    );
-
-    async function fetchPositionHistory() {
-      try {
-        await historyStore.fetchPositionsHistory();
-        const newHistoryPosition = historyStore.positionsHistoryReport.positionsHistory.find(
-          (item) => item.id === positionId
-        );
-        if (newHistoryPosition) {
-          setIsLoading(false);
-          setPosition(newHistoryPosition);
-        } else {
-          push(Page.PORTFOLIO_MAIN);
-        }
-      } catch (error) {
-        push(Page.PORTFOLIO_MAIN);
-      }
+    if (positionId === historyStore.activeHistoryItem?.id) {
+      setPosition(historyStore.activeHistoryItem);
     }
-
-    if (!currentHistoryPosition) {
-      fetchPositionHistory();
-    } else {
-      setIsLoading(false);
-      setPosition(currentHistoryPosition);
-    }
-  }, []);
+  }, [positionId]);
 
   return (
     <>
-      <LoaderForComponents isLoading={isLoading} />
-
       {position && (
         <FlexContainer
           flexDirection="column"

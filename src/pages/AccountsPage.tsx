@@ -17,17 +17,11 @@ import Fields from '../constants/fields';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
 import Page from '../constants/Pages';
-import { PortfolioTabEnum } from '../enums/PortfolioTabEnum';
 
 const AccountsPage = () => {
   const { push } = useHistory();
   const { t } = useTranslation();
-  const {
-    quotesStore,
-    mainAppStore,
-    notificationStore,
-    portfolioNavLinksStore,
-  } = useStores();
+  const { quotesStore, mainAppStore, notificationStore } = useStores();
 
   const [total, setTotal] = useState(quotesStore.total);
 
@@ -40,11 +34,7 @@ const AccountsPage = () => {
       [Fields.ACCOUNT_ID]: accId,
     });
     const account = mainAppStore.accounts.find((acc) => acc.id === accId);
-
-    if (account) {
-      mainAppStore.setActiveAccount(account);
-      portfolioNavLinksStore.setPortfolioNavLink(PortfolioTabEnum.ACTIVE);
-    }
+    account && mainAppStore.setActiveAccount(account);
 
     notificationStore.notificationMessage = `${t(
       'Your account has been switched on'

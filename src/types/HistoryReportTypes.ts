@@ -12,10 +12,6 @@ export interface PositionsHistoryReportDTO {
   totalItems: number;
 }
 
-export interface PositionsHistoryReport extends PositionsHistoryReportDTO {
-  accountId: string;
-}
-
 export interface PositionHistoryDTO {
   id: number;
   instrument: string;

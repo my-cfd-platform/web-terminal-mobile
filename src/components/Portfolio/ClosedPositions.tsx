@@ -1,34 +1,62 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import { useStores } from '../../hooks/useStores';
 import { useTranslation } from 'react-i18next';
+import moment from 'moment';
+import API from '../../helpers/API';
 import { observer } from 'mobx-react-lite';
 import InfinityScrollList from '../InfinityScrollList';
 import ClosedPositionItem from './ClosedPositionItem';
 import EmptyListText from '../EmptyListText';
 import LoaderForComponents from '../LoaderForComponents';
 import { FlexContainer } from '../../styles/FlexContainer';
-import { PortfolioTabEnum } from '../../enums/PortfolioTabEnum';
 
 const ClosedPositions = observer(() => {
-  const { mainAppStore, historyStore, portfolioNavLinksStore } = useStores();
+  const { mainAppStore, historyStore, dateRangeStore } = useStores();
   const { t } = useTranslation();
 
   const [isLoading, setIsLoading] = useState(true);
 
-  useEffect(() => {
-    if (mainAppStore.activeAccountId) {
-      if (!historyStore.positionsHistoryReport.positionsHistory.length) {
-        historyStore.fetchPositionsHistory().finally(() => {
-          setIsLoading(false);
+  const fetchPositionsHistory = useCallback(
+    async (isScrolling = false) => {
+      try {
+        const response = await API.getPositionsHistory({
+          accountId: mainAppStore.activeAccount!.id,
+          startDate: 0,
+          endDate: moment().valueOf(),
+          page: isScrolling ? historyStore.positionsHistoryReport.page + 1 : 1,
+          pageSize: 20,
         });
-      } else {
-        setIsLoading(false);
-      }
-    }
-  }, [mainAppStore.activeAccountId]);
+
+        historyStore.positionsHistoryReport = {
+          ...response,
+          positionsHistory: isScrolling
+            ? [
+                ...historyStore.positionsHistoryReport.positionsHistory,
+                ...response.positionsHistory,
+              ]
+            : response.positionsHistory,
+        };
+      } catch (error) {}
+    },
+    [
+      mainAppStore.activeAccount?.id,
+      dateRangeStore.startDate,
+      dateRangeStore.endDate,
+      historyStore.positionsHistoryReport,
+    ]
+  );
 
   useEffect(() => {
-    portfolioNavLinksStore.setPortfolioNavLink(PortfolioTabEnum.CLOSED);
+    fetchPositionsHistory().finally(() => {
+      setIsLoading(false);
+    });
+    return () => {
+      historyStore.positionsHistoryReport = {
+        ...historyStore.positionsHistoryReport,
+        page: 1,
+        positionsHistory: [],
+      };
+    };
   }, []);
 
   return (
@@ -39,7 +67,7 @@ const ClosedPositions = observer(() => {
         <>
           {historyStore.positionsHistoryReport.positionsHistory.length ? (
             <InfinityScrollList
-              getData={historyStore.fetchPositionsHistory}
+              getData={fetchPositionsHistory}
               listData={historyStore.positionsHistoryReport.positionsHistory}
               isFetching={isLoading}
               // WATCH CLOSELY

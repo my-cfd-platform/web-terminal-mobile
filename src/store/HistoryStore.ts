@@ -1,22 +1,17 @@
-import {
-  PositionHistoryDTO,
-  PositionsHistoryReport,
-} from './../types/HistoryReportTypes';
+import { PositionHistoryDTO } from './../types/HistoryReportTypes';
 import { observable, action } from 'mobx';
+import { PositionsHistoryReportDTO } from '../types/HistoryReportTypes';
 import { ShowDatesDropdownEnum } from '../enums/ShowDatesDropdownEnum';
-import { RootStore } from './RootStore';
-import API from '../helpers/API';
-import moment from 'moment';
 
 interface ContextProps {
-  positionsHistoryReport: PositionsHistoryReport;
+  positionsHistoryReport: PositionsHistoryReportDTO;
   positionsDatesRangeType: ShowDatesDropdownEnum;
   balancesDatesRangeType: ShowDatesDropdownEnum;
+  activeHistoryItem: PositionHistoryDTO | null;
 }
 
 export class HistoryStore implements ContextProps {
-  @observable positionsHistoryReport: PositionsHistoryReport = {
-    accountId: '',
+  @observable positionsHistoryReport: PositionsHistoryReportDTO = {
     page: 0,
     pageSize: 0,
     positionsHistory: [],
@@ -30,53 +25,10 @@ export class HistoryStore implements ContextProps {
     ShowDatesDropdownEnum.Week;
   @observable balancesDatesRangeType: ShowDatesDropdownEnum =
     ShowDatesDropdownEnum.Week;
-  rootStore: RootStore;
+  @observable activeHistoryItem: PositionHistoryDTO | null = null;
 
-  constructor(rootStore: RootStore) {
-    this.rootStore = rootStore;
+  @action
+  setActiveHistoryItem = (activeHistoryItem: PositionHistoryDTO) => {
+    this.activeHistoryItem = activeHistoryItem;
   }
-
-  @action
-  fetchPositionsHistory = async (isScrolling = false) => {
-    try {
-      const response = await API.getPositionsHistory({
-        accountId: this.rootStore.mainAppStore.activeAccountId,
-        startDate: 0,
-        endDate: moment().valueOf(),
-        page: isScrolling ? this.positionsHistoryReport.page + 1 : 1,
-        pageSize: 20,
-      });
-
-      if (
-        this.rootStore.mainAppStore.activeAccountId ===
-        this.positionsHistoryReport.accountId
-      ) {
-        this.positionsHistoryReport = {
-          ...response,
-          accountId: this.rootStore.mainAppStore.activeAccountId,
-          positionsHistory: isScrolling
-            ? [
-                ...this.positionsHistoryReport.positionsHistory,
-                ...response.positionsHistory,
-              ]
-            : response.positionsHistory,
-        };
-      } else {
-        this.positionsHistoryReport = {
-          ...response,
-          accountId: this.rootStore.mainAppStore.activeAccountId,
-          positionsHistory: response.positionsHistory,
-        };
-      }
-    } catch (error) {}
-  };
-
-  @action
-  clearPositionsHistory = () => {
-    this.positionsHistoryReport = {
-      ...this.positionsHistoryReport,
-      page: 1,
-      positionsHistory: [],
-    };
-  };
 }

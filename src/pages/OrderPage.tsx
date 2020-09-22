@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, ChangeEvent } from 'react';
+import React, { useCallback, useEffect, ChangeEvent, useState } from 'react';
 import * as yup from 'yup';
 import { useFormik, FormikHelpers } from 'formik';
 import BackFlowLayout from '../components/BackFlowLayout';
@@ -15,7 +15,7 @@ import { PrimaryTextSpan } from '../styles/TextsElements';
 import styled from '@emotion/styled';
 import { ButtonWithoutStyles } from '../styles/ButtonWithoutStyles';
 import Colors from '../constants/Colors';
-import { observer, Observer } from 'mobx-react-lite';
+import { Observer } from 'mobx-react-lite';
 import { css } from '@emotion/core';
 import API from '../helpers/API';
 import { OpenPositionModelFormik } from '../types/Positions';
@@ -28,8 +28,9 @@ import Page from '../constants/Pages';
 
 const PRECISION_USD = 2;
 const DEFAULT_INVEST_AMOUNT = 10;
+const MAX_INPUT_VALUE = 9999999.99;
 
-const OrderPage = observer(() => {
+const OrderPage = () => {
   const { type } = useParams<{ type: string }>();
   const { t } = useTranslation();
   const {
@@ -46,45 +47,37 @@ const OrderPage = observer(() => {
     [mainAppStore.activeAccount]
   );
 
-  if (!instrumentsStore.activeInstrument) {
-    push(Page.DASHBOARD)
-    return null;
-  }
+  // TODO: Refactor
+  const instrument = useCallback(() => {
+    return (
+      instrumentsStore.activeInstrument?.instrumentItem ||
+      instrumentsStore.instruments[0].instrumentItem
+    );
+  }, [instrumentsStore.activeInstrument]);
 
   const initialValues = useCallback(
     () => ({
       processId: getProcessId(),
       accountId: mainAppStore.activeAccount?.id || '',
-      instrumentId: instrumentsStore.activeInstrument!.instrumentItem.id,
+      instrumentId: instrument().id,
       operation: null,
-      multiplier: instrumentsStore.activeInstrument!.instrumentItem
-        .multiplier[0],
+      multiplier: instrument().multiplier[0],
       investmentAmount: DEFAULT_INVEST_AMOUNT,
       tp: null,
       sl: null,
       slType: null,
       tpType: null,
     }),
-    [instrumentsStore.activeInstrument, mainAppStore.activeAccount?.id]
+    [instrument, mainAppStore.activeAccount?.id]
   );
 
   const currentPriceAsk = useCallback(
-    () =>
-      quotesStore.quotes[instrumentsStore.activeInstrument!.instrumentItem.id]
-        .ask.c,
-    [
-      quotesStore.quotes[instrumentsStore.activeInstrument!.instrumentItem.id]
-        .ask.c,
-    ]
+    () => quotesStore.quotes[instrument().id].ask.c,
+    [quotesStore.quotes[instrument().id].ask.c]
   );
   const currentPriceBid = useCallback(
-    () =>
-      quotesStore.quotes[instrumentsStore.activeInstrument!.instrumentItem.id]
-        .bid.c,
-    [
-      quotesStore.quotes[instrumentsStore.activeInstrument!.instrumentItem.id]
-        .bid.c,
-    ]
+    () => quotesStore.quotes[instrument().id].bid.c,
+    [quotesStore.quotes[instrument().id].bid.c]
   );
 
   const validationSchema: any = useCallback(
@@ -94,16 +87,15 @@ const OrderPage = observer(() => {
           .number()
           .test(
             Fields.AMOUNT,
-            `${t('Minimum trade volume')} $${
-              instrumentsStore.activeInstrument?.instrumentItem
-                .minOperationVolume
-            }. ${t('Please increase your trade amount or multiplier')}.`,
+            `${t('Minimum trade volume')} $${+instrument()
+              .minOperationVolume}. ${t(
+              'Please increase your trade amount or multiplier'
+            )}.`,
             function (value) {
               if (value) {
                 return (
                   value >=
-                  instrumentsStore.activeInstrument!.instrumentItem
-                    .minOperationVolume /
+                  +instrument().minOperationVolume /
                     +this.parent[Fields.MULTIPLIER]
                 );
               }
@@ -112,16 +104,15 @@ const OrderPage = observer(() => {
           )
           .test(
             Fields.AMOUNT,
-            `${t('Maximum trade volume')} $${
-              instrumentsStore.activeInstrument?.instrumentItem
-                .maxOperationVolume
-            }. ${t('Please decrease your trade amount or multiplier')}.`,
+            `${t('Maximum trade volume')} $${+instrument()
+              .maxOperationVolume}. ${t(
+              'Please decrease your trade amount or multiplier'
+            )}.`,
             function (value) {
               if (value) {
                 return (
                   value <=
-                  instrumentsStore.activeInstrument!.instrumentItem
-                    .maxOperationVolume /
+                  +instrument().maxOperationVolume /
                     +this.parent[Fields.MULTIPLIER]
                 );
               }
@@ -221,12 +212,7 @@ const OrderPage = observer(() => {
         tpType: yup.number().nullable(),
         slType: yup.number().nullable(),
       }),
-    [
-      instrumentsStore.activeInstrument,
-      currentPriceBid,
-      currentPriceAsk,
-      initialValues,
-    ]
+    [instrument, currentPriceBid, currentPriceAsk, initialValues]
   );
 
   const onSubmit = async (
@@ -235,6 +221,8 @@ const OrderPage = observer(() => {
   ) => {
     formikHelpers.setSubmitting(true);
     const { operation, ...otherValues } = values;
+
+    let availableBalance = mainAppStore.activeAccount?.balance || 0;
 
     const modelToSubmit = {
       ...otherValues,
@@ -245,18 +233,19 @@ const OrderPage = observer(() => {
       const balanceBeforeOrder = getActiveAccountBalance();
       const response = await API.openPosition(modelToSubmit);
       if (response.result === OperationApiResponseCodes.Ok) {
-        if (instrumentsStore.activeInstrument) {
+        const instrumentItem = instrumentsStore.instruments.find(
+          (item) => item.instrumentItem.id === instrument().id
+        )?.instrumentItem;
+
+        if (instrumentItem) {
           activePositionNotificationStore.notificationMessageData = {
             equity: 0,
-            instrumentName:
-              instrumentsStore.activeInstrument.instrumentItem.name,
+            instrumentName: instrumentItem.name,
             instrumentGroup:
               instrumentsStore.instrumentGroups.find(
-                (item) =>
-                  item.id ===
-                  instrumentsStore.activeInstrument?.instrumentItem.id
+                (item) => item.id === instrumentItem.id
               )?.name || '',
-            instrumentId: instrumentsStore.activeInstrument.instrumentItem.id,
+            instrumentId: instrumentItem.id,
             type: 'open',
           };
           activePositionNotificationStore.isSuccessfull = true;
@@ -304,6 +293,17 @@ const OrderPage = observer(() => {
     } catch (error) {}
   };
 
+  const handleChangeInputAmount = (increase: boolean) => () => {
+    const newValue = increase
+      ? Number(+values.investmentAmount + 1).toFixed(PRECISION_USD)
+      : values.investmentAmount < 1
+      ? 0
+      : Number(+values.investmentAmount - 1).toFixed(PRECISION_USD);
+
+    if (newValue <= MAX_INPUT_VALUE) {
+      setFieldValue(Fields.AMOUNT, newValue);
+    }
+  };
   // TODO: make one helper for all inputs (autoclose, price at)
   const investOnBeforeInputHandler = (e: any) => {
     const currTargetValue = e.currentTarget.value;
@@ -360,27 +360,24 @@ const OrderPage = observer(() => {
     resetForm,
     handleSubmit,
     getFieldProps,
+    validateForm,
     errors,
     touched,
+    isSubmitting,
   } = useFormik({
     initialValues: initialValues(),
     onSubmit,
     validationSchema,
     validateOnBlur: false,
     validateOnChange: false,
+    // enableReinitialize: true,
   });
 
   useEffect(() => {
     resetForm();
-    setFieldValue(
-      Fields.INSTRUMNENT_ID,
-      instrumentsStore.activeInstrument!.instrumentItem.id
-    );
-    setFieldValue(
-      Fields.MULTIPLIER,
-      instrumentsStore.activeInstrument!.instrumentItem.multiplier[0]
-    );
-  }, [instrumentsStore.activeInstrument]);
+    setFieldValue(Fields.INSTRUMNENT_ID, instrument().id);
+    setFieldValue(Fields.MULTIPLIER, instrument().multiplier[0]);
+  }, [instrument]);
 
   useEffect(() => {
     resetForm();
@@ -467,8 +464,8 @@ const OrderPage = observer(() => {
             </FlexContainer>
 
             <MultiplierSelect dir="rtl" {...getFieldProps(Fields.MULTIPLIER)}>
-              {instrumentsStore
-                .activeInstrument!.instrumentItem.multiplier.slice()
+              {instrument()
+                .multiplier.slice()
                 .sort((a, b) => b - a)
                 .map((multiplier) => (
                   <MultiplierSelectValue value={multiplier} key={multiplier}>
@@ -486,7 +483,7 @@ const OrderPage = observer(() => {
       </FlexContainer>
     </BackFlowLayout>
   );
-});
+};
 
 export default OrderPage;
 
