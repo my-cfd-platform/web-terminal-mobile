@@ -32,6 +32,7 @@ import { calculateInPercent } from '../../helpers/calculateInPercent';
 interface Props {
   positionId: number;
 }
+
 const ActivePositionsDetails: FC<Props> = observer((props) => {
   const { positionId } = props;
   const { t } = useTranslation();
@@ -47,14 +48,6 @@ const ActivePositionsDetails: FC<Props> = observer((props) => {
 
   const [position, setPosition] = useState<PositionModelWSDTO>();
 
-  const activeInstrument = useCallback(() => {
-    return (
-      instrumentsStore.instruments.find(
-        (item) => item.instrumentItem.id === position?.instrument
-      )?.instrumentItem || instrumentsStore.instruments[0].instrumentItem
-    );
-  }, [position]);
-
   const closePosition = async () => {
     if (!position) {
       return;
@@ -62,19 +55,17 @@ const ActivePositionsDetails: FC<Props> = observer((props) => {
 
     try {
       const isBuy = position.operation === AskBidEnum.Buy;
-      const equity =
-        
-        calculateFloatingProfitAndLoss({
-          investment: position.investmentAmount,
-          multiplier: position.multiplier,
-          costs: position.swap + position.commission,
-          side: isBuy ? 1 : -1,
-          currentPrice: isBuy
-            ? quotesStore.quotes[position.instrument].bid.c
-            : quotesStore.quotes[position.instrument].ask.c,
-          openPrice: position.openPrice,
-        });
-      const percentPL = calculateInPercent(position.investmentAmount, equity)
+      const equity = calculateFloatingProfitAndLoss({
+        investment: position.investmentAmount,
+        multiplier: position.multiplier,
+        costs: position.swap + position.commission,
+        side: isBuy ? 1 : -1,
+        currentPrice: isBuy
+          ? quotesStore.quotes[position.instrument].bid.c
+          : quotesStore.quotes[position.instrument].ask.c,
+        openPrice: position.openPrice,
+      });
+      const percentPL = calculateInPercent(position.investmentAmount, equity);
       const response = await API.closePosition({
         accountId: mainAppStore.activeAccount!.id,
         positionId: position.id,
@@ -104,32 +95,32 @@ const ActivePositionsDetails: FC<Props> = observer((props) => {
         mixpanel.track(mixpanelEvents.CLOSE_ORDER, {
           [mixapanelProps.AMOUNT]: position.investmentAmount,
           [mixapanelProps.ACCOUNT_CURRENCY]:
-          mainAppStore.activeAccount?.currency || '',
+            mainAppStore.activeAccount?.currency || '',
           [mixapanelProps.INSTRUMENT_ID]: position.instrument,
           [mixapanelProps.MULTIPLIER]: position.multiplier,
           [mixapanelProps.TREND]:
-              position.operation === AskBidEnum.Buy ? 'buy' : 'sell',
+            position.operation === AskBidEnum.Buy ? 'buy' : 'sell',
           [mixapanelProps.SLTP]: !!(position.sl || position.tp),
           [mixapanelProps.ACCOUNT_ID]: mainAppStore.activeAccount?.id || '',
           [mixapanelProps.ACCOUNT_TYPE]: mainAppStore.activeAccount?.isLive
-              ? 'real'
-              : 'demo',
+            ? 'real'
+            : 'demo',
         });
         push(`${Page.PORTFOLIO_MAIN}/${PortfolioTabEnum.ACTIVE}`);
       } else {
         mixpanel.track(mixpanelEvents.CLOSE_ORDER_FAILED, {
           [mixapanelProps.AMOUNT]: position.investmentAmount,
           [mixapanelProps.ACCOUNT_CURRENCY]:
-          mainAppStore.activeAccount?.currency || '',
+            mainAppStore.activeAccount?.currency || '',
           [mixapanelProps.INSTRUMENT_ID]: position.instrument,
           [mixapanelProps.MULTIPLIER]: position.multiplier,
           [mixapanelProps.TREND]:
-              position.operation === AskBidEnum.Buy ? 'buy' : 'sell',
+            position.operation === AskBidEnum.Buy ? 'buy' : 'sell',
           [mixapanelProps.SLTP]: !!(position.sl || position.tp),
           [mixapanelProps.ACCOUNT_ID]: mainAppStore.activeAccount?.id || '',
           [mixapanelProps.ACCOUNT_TYPE]: mainAppStore.activeAccount?.isLive
-              ? 'real'
-              : 'demo',
+            ? 'real'
+            : 'demo',
           [mixapanelProps.ERROR_TEXT]: apiResponseCodeMessages[response.result],
         });
         notificationStore.notificationMessage = t(
@@ -141,28 +132,22 @@ const ActivePositionsDetails: FC<Props> = observer((props) => {
     } catch (error) {}
   };
 
-  const getCurrentPrice = useCallback(() => {
-    switch (position?.operation) {
-      case AskBidEnum.Sell:
-        return instrumentsStore.instruments.find(
-          (item) => item.instrumentItem.id === position.instrument
-        )?.instrumentItem.ask;
-
-      default:
-        return instrumentsStore.instruments.find(
-          (item) => item.instrumentItem.id === position?.instrument
-        )?.instrumentItem.bid;
-    }
-  }, [position, instrumentsStore.instruments]);
-
   useEffect(() => {
-    const positionById = quotesStore.activePositions?.find(
+    const positionById = quotesStore.activePositions.find(
       (item) => item.id === +positionId
     );
     if (positionById) {
       setPosition(positionById);
     }
-  }, [positionId]);
+  }, [quotesStore.activePositions, positionId]);
+
+  const positionInstrumentDigits = useCallback(
+    () =>
+      instrumentsStore.instruments.find(
+        (item) => item.instrumentItem.id === position?.instrument
+      )?.instrumentItem.digits,
+    [position, instrumentsStore.activeInstrument]
+  );
 
   return (
     <>
@@ -246,12 +231,12 @@ const ActivePositionsDetails: FC<Props> = observer((props) => {
                   {() => (
                     <>
                       {position.operation === AskBidEnum.Buy
-                        ? quotesStore.quotes[
-                            activeInstrument().id
-                          ].bid.c.toFixed(activeInstrument().digits)
-                        : quotesStore.quotes[
-                            activeInstrument().id
-                          ].ask.c.toFixed(activeInstrument().digits)}
+                        ? quotesStore.quotes[position.instrument].bid.c.toFixed(
+                            positionInstrumentDigits()
+                          )
+                        : quotesStore.quotes[position.instrument].ask.c.toFixed(
+                            positionInstrumentDigits()
+                          )}
                     </>
                   )}
                 </Observer>

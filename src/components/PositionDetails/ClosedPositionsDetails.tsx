@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useState } from 'react';
+import React, { FC, useCallback, useEffect, useState } from 'react';
 import { FlexContainer } from '../../styles/FlexContainer';
 import { PrimaryTextSpan } from '../../styles/TextsElements';
 import moment from 'moment';
@@ -15,6 +15,7 @@ import ClosedPositionItem from '../Portfolio/ClosedPositionItem';
 import { useHistory } from 'react-router-dom';
 import Page from '../../constants/Pages';
 import LoaderForComponents from '../LoaderForComponents';
+import { PortfolioTabEnum } from '../../enums/PortfolioTabEnum';
 
 interface Props {
   positionId: number;
@@ -29,27 +30,27 @@ const ClosedPositionsDetails: FC<Props> = ({ positionId }) => {
   const [position, setPosition] = useState<PositionHistoryDTO>();
   const [isLoading, setIsLoading] = useState(true);
 
+  const fetchPositionHistory = useCallback(async () => {
+    try {
+      await historyStore.fetchPositionsHistory();
+      const newHistoryPosition = historyStore.positionsHistoryReport.positionsHistory.find(
+        (item) => item.id === positionId
+      );
+      if (newHistoryPosition) {
+        setIsLoading(false);
+        setPosition(newHistoryPosition);
+      } else {
+        push(`${Page.PORTFOLIO_MAIN}/${PortfolioTabEnum.CLOSED}`);
+      }
+    } catch (error) {
+      push(`${Page.PORTFOLIO_MAIN}/${PortfolioTabEnum.CLOSED}`);
+    }
+  }, [historyStore.positionsHistoryReport]);
+
   useEffect(() => {
     const currentHistoryPosition = historyStore.positionsHistoryReport.positionsHistory.find(
       (item) => item.id === positionId
     );
-
-    async function fetchPositionHistory() {
-      try {
-        await historyStore.fetchPositionsHistory();
-        const newHistoryPosition = historyStore.positionsHistoryReport.positionsHistory.find(
-          (item) => item.id === positionId
-        );
-        if (newHistoryPosition) {
-          setIsLoading(false);
-          setPosition(newHistoryPosition);
-        } else {
-          push(Page.PORTFOLIO_MAIN);
-        }
-      } catch (error) {
-        push(Page.PORTFOLIO_MAIN);
-      }
-    }
 
     if (!currentHistoryPosition) {
       fetchPositionHistory();
@@ -62,7 +63,6 @@ const ClosedPositionsDetails: FC<Props> = ({ positionId }) => {
   return (
     <>
       <LoaderForComponents isLoading={isLoading} />
-
       {position && (
         <FlexContainer
           flexDirection="column"

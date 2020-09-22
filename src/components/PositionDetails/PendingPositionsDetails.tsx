@@ -1,12 +1,9 @@
 import React, { useEffect, useState, FC, useCallback } from 'react';
 import { FlexContainer } from '../../styles/FlexContainer';
-import ActivePositionItem from '../Portfolio/ActivePositionItem';
 import { PrimaryTextSpan } from '../../styles/TextsElements';
-import { PositionModelWSDTO } from '../../types/Positions';
 import moment from 'moment';
 import { useTranslation } from 'react-i18next';
 import useInstrument from '../../hooks/useInstrument';
-import { getNumberSign } from '../../helpers/getNumberSign';
 import { useStores } from '../../hooks/useStores';
 import { observer, Observer } from 'mobx-react-lite';
 import Colors from '../../constants/Colors';
@@ -15,11 +12,7 @@ import { getProcessId } from '../../helpers/getProcessId';
 import API from '../../helpers/API';
 import { OperationApiResponseCodes } from '../../enums/OperationApiResponseCodes';
 import { useHistory } from 'react-router-dom';
-import EquityPnL from './EquityPnL';
-import calculateFloatingProfitAndLoss from '../../helpers/calculateFloatingProfitAndLoss';
 import { AskBidEnum } from '../../enums/AskBid';
-import ImageContainer from '../ImageContainer';
-import apiResponseCodeMessages from '../../constants/apiResponseCodeMessages';
 import Page from '../../constants/Pages';
 import { PortfolioTabEnum } from '../../enums/PortfolioTabEnum';
 import { TpSlTypeEnum } from '../../enums/TpSlTypeEnum';
@@ -30,6 +23,7 @@ import PendingOrderItem from '../Portfolio/PendingOrderItem';
 interface Props {
   positionId: number;
 }
+
 const PendingPositionsDetails: FC<Props> = observer((props) => {
   const { positionId } = props;
   const { t } = useTranslation();
@@ -55,7 +49,7 @@ const PendingPositionsDetails: FC<Props> = observer((props) => {
 
       if (response.result === OperationApiResponseCodes.Ok) {
         const instrumentItem = instrumentsStore.instruments.find(
-            (item) => item.instrumentItem.id === position?.instrument
+          (item) => item.instrumentItem.id === position?.instrument
         )?.instrumentItem;
 
         if (instrumentItem) {
@@ -64,9 +58,9 @@ const PendingPositionsDetails: FC<Props> = observer((props) => {
             openPrice: position?.openPrice || 0,
             instrumentName: instrumentItem.name,
             instrumentGroup:
-                instrumentsStore.instrumentGroups.find(
-                    (item) => item.id === instrumentItem.id
-                )?.name || '',
+              instrumentsStore.instrumentGroups.find(
+                (item) => item.id === instrumentItem.id
+              )?.name || '',
             instrumentId: instrumentItem.id,
             type: 'close',
           };
@@ -81,36 +75,22 @@ const PendingPositionsDetails: FC<Props> = observer((props) => {
     } catch (error) {}
   };
 
-  const activeInstrument = useCallback(() => {
-    return (
+  const positionInstrumentDigits = useCallback(
+    () =>
       instrumentsStore.instruments.find(
         (item) => item.instrumentItem.id === position?.instrument
-      )?.instrumentItem || instrumentsStore.instruments[0].instrumentItem
-    );
-  }, [position]);
-
-  const getInstrument = useCallback(() => {
-    const instrument =
-      instrumentsStore.instruments.find(
-        (item) => item.instrumentItem.id === position?.instrument
-      )?.instrumentItem || instrumentsStore.instruments[0].instrumentItem;
-
-    return {
-      groupId: instrument.groupId,
-      id: instrument.id,
-      investmentAmount: position?.investmentAmount || 0,
-      name: instrument.name,
-    };
-  }, [position]);
+      )?.instrumentItem.digits,
+    [position, instrumentsStore.instruments]
+  );
 
   useEffect(() => {
-    const positionById = quotesStore.pendingOrders?.find(
-      (item) => item.id === +positionId
+    const positionById = quotesStore.pendingOrders.find(
+      (item) => item.id === positionId
     );
     if (positionById) {
       setPosition(positionById);
     }
-  }, [positionId]);
+  }, [positionId, quotesStore.pendingOrders]);
 
   return (
     <>
@@ -199,12 +179,12 @@ const PendingPositionsDetails: FC<Props> = observer((props) => {
                   {() => (
                     <>
                       {position.operation === AskBidEnum.Buy
-                        ? quotesStore.quotes[
-                            activeInstrument().id
-                          ].bid.c.toFixed(activeInstrument().digits)
-                        : quotesStore.quotes[
-                            activeInstrument().id
-                          ].ask.c.toFixed(activeInstrument().digits)}
+                        ? quotesStore.quotes[position.instrument].bid.c.toFixed(
+                            positionInstrumentDigits()
+                          )
+                        : quotesStore.quotes[position.instrument].ask.c.toFixed(
+                            positionInstrumentDigits()
+                          )}
                     </>
                   )}
                 </Observer>
@@ -325,7 +305,8 @@ const PendingPositionsDetails: FC<Props> = observer((props) => {
               </PrimaryTextSpan>
               &nbsp; position for&nbsp;
               <PrimaryTextSpan color="#ffffff">
-                {mainAppStore.activeAccount?.symbol}{position.investmentAmount.toFixed(2)}
+                {mainAppStore.activeAccount?.symbol}
+                {position.investmentAmount.toFixed(2)}
               </PrimaryTextSpan>
             </ClosePositionButton>
           </FlexContainer>
