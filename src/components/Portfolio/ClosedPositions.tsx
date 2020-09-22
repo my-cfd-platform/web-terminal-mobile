@@ -20,7 +20,7 @@ const ClosedPositions = observer(() => {
     async (isScrolling = false) => {
       try {
         const response = await API.getPositionsHistory({
-          accountId: mainAppStore.activeAccount!.id,
+          accountId: mainAppStore.activeAccountId,
           startDate: 0,
           endDate: moment().valueOf(),
           page: isScrolling ? historyStore.positionsHistoryReport.page + 1 : 1,
@@ -39,7 +39,7 @@ const ClosedPositions = observer(() => {
       } catch (error) {}
     },
     [
-      mainAppStore.activeAccount?.id,
+      mainAppStore.activeAccountId,
       dateRangeStore.startDate,
       dateRangeStore.endDate,
       historyStore.positionsHistoryReport,
@@ -47,9 +47,12 @@ const ClosedPositions = observer(() => {
   );
 
   useEffect(() => {
-    fetchPositionsHistory().finally(() => {
-      setIsLoading(false);
-    });
+    if (mainAppStore.activeAccountId) {
+      fetchPositionsHistory().finally(() => {
+        setIsLoading(false);
+      });
+    }
+
     return () => {
       historyStore.positionsHistoryReport = {
         ...historyStore.positionsHistoryReport,
@@ -57,7 +60,7 @@ const ClosedPositions = observer(() => {
         positionsHistory: [],
       };
     };
-  }, []);
+  }, [mainAppStore.activeAccountId]);
 
   return (
     <>
