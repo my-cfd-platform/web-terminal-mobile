@@ -53,6 +53,7 @@ const AccountProfile = () => {
       'active_account_id',
       mainAppStore.accounts.find((item) => item.isLive)?.id || ''
     );
+    urlParams.set('env', 'web_mob');
     urlParams.set('trader_id', userProfileStore.userProfileId || '');
     urlParams.set('lang', mainAppStore.lang);
     setParsedParams(urlParams.toString());

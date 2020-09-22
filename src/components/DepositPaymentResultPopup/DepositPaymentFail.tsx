@@ -19,14 +19,14 @@ const DepositPaymentFail: FC = () => {
         alignItems="center"
         marginBottom="112px"
       >
-        <FlexContainer marginBottom="40px">
+        <FlexContainer justifyContent={'center'} alignItems={'center'} marginBottom="40px">
           <img src={FailImage} width={138} />
         </FlexContainer>
-        <FailText>{t('Insufficient funds')}</FailText>
+        <FailText>{t('Failed')}</FailText>
         <FailDescription>
-          {t('Please, use another payment method or')}
+          {t('Something went wrong.')}
           <br />
-          {t('change deposit amount')}
+          {t('Try again or use another payment method.')}
         </FailDescription>
       </FlexContainer>
       <FlexContainer padding="0 16px" width="100%">
