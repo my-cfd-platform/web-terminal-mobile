@@ -1,7 +1,8 @@
 import {
   LOCAL_STORAGE_TOKEN_KEY,
   LOCAL_STORAGE_REFRESH_TOKEN_KEY,
-  LOCAL_STORAGE_LANGUAGE,, LAST_PAGE_VISITED
+  LOCAL_STORAGE_LANGUAGE,
+  LAST_PAGE_VISITED,
 } from './../constants/global';
 import axios from 'axios';
 import {
