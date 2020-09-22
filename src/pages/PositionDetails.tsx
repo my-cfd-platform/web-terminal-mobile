@@ -11,6 +11,9 @@ const PositionDetails = () => {
 
   const renderByType = useCallback(() => {
     switch (type) {
+      case PortfolioTabEnum.ACTIVE:
+        return <ActivePositionsDetails positionId={+id} />;
+
       case PortfolioTabEnum.CLOSED:
         return <ClosedPositionsDetails positionId={+id} />;
 
