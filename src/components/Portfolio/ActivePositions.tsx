@@ -5,11 +5,17 @@ import ActivePositionItem from './ActivePositionItem';
 import EmptyListText from '../EmptyListText';
 import { FlexContainer } from '../../styles/FlexContainer';
 import { observer } from 'mobx-react-lite';
+import { PortfolioTabEnum } from '../../enums/PortfolioTabEnum';
 
 const ActivePositions = observer(() => {
   const { t } = useTranslation();
 
-  const { quotesStore } = useStores();
+  const { quotesStore, historyStore, portfolioNavLinksStore } = useStores();
+
+  useEffect(() => {
+    historyStore.clearPositionsHistory();
+    portfolioNavLinksStore.setPortfolioNavLink(PortfolioTabEnum.ACTIVE);
+  }, []);
 
   return (
     <>
