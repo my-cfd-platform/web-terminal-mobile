@@ -1,16 +1,12 @@
 import React, { FC, useCallback } from 'react';
-import { PositionModelWSDTO } from '../../types/Positions';
 import styled from '@emotion/styled';
 import { FlexContainer } from '../../styles/FlexContainer';
 import ImageContainer from '../ImageContainer';
 import { PrimaryTextSpan } from '../../styles/TextsElements';
 import { useStores } from '../../hooks/useStores';
-import ActivePositionPnL from './ActivePositionPnL';
-import { Link, useParams, useHistory } from 'react-router-dom';
+import { useParams, useHistory } from 'react-router-dom';
 import Page from '../../constants/Pages';
 import { PositionHistoryDTO } from '../../types/HistoryReportTypes';
-import { calculateInPercent } from '../../helpers/calculateInPercent';
-import { AskBidEnum } from '../../enums/AskBid';
 import Colors from '../../constants/Colors';
 import { ButtonWithoutStyles } from '../../styles/ButtonWithoutStyles';
 
@@ -19,19 +15,14 @@ interface Props {
   currencySymbol: string;
 }
 
-const ClosedPositionItem: FC<Props> = ({ tradingHistoryItem, currencySymbol }) => {
+const ClosedPositionItem: FC<Props> = ({
+  tradingHistoryItem,
+  currencySymbol,
+}) => {
   const { mainAppStore, instrumentsStore, historyStore } = useStores();
   const { push } = useHistory();
-  const { type } = useParams();
-  const {
-    id,
-    instrument,
-    profit,
-    investmentAmount,
-    operation,
-  } = tradingHistoryItem;
-
-  const isBuy = operation === AskBidEnum.Buy;
+  const { type } = useParams<{ type: string }>();
+  const { id, instrument, profit, operation } = tradingHistoryItem;
 
   const groupName = (instrument: string) => {
     const groupId =
@@ -42,21 +33,26 @@ const ClosedPositionItem: FC<Props> = ({ tradingHistoryItem, currencySymbol }) =
   };
 
   const activeInstrument = useCallback(() => {
-    return instrumentsStore.instruments.find(item => item.instrumentItem.id === instrument)?.instrumentItem;
+    return instrumentsStore.instruments.find(
+      (item) => item.instrumentItem.id === instrument
+    )?.instrumentItem;
   }, [tradingHistoryItem]);
 
   const handleClickOpen = () => {
-    historyStore.setActiveHistoryItem(tradingHistoryItem);
     push(`${Page.PORTFOLIO_MAIN}/${type}/${id}`);
-  }
-  
+  };
+
   return (
     <InstrumentItem onClick={handleClickOpen}>
       <FlexContainer width="48px" height="48px" marginRight="16px">
         <ImageContainer instrumentId={instrument} />
       </FlexContainer>
 
-      <FlexContainer flexDirection="column" justifyContent="center" alignItems="flex-start">
+      <FlexContainer
+        flexDirection="column"
+        justifyContent="center"
+        alignItems="flex-start"
+      >
         <PrimaryTextSpan
           color="#ffffff"
           fontSize="16px"
@@ -90,7 +86,8 @@ const ClosedPositionItem: FC<Props> = ({ tradingHistoryItem, currencySymbol }) =
 
         <QuoteTextLabel isGrowth={profit >= 0}>
           {profit >= 0 ? '+' : '-'}
-          {currencySymbol}{Math.abs(profit).toFixed(2)}
+          {currencySymbol}
+          {Math.abs(profit).toFixed(2)}
         </QuoteTextLabel>
       </FlexContainer>
     </InstrumentItem>
