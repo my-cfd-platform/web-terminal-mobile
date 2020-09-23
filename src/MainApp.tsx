@@ -15,6 +15,7 @@ import { AccountTypeEnum } from './enums/AccountTypeEnum';
 import API from './helpers/API';
 import apiResponseCodeMessages from './constants/apiResponseCodeMessages';
 import { OperationApiResponseCodes } from './enums/OperationApiResponseCodes';
+import { Observer } from 'mobx-react-lite';
 
 const MainApp: FC = () => {
   const { mainAppStore, instrumentsStore, badRequestPopupStore } = useStores();
@@ -111,6 +112,17 @@ const MainApp: FC = () => {
           'trading platform'
         )}`}</title>
         <link rel="shortcut icon" href={mainAppStore.initModel.favicon} />
+        <Observer>
+          {() => (
+            <>
+              {mainAppStore.initModel.recaptchaToken && (
+                <script
+                  src={`https://www.google.com/recaptcha/api.js?render=${mainAppStore.initModel.recaptchaToken}`}
+                ></script>
+              )}
+            </>
+          )}
+        </Observer>
       </Helmet>
       <Router>
         <RoutingLayout></RoutingLayout>

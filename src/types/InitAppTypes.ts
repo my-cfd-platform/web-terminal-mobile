@@ -15,4 +15,5 @@ export interface InitModel {
   gaAsAccount: string;
   favicon: string;
   mixpanelToken: string;
+  recaptchaToken: string;
 }

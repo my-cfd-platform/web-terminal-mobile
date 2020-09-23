@@ -87,6 +87,7 @@ export class MainAppStore implements MainAppStoreProps {
     termsUrl: '',
     tradingUrl: '',
     mixpanelToken: '582507549d28c813188211a0d15ec940',
+    recaptchaToken: '',
   };
   @observable isLoading = false;
   @observable isInitLoading = true;

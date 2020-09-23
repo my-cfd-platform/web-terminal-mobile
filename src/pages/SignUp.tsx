@@ -68,7 +68,7 @@ const SignUp = () => {
     try {
       grecaptcha.ready(function () {
         grecaptcha
-          .execute(RECAPTCHA_KEY, {
+          .execute(mainAppStore.initModel.recaptchaToken, {
             action: 'submit',
           })
           .then(
@@ -88,7 +88,7 @@ const SignUp = () => {
                   mixpanel.track(mixpanelEvents.SIGN_UP_FAILED, {
                     [mixapanelProps.BRAND_NAME]: mainAppStore.initModel.brandName.toLowerCase(),
                     [mixapanelProps.ERROR_TEXT]: t(
-                        apiResponseCodeMessages[result]
+                      apiResponseCodeMessages[result]
                     ),
                     [mixapanelProps.EMAIL]: values.email,
                   });
