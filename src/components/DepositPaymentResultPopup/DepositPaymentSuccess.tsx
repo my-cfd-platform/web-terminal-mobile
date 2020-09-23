@@ -35,7 +35,7 @@ const DepositPaymentSuccess: FC<Props> = props => {
             push(Pages.DASHBOARD);
           }}
         >
-          {t('Trade')}
+          {t('Trade now')}
         </TradeButton>
       </FlexContainer>
     </>

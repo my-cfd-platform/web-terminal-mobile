@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, {FC, useEffect, useState} from 'react';
 import styled from '@emotion/styled';
 
 import FailImage from '../../assets/images/fail.png';
@@ -8,10 +8,25 @@ import { useHistory } from 'react-router-dom';
 import Pages from '../../constants/Pages';
 import HashLocation from '../../constants/hashLocation';
 import { useTranslation } from 'react-i18next';
+import {useStores} from "../../hooks/useStores";
 
 const DepositPaymentFail: FC = () => {
+  const { mainAppStore, userProfileStore } = useStores();
+  const [parsedParams, setParsedParams] = useState('');
+  useEffect(() => {
+    urlParams.set('token', mainAppStore.token);
+    urlParams.set(
+      'active_account_id',
+      mainAppStore.accounts.find((item) => item.isLive)?.id || ''
+    );
+    urlParams.set('lang', mainAppStore.lang);
+    urlParams.set('env', 'web_mob');
+    urlParams.set('trader_id', userProfileStore.userProfileId || '');
+    setParsedParams(urlParams.toString());
+  }, [mainAppStore.token, mainAppStore.lang, mainAppStore.accounts, userProfileStore.userProfileId]);
   const { push } = useHistory();
-  const { t } = useTranslation();
+    const urlParams = new URLSearchParams();
+    const { t } = useTranslation();
   return (
     <>
       <FlexContainer
@@ -30,12 +45,8 @@ const DepositPaymentFail: FC = () => {
         </FailDescription>
       </FlexContainer>
       <FlexContainer padding="0 16px" width="100%">
-        <OtherMethodsButton
-          onClick={() => {
-            push(Pages.DASHBOARD);
-          }}
-        >
-          {t('Trade')}
+        <OtherMethodsButton href={`${API_DEPOSIT_STRING}/?${parsedParams}`}>
+          {t('Back to Deposit')}
         </OtherMethodsButton>
       </FlexContainer>
     </>
@@ -44,7 +55,7 @@ const DepositPaymentFail: FC = () => {
 
 export default DepositPaymentFail;
 
-const OtherMethodsButton = styled(ButtonWithoutStyles)`
+const OtherMethodsButton = styled.a`
   background-color: #00ffdd;
   border-radius: 10px;
   width: 100%;
@@ -52,6 +63,7 @@ const OtherMethodsButton = styled(ButtonWithoutStyles)`
   font-size: 16px;
   font-weight: bold;
   color: #252636;
+  text-align: center;
 `;
 
 const FailText = styled.span`
