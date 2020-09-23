@@ -91,7 +91,7 @@ const injectInerceptors = (tradingUrl: string, mainAppStore: MainAppStore) => {
         config.url = `${tradingUrl}${config.url}`;
       }
     }
-    config.headers[RequestHeaders.ACCEPT_LANGUAGE] = `${mainAppStore.lang};q=0.9`;
+    config.headers[RequestHeaders.ACCEPT_LANGUAGE] = `${mainAppStore.lang}`;
     return config;
   });
 };
