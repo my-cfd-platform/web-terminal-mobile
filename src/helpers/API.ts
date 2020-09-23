@@ -203,7 +203,7 @@ class API {
   };
 
   forgotEmail = async (email: string) => {
-    const response = await axios.post<{result: OperationApiResponseCodes}>(
+    const response = await axios.post<{ result: OperationApiResponseCodes }>(
       `${API_AUTH_STRING}${AUTH_API_LIST.TRADER.FORGOT_PASSWORD}`,
       {
         email,
@@ -381,6 +381,7 @@ class API {
             termsUrl: '',
             tradingUrl: '',
             mixpanelToken: '582507549d28c813188211a0d15ec940',
+            recaptchaToken: '',
           },
         }
       : await axios.get<InitModel>(`${API_LIST.INIT.GET}`);

@@ -119,24 +119,11 @@ module.exports = (env, argv) => {
           argv.mode === 'production'
             ? JSON.stringify('/withdrawal')
             : JSON.stringify('http://localhost:5681/withdrawal'),
-        AUTH_TOKEN: JSON.stringify('TraderID'),
         CHARTING_LIBRARY_PATH:
           argv.mode === 'production'
             ? JSON.stringify('/charting_library/')
             : JSON.stringify('/src/vendor/charting_library/'),
         IS_LIVE: argv.mode === 'production',
-        MIXPANEL_TOKEN:
-          argv.is_local === 'true'
-            ? JSON.stringify('582507549d28c813188211a0d15ec940')
-            : JSON.stringify(process.env.MIXPANEL_TOKEN),
-        RECAPTCHA_KEY:
-          argv.mode === 'production'
-            ? JSON.stringify(process.env.RECAPTCHA_KEY)
-            : JSON.stringify(''),
-        RECAPTCHA_KEY_SECRET:
-          argv.mode === 'production'
-            ? JSON.stringify(process.env.RECAPTCHA_KEY_SECRET)
-            : JSON.stringify(''),
         IS_LOCAL: argv.is_local === 'true',
         BUILD_VERSION: JSON.stringify(process.env.BUILD_VERSION),
       }),
