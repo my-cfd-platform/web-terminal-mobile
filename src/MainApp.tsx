@@ -114,13 +114,9 @@ const MainApp: FC = () => {
         <link rel="shortcut icon" href={mainAppStore.initModel.favicon} />
         <Observer>
           {() => (
-            <>
-              {mainAppStore.initModel.recaptchaToken && (
-                <script
-                  src={`https://www.google.com/recaptcha/api.js?render=${mainAppStore.initModel.recaptchaToken}`}
-                ></script>
-              )}
-            </>
+            <script
+              src={`https://www.google.com/recaptcha/api.js?render=${mainAppStore.initModel.recaptchaToken}`}
+            ></script>
           )}
         </Observer>
       </Helmet>
