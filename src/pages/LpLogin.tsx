@@ -4,6 +4,8 @@ import { useStores } from '../hooks/useStores';
 import { OperationApiResponseCodes } from '../enums/OperationApiResponseCodes';
 import Page from '../constants/Pages';
 import { useTranslation } from 'react-i18next';
+import API from '../helpers/API';
+import { getProcessId } from '../helpers/getProcessId';
 
 interface QueryParams {
   lang: string;
@@ -14,10 +16,26 @@ interface QueryParams {
 const LpLogin = () => {
   const { token, lang, page } = useParams<QueryParams>();
   const { push } = useHistory();
-  const { mainAppStore, userProfileStore } = useStores();
+  const { mainAppStore } = useStores();
   const { i18n } = useTranslation();
 
   useEffect(() => {
+    async function getPersonalData() {
+      try {
+        const response = await API.getPersonalData(getProcessId());
+        const urlParams = new URLSearchParams();
+        urlParams.set('token', mainAppStore.token);
+        urlParams.set(
+          'active_account_id',
+          mainAppStore.accounts.find((item) => item.isLive)?.id || ''
+        );
+        urlParams.set('lang', mainAppStore.lang);
+        urlParams.set('env', 'web_mob');
+        urlParams.set('trader_id', response.data.id || '');
+        window.location.href = `${API_DEPOSIT_STRING}/?${urlParams.toString()}`;
+      } catch (error) {}
+    }
+
     async function fetchLpLogin() {
       try {
         const response = await mainAppStore.signInLpLogin({
@@ -26,16 +44,7 @@ const LpLogin = () => {
         if (response === OperationApiResponseCodes.Ok) {
           switch (page) {
             case 'deposit':
-              const urlParams = new URLSearchParams();
-              urlParams.set('token', mainAppStore.token);
-              urlParams.set(
-                'active_account_id',
-                mainAppStore.accounts.find((item) => item.isLive)?.id || ''
-              );
-              urlParams.set('lang', mainAppStore.lang);
-              urlParams.set('env', 'web_mob');
-              urlParams.set('trader_id', userProfileStore.userProfileId || '');
-              window.location.href = `${API_DEPOSIT_STRING}/?${urlParams.toString()}`;
+              getPersonalData();
               break;
 
             case 'withdrawal':
