@@ -15,7 +15,6 @@ import { AccountTypeEnum } from './enums/AccountTypeEnum';
 import API from './helpers/API';
 import apiResponseCodeMessages from './constants/apiResponseCodeMessages';
 import { OperationApiResponseCodes } from './enums/OperationApiResponseCodes';
-import { Observer } from 'mobx-react-lite';
 
 const MainApp: FC = () => {
   const { mainAppStore, instrumentsStore, badRequestPopupStore } = useStores();
