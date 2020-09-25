@@ -15,6 +15,7 @@ import AccountBalanceHistory from '../pages/AccountBalanceHistory';
 import AccountWithdraw from '../pages/AccountWithdraw';
 import AccountAboutUs from '../pages/AccountAboutUs';
 import RecoveryPassword from '../pages/RecoveryPassword';
+import PhoneVerification from '../pages/PhoneVerification';
 import LpLogin from '../pages/LpLogin';
 import ConfirmEmail from '../pages/ConfirmEmail';
 
@@ -169,6 +170,13 @@ const routesList = [
   {
     component: LpLogin,
     path: Page.LP_LOGIN,
+    exact: true,
+    strict: true,
+    layoutType: RouteLayoutType.Public,
+  },
+  {
+    component: PhoneVerification,
+    path: Page.PHONE_VERIFICATION,
     exact: true,
     strict: true,
     layoutType: RouteLayoutType.Public,
