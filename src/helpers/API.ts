@@ -260,6 +260,20 @@ class API {
     return response.data;
   };
 
+  getAdditionalRegistrationFields = async () => {
+    const response = await axios.get<string[]>(
+      `${API_AUTH_STRING}${AUTH_API_LIST.TRADER.ADDITIONAL_REGISTRATION_FIELDS}`,
+    );
+    return response.data;
+  };
+
+  getGeolocationInfo = async () => {
+    const response = await axios.get<Country>(
+      `${API_AUTH_STRING}${AUTH_API_LIST.COMMON.GEOLOCATION_INFO}`,
+    );
+    return response.data;
+  };
+
   postPersonalData = async (params: PersonalDataParams) => {
     const formData = this.convertParamsToFormData(params);
 
