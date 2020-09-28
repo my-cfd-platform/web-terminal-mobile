@@ -7,7 +7,7 @@ import NotificationPendingPositionPopup from '../components/NotificationPendingP
 import NavBar from '../components/NavBar/NavBar';
 import ChartContainer from './ChartContainer';
 import NavigationPanel from '../components/NavigationPanel';
-import { useRouteMatch } from 'react-router-dom';
+import { useRouteMatch, useHistory } from 'react-router-dom';
 import Page from '../constants/Pages';
 import styled from '@emotion/styled';
 import { FULL_VH, LAST_PAGE_VISITED } from '../constants/global';
@@ -31,13 +31,17 @@ const AuthorizedContainer: FC = ({ children }) => {
     Page.ACCOUNT_ABOUT_US,
     Page.ACCOUNTS_SWITCH,
   ]);
+  const { push } = useHistory();
   const { mainAppStore, userProfileStore, serverErrorPopupStore } = useStores();
   const showNavbarAndNav = !match?.isExact;
 
   useEffect(() => {
     async function fetchPersonalData() {
       try {
-        const response = await API.getPersonalData(getProcessId());
+        const response = await API.getPersonalData(
+          getProcessId(),
+          mainAppStore.initModel.authUrl
+        );
         mainAppStore.signUpFlag
           ? mixpanel.alias(response.data.id)
           : mixpanel.identify(response.data.id);
@@ -56,6 +60,14 @@ const AuthorizedContainer: FC = ({ children }) => {
           [mixapanelProps.BRAND_NAME]: mainAppStore.initModel.brandName.toLowerCase(),
         });
         mainAppStore.setSignUpFlag(false);
+        if (!response.data.phone) {
+          const additionalResponse = await API.getAdditionalRegistrationFields(
+            mainAppStore.initModel.authUrl
+          );
+          if (additionalResponse.includes('phone')) {
+            push(Page.PHONE_VERIFICATION);
+          }
+        }
       } catch (error) {}
     }
     fetchPersonalData();

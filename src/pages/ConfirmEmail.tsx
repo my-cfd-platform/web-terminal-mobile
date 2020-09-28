@@ -8,15 +8,17 @@ import LoaderFullscreen from '../components/LoaderFullscreen';
 import { PrimaryTextParagraph, PrimaryTextSpan } from '../styles/TextsElements';
 import Page from '../constants/Pages';
 import styled from '@emotion/styled';
+import { useStores } from '../hooks/useStores';
 
 const ConfirmEmail = () => {
-  const { id } = useParams();
+  const { id } = useParams<{ id: string }>();
   const [isLoading, setIsLoading] = useState(true);
   const [isSuccessful, setIsSuccessfull] = useState(false);
   const { t } = useTranslation();
+  const { mainAppStore } = useStores();
 
   useEffect(() => {
-    API.confirmEmail(id || '')
+    API.confirmEmail(id || '', mainAppStore.initModel.authUrl)
       .then((response) => {
         if (response.result === OperationApiResponseCodes.Ok) {
           setIsSuccessfull(true);
@@ -42,8 +44,8 @@ const ConfirmEmail = () => {
       padding="16px"
     >
       <LoaderFullscreen isLoading={isLoading} />
-      {
-        !isLoading && <FlexContainer width="100%" flexDirection="column" alignItems="center">
+      {!isLoading && (
+        <FlexContainer width="100%" flexDirection="column" alignItems="center">
           {isSuccessful ? (
             <>
               <PrimaryTextParagraph
@@ -89,7 +91,7 @@ const ConfirmEmail = () => {
             </PrimaryTextSpan>
           </LinkToDashboard>
         </FlexContainer>
-      }
+      )}
     </FlexContainer>
   );
 };

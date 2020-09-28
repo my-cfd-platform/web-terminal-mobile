@@ -40,6 +40,8 @@ const mixpanelEvents = {
   KYC_STEP_1: 'kyc step 1',
   KYC_STEP_2: 'kyc step 2',
   KYC_STEP_3: 'kyc step 3',
+  PHONE_FIELD_VIEW: 'phone field view',
+  PHONE_FIELD: 'phone field',
 };
 
 Object.freeze(mixpanelEvents);
