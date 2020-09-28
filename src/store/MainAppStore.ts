@@ -137,9 +137,7 @@ export class MainAppStore implements MainAppStoreProps {
 
   handleInitConnection = async (token = this.token) => {
     const wsConnectSub =
-      this.tradingUrl[this.tradingUrl.length - 1] === '/'
-        ? 'signalr'
-        : `/signalr`;
+      this.tradingUrl.slice(-1) === '/' ? 'signalr' : `/signalr`;
     const connectionString = IS_LIVE ? this.tradingUrl + wsConnectSub : WS_HOST;
     const connection = initConnection(connectionString);
 
