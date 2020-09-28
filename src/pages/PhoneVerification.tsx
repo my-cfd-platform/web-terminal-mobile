@@ -26,30 +26,26 @@ import { useTranslation } from 'react-i18next';
 import mixpanel from 'mixpanel-browser';
 import mixpanelEvents from '../constants/mixpanelEvents';
 import InputField from '../components/InputField';
-import {Observer} from 'mobx-react-lite';
+import { Observer } from 'mobx-react-lite';
 import Logo from '../components/Logo';
 import LogoMonfex from '../assets/images/logo.png';
-import {OperationApiResponseCodes} from '../enums/OperationApiResponseCodes';
+import { OperationApiResponseCodes } from '../enums/OperationApiResponseCodes';
 import mixapanelProps from '../constants/mixpanelProps';
 import parsePhoneNumber from 'libphonenumber-js/max';
 
 const PhoneVerification: FC = () => {
   const [countries, setCountries] = useState<Country[]>([]);
   const [dialMask, setDialMask] = useState('');
-  const countriesNames = countries.map(item => item.name);
+  const countriesNames = countries.map((item) => item.name);
   const { t } = useTranslation();
   const validationSchema = yup.object().shape<PhoneVerificationFormParams>({
     phone: yup
       .string()
       .required()
-      .test(
-        Fields.PHONE,
-        `${t('Phone number is invalid')}`,
-        function(value) {
-          const checkPhone = parsePhoneNumber(`+${value}`);
-          return !!checkPhone?.isValid();
-        }
-      ),
+      .test(Fields.PHONE, `${t('Phone number is invalid')}`, function (value) {
+        const checkPhone = parsePhoneNumber(`+${value}`);
+        return !!checkPhone?.isValid();
+      }),
     customCountryCode: yup
       .mixed()
       .oneOf(countriesNames, t('No matches'))
@@ -90,10 +86,13 @@ const PhoneVerification: FC = () => {
 
   const handleSubmitForm = async ({ phone }: PhoneVerificationFormParams) => {
     try {
-      const response = await API.postPersonalData({
-        ...initialValuesPeronalData,
-        phone,
-      });
+      const response = await API.postPersonalData(
+        {
+          ...initialValuesPeronalData,
+          phone,
+        },
+        mainAppStore.initModel.authUrl
+      );
       if (response.result === OperationApiResponseCodes.Ok) {
         mixpanel.track(mixpanelEvents.PHONE_FIELD, {
           [mixapanelProps.BRAND_NAME]: mainAppStore.initModel.brandName.toLowerCase(),
@@ -107,7 +106,10 @@ const PhoneVerification: FC = () => {
   useEffect(() => {
     async function fetchCountries() {
       try {
-        const response = await API.getCountries(CountriesEnum.EN);
+        const response = await API.getCountries(
+          CountriesEnum.EN,
+          mainAppStore.initModel.authUrl
+        );
         setCountries(response);
       } catch (error) {}
     }
@@ -133,14 +135,16 @@ const PhoneVerification: FC = () => {
               phone:
                 mainAppStore.profilePhone ||
                 phone ||
-                countries.find(item => item.name === countryOfCitizenship)
+                countries.find((item) => item.name === countryOfCitizenship)
                   ?.dial ||
                 '',
               customCountryCode: countryOfCitizenship,
             });
             setDialMask(
-              `+${countries.find(item => item.name === countryOfCitizenship)
-                ?.dial}` || ''
+              `+${
+                countries.find((item) => item.name === countryOfCitizenship)
+                  ?.dial
+              }` || ''
             );
             kycStore.filledStep = KYCstepsEnum.PhoneVerification;
           }
@@ -186,17 +190,17 @@ const PhoneVerification: FC = () => {
       backgroundColor="#252636"
     >
       <FlexContainer
-          width="100%"
-          height="100%"
-          flexDirection="column"
-          justifyContent="space-between"
-          padding="40px 10px"
+        width="100%"
+        height="100%"
+        flexDirection="column"
+        justifyContent="space-between"
+        padding="40px 10px"
       >
         <FlexContainer
-            justifyContent="center"
-            alignItems="center"
-            padding="30px 0"
-            minHeight="100px"
+          justifyContent="center"
+          alignItems="center"
+          padding="30px 0"
+          minHeight="100px"
         >
           <FlexContainer width="230px">
             <Observer>
@@ -210,41 +214,41 @@ const PhoneVerification: FC = () => {
               <FlexContainer width="100%" margin="0 0 28px 0">
                 <FlexContainer flexDirection="column" width="100%">
                   <AutoCompleteDropdown
-                      labelText={t('Country')}
-                      {...getFieldProps(Fields.CUSTOM_COUNTRY)}
-                      id={Fields.CUSTOM_COUNTRY}
-                      hasError={
-                        !!(touched.customCountryCode && errors.customCountryCode)
-                      }
-                      dropdownItemsList={countries}
-                      setFieldValue={setFieldValue}
-                      handleChange={handleChangeCountry(setFieldValue)}
+                    labelText={t('Country')}
+                    {...getFieldProps(Fields.CUSTOM_COUNTRY)}
+                    id={Fields.CUSTOM_COUNTRY}
+                    hasError={
+                      !!(touched.customCountryCode && errors.customCountryCode)
+                    }
+                    dropdownItemsList={countries}
+                    setFieldValue={setFieldValue}
+                    handleChange={handleChangeCountry(setFieldValue)}
                   ></AutoCompleteDropdown>
                 </FlexContainer>
               </FlexContainer>
               <FlexContainer width="100%" margin="0 0 28px 0">
                 <FlexContainer width="100%" flexDirection="column">
                   <InputField
-                      placeholder={t('Phone')}
-                      {...getFieldProps(Fields.PHONE)}
-                      id={Fields.PHONE}
-                      hasError={!!(touched.phone && errors.phone)}
-                      errorText={errors.phone}
+                    placeholder={t('Phone')}
+                    {...getFieldProps(Fields.PHONE)}
+                    id={Fields.PHONE}
+                    hasError={!!(touched.phone && errors.phone)}
+                    errorText={errors.phone}
                   />
                 </FlexContainer>
               </FlexContainer>
             </FlexContainer>
             <FlexContainer>
               <PrimaryButton
-                  type="submit"
-                  onClick={handlerClickSubmit}
-                  padding="8px 32px"
-                  width="100%"
+                type="submit"
+                onClick={handlerClickSubmit}
+                padding="8px 32px"
+                width="100%"
               >
                 <PrimaryTextSpan
-                    color="#003A38"
-                    fontWeight="bold"
-                    fontSize="14px"
+                  color="#003A38"
+                  fontWeight="bold"
+                  fontSize="14px"
                 >
                   {t('Confirm')}
                 </PrimaryTextSpan>

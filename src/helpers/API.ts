@@ -111,17 +111,19 @@ class API {
     return response.data;
   };
 
-  authenticate = async (credentials: UserAuthenticate) => {
+  authenticate = async (credentials: UserAuthenticate, authUrl: string) => {
     const response = await axios.post<UserAuthenticateResponse>(
-      `${API_AUTH_STRING}${AUTH_API_LIST.TRADER.AUTHENTICATE}`,
+      `${API_AUTH_STRING || authUrl || authUrl}${
+        AUTH_API_LIST.TRADER.AUTHENTICATE
+      }`,
       credentials
     );
     return response.data;
   };
 
-  signUpNewTrader = async (credentials: UserRegistration) => {
+  signUpNewTrader = async (credentials: UserRegistration, authUrl: string) => {
     const response = await axios.post<UserAuthenticateResponse>(
-      `${API_AUTH_STRING}${AUTH_API_LIST.TRADER.REGISTER}`,
+      `${API_AUTH_STRING || authUrl}${AUTH_API_LIST.TRADER.REGISTER}`,
       credentials
     );
     return response.data;
@@ -192,9 +194,9 @@ class API {
     return response.data;
   };
 
-  confirmEmail = async (link: string) => {
+  confirmEmail = async (link: string, authUrl: string) => {
     const response = await axios.post<{ result: OperationApiResponseCodes }>(
-      `${API_AUTH_STRING}${AUTH_API_LIST.PERSONAL_DATA.CONFIRM}`,
+      `${API_AUTH_STRING || authUrl}${AUTH_API_LIST.PERSONAL_DATA.CONFIRM}`,
       {
         link,
       }
@@ -202,9 +204,9 @@ class API {
     return response.data;
   };
 
-  forgotEmail = async (email: string) => {
+  forgotEmail = async (email: string, authUrl: string) => {
     const response = await axios.post<{ result: OperationApiResponseCodes }>(
-      `${API_AUTH_STRING}${AUTH_API_LIST.TRADER.FORGOT_PASSWORD}`,
+      `${API_AUTH_STRING || authUrl}${AUTH_API_LIST.TRADER.FORGOT_PASSWORD}`,
       {
         email,
       }
@@ -212,9 +214,12 @@ class API {
     return response.data;
   };
 
-  recoveryPassword = async (params: RecoveryPasswordParams) => {
+  recoveryPassword = async (
+    params: RecoveryPasswordParams,
+    authUrl: string
+  ) => {
     const response = await axios.post<{ result: OperationApiResponseCodes }>(
-      `${API_AUTH_STRING}${AUTH_API_LIST.TRADER.PASSWORD_RECOVERY}`,
+      `${API_AUTH_STRING || authUrl}${AUTH_API_LIST.TRADER.PASSWORD_RECOVERY}`,
       params
     );
     return response.data;
@@ -240,17 +245,17 @@ class API {
     return response.data;
   };
 
-  changePassword = async (params: ChangePasswordParams) => {
+  changePassword = async (params: ChangePasswordParams, authUrl: string) => {
     const response = await axios.post<ChangePasswordRespone>(
-      `${API_AUTH_STRING}${AUTH_API_LIST.TRADER.CHANGE_PASSWORD}`,
+      `${API_AUTH_STRING || authUrl}${AUTH_API_LIST.TRADER.CHANGE_PASSWORD}`,
       params
     );
     return response.data;
   };
 
-  getPersonalData = async (processId: string) => {
+  getPersonalData = async (processId: string, authUrl: string) => {
     const response = await axios.get<PersonalDataResponse>(
-      `${API_AUTH_STRING}${AUTH_API_LIST.PERSONAL_DATA.GET}`,
+      `${API_AUTH_STRING || authUrl}${AUTH_API_LIST.PERSONAL_DATA.GET}`,
       {
         params: {
           processId,
@@ -260,44 +265,52 @@ class API {
     return response.data;
   };
 
-  getAdditionalRegistrationFields = async () => {
+  getAdditionalRegistrationFields = async (authUrl: string) => {
     const response = await axios.get<string[]>(
-      `${API_AUTH_STRING}${AUTH_API_LIST.TRADER.ADDITIONAL_REGISTRATION_FIELDS}`,
+      `${API_AUTH_STRING || authUrl}${
+        AUTH_API_LIST.TRADER.ADDITIONAL_REGISTRATION_FIELDS
+      }`
     );
     return response.data;
   };
 
-  getGeolocationInfo = async () => {
+  getGeolocationInfo = async (authUrl: string) => {
     const response = await axios.get<Country>(
-      `${API_AUTH_STRING}${AUTH_API_LIST.COMMON.GEOLOCATION_INFO}`,
+      `${API_AUTH_STRING || authUrl}${AUTH_API_LIST.COMMON.GEOLOCATION_INFO}`
     );
     return response.data;
   };
 
-  postPersonalData = async (params: PersonalDataParams) => {
+  postPersonalData = async (params: PersonalDataParams, authUrl: string) => {
     const formData = this.convertParamsToFormData(params);
 
     const response = await axios.post<PersonalDataPostResponse>(
-      `${API_AUTH_STRING}${AUTH_API_LIST.PERSONAL_DATA.POST}`,
+      `${API_AUTH_STRING || authUrl}${AUTH_API_LIST.PERSONAL_DATA.POST}`,
       formData
     );
     return response.data;
   };
 
-  getCountries = async (lang = CountriesEnum.EN) => {
+  getCountries = async (lang = CountriesEnum.EN, authUrl: string) => {
     const response = await axios.get<Country[]>(
-      `${API_AUTH_STRING}${AUTH_API_LIST.COMMON.COUNTRIES}/${lang}`
+      `${API_AUTH_STRING || authUrl}${AUTH_API_LIST.COMMON.COUNTRIES}/${lang}`
     );
     return response.data;
   };
 
-  postDocument = async (documentType: DocumentTypeEnum, file: Blob) => {
+  postDocument = async (
+    documentType: DocumentTypeEnum,
+    file: Blob,
+    authUrl: string
+  ) => {
     const formData = new FormData();
     formData.append('file', file);
     formData.append('processId', getProcessId());
 
     const response = await axios.post<void>(
-      `${API_AUTH_STRING}${AUTH_API_LIST.DOCUMENT.POST}/${documentType}`,
+      `${API_AUTH_STRING || authUrl}${
+        AUTH_API_LIST.DOCUMENT.POST
+      }/${documentType}`,
       formData
     );
     return response.data;
@@ -352,24 +365,26 @@ class API {
     return response.data;
   };
 
-  getTradingUrl = async () => {
+  getTradingUrl = async (authUrl: string) => {
     const response = await axios.get<ServerInfoType>(
-      `${API_AUTH_STRING}${AUTH_API_LIST.COMMON.SERVER_INFO}`
+      `${API_AUTH_STRING || authUrl}${AUTH_API_LIST.COMMON.SERVER_INFO}`
     );
     return response.data;
   };
 
-  refreshToken = async (params: RefreshToken) => {
+  refreshToken = async (params: RefreshToken, authUrl: string) => {
     const response = await axios.post<RefreshTokenDTO>(
-      `${API_AUTH_STRING}${AUTH_API_LIST.TRADER.REFRESH_TOKEN}`,
+      `${API_AUTH_STRING || authUrl}${AUTH_API_LIST.TRADER.REFRESH_TOKEN}`,
       params
     );
     return response.data;
   };
 
-  verifyUser = async (params: { processId: string }) => {
+  verifyUser = async (params: { processId: string }, authUrl: string) => {
     const response = await axios.post<{ result: OperationApiResponseCodes }>(
-      `${API_AUTH_STRING}${AUTH_API_LIST.PERSONAL_DATA.ON_VERIFICATION}`,
+      `${API_AUTH_STRING || authUrl}${
+        AUTH_API_LIST.PERSONAL_DATA.ON_VERIFICATION
+      }`,
       params
     );
     return response.data;
@@ -394,9 +409,10 @@ class API {
             supportUrl: '',
             termsUrl: '',
             tradingUrl: '',
+            authUrl: '',
             mixpanelToken: '582507549d28c813188211a0d15ec940',
             recaptchaToken: '',
-          },
+          } as InitModel,
         }
       : await axios.get<InitModel>(`${API_LIST.INIT.GET}`);
     return response.data;
@@ -423,9 +439,9 @@ class API {
     return response.data;
   };
 
-  postLpLoginToken = async (params: LpLoginParams) => {
+  postLpLoginToken = async (params: LpLoginParams, authUrl: string) => {
     const response = await axios.post<UserAuthenticateResponse>(
-      `${API_AUTH_STRING}${AUTH_API_LIST.TRADER.LP_LOGIN}`,
+      `${API_AUTH_STRING || authUrl}${AUTH_API_LIST.TRADER.LP_LOGIN}`,
       params
     );
     return response.data;

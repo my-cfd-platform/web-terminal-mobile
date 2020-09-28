@@ -33,7 +33,10 @@ const AccountProfile = () => {
   useEffect(() => {
     async function fetchPersonalData() {
       try {
-        const response = await API.getPersonalData(getProcessId());
+        const response = await API.getPersonalData(
+          getProcessId(),
+          mainAppStore.initModel.authUrl
+        );
         setEmail(response.data.email || '');
         setName(
           `${response.data.firstName || ''} ${response.data.lastName || ''}`

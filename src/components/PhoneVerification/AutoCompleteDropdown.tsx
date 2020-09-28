@@ -8,6 +8,7 @@ import { FlexContainer } from '../../styles/FlexContainer';
 import API from '../../helpers/API';
 import { Country } from '../../types/CountriesTypes';
 import { useTranslation } from 'react-i18next';
+import { useStores } from '../../hooks/useStores';
 
 interface Props {
   labelText: string;
@@ -22,7 +23,7 @@ interface Props {
   handleChange?: (arg0: Country) => void;
 }
 
-const AutoCompleteDropdown: FC<Props> = props => {
+const AutoCompleteDropdown: FC<Props> = (props) => {
   const {
     labelText,
     id,
@@ -40,6 +41,8 @@ const AutoCompleteDropdown: FC<Props> = props => {
   const wrapperRef = useRef<HTMLLabelElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
+
+  const { mainAppStore } = useStores();
 
   const { t } = useTranslation();
 
@@ -79,7 +82,9 @@ const AutoCompleteDropdown: FC<Props> = props => {
   useEffect(() => {
     async function fetchCountry() {
       try {
-        const response = await API.getGeolocationInfo();
+        const response = await API.getGeolocationInfo(
+          mainAppStore.initModel.authUrl
+        );
         handleSetValue(response);
       } catch (error) {}
     }
@@ -88,14 +93,12 @@ const AutoCompleteDropdown: FC<Props> = props => {
 
   const renderItems = () => {
     const filteredList = dropdownItemsList.filter(
-      item => !value || item.name.toLowerCase().includes(value.toLowerCase())
+      (item) => !value || item.name.toLowerCase().includes(value.toLowerCase())
     );
     return filteredList.length ? (
-      filteredList.map(item => (
+      filteredList.map((item) => (
         <DropdownItem key={item.id} onClick={handleSetValue(item)}>
-          <DialText fontSize="12px">
-            +{item.dial}
-          </DialText>
+          <DialText fontSize="12px">+{item.dial}</DialText>
           <DropdownItemText color="#fffccc" fontSize="12px">
             {item.name}
           </DropdownItemText>
@@ -150,11 +153,11 @@ const LabelWrapper = styled.label`
 `;
 
 const Input = styled.input<{ hasError?: boolean }>`
-  background-color: rgba(42,45,56,0.5);
+  background-color: rgba(42, 45, 56, 0.5);
   outline: none;
   border: none;
-  border-bottom: #1C1F26 2px solid;
-  border-bottom: ${props => props.hasError && '1px solid #ED145B !important'};
+  border-bottom: #1c1f26 2px solid;
+  border-bottom: ${(props) => props.hasError && '1px solid #ED145B !important'};
   width: 100%;
   caret-color: #fff;
   color: #fffccc;

@@ -56,7 +56,10 @@ const ForgotPassword = () => {
       setIsLoading(true);
       setSubmitting(true);
 
-      const result = await API.forgotEmail(email);
+      const result = await API.forgotEmail(
+        email,
+        mainAppStore.initModel.authUrl
+      );
 
       if (result.result === OperationApiResponseCodes.Ok) {
         setIsSuccessfull(true);
@@ -163,7 +166,6 @@ const ForgotPassword = () => {
               </PrimaryTextSpan>
             </FlexContainer>
           )}
-
         </FlexContainer>
 
         <FlexContainer width="100vw" padding="0 16px" marginBottom="26px">

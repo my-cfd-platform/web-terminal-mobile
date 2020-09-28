@@ -26,9 +26,7 @@ import SvgIcon from '../components/SvgIcon';
 
 const RecoveryPassword = () => {
   const { t } = useTranslation();
-  const { token } = useParams();
-
-  const { mainAppStore } = useStores();
+  const { token } = useParams<{ token: string }>();
 
   const validationSchema = yup.object().shape<IResetPassword>({
     password: yup
@@ -58,15 +56,18 @@ const RecoveryPassword = () => {
   const [isSuccessful, setIsSuccessfull] = useState(false);
   const [isNotSuccessful, setNotIsSuccessfull] = useState(false);
 
-  const { badRequestPopupStore } = useStores();
+  const { badRequestPopupStore, mainAppStore } = useStores();
 
   const handleSubmitForm = async ({ password }: IResetPassword) => {
     setIsLoading(true);
     try {
-      const response = await API.recoveryPassword({
-        token: token || '',
-        password,
-      });
+      const response = await API.recoveryPassword(
+        {
+          token: token || '',
+          password,
+        },
+        mainAppStore.initModel.authUrl
+      );
       if (response.result === OperationApiResponseCodes.Ok) {
         mixpanel.track(mixpanelEvents.FORGOT_PASSWORD_SET_NEW, {
           [mixapanelProps.BRAND_NAME]: mainAppStore.initModel.brandName.toLowerCase(),
@@ -114,37 +115,42 @@ const RecoveryPassword = () => {
   return (
     <BackFlowLayout pageTitle={t('Recovery password')}>
       {isLoading && <LoaderForComponents isLoading={isLoading} />}
-      <FlexContainer height="100%" flexDirection="column" width="100%" justifyContent="center">
+      <FlexContainer
+        height="100%"
+        flexDirection="column"
+        width="100%"
+        justifyContent="center"
+      >
         {isSuccessful && (
-           <FlexContainer flexDirection="column" padding="16px">
-           <PrimaryTextParagraph
-             color="#fffccc"
-             fontSize="24px"
-             fontWeight="bold"
-             marginBottom="20px"
-           >
-             {t('Congratulation')}
-           </PrimaryTextParagraph>
+          <FlexContainer flexDirection="column" padding="16px">
+            <PrimaryTextParagraph
+              color="#fffccc"
+              fontSize="24px"
+              fontWeight="bold"
+              marginBottom="20px"
+            >
+              {t('Congratulation')}
+            </PrimaryTextParagraph>
 
-           <FlexContainer alignItems="center" padding="20px 0">
-             <FlexContainer margin="0 20px 0 0">
-               <SvgIcon {...CheckDone} fillColor="#005E5E" />
-             </FlexContainer>
-             <PrimaryTextParagraph color="#7b7b85" fontSize="12px">
-               {t('Your password has been successfully changed')}
-             </PrimaryTextParagraph>
-           </FlexContainer>
+            <FlexContainer alignItems="center" padding="20px 0">
+              <FlexContainer margin="0 20px 0 0">
+                <SvgIcon {...CheckDone} fillColor="#005E5E" />
+              </FlexContainer>
+              <PrimaryTextParagraph color="#7b7b85" fontSize="12px">
+                {t('Your password has been successfully changed')}
+              </PrimaryTextParagraph>
+            </FlexContainer>
 
-           <FlexContainer
-             alignItems="center"
-             justifyContent="center"
-             padding="12px 0 20px"
-           >
-             <LinkForgotSuccess to={Page.SIGN_IN}>
-               {t('Back to Login')}
-             </LinkForgotSuccess>
-           </FlexContainer>
-         </FlexContainer>
+            <FlexContainer
+              alignItems="center"
+              justifyContent="center"
+              padding="12px 0 20px"
+            >
+              <LinkForgotSuccess to={Page.SIGN_IN}>
+                {t('Back to Login')}
+              </LinkForgotSuccess>
+            </FlexContainer>
+          </FlexContainer>
         )}
         {isNotSuccessful && (
           <FlexContainer flexDirection="column" padding="16px">
@@ -181,44 +187,44 @@ const RecoveryPassword = () => {
         {!isSuccessful && !isNotSuccessful && (
           <CustomForm onSubmit={handleSubmit} noValidate>
             <FlexContainer flexDirection="column">
-            <InputField
-              name={Fields.PASSWORD}
-              id={Fields.PASSWORD}
-              placeholder={t('Password')}
-              value={values.password || ''}
-              onChange={handleChange}
-              type="password"
-              hasError={!!(touched.password && errors.password)}
-              errorText={errors.password}
-            />
-            <InputField
-              name={Fields.REPEAT_PASSWORD}
-              id={Fields.REPEAT_PASSWORD}
-              onChange={handleChange}
-              placeholder={t('Repeat Password')}
-              value={values.repeatPassword || ''}
-              type="password"
-              hasError={!!(touched.repeatPassword && errors.repeatPassword)}
-              errorText={errors.repeatPassword}
-            />
+              <InputField
+                name={Fields.PASSWORD}
+                id={Fields.PASSWORD}
+                placeholder={t('Password')}
+                value={values.password || ''}
+                onChange={handleChange}
+                type="password"
+                hasError={!!(touched.password && errors.password)}
+                errorText={errors.password}
+              />
+              <InputField
+                name={Fields.REPEAT_PASSWORD}
+                id={Fields.REPEAT_PASSWORD}
+                onChange={handleChange}
+                placeholder={t('Repeat Password')}
+                value={values.repeatPassword || ''}
+                type="password"
+                hasError={!!(touched.repeatPassword && errors.repeatPassword)}
+                errorText={errors.repeatPassword}
+              />
             </FlexContainer>
 
             <FlexContainer padding="16px">
-            <PrimaryButton
-              padding="12px"
-              type="submit"
-              width="100%"
-              onClick={handlerClickSubmit}
-              disabled={isSubmitting}
-            >
-              <PrimaryTextSpan
-                color={Colors.BLACK}
-                fontWeight="bold"
-                fontSize="16px"
+              <PrimaryButton
+                padding="12px"
+                type="submit"
+                width="100%"
+                onClick={handlerClickSubmit}
+                disabled={isSubmitting}
               >
-                {t('Confirm')}
-              </PrimaryTextSpan>
-            </PrimaryButton>
+                <PrimaryTextSpan
+                  color={Colors.BLACK}
+                  fontWeight="bold"
+                  fontSize="16px"
+                >
+                  {t('Confirm')}
+                </PrimaryTextSpan>
+              </PrimaryButton>
             </FlexContainer>
           </CustomForm>
         )}

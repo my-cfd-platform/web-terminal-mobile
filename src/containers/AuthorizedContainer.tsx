@@ -38,7 +38,10 @@ const AuthorizedContainer: FC = ({ children }) => {
   useEffect(() => {
     async function fetchPersonalData() {
       try {
-        const response = await API.getPersonalData(getProcessId());
+        const response = await API.getPersonalData(
+          getProcessId(),
+          mainAppStore.initModel.authUrl
+        );
         mainAppStore.signUpFlag
           ? mixpanel.alias(response.data.id)
           : mixpanel.identify(response.data.id);
@@ -58,7 +61,9 @@ const AuthorizedContainer: FC = ({ children }) => {
         });
         mainAppStore.setSignUpFlag(false);
         if (!response.data.phone) {
-          const additionalResponse = await API.getAdditionalRegistrationFields();
+          const additionalResponse = await API.getAdditionalRegistrationFields(
+            mainAppStore.initModel.authUrl
+          );
           if (additionalResponse.includes('phone')) {
             push(Page.PHONE_VERIFICATION);
           }

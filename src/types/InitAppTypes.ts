@@ -1,6 +1,7 @@
 export interface InitModel {
   logo: string;
   tradingUrl: string;
+  authUrl: string;
   policyUrl: string;
   termsUrl: string;
   faqUrl: string;
