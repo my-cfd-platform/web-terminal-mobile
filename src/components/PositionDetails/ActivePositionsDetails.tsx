@@ -157,6 +157,7 @@ const ActivePositionsDetails: FC<Props> = observer((props) => {
           maxHeight="100%"
           overflow="auto"
           width="100%"
+          padding="0 0 90px 0"
         >
           <ActivePositionItem position={position} />
 
