@@ -15,6 +15,7 @@ interface InputFieldProps {
   onChange?: (e: ChangeEvent<HTMLInputElement>) => void;
   onBlur?: (e: React.FocusEvent<HTMLInputElement>) => void;
   value: string;
+  autoComplete?: string;
 }
 
 const InputField: FC<InputFieldProps> = ({
@@ -27,6 +28,7 @@ const InputField: FC<InputFieldProps> = ({
   hasError = false,
   errorText = '',
   value,
+  autoComplete,
 }) => {
   return (
     <InputWrap>
@@ -40,6 +42,7 @@ const InputField: FC<InputFieldProps> = ({
         onChange={onChange}
         borderColor={(hasError && Colors.RED) || ''}
         onBlur={onBlur}
+        autoComplete={autoComplete}
       />
       {hasError && <ErrorText>{errorText}</ErrorText>}
     </InputWrap>
