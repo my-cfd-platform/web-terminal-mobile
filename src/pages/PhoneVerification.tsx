@@ -32,18 +32,21 @@ import LogoMonfex from '../assets/images/logo.png';
 import { OperationApiResponseCodes } from '../enums/OperationApiResponseCodes';
 import mixapanelProps from '../constants/mixpanelProps';
 import parsePhoneNumber from 'libphonenumber-js/max';
+import {AskBidEnum} from "../enums/AskBid";
+import Colors from "../constants/Colors";
 
 const PhoneVerification: FC = () => {
   const [countries, setCountries] = useState<Country[]>([]);
   const [dialMask, setDialMask] = useState('');
+  const [phoneLength, setPhoneLength] = useState(0);
   const countriesNames = countries.map((item) => item.name);
   const { t } = useTranslation();
   const validationSchema = yup.object().shape<PhoneVerificationFormParams>({
     phone: yup
       .string()
       .required()
-      .test(Fields.PHONE, `${t('Phone number is invalid')}`, function (value) {
-        const checkPhone = parsePhoneNumber(`+${value}`);
+      .test(Fields.PHONE, `${t('Phone number is incorrect')}`, function (value) {
+        const checkPhone = parsePhoneNumber(`${dialMask}${value}`);
         return !!checkPhone?.isValid();
       }),
     customCountryCode: yup
@@ -80,7 +83,8 @@ const PhoneVerification: FC = () => {
   });
 
   const handleChangeCountry = (setFieldValue: any) => (country: Country) => {
-    setFieldValue(Fields.PHONE, country.dial);
+    setPhoneLength(0);
+    setFieldValue(Fields.PHONE, '');
     setDialMask(`+${country.dial}`);
   };
 
@@ -172,6 +176,18 @@ const PhoneVerification: FC = () => {
     enableReinitialize: true,
   });
 
+  const handleChangePhone = (setFieldValue: any, e: any) => {
+    setPhoneLength(e.target.value.length);
+    setFieldValue(Fields.PHONE, e.target.value);
+  };
+
+  const phoneOnBeforeInputHandler = (e: any) => {
+    if (!e.data.match(/^[+0-9]*$/g)) {
+      e.preventDefault();
+      return;
+    }
+  };
+
   const handlerClickSubmit = async () => {
     const curErrors = await validateForm();
     const curErrorsKeys = Object.keys(curErrors);
@@ -194,7 +210,7 @@ const PhoneVerification: FC = () => {
         height="100%"
         flexDirection="column"
         justifyContent="space-between"
-        padding="40px 10px"
+        padding="40px 0"
       >
         <FlexContainer
           justifyContent="center"
@@ -211,7 +227,7 @@ const PhoneVerification: FC = () => {
         <FlexContainer flexDirection="column" height="100%">
           <CustomForm onSubmit={handleSubmit} noValidate>
             <FlexContainer flexDirection="column">
-              <FlexContainer width="100%" margin="0 0 28px 0">
+              <FlexContainer width="100%">
                 <FlexContainer flexDirection="column" width="100%">
                   <AutoCompleteDropdown
                     labelText={t('Country')}
@@ -226,19 +242,24 @@ const PhoneVerification: FC = () => {
                   ></AutoCompleteDropdown>
                 </FlexContainer>
               </FlexContainer>
-              <FlexContainer width="100%" margin="0 0 28px 0">
-                <FlexContainer width="100%" flexDirection="column">
+              <FlexContainer width="100%">
+                <PhoneInputWrapper width="100%" flexDirection="column">
+                  <Label>{t('Phone')}</Label>
+                  <MaskText right={phoneLength}>{dialMask}</MaskText>
                   <InputField
-                    placeholder={t('Phone')}
+                    placeholder={''}
                     {...getFieldProps(Fields.PHONE)}
                     id={Fields.PHONE}
+                    inputMode={'decimal'}
                     hasError={!!(touched.phone && errors.phone)}
                     errorText={errors.phone}
+                    onBeforeInput={phoneOnBeforeInputHandler}
+                    onChange={e => handleChangePhone(setFieldValue, e)}
                   />
-                </FlexContainer>
+                </PhoneInputWrapper>
               </FlexContainer>
             </FlexContainer>
-            <FlexContainer>
+            <FlexContainer padding={'0 16px'}>
               <PrimaryButton
                 type="submit"
                 onClick={handlerClickSubmit}
@@ -248,7 +269,7 @@ const PhoneVerification: FC = () => {
                 <PrimaryTextSpan
                   color="#003A38"
                   fontWeight="bold"
-                  fontSize="14px"
+                  fontSize="16px"
                 >
                   {t('Confirm')}
                 </PrimaryTextSpan>
@@ -269,4 +290,31 @@ const CustomForm = styled.form`
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+`;
+
+const PhoneInputWrapper = styled(FlexContainer)`
+  position: relative;
+  input {
+    text-align: right;
+  }
+`;
+
+const Label = styled(PrimaryTextSpan)`
+  position: absolute;
+  top: 19px;
+  left: 14px;
+  transform: translateY(-4px);
+  transition: transform 0.2s ease, font-size 0.2s ease, color 0.2s ease;
+  font-size: 16px;
+  color: rgba(255, 255, 255, 0.4);
+`;
+
+const MaskText = styled(PrimaryTextSpan)<{ right: number }>`
+  right: ${(props) => props.right * 10 + 17}px;
+  position: absolute;
+  top: 19px;
+  transform: translateY(-4px);
+  transition: transform 0.2s ease, font-size 0.2s ease, color 0.2s ease;
+  font-size: 16px;
+  color: #fffccc;
 `;
