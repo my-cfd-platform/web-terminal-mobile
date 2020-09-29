@@ -105,12 +105,7 @@ const DemoRealPopup = () => {
         </FlexContainer>
         <FlexContainer justifyContent="space-between" padding="0 24px">
           <PracticeOnDemoButton onClick={selectDemoAccount}>
-            <PrimaryTextSpan
-              fontSize="13px"
-              fontWeight="bold"
-              color="#fff"
-              whiteSpace="nowrap"
-            >
+            <PrimaryTextSpan fontSize="13px" fontWeight="bold" color="#fff">
               {t('Practice on Demo')}
             </PrimaryTextSpan>
           </PracticeOnDemoButton>
@@ -135,20 +130,30 @@ const PracticeOnDemoButton = styled(ButtonWithoutStyles)`
   background-color: ${Colors.RED};
   border-radius: 10px;
   height: 56px;
-  padding: 20px;
+  padding: 0 12px;
   width: 100%;
   margin-right: 8px;
+  width: 50%;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
 `;
 
 const InvestRealFunds = styled(ButtonWithoutStyles)`
   background-color: ${Colors.ACCENT_BLUE};
   border-radius: 10px;
   height: 56px;
-  padding: 20px;
+  padding: 0 12px;
   width: 100%;
   font-size: 13px;
   font-weight: bold;
   color: ${Colors.BLACK};
+  width: 50%;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
 `;
 
 const SuccessImageWrapper = styled.img`
