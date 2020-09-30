@@ -179,7 +179,7 @@ const routesList = [
     path: Page.PHONE_VERIFICATION,
     exact: true,
     strict: true,
-    layoutType: RouteLayoutType.Authorized,
+    layoutType: RouteLayoutType.Public,
   },
 ];
 
