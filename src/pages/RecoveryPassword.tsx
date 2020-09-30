@@ -196,6 +196,7 @@ const RecoveryPassword = () => {
                 type="password"
                 hasError={!!(touched.password && errors.password)}
                 errorText={errors.password}
+                autoComplete="off"
               />
               <InputField
                 name={Fields.REPEAT_PASSWORD}
@@ -206,6 +207,7 @@ const RecoveryPassword = () => {
                 type="password"
                 hasError={!!(touched.repeatPassword && errors.repeatPassword)}
                 errorText={errors.repeatPassword}
+                autoComplete="off"
               />
             </FlexContainer>
 

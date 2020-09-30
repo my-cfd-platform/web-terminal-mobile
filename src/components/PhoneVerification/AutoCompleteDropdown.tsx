@@ -1,5 +1,6 @@
 import React, { FC, ChangeEvent, useState, useRef, useEffect } from 'react';
 import styled from '@emotion/styled';
+import Colors from '../../constants/Colors';
 import {
   PrimaryTextSpan,
   PrimaryTextParagraph,
@@ -60,7 +61,6 @@ const AutoCompleteDropdown: FC<Props> = (props) => {
 
   const handleSetValue = (country: Country) => () => {
     setFieldValue(id, country.name);
-
     if (handleChange) {
       handleChange(country);
     }
@@ -98,8 +98,8 @@ const AutoCompleteDropdown: FC<Props> = (props) => {
     return filteredList.length ? (
       filteredList.map((item) => (
         <DropdownItem key={item.id} onClick={handleSetValue(item)}>
-          <DialText fontSize="12px">+{item.dial}</DialText>
-          <DropdownItemText color="#fffccc" fontSize="12px">
+          <DialText color="#ffffff" fontSize="16px">+{item.dial}</DialText>
+          <DropdownItemText color="#ffffff" fontSize="16px">
             {item.name}
           </DropdownItemText>
         </DropdownItem>
@@ -161,23 +161,23 @@ const Input = styled.input<{ hasError?: boolean }>`
   width: 100%;
   caret-color: #fff;
   color: #fffccc;
-  font-size: 14px;
+  font-size: 16px;
   line-height: 16px;
   padding: 14px 16px 14px;
   transition: border 0.2s ease;
   will-change: border;
   text-align: right;
-
-  &:hover {
-    border-bottom: 1px solid rgba(255, 255, 255, 0.4);
-
-    & + span {
-      color: rgba(255, 255, 255, 0.6);
-    }
-  }
+  transition: 0.4s;
 
   &:focus {
-    border-bottom: 1px solid #00ffdd;
+    background-color: ${Colors.INPUT_FOCUS_BG};
+  }
+  &::placeholder {
+    color: ${Colors.INPUT_LABEL_TEXT};
+  }
+  &:active,
+  &:focus {
+    outline: none;
   }
 
   &:-webkit-autofill,
@@ -185,14 +185,18 @@ const Input = styled.input<{ hasError?: boolean }>`
   &:-webkit-autofill:focus,
   &:-webkit-autofill:valid,
   &:-webkit-autofill:active {
-    transition: border 0.2s ease, background-color 50000s ease-in-out 0s;
+    font-size: 16px !important;
     -webkit-text-fill-color: #fffccc !important;
+    box-shadow: 0 0 0px 1000px #1d2026 inset !important;
+    -webkit-box-shadow: 0 0 0px 1000px #1d2026 inset !important;
+    transition: background-color 5000s linear 0s !important;
+    background-clip: content-box !important;
   }
 `;
 
 const Label = styled(PrimaryTextSpan)`
   position: absolute;
-  bottom: 10px;
+  bottom: 12px;
   left: 14px;
   transform: translateY(-4px);
   transition: transform 0.2s ease, font-size 0.2s ease, color 0.2s ease;
@@ -202,13 +206,14 @@ const Label = styled(PrimaryTextSpan)`
 
 const DialText = styled(PrimaryTextSpan)`
   display: flex;
-  width: 45px;
+  width: 60px;
   justify-content: flex-end;
   margin-right: 15px;
+  text-align: right;
 `;
 
 const DropdownWrapper = styled(FlexContainer)`
-  max-height: 130px;
+  max-height: calc(100vh - 217px);
   overflow-y: auto;
   ::-webkit-scrollbar {
     width: 4px;
@@ -224,8 +229,11 @@ const DropdownWrapper = styled(FlexContainer)`
 `;
 
 const DropdownItem = styled(FlexContainer)`
-  margin-bottom: 16px;
-
+  font-size: 16px;
+  box-sizing: border-box;
+  min-height: 50px;
+  align-items: center;
+  
   &:last-of-type {
     margin-bottom: 0;
   }
