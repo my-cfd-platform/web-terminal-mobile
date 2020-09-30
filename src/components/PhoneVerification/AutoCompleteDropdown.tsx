@@ -64,7 +64,9 @@ const AutoCompleteDropdown: FC<Props> = (props) => {
     if (handleChange) {
       handleChange(country);
     }
-    toggle(false);
+    setTimeout(() => {
+      toggle(false);
+    }, 0);
   };
 
   useEffect(() => {
@@ -98,7 +100,9 @@ const AutoCompleteDropdown: FC<Props> = (props) => {
     return filteredList.length ? (
       filteredList.map((item) => (
         <DropdownItem key={item.id} onClick={handleSetValue(item)}>
-          <DialText color="#ffffff" fontSize="16px">+{item.dial}</DialText>
+          <DialText color="#ffffff" fontSize="16px">
+            +{item.dial}
+          </DialText>
           <DropdownItemText color="#ffffff" fontSize="16px">
             {item.name}
           </DropdownItemText>
@@ -233,7 +237,7 @@ const DropdownItem = styled(FlexContainer)`
   box-sizing: border-box;
   min-height: 50px;
   align-items: center;
-  
+
   &:last-of-type {
     margin-bottom: 0;
   }
