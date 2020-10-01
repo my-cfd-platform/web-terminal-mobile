@@ -276,13 +276,14 @@ class API {
   };
 
   getGeolocationInfo = async (authUrl: string) => {
-    const response = await axios.get<Country>(
-      `${API_AUTH_STRING || authUrl}${AUTH_API_LIST.COMMON.GEOLOCATION_INFO}`
-    );
+    const response = await axios.get<{
+      country: string;
+      dial: string;
+    }>(`${API_AUTH_STRING || authUrl}${AUTH_API_LIST.COMMON.GEOLOCATION_INFO}`);
     return response.data;
   };
 
-  postPersonalData = async (params: PersonalDataParams, authUrl: string) => {
+  postPersonalData = async (params: any, authUrl: string) => {
     const formData = this.convertParamsToFormData(params);
 
     const response = await axios.post<PersonalDataPostResponse>(

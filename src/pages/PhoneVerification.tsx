@@ -1,27 +1,21 @@
 import React, { useState, useEffect, FC } from 'react';
 import { FlexContainer } from '../styles/FlexContainer';
-import { PrimaryTextParagraph, PrimaryTextSpan } from '../styles/TextsElements';
+import { PrimaryTextSpan } from '../styles/TextsElements';
 import { useFormik } from 'formik';
 import Fields from '../constants/fields';
 import AutoCompleteDropdown from '../components/PhoneVerification/AutoCompleteDropdown';
 import { PrimaryButton } from '../styles/Buttons';
 import styled from '@emotion/styled';
-import {
-  PhoneVerificationFormParams,
-  PersonalDataParams,
-} from '../types/PersonalDataTypes';
-import { Country, CountryCode } from '../types/CountriesTypes';
+import { PhoneVerificationFormParams } from '../types/PersonalDataTypes';
+import { Country } from '../types/CountriesTypes';
 import API from '../helpers/API';
 import { CountriesEnum } from '../enums/CountriesEnum';
 import * as yup from 'yup';
-import KeysInApi from '../constants/keysInApi';
 import { useStores } from '../hooks/useStores';
 import { KYCstepsEnum } from '../enums/KYCsteps';
 import Page from '../constants/Pages';
 import { useHistory } from 'react-router-dom';
 import { getProcessId } from '../helpers/getProcessId';
-import { SexEnum } from '../enums/Sex';
-import validationInputTexts from '../constants/validationInputTexts';
 import { useTranslation } from 'react-i18next';
 import mixpanel from 'mixpanel-browser';
 import mixpanelEvents from '../constants/mixpanelEvents';
@@ -37,48 +31,27 @@ const PhoneVerification: FC = () => {
   const [countries, setCountries] = useState<Country[]>([]);
   const [dialMask, setDialMask] = useState('');
   const [phoneLength, setPhoneLength] = useState(0);
-  const countriesNames = countries.map((item) => item.name);
   const { t } = useTranslation();
   const validationSchema = yup.object().shape<PhoneVerificationFormParams>({
     phone: yup
       .string()
       .required()
-      .test(Fields.PHONE, `${t('Phone number is incorrect')}`, function (value) {
+      .test(Fields.PHONE, `${t('Phone number is incorrect')}`, function (
+        value
+      ) {
         const checkPhone = parsePhoneNumber(`${dialMask}${value}`);
         return !!checkPhone?.isValid();
       }),
-    customCountryCode: yup
-      .mixed()
-      .oneOf(countriesNames, t('No matches'))
-      .required(t(validationInputTexts.REQUIRED_FIELD)),
+    customCountryCode: yup.string(),
   });
 
   const { push } = useHistory();
   const { kycStore, mainAppStore } = useStores();
 
-  const [initialValues, setInitialValuesForm] = useState<
-    PhoneVerificationFormParams
-  >({
+  const initialValues = {
     customCountryCode: '',
     phone: '',
-  });
-
-  const [initialValuesPeronalData, setValuesPeronalData] = useState<
-    PersonalDataParams
-  >({
-    city: '',
-    countryOfCitizenship: '',
-    countryOfResidence: '',
-    dateOfBirth: 0,
-    firstName: '',
-    lastName: '',
-    postalCode: '',
-    processId: getProcessId(),
-    sex: SexEnum.Unknown,
-    address: '',
-    uSCitizen: false,
-    phone: '',
-  });
+  };
 
   const handleChangeCountry = (setFieldValue: any) => (country: Country) => {
     setPhoneLength(0);
@@ -90,8 +63,8 @@ const PhoneVerification: FC = () => {
     try {
       const response = await API.postPersonalData(
         {
-          ...initialValuesPeronalData,
-          phone,
+          processId: getProcessId(),
+          phone: phone.trim(),
         },
         mainAppStore.initModel.authUrl
       );
@@ -119,44 +92,31 @@ const PhoneVerification: FC = () => {
   }, []);
 
   useEffect(() => {
+    const fetchGeoLocationInfo = async () => {
+      try {
+        const response = await API.getGeolocationInfo(
+          mainAppStore.initModel.authUrl
+        );
+        const country = countries.find((item) => item.id === response.country);
+        if (country) {
+          setFieldValue(Fields.CUSTOM_COUNTRY, country.name);
+        }
+        if (response.dial) {
+          setDialMask(`+${response.dial}`);
+        }
+      } catch (error) {}
+    };
+
+    if (countries.length) {
+      fetchGeoLocationInfo();
+    }
+  }, [countries]);
+
+  useEffect(() => {
     mixpanel.track(mixpanelEvents.PHONE_FIELD_VIEW, {
       [mixapanelProps.BRAND_NAME]: mainAppStore.initModel.brandName.toLowerCase(),
     });
   }, []);
-
-  useEffect(() => {
-    async function fetchCurrentStep() {
-      try {
-        const response = await API.getKeyValue(KeysInApi.PERSONAL_DATA);
-        if (response) {
-          const parsed: PersonalDataParams = JSON.parse(response);
-          if (parsed instanceof Object) {
-            setValuesPeronalData(parsed);
-            const { phone, countryOfCitizenship } = parsed;
-            setInitialValuesForm({
-              phone:
-                mainAppStore.profilePhone ||
-                phone ||
-                countries.find((item) => item.name === countryOfCitizenship)
-                  ?.dial ||
-                '',
-              customCountryCode: countryOfCitizenship,
-            });
-            setDialMask(
-              `+${
-                countries.find((item) => item.name === countryOfCitizenship)
-                  ?.dial
-              }` || ''
-            );
-            kycStore.filledStep = KYCstepsEnum.PhoneVerification;
-          }
-        }
-      } catch (error) {}
-    }
-    if (countries.length) {
-      fetchCurrentStep();
-    }
-  }, [countries]);
 
   const {
     setFieldValue,
@@ -209,10 +169,10 @@ const PhoneVerification: FC = () => {
         justifyContent="space-between"
       >
         <FlexContainer
-            justifyContent="center"
-            alignItems="center"
-            padding="30px 0 54px"
-            minHeight="100px"
+          justifyContent="center"
+          alignItems="center"
+          padding="30px 0 54px"
+          minHeight="100px"
         >
           <FlexContainer width="230px">
             <Observer>
@@ -250,7 +210,7 @@ const PhoneVerification: FC = () => {
                     hasError={!!(touched.phone && errors.phone)}
                     errorText={errors.phone}
                     onBeforeInput={phoneOnBeforeInputHandler}
-                    onChange={e => handleChangePhone(setFieldValue, e)}
+                    onChange={(e) => handleChangePhone(setFieldValue, e)}
                   />
                 </PhoneInputWrapper>
               </FlexContainer>
