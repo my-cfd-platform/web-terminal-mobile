@@ -12,25 +12,25 @@ import API from '../helpers/API';
 import { CountriesEnum } from '../enums/CountriesEnum';
 import * as yup from 'yup';
 import { useStores } from '../hooks/useStores';
-import { KYCstepsEnum } from '../enums/KYCsteps';
 import Page from '../constants/Pages';
 import { useHistory } from 'react-router-dom';
 import { getProcessId } from '../helpers/getProcessId';
 import { useTranslation } from 'react-i18next';
 import mixpanel from 'mixpanel-browser';
 import mixpanelEvents from '../constants/mixpanelEvents';
-import InputField from '../components/InputField';
 import { Observer } from 'mobx-react-lite';
 import Logo from '../components/Logo';
 import LogoMonfex from '../assets/images/logo.png';
 import { OperationApiResponseCodes } from '../enums/OperationApiResponseCodes';
 import mixapanelProps from '../constants/mixpanelProps';
-import parsePhoneNumber from 'libphonenumber-js/max';
+import parsePhoneNumber, { getExampleNumber } from 'libphonenumber-js/max';
+import InputMaskedField from '../components/InputMaskedField';
+import { fromAlpha3ToAlpha2Code } from '../helpers/fromAlpha3ToAlpha2Code';
+import examples from 'libphonenumber-js/examples.mobile.json';
 
 const PhoneVerification: FC = () => {
   const [countries, setCountries] = useState<Country[]>([]);
   const [dialMask, setDialMask] = useState('');
-  const [phoneLength, setPhoneLength] = useState(0);
   const { t } = useTranslation();
   const validationSchema = yup.object().shape<PhoneVerificationFormParams>({
     phone: yup
@@ -46,7 +46,7 @@ const PhoneVerification: FC = () => {
   });
 
   const { push } = useHistory();
-  const { kycStore, mainAppStore } = useStores();
+  const { mainAppStore } = useStores();
 
   const initialValues = {
     customCountryCode: '',
@@ -54,11 +54,18 @@ const PhoneVerification: FC = () => {
   };
 
   const handleChangeCountry = (setFieldValue: any) => (country: Country) => {
-    setPhoneLength(0);
-    setFieldValue(Fields.PHONE, '');
-    setDialMask(`+${country.dial}`);
+    setFieldValue(Fields.PHONE, country.dial);
+    const phoneNumber = getExampleNumber(
+      fromAlpha3ToAlpha2Code(country.id),
+      examples
+    );
+    const mask = phoneNumber?.nationalNumber.replace(/\d/g, '9');
+    if (mask) {
+      setDialMask(`+\\${country.dial.split('').join('\\')}${mask}`);
+    } else {
+      setDialMask(`+\\${country.dial.split('').join('\\')}99999999999999`);
+    }
   };
-
   const handleSubmitForm = async ({ phone }: PhoneVerificationFormParams) => {
     try {
       const response = await API.postPersonalData(
@@ -73,7 +80,6 @@ const PhoneVerification: FC = () => {
           [mixapanelProps.BRAND_NAME]: mainAppStore.initModel.brandName.toLowerCase(),
         });
       }
-      kycStore.filledStep = KYCstepsEnum.PersonalData;
       push(Page.DASHBOARD);
     } catch (error) {}
   };
@@ -102,7 +108,18 @@ const PhoneVerification: FC = () => {
           setFieldValue(Fields.CUSTOM_COUNTRY, country.name);
         }
         if (response.dial) {
-          setDialMask(`+${response.dial}`);
+          const phoneNumber = getExampleNumber(
+            fromAlpha3ToAlpha2Code(response.country),
+            examples
+          );
+          const mask = phoneNumber?.nationalNumber.replace(/\d/g, '9');
+          if (mask) {
+            setDialMask(`+\\${response.dial.split('').join('\\')}${mask}`);
+          } else {
+            setDialMask(
+              `+\\${response.dial.split('').join('\\')}99999999999999`
+            );
+          }
         }
       } catch (error) {}
     };
@@ -133,18 +150,6 @@ const PhoneVerification: FC = () => {
     validateOnChange: true,
     enableReinitialize: true,
   });
-
-  const handleChangePhone = (setFieldValue: any, e: any) => {
-    setPhoneLength(e.target.value.length);
-    setFieldValue(Fields.PHONE, e.target.value);
-  };
-
-  const phoneOnBeforeInputHandler = (e: any) => {
-    if (!e.data.match(/^[+0-9]*$/g)) {
-      e.preventDefault();
-      return;
-    }
-  };
 
   const handlerClickSubmit = async () => {
     const curErrors = await validateForm();
@@ -201,16 +206,12 @@ const PhoneVerification: FC = () => {
               <FlexContainer width="100%">
                 <PhoneInputWrapper width="100%" flexDirection="column">
                   <Label>{t('Phone')}</Label>
-                  <MaskText right={phoneLength}>{dialMask}</MaskText>
-                  <InputField
-                    placeholder={''}
+                  <InputMaskedField
+                    mask={dialMask}
                     {...getFieldProps(Fields.PHONE)}
                     id={Fields.PHONE}
-                    inputMode={'decimal'}
                     hasError={!!(touched.phone && errors.phone)}
                     errorText={errors.phone}
-                    onBeforeInput={phoneOnBeforeInputHandler}
-                    onChange={(e) => handleChangePhone(setFieldValue, e)}
                   />
                 </PhoneInputWrapper>
               </FlexContainer>
@@ -263,14 +264,4 @@ const Label = styled(PrimaryTextSpan)`
   transition: transform 0.2s ease, font-size 0.2s ease, color 0.2s ease;
   font-size: 16px;
   color: rgba(255, 255, 255, 0.4);
-`;
-
-const MaskText = styled(PrimaryTextSpan)<{ right: number }>`
-  right: ${(props) => props.right * 10 + 17}px;
-  position: absolute;
-  top: 19px;
-  transform: translateY(-4px);
-  transition: transform 0.2s ease, font-size 0.2s ease, color 0.2s ease;
-  font-size: 16px;
-  color: #fffccc;
 `;
