@@ -10,6 +10,8 @@ import API from '../../helpers/API';
 import { Country } from '../../types/CountriesTypes';
 import { useTranslation } from 'react-i18next';
 import { useStores } from '../../hooks/useStores';
+import IconArrowLink from '../../assets/svg/Profile/icon-arrow-link.svg';
+import SvgIcon from '../SvgIcon';
 
 interface Props {
   labelText: string;
@@ -128,6 +130,12 @@ const AutoCompleteDropdown: FC<Props> = (props) => {
         autoComplete={autoComplete}
       />
       <Label>{labelText}</Label>
+      <SvgIcon
+          {...IconArrowLink}
+          width={12}
+          height={12}
+          fillColor="#c4c4c4"
+      />
       {on && (
         <DropdownWrapper
           ref={dropdownRef}
@@ -154,6 +162,11 @@ const LabelWrapper = styled.label`
   position: relative;
   margin: 0;
   padding-top: 24px;
+  svg {
+    position: absolute;
+    right: 16px;
+    top: 43px;
+  }
 `;
 
 const Input = styled.input<{ hasError?: boolean }>`
@@ -167,7 +180,7 @@ const Input = styled.input<{ hasError?: boolean }>`
   color: #fffccc;
   font-size: 16px;
   line-height: 16px;
-  padding: 14px 16px 14px;
+  padding: 14px 42px 14px 16px;
   transition: border 0.2s ease;
   will-change: border;
   text-align: right;

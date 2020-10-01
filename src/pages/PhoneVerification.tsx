@@ -32,8 +32,6 @@ import LogoMonfex from '../assets/images/logo.png';
 import { OperationApiResponseCodes } from '../enums/OperationApiResponseCodes';
 import mixapanelProps from '../constants/mixpanelProps';
 import parsePhoneNumber from 'libphonenumber-js/max';
-import {AskBidEnum} from "../enums/AskBid";
-import Colors from "../constants/Colors";
 
 const PhoneVerification: FC = () => {
   const [countries, setCountries] = useState<Country[]>([]);
@@ -203,20 +201,18 @@ const PhoneVerification: FC = () => {
       height="100%"
       flexDirection="column"
       alignItems="center"
-      backgroundColor="#252636"
     >
       <FlexContainer
         width="100%"
         height="100%"
         flexDirection="column"
         justifyContent="space-between"
-        padding="40px 0"
       >
         <FlexContainer
-          justifyContent="center"
-          alignItems="center"
-          padding="30px 0"
-          minHeight="100px"
+            justifyContent="center"
+            alignItems="center"
+            padding="30px 0 54px"
+            minHeight="100px"
         >
           <FlexContainer width="230px">
             <Observer>
@@ -259,7 +255,7 @@ const PhoneVerification: FC = () => {
                 </PhoneInputWrapper>
               </FlexContainer>
             </FlexContainer>
-            <FlexContainer padding={'0 16px'}>
+            <FlexContainer padding={'0 16px 40px'}>
               <PrimaryButton
                 type="submit"
                 onClick={handlerClickSubmit}
