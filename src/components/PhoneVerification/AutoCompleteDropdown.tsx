@@ -6,11 +6,9 @@ import {
   PrimaryTextParagraph,
 } from '../../styles/TextsElements';
 import { FlexContainer } from '../../styles/FlexContainer';
-import API from '../../helpers/API';
 import { Country } from '../../types/CountriesTypes';
 import { useTranslation } from 'react-i18next';
-import { useStores } from '../../hooks/useStores';
-import IconArrowLink from '../../assets/svg/Profile/icon-arrow-link.svg';
+import IconArrowLink from '../../assets/svg/profile/icon-arrow-link.svg';
 import SvgIcon from '../SvgIcon';
 
 interface Props {
@@ -44,8 +42,6 @@ const AutoCompleteDropdown: FC<Props> = (props) => {
   const wrapperRef = useRef<HTMLLabelElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
-
-  const { mainAppStore } = useStores();
 
   const { t } = useTranslation();
 
@@ -83,18 +79,6 @@ const AutoCompleteDropdown: FC<Props> = (props) => {
     return () => inputRef.current?.removeEventListener('focus', toggleFocus);
   }, []);
 
-  useEffect(() => {
-    async function fetchCountry() {
-      try {
-        const response = await API.getGeolocationInfo(
-          mainAppStore.initModel.authUrl
-        );
-        handleSetValue(response);
-      } catch (error) {}
-    }
-    fetchCountry();
-  }, []);
-
   const renderItems = () => {
     const filteredList = dropdownItemsList.filter(
       (item) => !value || item.name.toLowerCase().includes(value.toLowerCase())
@@ -130,12 +114,7 @@ const AutoCompleteDropdown: FC<Props> = (props) => {
         autoComplete={autoComplete}
       />
       <Label>{labelText}</Label>
-      <SvgIcon
-          {...IconArrowLink}
-          width={12}
-          height={12}
-          fillColor="#c4c4c4"
-      />
+      <SvgIcon {...IconArrowLink} width={12} height={12} fillColor="#c4c4c4" />
       {on && (
         <DropdownWrapper
           ref={dropdownRef}
