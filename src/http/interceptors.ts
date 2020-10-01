@@ -10,12 +10,12 @@ const injectInerceptors = (tradingUrl: string, mainAppStore: MainAppStore) => {
   axios.interceptors.response.use(
     function (config: AxiosResponse) {
       if (config.data.result === OperationApiResponseCodes.TechnicalError) {
-        axios.request(config);
+        axios.request(config.config);
         if (!mainAppStore.rootStore.serverErrorPopupStore.isActive) {
           mainAppStore.rootStore.serverErrorPopupStore.openModal();
         }
         setTimeout(() => {
-          axios.request(config);
+          axios.request(config.config);
           if (!mainAppStore.rootStore.serverErrorPopupStore.isActive) {
             mainAppStore.rootStore.serverErrorPopupStore.openModal();
           }
