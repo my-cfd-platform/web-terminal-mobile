@@ -39,7 +39,7 @@ const PhoneVerification: FC = () => {
       .test(Fields.PHONE, `${t('Phone number is incorrect')}`, function (
         value
       ) {
-        const checkPhone = parsePhoneNumber(`${dialMask}${value}`);
+        const checkPhone = parsePhoneNumber(value);
         return !!checkPhone?.isValid();
       }),
     customCountryCode: yup.string(),

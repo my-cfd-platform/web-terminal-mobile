@@ -79,6 +79,12 @@ const AutoCompleteDropdown: FC<Props> = (props) => {
     return () => inputRef.current?.removeEventListener('focus', toggleFocus);
   }, []);
 
+  const handleReadableInput = (e: any) => {
+    e.target.attributes.readonly = e.target.attributes.readonly === ''
+        ? 'readonly'
+        : '';
+  };
+
   const renderItems = () => {
     const filteredList = dropdownItemsList.filter(
       (item) => !value || item.name.toLowerCase().includes(value.toLowerCase())
@@ -112,6 +118,8 @@ const AutoCompleteDropdown: FC<Props> = (props) => {
         required
         hasError={hasError}
         autoComplete={autoComplete}
+        onClick={handleReadableInput}
+        onBlur={handleReadableInput}
       />
       <Label>{labelText}</Label>
       <SvgIcon {...IconArrowLink} width={12} height={12} fillColor="#c4c4c4" />
@@ -159,11 +167,14 @@ const Input = styled.input<{ hasError?: boolean }>`
   color: #fffccc;
   font-size: 16px;
   line-height: 16px;
-  padding: 14px 42px 14px 16px;
+  padding: 14px 42px 14px 85px;
   transition: border 0.2s ease;
   will-change: border;
   text-align: right;
   transition: 0.4s;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
 
   &:focus {
     background-color: ${Colors.INPUT_FOCUS_BG};
@@ -192,7 +203,7 @@ const Input = styled.input<{ hasError?: boolean }>`
 
 const Label = styled(PrimaryTextSpan)`
   position: absolute;
-  bottom: 12px;
+  bottom: 13px;
   left: 14px;
   transform: translateY(-4px);
   transition: transform 0.2s ease, font-size 0.2s ease, color 0.2s ease;
