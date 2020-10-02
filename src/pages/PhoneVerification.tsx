@@ -39,8 +39,12 @@ const PhoneVerification: FC = () => {
       .test(Fields.PHONE, `${t('Phone number is incorrect')}`, function (
         value
       ) {
-        const checkPhone = parsePhoneNumber(value);
-        return !!checkPhone?.isValid();
+        try {
+          const checkPhone = parsePhoneNumber(value);
+          return !!checkPhone?.isValid();
+        } catch (error) {
+          return false;
+        }
       }),
     customCountryCode: yup.string(),
   });
