@@ -233,6 +233,7 @@ export class MainAppStore implements MainAppStoreProps {
     connection.on(
       Topics.SERVER_ERROR,
       (response: ResponseFromWebsocket<ServerError>) => {
+        console.log(Topics.SERVER_ERROR);
         this.isInitLoading = false;
         this.isLoading = false;
         this.rootStore.badRequestPopupStore.openModal();
@@ -241,14 +242,21 @@ export class MainAppStore implements MainAppStoreProps {
     );
 
     connection.onclose((error) => {
+      // TODO: https://monfex.atlassian.net/browse/WEBT-510
+      if (error && error?.message.indexOf('1006') > -1) {
+        window.location.reload();
+        return;
+      }
+
+      this.socketError = true;
+      this.isLoading = false;
+      this.isInitLoading = false;
       this.rootStore.badRequestPopupStore.openModal();
       this.rootStore.badRequestPopupStore.setMessage(
         error?.message ||
           apiResponseCodeMessages[OperationApiResponseCodes.TechnicalError]
       );
-      this.socketError = true;
-      this.isLoading = false;
-      this.isInitLoading = false;
+
       console.log('websocket error: ', error);
       console.log('=====/=====');
     });
