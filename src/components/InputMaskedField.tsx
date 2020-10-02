@@ -49,6 +49,7 @@ const InputMaskedField: FC<InputFieldProps> = ({
     <InputWrap>
       <CustomInputMask
         mask={mask}
+        maskPlaceholder={null}
         inputMode={inputMode}
         onBeforeInput={onBeforeInput}
         value={value}
@@ -86,9 +87,13 @@ interface InputMaskProps {
   padding?: string;
   fontSize?: string;
   borderColor?: string;
+  maskPlaceholder?: string | null;
 }
 
-const CustomInputMask = styled(ReactInputMask)<InputMaskProps>`
+const CustomInputMask = styled(ReactInputMask, {
+  shouldForwardProp: (propName: string) =>
+    !['hasError', 'maskChar', 'borderColor'].includes(propName),
+})<InputMaskProps>`
   width: 100%;
   border: none;
   height: ${(props) => props.height || '50px'};
