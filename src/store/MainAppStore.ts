@@ -112,6 +112,7 @@ export class MainAppStore implements MainAppStoreProps {
   @observable activeAccountId: string = '';
   @observable connectionSignalRTimer: NodeJS.Timeout | null = null;
   @observable signUpFlag: boolean = false;
+  websocketConnectionTries = 0;
 
   constructor(rootStore: RootStore) {
     this.rootStore = rootStore;
@@ -144,6 +145,7 @@ export class MainAppStore implements MainAppStoreProps {
     const connectToWebocket = async () => {
       try {
         await connection.start();
+        this.websocketConnectionTries = 0;
         try {
           await connection.send(Topics.INIT, token);
           this.isAuthorized = true;
@@ -244,8 +246,12 @@ export class MainAppStore implements MainAppStoreProps {
     connection.onclose((error) => {
       // TODO: https://monfex.atlassian.net/browse/WEBT-510
       if (error && error?.message.indexOf('1006') > -1) {
-        window.location.reload();
-        return;
+        if (this.websocketConnectionTries < 3) {
+          this.handleInitConnection();
+        } else {
+          window.location.reload();
+          return;
+        }
       }
 
       this.socketError = true;
