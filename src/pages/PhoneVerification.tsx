@@ -75,7 +75,7 @@ const PhoneVerification: FC = () => {
       const response = await API.postPersonalData(
         {
           processId: getProcessId(),
-          phone: `${dialMask}${phone.trim()}`,
+          phone: phone.trim(),
         },
         mainAppStore.initModel.authUrl
       );
