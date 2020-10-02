@@ -112,6 +112,7 @@ const PhoneVerification: FC = () => {
           setFieldValue(Fields.CUSTOM_COUNTRY, country.name);
         }
         if (response.dial) {
+          setFieldValue(Fields.PHONE, response.dial);
           const phoneNumber = getExampleNumber(
             fromAlpha3ToAlpha2Code(response.country),
             examples
