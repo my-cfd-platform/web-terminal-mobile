@@ -39,8 +39,12 @@ const PhoneVerification: FC = () => {
       .test(Fields.PHONE, `${t('Phone number is incorrect')}`, function (
         value
       ) {
-        const checkPhone = parsePhoneNumber(`${dialMask}${value}`);
-        return !!checkPhone?.isValid();
+        try {
+          const checkPhone = parsePhoneNumber(value);
+          return !!checkPhone?.isValid();
+        } catch (error) {
+          return false;
+        }
       }),
     customCountryCode: yup.string(),
   });
@@ -71,7 +75,7 @@ const PhoneVerification: FC = () => {
       const response = await API.postPersonalData(
         {
           processId: getProcessId(),
-          phone: `${dialMask}${phone.trim()}`,
+          phone: phone.trim(),
         },
         mainAppStore.initModel.authUrl
       );
@@ -108,6 +112,7 @@ const PhoneVerification: FC = () => {
           setFieldValue(Fields.CUSTOM_COUNTRY, country.name);
         }
         if (response.dial) {
+          setFieldValue(Fields.PHONE, response.dial);
           const phoneNumber = getExampleNumber(
             fromAlpha3ToAlpha2Code(response.country),
             examples

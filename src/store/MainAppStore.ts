@@ -112,6 +112,7 @@ export class MainAppStore implements MainAppStoreProps {
   @observable activeAccountId: string = '';
   @observable connectionSignalRTimer: NodeJS.Timeout | null = null;
   @observable signUpFlag: boolean = false;
+  websocketConnectionTries = 0;
 
   constructor(rootStore: RootStore) {
     this.rootStore = rootStore;
@@ -144,6 +145,7 @@ export class MainAppStore implements MainAppStoreProps {
     const connectToWebocket = async () => {
       try {
         await connection.start();
+        this.websocketConnectionTries = 0;
         try {
           await connection.send(Topics.INIT, token);
           this.isAuthorized = true;
@@ -233,6 +235,7 @@ export class MainAppStore implements MainAppStoreProps {
     connection.on(
       Topics.SERVER_ERROR,
       (response: ResponseFromWebsocket<ServerError>) => {
+        console.log(Topics.SERVER_ERROR);
         this.isInitLoading = false;
         this.isLoading = false;
         this.rootStore.badRequestPopupStore.openModal();
@@ -241,14 +244,26 @@ export class MainAppStore implements MainAppStoreProps {
     );
 
     connection.onclose((error) => {
+      // TODO: https://monfex.atlassian.net/browse/WEBT-510
+      if (error && error?.message.indexOf('1006') > -1) {
+        if (this.websocketConnectionTries < 3) {
+          this.websocketConnectionTries = this.websocketConnectionTries + 1; // TODO: mobx strange behavior with i++;
+          this.handleInitConnection();
+        } else {
+          window.location.reload();
+          return;
+        }
+      }
+
+      this.socketError = true;
+      this.isLoading = false;
+      this.isInitLoading = false;
       this.rootStore.badRequestPopupStore.openModal();
       this.rootStore.badRequestPopupStore.setMessage(
         error?.message ||
           apiResponseCodeMessages[OperationApiResponseCodes.TechnicalError]
       );
-      this.socketError = true;
-      this.isLoading = false;
-      this.isInitLoading = false;
+
       console.log('websocket error: ', error);
       console.log('=====/=====');
     });
