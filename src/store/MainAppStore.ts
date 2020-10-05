@@ -247,6 +247,7 @@ export class MainAppStore implements MainAppStoreProps {
       // TODO: https://monfex.atlassian.net/browse/WEBT-510
       if (error && error?.message.indexOf('1006') > -1) {
         if (this.websocketConnectionTries < 3) {
+          this.websocketConnectionTries = this.websocketConnectionTries + 1; // TODO: mobx strange behavior with i++;
           this.handleInitConnection();
         } else {
           window.location.reload();
