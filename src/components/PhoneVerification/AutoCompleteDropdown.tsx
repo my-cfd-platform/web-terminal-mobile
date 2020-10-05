@@ -78,6 +78,11 @@ const AutoCompleteDropdown: FC<Props> = (props) => {
     }, 0);
   };
 
+  const handleHideSearchInput = () => {
+    setShowSearchInput(false);
+    setSearchInput('');
+  };
+
   const renderItems = () => {
     const filteredList = dropdownItemsList.filter(
       (item) => !searchInput
@@ -96,9 +101,9 @@ const AutoCompleteDropdown: FC<Props> = (props) => {
         </DropdownItem>
       ))
     ) : (
-      <PrimaryTextSpan fontSize="11px" color="rgba(255,255,255,0.4)">
+      <EmptyList fontSize="13px" color="rgba(255,255,255,0.4)">
         {t('No matches')}
-      </PrimaryTextSpan>
+      </EmptyList>
     );
   };
   return (
@@ -135,7 +140,7 @@ const AutoCompleteDropdown: FC<Props> = (props) => {
               ? <SearchPanel width={'100%'} position={'relative'} justifyContent={'space-between'}>
                   <SvgIcon {...IconSearch} width={16} height={16} fillColor="rgba(255, 255, 255, 1)" />
                   <SearchInput ref={searchInputRef} onChange={handleChangeSearchInput} />
-                  <ButtonWithoutStyles onClick={() => setShowSearchInput(false)}>
+                  <ButtonWithoutStyles onClick={handleHideSearchInput}>
                     <PrimaryTextSpan fontSize="16px" color="#fff">{t('Cancel')}</PrimaryTextSpan>
                   </ButtonWithoutStyles>
                 </SearchPanel>
@@ -240,6 +245,10 @@ const DialText = styled(PrimaryTextSpan)`
   justify-content: flex-end;
   margin-right: 15px;
   text-align: right;
+`;
+
+const EmptyList = styled(PrimaryTextSpan)`
+  padding-left: 16px;
 `;
 
 const DropdownWrapper = styled(FlexContainer)`
