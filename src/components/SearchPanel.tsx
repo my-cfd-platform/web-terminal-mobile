@@ -6,6 +6,7 @@ import styled from '@emotion/styled';
 import { FlexContainer } from '../styles/FlexContainer';
 import Colors from '../constants/Colors';
 import { PrimaryTextSpan } from '../styles/TextsElements';
+import { useTranslation } from 'react-i18next';
 
 interface Props {
   position?: 'absolute';
@@ -17,6 +18,7 @@ interface Props {
 const SearchPanel = (props: Props) => {
   const { position, top, onToggle, onChange } = props;
   const inputRef = useRef<HTMLInputElement>(null);
+  const { t } = useTranslation();
 
   const [on, toggle] = useState(false);
 
@@ -61,7 +63,7 @@ const SearchPanel = (props: Props) => {
           <ButtonWithoutStyles onClick={closeSearch}>
             <FlexContainer padding="0 16px 0 0">
               <PrimaryTextSpan color="#ffffff" fontSize="13px" fontWeight={500}>
-                Cancel
+                {t('Cancel')}
               </PrimaryTextSpan>
             </FlexContainer>
           </ButtonWithoutStyles>

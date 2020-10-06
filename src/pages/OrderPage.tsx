@@ -388,7 +388,7 @@ const OrderPage = observer(() => {
   }, [mainAppStore.activeAccount]);
 
   return (
-    <BackFlowLayout pageTitle={type}>
+    <BackFlowLayout pageTitle={t(type)}>
       <FlexContainer flexDirection="column" width="100%" position="relative">
         <ActiveInstrumentItem type={type} />
         <CustomForm autoComplete="off" onSubmit={handleSubmit}>

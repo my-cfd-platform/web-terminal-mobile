@@ -30,6 +30,7 @@ const AuthorizedContainer: FC = ({ children }) => {
     Page.ORDER,
     Page.ACCOUNT_ABOUT_US,
     Page.ACCOUNTS_SWITCH,
+    Page.ACCOUNT_CHANGE_LANGUAGE,
   ]);
   const { push } = useHistory();
   const { mainAppStore, userProfileStore, serverErrorPopupStore } = useStores();

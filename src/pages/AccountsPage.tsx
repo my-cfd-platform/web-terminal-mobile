@@ -66,7 +66,7 @@ const AccountsPage = () => {
   );
 
   return (
-    <BackFlowLayout pageTitle="Select Account">
+    <BackFlowLayout pageTitle={t('Select Account')}>
       <FlexContainer flexDirection="column" width="100%">
         {mainAppStore.accounts.map((item) => (
           <Fragment key={item.id}>
@@ -76,7 +76,7 @@ const AccountsPage = () => {
                 fontSize="13px"
                 textTransform="uppercase"
               >
-                {item.isLive ? t('USD account') : t('Demo')}
+                {item.isLive ? `USD ${t('Account')}` : t('Demo')}
               </PrimaryTextSpan>
             </FlexContainer>
 

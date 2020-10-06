@@ -6,6 +6,7 @@ interface PrimaryTextType {
   fontStyle?: 'italic' | 'normal';
   fontSize?:
     | '8px'
+    | '9px'
     | '12px'
     | '11px'
     | '13px'

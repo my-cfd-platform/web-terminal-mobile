@@ -133,7 +133,7 @@ const SignIn = () => {
           <InputField
             id={Fields.EMAIL}
             name={Fields.EMAIL}
-            placeholder="Email"
+            placeholder={t('Email')}
             type="email"
             hasError={!!(touched.email && errors.email)}
             errorText={errors.email}
@@ -148,7 +148,7 @@ const SignIn = () => {
             value={values.password || ''}
             id={Fields.PASSWORD}
             type="password"
-            placeholder="Password"
+            placeholder={t('Password')}
             hasError={!!(touched.password && errors.password)}
             errorText={errors.password}
           />

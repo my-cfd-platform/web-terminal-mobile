@@ -33,7 +33,7 @@ const News = () => {
           {t('No News yet')}
         </PrimaryTextSpan>
         <PrimaryTextSpan fontSize="13px" color="rgba(196, 196, 196, 0.5)">
-          {t('No News yet')},{t('soon there will be the latest news')}.
+          {t('No News yet')}, {t('soon there will be the latest news')}.
         </PrimaryTextSpan>
       </FlexContainer>
     </FlexContainer>
