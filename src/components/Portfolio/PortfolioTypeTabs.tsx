@@ -32,7 +32,7 @@ function PortfolioTypeTabs() {
           to={`${Page.PORTFOLIO_MAIN}/${tab.type}`}
           activeClassName="selected"
         >
-          {tab.name}
+          {t(tab.name)}
         </CustomNavLink>
       ))}
     </NavWrap>

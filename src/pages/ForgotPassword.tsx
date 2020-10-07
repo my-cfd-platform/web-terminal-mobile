@@ -111,8 +111,8 @@ const ForgotPassword = () => {
   };
 
   return (
-    <BackFlowLayout pageTitle="Forgot Password">
-      {isSuccessful && <DoneBtn to={Page.SIGN_IN}>Done</DoneBtn>}
+    <BackFlowLayout pageTitle={t('Forgot Password')}>
+      {isSuccessful && <DoneBtn to={Page.SIGN_IN}>{t('Done')}</DoneBtn>}
 
       <FlexContainer
         minHeight="100%"
@@ -132,7 +132,7 @@ const ForgotPassword = () => {
               <InputField
                 id={Fields.EMAIL}
                 name={Fields.EMAIL}
-                placeholder="Email"
+                placeholder={t('Email')}
                 type="email"
                 value={values.email || ''}
                 onChange={handleChange}
@@ -154,15 +154,15 @@ const ForgotPassword = () => {
                 fontWeight="bold"
                 marginBottom="18px"
               >
-                Check your email
+                {t('Check your email')}
               </PrimaryTextSpan>
               <PrimaryTextSpan
                 color="rgba(255, 255, 255, 0.4)"
                 fontSize="13px"
                 textAlign="center"
               >
-                We’ve sent you a link to create
-                <br />a new password
+                {t('We’ve sent you a link to create')}
+                <br /> {t('a new password')}
               </PrimaryTextSpan>
             </FlexContainer>
           )}

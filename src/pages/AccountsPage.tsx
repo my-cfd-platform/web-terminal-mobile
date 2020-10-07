@@ -45,7 +45,7 @@ const AccountsPage = () => {
       mainAppStore.setActiveAccount(account);
       portfolioNavLinksStore.setPortfolioNavLink(PortfolioTabEnum.ACTIVE);
     }
-
+    mainAppStore.isLoading = true;
     notificationStore.notificationMessage = `${t(
       'Your account has been switched on'
     )} ${account?.isLive ? t('Real') : t('Demo')}`;
@@ -66,7 +66,7 @@ const AccountsPage = () => {
   );
 
   return (
-    <BackFlowLayout pageTitle="Select Account">
+    <BackFlowLayout pageTitle={t('Select Account')}>
       <FlexContainer flexDirection="column" width="100%">
         {mainAppStore.accounts.map((item) => (
           <Fragment key={item.id}>
@@ -76,7 +76,7 @@ const AccountsPage = () => {
                 fontSize="13px"
                 textTransform="uppercase"
               >
-                {item.isLive ? t('USD account') : t('Demo')}
+                {item.isLive ? `USD ${t('Account')}` : t('Demo')}
               </PrimaryTextSpan>
             </FlexContainer>
 
