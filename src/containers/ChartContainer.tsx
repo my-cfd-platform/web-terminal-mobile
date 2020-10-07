@@ -32,6 +32,7 @@ const ChartContainer: FC = observer(() => {
       instrumentsStore.activeInstrument &&
       instrumentsStore.instruments.length
     ) {
+      mainAppStore.isLoading = true;
       const widgetOptions: ChartingLibraryWidgetOptions = {
         symbol: instrumentsStore.activeInstrument.instrumentItem.id,
         datafeed: new DataFeedService(

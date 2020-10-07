@@ -45,7 +45,7 @@ const AccountsPage = () => {
       mainAppStore.setActiveAccount(account);
       portfolioNavLinksStore.setPortfolioNavLink(PortfolioTabEnum.ACTIVE);
     }
-
+    mainAppStore.isLoading = true;
     notificationStore.notificationMessage = `${t(
       'Your account has been switched on'
     )} ${account?.isLive ? t('Real') : t('Demo')}`;
