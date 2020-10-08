@@ -14,21 +14,31 @@ import {
 import { useStores } from '../hooks/useStores';
 import { useTranslation } from 'react-i18next';
 import styled from '@emotion/styled';
+import Page from '../constants/Pages';
+import { useHistory } from 'react-router-dom';
 
 const AccountLanguage = () => {
   const { mainAppStore } = useStores();
   const [list, setList] = useState(ListForEN);
   const [activeLanguage, setActiveLanguage] = useState<any>(null);
+  const [wasChanged, setWasChanged] = useState<boolean>(false);
   const { t } = useTranslation();
+  const { push } = useHistory();
 
   useEffect(() => {
     switch (mainAppStore.lang) {
       case CountriesEnum.EN:
-        setActiveLanguage(ListForEN[CountriesEnum.EN]);
+        setActiveLanguage({
+          id: CountriesEnum.EN,
+          name: ListForEN[CountriesEnum.EN]
+        });
         setList(ListForEN);
         break;
       case CountriesEnum.PL:
-        setActiveLanguage(ListForPL[CountriesEnum.PL]);
+        setActiveLanguage({
+          id: CountriesEnum.PL,
+          name: ListForPL[CountriesEnum.PL]
+        });
         setList(ListForPL);
         break;
       // case CountriesEnum.ES:
@@ -41,11 +51,13 @@ const AccountLanguage = () => {
   }, [mainAppStore.lang]);
 
   const handleChangeActiveLanguage = (key: any) => {
+    setWasChanged(!(key.id === mainAppStore.lang));
     setActiveLanguage(key);
   };
 
   const handleChangeLanguage = () => {
     mainAppStore.setLanguage(activeLanguage.id);
+    push(Page.ACCOUNT_PROFILE);
   };
 
   return (
@@ -72,7 +84,7 @@ const AccountLanguage = () => {
                 fontSize="16px"
                 color={activeLanguage?.id === key ? '#fffccc' : '#fff'}
               >
-                {list[key].name}
+                {list[key].originName} ({list[key].name})
               </PrimaryTextSpan>
             </LanguageItem>
           ))}
@@ -88,6 +100,7 @@ const AccountLanguage = () => {
             type="button"
             width="100%"
             onClick={handleChangeLanguage}
+            disabled={!wasChanged}
           >
             <PrimaryTextSpan
               color={Colors.BLACK}
