@@ -222,7 +222,7 @@ const AccountProfile = () => {
               fontSize="16px"
               fontWeight="normal"
             >
-              {t('Change language')}
+              {t('Language')}
             </PrimaryTextSpan>
           </FlexContainer>
           <SvgIcon {...IconArrowLink} fillColor="rgba(196, 196, 196, 0.5)" />
