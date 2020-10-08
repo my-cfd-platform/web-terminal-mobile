@@ -63,8 +63,8 @@ const DemoRealPopup = () => {
           [Fields.ACCOUNT_ID]: acc.id,
         });
         mainAppStore.setActiveAccount(acc);
-        mainAppStore.isDemoRealPopup = false;
         window.location.href = `${API_DEPOSIT_STRING}/?${parsedParams}`;
+        mainAppStore.isDemoRealPopup = false;
       } catch (error) {
         badRequestPopupStore.openModal();
         badRequestPopupStore.setMessage(error);
