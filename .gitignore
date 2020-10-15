@@ -1,1 +1,7 @@
-node_modules
+﻿/node_modules
+/.git
+/wwwroot
+/.vs
+/dist
+.idea
+.DS_Store
