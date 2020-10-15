@@ -198,6 +198,36 @@ const AccountProfile = () => {
           </PrimaryTextSpan>
         </FlexContainer>
 
+        <ProfileMenuLink to={Page.ACCOUNT_CHANGE_LANGUAGE}>
+          <FlexContainer alignItems="center">
+            <FlexContainer
+              width="28px"
+              height="28px"
+              backgroundColor="#77787E"
+              borderRadius="50%"
+              justifyContent="center"
+              alignItems="center"
+              marginRight="14px"
+            >
+              <PrimaryTextSpan
+                  color="#ffffff"
+                  fontSize="9px"
+                  fontWeight="normal"
+              >
+                {mainAppStore.lang.substr(0, 2).toUpperCase()}
+              </PrimaryTextSpan>
+            </FlexContainer>
+            <PrimaryTextSpan
+              color="#ffffff"
+              fontSize="16px"
+              fontWeight="normal"
+            >
+              {t('Language')}
+            </PrimaryTextSpan>
+          </FlexContainer>
+          <SvgIcon {...IconArrowLink} fillColor="rgba(196, 196, 196, 0.5)" />
+        </ProfileMenuLink>
+
         <ProfileMenuLink to={Page.ACCOUNT_ABOUT_US}>
           <FlexContainer alignItems="center">
             <FlexContainer

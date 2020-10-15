@@ -217,7 +217,7 @@ const SignUp = () => {
             onChange={handleChange}
             onBlur={handleBlur}
             value={values.email || ''}
-            placeholder="Email"
+            placeholder={t('Email')}
             type="email"
             hasError={!!(touched.email && errors.email)}
             errorText={errors.email}
@@ -228,7 +228,7 @@ const SignUp = () => {
             value={values.password || ''}
             onChange={handleChange}
             onBlur={handleBlur}
-            placeholder="Password"
+            placeholder={t('Password')}
             type="password"
             hasError={!!(touched.password && errors.password)}
             errorText={errors.password}
