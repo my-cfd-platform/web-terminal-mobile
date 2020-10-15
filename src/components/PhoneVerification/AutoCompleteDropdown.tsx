@@ -13,6 +13,7 @@ import SvgIcon from '../SvgIcon';
 import IconBackBtn from '../../assets/svg/icon-back-btn.svg';
 import IconSearch from '../../assets/svg/icon-search.svg';
 import { ButtonWithoutStyles } from '../../styles/ButtonWithoutStyles';
+import { FULL_VH } from '../../constants/global';
 
 interface Props {
   labelText: string;
@@ -252,7 +253,7 @@ const EmptyList = styled(PrimaryTextSpan)`
 `;
 
 const DropdownWrapper = styled(FlexContainer)`
-  height: calc(100vh - 80px);
+  height: ${`calc(${FULL_VH} - 80px)`};
   overflow-y: auto;
   ::-webkit-scrollbar {
     width: 4px;
@@ -268,7 +269,7 @@ const DropdownWrapper = styled(FlexContainer)`
 `;
 
 const DropdownPopup = styled(FlexContainer)`
-  height: 100vh;
+  height: ${`calc(${FULL_VH})`};
 `;
 
 const SearchInput = styled.input`
