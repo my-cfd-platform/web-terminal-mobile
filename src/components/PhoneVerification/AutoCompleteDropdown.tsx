@@ -13,6 +13,7 @@ import SvgIcon from '../SvgIcon';
 import IconBackBtn from '../../assets/svg/icon-back-btn.svg';
 import IconSearch from '../../assets/svg/icon-search.svg';
 import { ButtonWithoutStyles } from '../../styles/ButtonWithoutStyles';
+import { FULL_VH } from '../../constants/global';
 
 interface Props {
   labelText: string;
@@ -106,6 +107,7 @@ const AutoCompleteDropdown: FC<Props> = (props) => {
       </EmptyList>
     );
   };
+
   return (
     <FlexContainer flexDirection={'column'}>
       <LabelWrapper htmlFor={id} ref={wrapperRef}>
@@ -134,6 +136,8 @@ const AutoCompleteDropdown: FC<Props> = (props) => {
           zIndex="101"
           backgroundColor="#1C2026"
           flexDirection="column"
+          height={`calc(${FULL_VH})`}
+          maxHeight={`calc(${FULL_VH})`}
         >
           <HeaderDropdown padding="16px">
             { showSearchInput
@@ -252,7 +256,7 @@ const EmptyList = styled(PrimaryTextSpan)`
 `;
 
 const DropdownWrapper = styled(FlexContainer)`
-  height: calc(100vh - 80px);
+  max-height: ${`calc(${FULL_VH} - 80px)`};
   overflow-y: auto;
   ::-webkit-scrollbar {
     width: 4px;
@@ -268,7 +272,8 @@ const DropdownWrapper = styled(FlexContainer)`
 `;
 
 const DropdownPopup = styled(FlexContainer)`
-  height: 100vh;
+  height: ${`calc(${FULL_VH})`};
+  max-height: ${`calc(${FULL_VH})`};
 `;
 
 const SearchInput = styled.input`
