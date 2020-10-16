@@ -136,6 +136,8 @@ const AutoCompleteDropdown: FC<Props> = (props) => {
           zIndex="101"
           backgroundColor="#1C2026"
           flexDirection="column"
+          height={`calc(${FULL_VH})`}
+          maxHeight={`calc(${FULL_VH})`}
         >
           <HeaderDropdown padding="16px">
             { showSearchInput
