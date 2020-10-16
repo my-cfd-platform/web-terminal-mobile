@@ -19,6 +19,7 @@ import { TpSlTypeEnum } from '../../enums/TpSlTypeEnum';
 import styled from '@emotion/styled';
 import { PendingOrderWSDTO } from '../../types/PendingOrdersTypes';
 import PendingOrderItem from '../Portfolio/PendingOrderItem';
+import apiResponseCodeMessages from '../../constants/apiResponseCodeMessages';
 
 interface Props {
   positionId: number;
@@ -69,6 +70,9 @@ const PendingPositionsDetails: FC<Props> = observer((props) => {
         }
         push(`${Page.PORTFOLIO_MAIN}/${PortfolioTabEnum.PENDING}`);
       } else {
+        notificationStore.notificationMessage = t(
+          apiResponseCodeMessages[response.result]
+        );
         notificationStore.isSuccessfull = false;
         notificationStore.openNotification();
       }

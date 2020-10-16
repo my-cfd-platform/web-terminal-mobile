@@ -107,6 +107,7 @@ const AutoCompleteDropdown: FC<Props> = (props) => {
       </EmptyList>
     );
   };
+
   return (
     <FlexContainer flexDirection={'column'}>
       <LabelWrapper htmlFor={id} ref={wrapperRef}>
@@ -253,7 +254,7 @@ const EmptyList = styled(PrimaryTextSpan)`
 `;
 
 const DropdownWrapper = styled(FlexContainer)`
-  height: ${`calc(${FULL_VH} - 80px)`};
+  max-height: ${`calc(${FULL_VH} - 80px)`};
   overflow-y: auto;
   ::-webkit-scrollbar {
     width: 4px;
@@ -270,6 +271,7 @@ const DropdownWrapper = styled(FlexContainer)`
 
 const DropdownPopup = styled(FlexContainer)`
   height: ${`calc(${FULL_VH})`};
+  max-height: ${`calc(${FULL_VH})`};
 `;
 
 const SearchInput = styled.input`
