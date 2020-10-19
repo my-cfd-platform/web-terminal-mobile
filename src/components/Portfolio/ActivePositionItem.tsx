@@ -12,9 +12,10 @@ import ItemOperationLabel from './ItemOperationLabel';
 
 interface Props {
   position: PositionModelWSDTO;
+  isInner?: boolean;
 }
 
-const ActivePositionItem: FC<Props> = ({ position }) => {
+const ActivePositionItem: FC<Props> = ({ position, isInner }) => {
   const { mainAppStore, instrumentsStore } = useStores();
   const { type } = useParams<{ type: string }>();
   const { id, instrument, operation } = position;
@@ -49,7 +50,8 @@ const ActivePositionItem: FC<Props> = ({ position }) => {
         >
           <FlexContainer alignItems="center">
             {activeInstrument()?.name}{' '}
-            <ItemOperationLabel operation={operation} />
+            {!isInner && <ItemOperationLabel operation={operation} />}
+            
           </FlexContainer>
         </PrimaryTextSpan>
         <PrimaryTextSpan
@@ -73,7 +75,7 @@ const ActivePositionItem: FC<Props> = ({ position }) => {
           {mainAppStore.activeAccount?.symbol}
           {position.investmentAmount.toFixed(2)}
         </PrimaryTextSpan>
-        <ActivePositionPnL position={position} />
+        <ActivePositionPnL position={position} hasBackground={isInner}/>
       </FlexContainer>
     </InstrumentItem>
   );

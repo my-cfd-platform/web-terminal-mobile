@@ -10,15 +10,18 @@ import { PositionHistoryDTO } from '../../types/HistoryReportTypes';
 import Colors from '../../constants/Colors';
 import { ButtonWithoutStyles } from '../../styles/ButtonWithoutStyles';
 import ItemOperationLabel from './ItemOperationLabel';
+import { css } from '@emotion/core';
 
 interface Props {
   tradingHistoryItem: PositionHistoryDTO;
   currencySymbol: string;
+  isInner?: boolean;
 }
 
 const ClosedPositionItem: FC<Props> = ({
   tradingHistoryItem,
   currencySymbol,
+  isInner,
 }) => {
   const { mainAppStore, instrumentsStore, historyStore } = useStores();
   const { push } = useHistory();
@@ -63,7 +66,7 @@ const ClosedPositionItem: FC<Props> = ({
         >
           <FlexContainer alignItems="center">
             {activeInstrument()?.name}{' '}
-            <ItemOperationLabel operation={operation} />
+            {!isInner && <ItemOperationLabel operation={operation} />}
           </FlexContainer>
         </PrimaryTextSpan>
         <PrimaryTextSpan
@@ -88,7 +91,7 @@ const ClosedPositionItem: FC<Props> = ({
           {tradingHistoryItem.investmentAmount.toFixed(2)}
         </PrimaryTextSpan>
 
-        <QuoteTextLabel isGrowth={profit >= 0}>
+        <QuoteTextLabel isGrowth={profit >= 0} hasBackground={isInner}>
           {profit >= 0 ? '+' : '-'}
           {currencySymbol}
           {Math.abs(profit).toFixed(2)}
@@ -114,8 +117,16 @@ const InstrumentItem = styled(ButtonWithoutStyles)`
   }
 `;
 
-const QuoteTextLabel = styled(FlexContainer)<{ isGrowth?: boolean }>`
+const QuoteTextLabel = styled(FlexContainer)<{ isGrowth?: boolean; hasBackground?: boolean; }>`
   color: ${(props) => (props.isGrowth ? Colors.ACCENT_BLUE : Colors.RED)};
+
+  ${(props) =>
+    props.hasBackground &&
+    css`
+      background-color: ${props.isGrowth ? Colors.ACCENT_BLUE : Colors.RED};
+      color: ${props.isGrowth ? '#000000' : '#ffffff'};
+    `};
+
   border-radius: 4px;
   padding: 2px 4px;
   font-size: 13px;

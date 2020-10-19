@@ -159,7 +159,7 @@ const ActivePositionsDetails: FC<Props> = observer((props) => {
           width="100%"
           padding="0 0 90px 0"
         >
-          <ActivePositionItem position={position} />
+          <ActivePositionItem position={position} isInner={true} />
 
           <FlexContainer flexDirection="column" marginBottom="20px">
             <FlexContainer padding="12px 16px 0" marginBottom="8px">

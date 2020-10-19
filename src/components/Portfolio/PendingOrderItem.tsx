@@ -15,9 +15,10 @@ import ItemOperationLabel from './ItemOperationLabel';
 interface Props {
   pendingOrder: PendingOrderWSDTO;
   currencySymbol: string;
+  isInner?: boolean;
 }
 
-const PendingOrderItem: FC<Props> = ({ pendingOrder }) => {
+const PendingOrderItem: FC<Props> = ({ pendingOrder, isInner }) => {
   const { type } = useParams<{ type: string }>();
   const { t } = useTranslation();
   const { getPressision } = useInstrument();
@@ -62,7 +63,7 @@ const PendingOrderItem: FC<Props> = ({ pendingOrder }) => {
         >
           <FlexContainer alignItems="center">
             {activeInstrument()?.name}{' '}
-            <ItemOperationLabel operation={operation} />
+            {!isInner && <ItemOperationLabel operation={operation} />}
           </FlexContainer>
         </PrimaryTextSpan>
         <PrimaryTextSpan
