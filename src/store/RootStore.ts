@@ -18,6 +18,7 @@ import { PendingPositionNotificationStore } from './PendingPositionNotificationS
 import { ServerErrorPopupStore } from './ServerErrorPopupStore';
 import { UserProfileStore } from './UserProfileStore';
 import { PortfolioNavLinksStore } from './PortfolioNavLinksStore';
+import { MarkersOnChartStore } from './MarkersOnChartStore';
 
 export class RootStore {
   quotesStore: QuotesStore;
@@ -40,6 +41,7 @@ export class RootStore {
   serverErrorPopupStore: ServerErrorPopupStore;
   userProfileStore: UserProfileStore;
   portfolioNavLinksStore: PortfolioNavLinksStore;
+  markersOnChartStore: MarkersOnChartStore;
 
   constructor() {
     this.quotesStore = new QuotesStore(this);
@@ -62,5 +64,6 @@ export class RootStore {
     this.serverErrorPopupStore = new ServerErrorPopupStore();
     this.userProfileStore = new UserProfileStore();
     this.portfolioNavLinksStore = new PortfolioNavLinksStore();
+    this.markersOnChartStore = new MarkersOnChartStore(this);
   }
 }
