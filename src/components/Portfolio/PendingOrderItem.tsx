@@ -10,18 +10,26 @@ import { PrimaryTextSpan } from '../../styles/TextsElements';
 import { useStores } from '../../hooks/useStores';
 import { useTranslation } from 'react-i18next';
 import useInstrument from '../../hooks/useInstrument';
+import ItemOperationLabel from './ItemOperationLabel';
 
 interface Props {
   pendingOrder: PendingOrderWSDTO;
   currencySymbol: string;
+  isInner?: boolean;
 }
 
-const PendingOrderItem: FC<Props> = ({ pendingOrder }) => {
-  const { type } = useParams();
+const PendingOrderItem: FC<Props> = ({ pendingOrder, isInner }) => {
+  const { type } = useParams<{ type: string }>();
   const { t } = useTranslation();
   const { getPressision } = useInstrument();
 
-  const { id, instrument, investmentAmount, openPrice } = pendingOrder;
+  const {
+    id,
+    instrument,
+    investmentAmount,
+    openPrice,
+    operation,
+  } = pendingOrder;
 
   const { mainAppStore, instrumentsStore } = useStores();
 
@@ -34,7 +42,9 @@ const PendingOrderItem: FC<Props> = ({ pendingOrder }) => {
   };
 
   const activeInstrument = useCallback(() => {
-    return instrumentsStore.instruments.find(item => item.instrumentItem.id === instrument)?.instrumentItem;
+    return instrumentsStore.instruments.find(
+      (item) => item.instrumentItem.id === instrument
+    )?.instrumentItem;
   }, [pendingOrder]);
 
   return (
@@ -51,7 +61,10 @@ const PendingOrderItem: FC<Props> = ({ pendingOrder }) => {
           lineHeight="1"
           marginBottom="6px"
         >
-          {activeInstrument()?.name}
+          <FlexContainer alignItems="center">
+            {activeInstrument()?.name}{' '}
+            {!isInner && <ItemOperationLabel operation={operation} />}
+          </FlexContainer>
         </PrimaryTextSpan>
         <PrimaryTextSpan
           color="rgba(255, 255, 255, 0.4)"

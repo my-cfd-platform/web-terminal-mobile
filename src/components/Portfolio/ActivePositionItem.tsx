@@ -8,15 +8,17 @@ import { useStores } from '../../hooks/useStores';
 import ActivePositionPnL from './ActivePositionPnL';
 import { Link, useParams } from 'react-router-dom';
 import Page from '../../constants/Pages';
+import ItemOperationLabel from './ItemOperationLabel';
 
 interface Props {
   position: PositionModelWSDTO;
+  isInner?: boolean;
 }
 
-const ActivePositionItem: FC<Props> = ({ position }) => {
+const ActivePositionItem: FC<Props> = ({ position, isInner }) => {
   const { mainAppStore, instrumentsStore } = useStores();
-  const { type } = useParams();
-  const { id, instrument } = position;
+  const { type } = useParams<{ type: string }>();
+  const { id, instrument, operation } = position;
 
   const groupName = (instrument: string) => {
     const groupId =
@@ -27,7 +29,9 @@ const ActivePositionItem: FC<Props> = ({ position }) => {
   };
 
   const activeInstrument = useCallback(() => {
-    return instrumentsStore.instruments.find(item => item.instrumentItem.id === instrument)?.instrumentItem;
+    return instrumentsStore.instruments.find(
+      (item) => item.instrumentItem.id === instrument
+    )?.instrumentItem;
   }, [position]);
 
   return (
@@ -44,7 +48,11 @@ const ActivePositionItem: FC<Props> = ({ position }) => {
           lineHeight="1"
           marginBottom="6px"
         >
-          {activeInstrument()?.name}
+          <FlexContainer alignItems="center">
+            {activeInstrument()?.name}{' '}
+            {!isInner && <ItemOperationLabel operation={operation} />}
+            
+          </FlexContainer>
         </PrimaryTextSpan>
         <PrimaryTextSpan
           color="rgba(255, 255, 255, 0.4)"
@@ -67,7 +75,7 @@ const ActivePositionItem: FC<Props> = ({ position }) => {
           {mainAppStore.activeAccount?.symbol}
           {position.investmentAmount.toFixed(2)}
         </PrimaryTextSpan>
-        <ActivePositionPnL position={position} />
+        <ActivePositionPnL position={position} hasBackground={isInner}/>
       </FlexContainer>
     </InstrumentItem>
   );

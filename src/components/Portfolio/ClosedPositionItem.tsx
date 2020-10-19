@@ -9,15 +9,19 @@ import Page from '../../constants/Pages';
 import { PositionHistoryDTO } from '../../types/HistoryReportTypes';
 import Colors from '../../constants/Colors';
 import { ButtonWithoutStyles } from '../../styles/ButtonWithoutStyles';
+import ItemOperationLabel from './ItemOperationLabel';
+import { css } from '@emotion/core';
 
 interface Props {
   tradingHistoryItem: PositionHistoryDTO;
   currencySymbol: string;
+  isInner?: boolean;
 }
 
 const ClosedPositionItem: FC<Props> = ({
   tradingHistoryItem,
   currencySymbol,
+  isInner,
 }) => {
   const { mainAppStore, instrumentsStore, historyStore } = useStores();
   const { push } = useHistory();
@@ -60,7 +64,10 @@ const ClosedPositionItem: FC<Props> = ({
           lineHeight="1"
           marginBottom="6px"
         >
-          {activeInstrument()?.name}
+          <FlexContainer alignItems="center">
+            {activeInstrument()?.name}{' '}
+            {!isInner && <ItemOperationLabel operation={operation} />}
+          </FlexContainer>
         </PrimaryTextSpan>
         <PrimaryTextSpan
           color="rgba(255, 255, 255, 0.4)"
@@ -84,7 +91,7 @@ const ClosedPositionItem: FC<Props> = ({
           {tradingHistoryItem.investmentAmount.toFixed(2)}
         </PrimaryTextSpan>
 
-        <QuoteTextLabel isGrowth={profit >= 0}>
+        <QuoteTextLabel isGrowth={profit >= 0} hasBackground={isInner}>
           {profit >= 0 ? '+' : '-'}
           {currencySymbol}
           {Math.abs(profit).toFixed(2)}
@@ -110,10 +117,16 @@ const InstrumentItem = styled(ButtonWithoutStyles)`
   }
 `;
 
-const QuoteTextLabel = styled(FlexContainer)<{ isGrowth?: boolean }>`
-  background-color: ${(props) =>
-    props.isGrowth ? Colors.ACCENT_BLUE : Colors.RED};
-  color: ${(props) => (props.isGrowth ? '#000000' : '#ffffff')};
+const QuoteTextLabel = styled(FlexContainer)<{ isGrowth?: boolean; hasBackground?: boolean; }>`
+  color: ${(props) => (props.isGrowth ? Colors.ACCENT_BLUE : Colors.RED)};
+
+  ${(props) =>
+    props.hasBackground &&
+    css`
+      background-color: ${props.isGrowth ? Colors.ACCENT_BLUE : Colors.RED};
+      color: ${props.isGrowth ? '#000000' : '#ffffff'};
+    `};
+
   border-radius: 4px;
   padding: 2px 4px;
   font-size: 13px;

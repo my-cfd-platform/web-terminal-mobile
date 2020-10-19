@@ -20,7 +20,12 @@ import styled from '@emotion/styled';
 const containerId = 'tv_chart_container';
 
 const ChartContainer: FC = observer(() => {
-  const { mainAppStore, tradingViewStore, instrumentsStore } = useStores();
+  const {
+    mainAppStore,
+    tradingViewStore,
+    instrumentsStore,
+    markersOnChartStore,
+  } = useStores();
 
   const match = useRouteMatch(Page.DASHBOARD);
   // TODO: think how to improve logic
@@ -114,6 +119,7 @@ const ChartContainer: FC = observer(() => {
       tvWidget.onChartReady(async () => {
         tradingViewStore.tradingWidget = tvWidget;
         mainAppStore.isLoading = false;
+        markersOnChartStore.renderActivePositionsMarkersOnChart();
       });
     }
   }, [
