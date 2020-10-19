@@ -8,6 +8,7 @@ import { useStores } from '../../hooks/useStores';
 import ActivePositionPnL from './ActivePositionPnL';
 import { Link, useParams } from 'react-router-dom';
 import Page from '../../constants/Pages';
+import ItemOperationLabel from './ItemOperationLabel';
 
 interface Props {
   position: PositionModelWSDTO;
@@ -15,8 +16,8 @@ interface Props {
 
 const ActivePositionItem: FC<Props> = ({ position }) => {
   const { mainAppStore, instrumentsStore } = useStores();
-  const { type } = useParams();
-  const { id, instrument } = position;
+  const { type } = useParams<{ type: string }>();
+  const { id, instrument, operation } = position;
 
   const groupName = (instrument: string) => {
     const groupId =
@@ -27,7 +28,9 @@ const ActivePositionItem: FC<Props> = ({ position }) => {
   };
 
   const activeInstrument = useCallback(() => {
-    return instrumentsStore.instruments.find(item => item.instrumentItem.id === instrument)?.instrumentItem;
+    return instrumentsStore.instruments.find(
+      (item) => item.instrumentItem.id === instrument
+    )?.instrumentItem;
   }, [position]);
 
   return (
@@ -44,7 +47,10 @@ const ActivePositionItem: FC<Props> = ({ position }) => {
           lineHeight="1"
           marginBottom="6px"
         >
-          {activeInstrument()?.name}
+          <FlexContainer alignItems="center">
+            {activeInstrument()?.name}{' '}
+            <ItemOperationLabel operation={operation} />
+          </FlexContainer>
         </PrimaryTextSpan>
         <PrimaryTextSpan
           color="rgba(255, 255, 255, 0.4)"

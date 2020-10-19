@@ -69,9 +69,7 @@ const ActivePositionPnL: FC<Props> = ({ position }) => {
 export default ActivePositionPnL;
 
 const QuoteTextLabel = styled(FlexContainer)<{ isGrowth?: boolean }>`
-  background-color: ${(props) =>
-    props.isGrowth ? Colors.ACCENT_BLUE : Colors.RED};
-  color: ${(props) => (props.isGrowth ? '#000000' : '#ffffff')};
+  color: ${(props) => (props.isGrowth ? Colors.ACCENT_BLUE : Colors.RED)};
   border-radius: 4px;
   padding: 2px 4px;
   font-size: 13px;

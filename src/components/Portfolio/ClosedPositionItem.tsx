@@ -9,6 +9,7 @@ import Page from '../../constants/Pages';
 import { PositionHistoryDTO } from '../../types/HistoryReportTypes';
 import Colors from '../../constants/Colors';
 import { ButtonWithoutStyles } from '../../styles/ButtonWithoutStyles';
+import ItemOperationLabel from './ItemOperationLabel';
 
 interface Props {
   tradingHistoryItem: PositionHistoryDTO;
@@ -60,7 +61,10 @@ const ClosedPositionItem: FC<Props> = ({
           lineHeight="1"
           marginBottom="6px"
         >
-          {activeInstrument()?.name}
+          <FlexContainer alignItems="center">
+            {activeInstrument()?.name}{' '}
+            <ItemOperationLabel operation={operation} />
+          </FlexContainer>
         </PrimaryTextSpan>
         <PrimaryTextSpan
           color="rgba(255, 255, 255, 0.4)"
@@ -111,9 +115,7 @@ const InstrumentItem = styled(ButtonWithoutStyles)`
 `;
 
 const QuoteTextLabel = styled(FlexContainer)<{ isGrowth?: boolean }>`
-  background-color: ${(props) =>
-    props.isGrowth ? Colors.ACCENT_BLUE : Colors.RED};
-  color: ${(props) => (props.isGrowth ? '#000000' : '#ffffff')};
+  color: ${(props) => (props.isGrowth ? Colors.ACCENT_BLUE : Colors.RED)};
   border-radius: 4px;
   padding: 2px 4px;
   font-size: 13px;
