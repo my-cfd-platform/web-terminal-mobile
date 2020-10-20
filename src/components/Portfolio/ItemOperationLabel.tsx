@@ -25,10 +25,9 @@ const Label = styled.span<{isBuy: boolean}>`
   font-size: 8px;
   font-weight: 800;
   border-radius: 4px;
-  padding: 2px;
+  padding: 2px 4px;
   text-transform: uppercase;
   line-height: 1;
-  width: 32px;
   height: 12px;
   margin-left: 8px;
   text-align: center;
