@@ -198,6 +198,8 @@ export class InstrumentsStore implements ContextProps {
                 ?.chart()
                 .setChartType(newActiveInstrument.chartType);
             });
+            
+          this.rootStore.markersOnChartStore.renderActivePositionsMarkersOnChart();
         }
       } catch (error) {}
     } else {

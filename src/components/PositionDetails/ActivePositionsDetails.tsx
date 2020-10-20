@@ -43,6 +43,7 @@ const ActivePositionsDetails: FC<Props> = observer((props) => {
     notificationStore,
     activePositionNotificationStore,
     instrumentsStore,
+    markersOnChartStore,
   } = useStores();
   const { push } = useHistory();
 
@@ -73,6 +74,8 @@ const ActivePositionsDetails: FC<Props> = observer((props) => {
       });
 
       if (response.result === OperationApiResponseCodes.Ok) {
+        markersOnChartStore.removeMarkerByPositionId(position.id);
+
         const instrumentItem = instrumentsStore.instruments.find(
           (item) => item.instrumentItem.id === position.instrument
         )?.instrumentItem;
