@@ -42,8 +42,8 @@ export class MarkersOnChartStore implements IMarkersOnChartStore {
             position.operation === AskBidEnum.Buy ? '#00ffdd' : '#ed145b'
           )
           .setDirection(position.operation === AskBidEnum.Buy ? 'buy' : 'sell')
-          .setTime(position.openDate / 1000)
-          .setPrice(position.investmentAmount)
+          .setTime((position.openDate - 1000) / 1000)
+          .setPrice(position.openPrice)
           .setArrowSpacing(0);
         if (marker) {
           this.activeMarkers.push({
@@ -69,7 +69,7 @@ export class MarkersOnChartStore implements IMarkersOnChartStore {
         position.operation === AskBidEnum.Buy ? '#00ffdd' : '#ed145b'
       )
       .setDirection(position.operation === AskBidEnum.Buy ? 'buy' : 'sell')
-      .setTime((position.openDate - 100) / 1000)
+      .setTime((position.openDate - 1000) / 1000)
       .setPrice(position.investmentAmount);
     if (marker) {
       this.activeMarkers.push({
