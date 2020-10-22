@@ -15,6 +15,7 @@ import { AccountTypeEnum } from './enums/AccountTypeEnum';
 import API from './helpers/API';
 import apiResponseCodeMessages from './constants/apiResponseCodeMessages';
 import { OperationApiResponseCodes } from './enums/OperationApiResponseCodes';
+import { FULL_VH } from './constants/global';
 
 const MainApp: FC = () => {
   const { mainAppStore, instrumentsStore, badRequestPopupStore } = useStores();
@@ -133,6 +134,11 @@ const MainApp: FC = () => {
           body {
             background-color: ${Colors.BACKGROUD_PAGE};
             color: #fff;
+          }
+
+          html, body {
+            overflow: hidden;
+            max-height: calc(${FULL_VH});
           }
 
           .grecaptcha-badge {
