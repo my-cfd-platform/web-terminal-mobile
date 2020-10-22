@@ -51,20 +51,27 @@ const WithdrawRequestTab = () => {
               {!withdrawalStore.loading && (
                 <>
                   {withdrawalStore.pendingPopup ? (
-                    <PrimaryTextSpan color="#ffffff" textAlign="center">
-                      {t('Our Customer support will contact you via')} &nbsp;
-                      <PrimaryTextSpan color="#FFFCCC">
-                        {userEmail || 'your@email.com'}
+                    <FlexContainer
+                      height="calc(100% - 75px)"
+                      alignItems="center"
+                      justifyContent="center"
+                      padding="16px"
+                    >
+                      <PrimaryTextSpan color="#ffffff" textAlign="center">
+                        {t('Our Customer support will contact you via')} &nbsp;
+                        <PrimaryTextSpan color="#FFFCCC">
+                          {userEmail || 'your@email.com'}
+                        </PrimaryTextSpan>
+                        <br />
+                        {t(
+                          'to confirm and proceed with your withdrawal request.'
+                        )}
+                        <br />
+                        {t(
+                          'Please be note, that you can submit only one withdrawal request at a time'
+                        )}
                       </PrimaryTextSpan>
-                      <br />
-                      {t(
-                        'to confirm and proceed with your withdrawal request.'
-                      )}
-                      <br />
-                      {t(
-                        'Please be note, that you can submit only one withdrawal request at a time'
-                      )}
-                    </PrimaryTextSpan>
+                    </FlexContainer>
                   ) : (
                     <>
                       {mainAppStore.accounts.find((acc) => acc.isLive)
