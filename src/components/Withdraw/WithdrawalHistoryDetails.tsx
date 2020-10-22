@@ -19,7 +19,7 @@ interface QueryProps {
 const WithdrawalHistoryDetails = () => {
   const { t } = useTranslation();
   const { type } = useParams<QueryProps>();
-  const { withdrawalStore } = useStores();
+  const { withdrawalStore, notificationStore } = useStores();
   const { push } = useHistory();
   const [item, setItem] = useState<WithdrawalHistoryModel>();
 
@@ -31,12 +31,19 @@ const WithdrawalHistoryDetails = () => {
       });
       if (result.status === WithdrawalHistoryResponseStatus.Successful) {
         withdrawalStore.closePendingPopup();
+        notificationStore.isSuccessfull = true;
+        notificationStore.notificationMessage = t(
+          'A withdrawal request has been canceled'
+        );
+        notificationStore.openNotification();
       }
     } catch (error) {}
   };
 
   useEffect(() => {
-    const withdrawalItem = withdrawalStore.history?.find( item => item.id === type);
+    const withdrawalItem = withdrawalStore.history?.find(
+      (item) => item.id === type
+    );
     if (withdrawalItem) {
       setItem(withdrawalItem);
     } else {

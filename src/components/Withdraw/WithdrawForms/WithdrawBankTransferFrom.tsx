@@ -73,7 +73,9 @@ const WithdrawBankTransferFrom = () => {
 
       const result = await API.createWithdrawal(data);
       if (result.status === WithdrawalHistoryResponseStatus.Successful) {
-        withdrawalStore.opentTab(WithdrawalTabsEnum.History);
+        // TODO: redirect to success page
+
+
         notificationStore.isSuccessfull = true;
       } else {
         notificationStore.isSuccessfull = false;
@@ -242,7 +244,7 @@ const WithdrawBankTransferFrom = () => {
                       fontSize="11px"
                       color="rgba(196, 196, 196, 0.5)"
                     >
-                      {t('Available')}&nbsp;
+                      {t('Balance')}&nbsp;
                       {mainAppStore.accounts.find((acc) => acc.isLive)?.symbol}
                       {mainAppStore.accounts
                         .find((acc) => acc.isLive)
@@ -271,7 +273,7 @@ const WithdrawBankTransferFrom = () => {
 
         <FlexContainer padding="16px" width="100%">
           <PrimaryButton type="submit" onClick={handlerClickSubmit} width="100%">
-            {t('Next')}
+            {t('Confirm')}
           </PrimaryButton>
         </FlexContainer>
       </FlexContainer>
