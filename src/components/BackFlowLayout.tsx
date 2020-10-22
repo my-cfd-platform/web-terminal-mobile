@@ -11,11 +11,19 @@ import { FULL_VH } from '../constants/global';
 
 interface Props {
   pageTitle?: string;
+  backLink?: string;
 }
 
-const BackFlowLayout: FC<Props> = (props) => {
-  const { children, pageTitle } = props;
-  const { goBack } = useHistory();
+const BackFlowLayout: FC<Props> = ({ children, pageTitle, backLink }) => {  
+  const { goBack, push } = useHistory();
+
+  const handleClickBack = () => {
+    if (backLink) {
+      push(backLink);
+      return;
+    }
+    goBack();
+  }
 
   return (
     <FlexContainer
@@ -25,7 +33,7 @@ const BackFlowLayout: FC<Props> = (props) => {
       flexDirection="column"
     >
       <PageHeaderWrap>
-        <BackButton onClick={goBack}>
+        <BackButton onClick={handleClickBack}>
           <SvgIcon
             {...IconBack}
             fillColor="rgba(255, 255, 255, 0.6)"

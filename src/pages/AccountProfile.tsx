@@ -137,7 +137,7 @@ const AccountProfile = () => {
           <SvgIcon {...IconArrowLink} fillColor="rgba(196, 196, 196, 0.5)" />
         </ProfileMenuA>
 
-        <ProfileMenuLink to={Page.ACCOUNT_WITHDRAW}>
+        <ProfileMenuLink to={Page.ACCOUNT_WITHDRAW_NEW}>
           <FlexContainer alignItems="center">
             <FlexContainer
               width="28px"
