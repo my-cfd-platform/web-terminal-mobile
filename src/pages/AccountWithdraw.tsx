@@ -18,14 +18,28 @@ import { PersonalDataKYCEnum } from '../enums/PersonalDataKYCEnum';
 import FailImage from '../assets/images/fail.png';
 import WithdrawBankTransferFrom from '../components/Withdraw/WithdrawForms/WithdrawBankTransferFrom';
 import WithdrawBitcoinForm from '../components/Withdraw/WithdrawForms/WithdrawBitcoinForm';
+import WithdrawalHistoryDetails from '../components/Withdraw/WithdrawalHistoryDetails';
 
+interface QueryPropsParams {
+  tab: string;
+  type: string;
+}
 const AccountWithdraw = () => {
   const { t } = useTranslation();
-  const location = useLocation();
-  const { tab, type } = useParams<{ tab: string; type: string }>();
+  
+  const { tab, type } = useParams<QueryPropsParams>();
   const { push } = useHistory();
 
   const { mainAppStore, withdrawalStore } = useStores();
+
+  const renderHistoryPageByType = useCallback(() => {
+    switch (type) {
+      case 'all':
+        return <WithdrawalHistoryTab />;
+      default:
+        return <WithdrawalHistoryDetails />;
+    }
+  }, [type]);
 
   const renderPageByType = useCallback(() => {
     switch (type) {
@@ -33,7 +47,6 @@ const AccountWithdraw = () => {
         return <WithdrawBankTransferFrom />;
       case 'bitcoin':
         return <WithdrawBitcoinForm />;
-
       default:
         return <WithdrawRequestTab />;
     }
@@ -42,7 +55,7 @@ const AccountWithdraw = () => {
   const renderTab = useCallback(() => {
     switch (tab) {
       case 'history':
-        return <WithdrawalHistoryTab />;
+        return renderHistoryPageByType();
       default:
         return renderPageByType();
     }
@@ -75,7 +88,8 @@ const AccountWithdraw = () => {
   }, []);
 
   return (
-    <BackFlowLayout pageTitle={t('Withdraw')} backLink={Page.ACCOUNT_PROFILE}>
+    // backLink={Page.ACCOUNT_PROFILE}
+    <BackFlowLayout pageTitle={t('Withdraw')}>
       {/* {mainAppStore.profileStatus !== PersonalDataKYCEnum.Verified ? ( */}
       {mainAppStore.profileStatus === -1 ? (
         <FlexContainer
