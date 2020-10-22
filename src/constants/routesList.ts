@@ -153,6 +153,7 @@ const routesList = [
     strict: true,
     layoutType: RouteLayoutType.Authorized,
   },
+
   {
     component: AccountWithdraw,
     path: Page.ACCOUNT_WITHDRAW,
@@ -160,7 +161,13 @@ const routesList = [
     strict: true,
     layoutType: RouteLayoutType.Authorized,
   },
-
+  {
+    component: AccountWithdraw,
+    path: Page.ACCOUNT_WITHDRAW_NEW_TYPE,
+    exact: false,
+    strict: true,
+    layoutType: RouteLayoutType.Authorized,
+  },
   {
     component: AccountAboutUs,
     path: Page.ACCOUNT_ABOUT_US,
