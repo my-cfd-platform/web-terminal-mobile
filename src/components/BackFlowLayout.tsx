@@ -4,6 +4,7 @@ import styled from '@emotion/styled';
 import { PrimaryTextSpan } from '../styles/TextsElements';
 
 import IconBack from '../assets/svg/icon-back-btn.svg';
+import IconClose from '../assets/svg/profile/icon-account-close.svg';
 import { ButtonWithoutStyles } from '../styles/ButtonWithoutStyles';
 import SvgIcon from './SvgIcon';
 import { useHistory } from 'react-router-dom';
@@ -11,18 +12,24 @@ import { FULL_VH } from '../constants/global';
 
 interface Props {
   pageTitle?: string;
+  handleGoBack?: any;
+  type?: string
   backLink?: string;
 }
 
-const BackFlowLayout: FC<Props> = ({ children, pageTitle, backLink }) => {  
+const BackFlowLayout: FC<Props> = ({ children, pageTitle, backLink, handleGoBack, type }) => {
   const { goBack, push } = useHistory();
-
+  const useIcon = type === 'close' ? IconClose : IconBack;
   const handleClickBack = () => {
     if (backLink) {
       push(backLink);
       return;
     }
-    goBack();
+    if (handleGoBack) {
+      handleGoBack();
+    } else {
+      goBack();
+    }
   }
 
   return (
@@ -35,7 +42,7 @@ const BackFlowLayout: FC<Props> = ({ children, pageTitle, backLink }) => {
       <PageHeaderWrap>
         <BackButton onClick={handleClickBack}>
           <SvgIcon
-            {...IconBack}
+            {...useIcon}
             fillColor="rgba(255, 255, 255, 0.6)"
             hoverFillColor="#ffffff"
           />
