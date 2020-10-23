@@ -90,8 +90,7 @@ const AccountWithdraw = () => {
   return (
     // backLink={Page.ACCOUNT_PROFILE}
     <BackFlowLayout pageTitle={t('Withdraw')}>
-      {/* {mainAppStore.profileStatus !== PersonalDataKYCEnum.Verified ? ( */}
-      {mainAppStore.profileStatus === -1 ? (
+      {mainAppStore.profileStatus !== PersonalDataKYCEnum.Verified ? (
         <FlexContainer
           width="100%"
           height="100%"
@@ -121,7 +120,7 @@ const AccountWithdraw = () => {
             </FailDescription>
           </FlexContainer>
           <FlexContainer padding="16px" width="100%">
-            <OtherMethodsButton href={`/kyc`}>
+            <OtherMethodsButton href={Page.ACCOUNT_VERIFICATION}>
               {t('Proceed to Verification')}
             </OtherMethodsButton>
           </FlexContainer>
