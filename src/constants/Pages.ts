@@ -24,6 +24,7 @@ const Page = {
   ACCOUNT_HISTORY_QUOTES: '/account-history-quotes',
   ACCOUNT_ABOUT_US: '/account-about-us',
   ACCOUNT_CHANGE_LANGUAGE: '/account-change-language',
+  ACCOUNT_VERIFICATION: '/account-verification',
   PAYMENTS: '/payments/:status',
 
   ABOUT_US: 'https://www.monfex.com/why-us',

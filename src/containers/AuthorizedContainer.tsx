@@ -31,9 +31,10 @@ const AuthorizedContainer: FC = ({ children }) => {
     Page.ACCOUNT_ABOUT_US,
     Page.ACCOUNTS_SWITCH,
     Page.ACCOUNT_CHANGE_LANGUAGE,
+    Page.ACCOUNT_VERIFICATION,
     Page.ACCOUNT_WITHDRAW_NEW_TYPE,
   ]);
-  
+
   const { push } = useHistory();
   const { mainAppStore, userProfileStore, serverErrorPopupStore } = useStores();
   const showNavbarAndNav = !match?.isExact;
