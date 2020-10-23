@@ -14,6 +14,7 @@ import OrderPage from '../pages/OrderPage';
 import AccountBalanceHistory from '../pages/AccountBalanceHistory';
 import AccountWithdraw from '../pages/AccountWithdraw';
 import AccountLanguage from '../pages/AccountLanguage';
+import AccountVerification from '../pages/AccountVerification';
 import AccountAboutUs from '../pages/AccountAboutUs';
 import RecoveryPassword from '../pages/RecoveryPassword';
 import PhoneVerification from '../pages/PhoneVerification';
@@ -160,7 +161,6 @@ const routesList = [
     strict: true,
     layoutType: RouteLayoutType.Authorized,
   },
-
   {
     component: AccountAboutUs,
     path: Page.ACCOUNT_ABOUT_US,
@@ -171,6 +171,13 @@ const routesList = [
   {
     component: AccountLanguage,
     path: Page.ACCOUNT_CHANGE_LANGUAGE,
+    exact: true,
+    strict: true,
+    layoutType: RouteLayoutType.Authorized,
+  },
+  {
+    component: AccountVerification,
+    path: Page.ACCOUNT_VERIFICATION,
     exact: true,
     strict: true,
     layoutType: RouteLayoutType.Authorized,
