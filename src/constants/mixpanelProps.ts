@@ -21,6 +21,8 @@ const mixapanelProps = {
   ACCOUNT_TYPE: 'Account Type',
   EVENT_REF: 'Event ref',
   ERROR_TEXT: 'Error text',
+  WITHDRAWAL_METHOD: 'Withdraw method',
+  
 };
 
 Object.freeze(mixapanelProps);
