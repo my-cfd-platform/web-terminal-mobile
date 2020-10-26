@@ -23,17 +23,7 @@ const WithdrawHistoryItem = ({ data, updateHistory }: Props) => {
   const { t } = useTranslation();
   const { withdrawalStore } = useStores();
 
-  const handleCancel = async (withdrawalId: string) => {
-    try {
-      const result = await API.cancelWithdrawal({
-        withdrawalId,
-      });
-      if (result.status === WithdrawalHistoryResponseStatus.Successful) {
-        updateHistory();
-        withdrawalStore.closePendingPopup();
-      }
-    } catch (error) {}
-  };
+  
 
   const selectStatusColor = (status: WithdrawalStatusesEnum | null) => {
     switch (status) {

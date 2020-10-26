@@ -22,6 +22,7 @@ import IconLogout from '../assets/svg/profile/icon-logout.svg';
 import IconAboutUs from '../assets/svg/profile/icon-about.svg';
 import IconVerify from '../assets/svg/profile/icon-verify.svg';
 import { PersonalDataKYCEnum } from '../enums/PersonalDataKYCEnum';
+import AchievementStatusLabel from '../components/AchievementStatusLabel';
 
 const AccountProfile = () => {
   const { mainAppStore, userProfileStore } = useStores();
@@ -66,6 +67,7 @@ const AccountProfile = () => {
 
   return (
     <FlexContainer flexDirection="column">
+      <AchievementStatusLabel />
       <FlexContainer padding="16px" marginBottom="24px">
         <UserPhoto
           alignItems="center"
@@ -103,32 +105,33 @@ const AccountProfile = () => {
         </FlexContainer>
       </FlexContainer>
 
-      {mainAppStore.profileStatus === PersonalDataKYCEnum.NotVerified
-      && <FlexContainer flexDirection="column" marginBottom="24px">
-        <ProfileMenuLink to={Page.ACCOUNT_VERIFICATION}>
-          <FlexContainer alignItems="center">
-            <FlexContainer
-              width="28px"
-              height="28px"
-              backgroundColor="#00000000"
-              borderRadius="50%"
-              justifyContent="center"
-              alignItems="center"
-              marginRight="14px"
-            >
-              <SvgIcon {...IconVerify} fillColor="#ED145B" />
+      {mainAppStore.profileStatus === PersonalDataKYCEnum.NotVerified && (
+        <FlexContainer flexDirection="column" marginBottom="24px">
+          <ProfileMenuLink to={Page.ACCOUNT_VERIFICATION}>
+            <FlexContainer alignItems="center">
+              <FlexContainer
+                width="28px"
+                height="28px"
+                backgroundColor="#00000000"
+                borderRadius="50%"
+                justifyContent="center"
+                alignItems="center"
+                marginRight="14px"
+              >
+                <SvgIcon {...IconVerify} fillColor="#ED145B" />
+              </FlexContainer>
+              <PrimaryTextSpan
+                color="#ffffff"
+                fontSize="16px"
+                fontWeight="normal"
+              >
+                {t('Fill in personal details')}
+              </PrimaryTextSpan>
             </FlexContainer>
-            <PrimaryTextSpan
-              color="#ffffff"
-              fontSize="16px"
-              fontWeight="normal"
-            >
-              {t('Fill in personal details')}
-            </PrimaryTextSpan>
-          </FlexContainer>
-          <SvgIcon {...IconArrowLink} fillColor="rgba(196, 196, 196, 0.5)" />
+            <SvgIcon {...IconArrowLink} fillColor="rgba(196, 196, 196, 0.5)" />
           </ProfileMenuLink>
-      </FlexContainer>}
+        </FlexContainer>
+      )}
 
       <FlexContainer flexDirection="column" marginBottom="24px">
         <FlexContainer padding="0 16px" marginBottom="8px">
@@ -239,9 +242,9 @@ const AccountProfile = () => {
               marginRight="14px"
             >
               <PrimaryTextSpan
-                  color="#ffffff"
-                  fontSize="9px"
-                  fontWeight="normal"
+                color="#ffffff"
+                fontSize="9px"
+                fontWeight="normal"
               >
                 {mainAppStore.lang.substr(0, 2).toUpperCase()}
               </PrimaryTextSpan>
