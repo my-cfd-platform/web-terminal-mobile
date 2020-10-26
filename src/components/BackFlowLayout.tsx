@@ -38,6 +38,7 @@ const BackFlowLayout: FC<Props> = ({ children, pageTitle, backLink, handleGoBack
       height={`calc(${FULL_VH})`}
       width="100vw"
       flexDirection="column"
+      overflow="auto"
     >
       <PageHeaderWrap>
         <BackButton onClick={handleClickBack}>

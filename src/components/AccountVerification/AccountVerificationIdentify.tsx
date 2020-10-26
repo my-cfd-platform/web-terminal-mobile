@@ -96,6 +96,7 @@ const AccountVerificationIdentify: FC<Props> = (props) => {
               alignItems={'center'}
               width={'100%'}
               marginBottom={'40px'}
+              flex={'1 0 auto'}
             >
               <FlexContainer
                 width="184px"

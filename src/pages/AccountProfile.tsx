@@ -102,8 +102,7 @@ const AccountProfile = () => {
           </PrimaryTextSpan>
         </FlexContainer>
       </FlexContainer>
-
-      {mainAppStore.profileStatus === PersonalDataKYCEnum.NotVerified
+      {userProfileStore.userProfile?.kyc === PersonalDataKYCEnum.NotVerified
       && <FlexContainer flexDirection="column" marginBottom="24px">
         <ProfileMenuLink to={Page.ACCOUNT_VERIFICATION}>
           <FlexContainer alignItems="center">
