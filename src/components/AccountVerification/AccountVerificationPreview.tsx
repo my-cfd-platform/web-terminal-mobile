@@ -126,6 +126,7 @@ const ImageElem = styled.img`
   display: block;
   object-fit: contain;
   width: 100%;
+  max-height: 300px;
   background: #C4C4C4;
   border-radius: 5px;
 `;

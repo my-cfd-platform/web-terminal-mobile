@@ -37,6 +37,7 @@ const mixpanelEvents = {
   CLOSE_ORDER_FAILED: 'close order failed',
   WITHDRAW_VIEW: 'withdraw view',
   WITHDRAW_HISTORY_VIEW: 'withdraw history view',
+  WITHDRAW_REQUEST: 'withdraw request',
   KYC_STEP_1: 'kyc step 1',
   KYC_STEP_2: 'kyc step 2',
   KYC_STEP_3: 'kyc step 3',

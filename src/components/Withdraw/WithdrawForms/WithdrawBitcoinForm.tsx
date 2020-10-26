@@ -18,6 +18,9 @@ import { CreateWithdrawalParams } from '../../../types/WithdrawalTypes';
 import { Observer } from 'mobx-react-lite';
 import InputField from '../../InputField';
 import { PrimaryButton } from '../../../styles/Buttons';
+import mixpanel from 'mixpanel-browser';
+import mixpanelEvents from '../../../constants/mixpanelEvents';
+import mixapanelProps from '../../../constants/mixpanelProps';
 
 interface RequestValues {
   amount: number;
@@ -80,6 +83,12 @@ const WithdrawBitcoinForm = () => {
       if (result.status === WithdrawalHistoryResponseStatus.Successful) {
         withdrawalStore.opentTab(WithdrawalTabsEnum.History);
         notificationStore.isSuccessfull = true;
+
+
+        mixpanel.track(mixpanelEvents.WITHDRAW_REQUEST, {
+          [mixapanelProps.AMOUNT]: +values.amount,
+          [mixapanelProps.WITHDRAWAL_METHOD]: 'Bitcoin',
+        });
       } else {
         notificationStore.isSuccessfull = false;
       }

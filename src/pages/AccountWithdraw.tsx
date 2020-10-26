@@ -19,6 +19,9 @@ import FailImage from '../assets/images/fail.png';
 import WithdrawBankTransferFrom from '../components/Withdraw/WithdrawForms/WithdrawBankTransferFrom';
 import WithdrawBitcoinForm from '../components/Withdraw/WithdrawForms/WithdrawBitcoinForm';
 import WithdrawalHistoryDetails from '../components/Withdraw/WithdrawalHistoryDetails';
+import mixpanel from 'mixpanel-browser';
+import mixpanelEvents from '../constants/mixpanelEvents';
+import mixapanelProps from '../constants/mixpanelProps';
 
 interface QueryPropsParams {
   tab: string;
@@ -85,6 +88,12 @@ const AccountWithdraw = () => {
       } catch (error) {}
     };
     initHistoryList();
+
+
+    mixpanel.track(mixpanelEvents.WITHDRAW_VIEW, {
+      [mixapanelProps.AVAILABLE_BALANCE]:
+        mainAppStore.accounts.find((item) => item.isLive)?.balance || 0,
+    });
   }, []);
 
   return (
