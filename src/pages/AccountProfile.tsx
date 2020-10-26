@@ -127,6 +127,20 @@ const AccountProfile = () => {
               >
                 {t('Fill in personal details')}
               </PrimaryTextSpan>
+      {userProfileStore.userProfile?.kyc === PersonalDataKYCEnum.NotVerified
+      && <FlexContainer flexDirection="column" marginBottom="24px">
+        <ProfileMenuLink to={Page.ACCOUNT_VERIFICATION}>
+          <FlexContainer alignItems="center">
+            <FlexContainer
+              width="28px"
+              height="28px"
+              backgroundColor="#00000000"
+              borderRadius="50%"
+              justifyContent="center"
+              alignItems="center"
+              marginRight="14px"
+            >
+              <SvgIcon {...IconVerify} fillColor="#ED145B" />
             </FlexContainer>
             <SvgIcon {...IconArrowLink} fillColor="rgba(196, 196, 196, 0.5)" />
           </ProfileMenuLink>
