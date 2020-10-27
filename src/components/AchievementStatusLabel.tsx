@@ -6,11 +6,15 @@ import { useStores } from '../hooks/useStores';
 import { FlexContainer } from '../styles/FlexContainer';
 import { PrimaryTextSpan } from '../styles/TextsElements';
 
+import SilverBG from '../assets/images/achievement_status_bg/silver.png';
+import GoldBG from '../assets/images/achievement_status_bg/gold.png';
+import PlatinumBG from '../assets/images/achievement_status_bg/platinum.png';
 
-import SilverBG from "../assets/images/achievement_status_bg/silver.png"
-import GoldBG from "../assets/images/achievement_status_bg/gold.png"
-import PlatinumBG from "../assets/images/achievement_status_bg/platinum.png"
-
+const listStatus = [
+  AchievementStatus.SILVER,
+  AchievementStatus.GOLD,
+  AchievementStatus.PLATINUM,
+];
 
 const AchievementStatusLabel = observer(() => {
   const { mainAppStore } = useStores();
@@ -29,7 +33,6 @@ const AchievementStatusLabel = observer(() => {
     }
   }, [mainAppStore.accounts]);
 
-
   const labelColor = useCallback(() => {
     const key = mainAppStore.activeAccount?.achievementStatus;
     switch (key) {
@@ -40,12 +43,14 @@ const AchievementStatusLabel = observer(() => {
       case AchievementStatus.PLATINUM:
         return '#00FFDD';
       default:
-        return "#ffffff";
+        return '#ffffff';
     }
   }, [mainAppStore.accounts]);
 
-
-  if (mainAppStore.activeAccount?.achievementStatus === AchievementStatus.BASIC) {
+  if (
+    !mainAppStore.activeAccount?.achievementStatus ||
+    !listStatus.includes(mainAppStore.activeAccount?.achievementStatus)
+  ) {
     return null;
   }
 
@@ -59,7 +64,12 @@ const AchievementStatusLabel = observer(() => {
         justifyContent="center"
         backgroundImage={`url(${labelBackground()})`}
       >
-        <PrimaryTextSpan color={labelColor()} fontSize="12px" lineHeight="1" textTransform="uppercase">
+        <PrimaryTextSpan
+          color={labelColor()}
+          fontSize="12px"
+          lineHeight="1"
+          textTransform="uppercase"
+        >
           {mainAppStore.activeAccount?.achievementStatus}
         </PrimaryTextSpan>
       </Label>
@@ -70,12 +80,12 @@ const AchievementStatusLabel = observer(() => {
 export default AchievementStatusLabel;
 
 const Wrap = styled(FlexContainer)`
-  border-top: 1px solid  rgba(169, 171, 173, 0.1);
+  border-top: 1px solid rgba(169, 171, 173, 0.1);
 `;
 
 const Label = styled(FlexContainer)`
   border: 1px solid rgba(169, 171, 173, 0.1);
-  border-top:  0;
+  border-top: 0;
   background-repeat: no-repeat;
   background-size: cover;
 `;

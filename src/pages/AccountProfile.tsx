@@ -121,11 +121,15 @@ const AccountProfile = () => {
               >
                 <SvgIcon {...IconVerify} fillColor="#ED145B" />
               </FlexContainer>
-              <SvgIcon
-                {...IconArrowLink}
-                fillColor="rgba(196, 196, 196, 0.5)"
-              />
+              <PrimaryTextSpan
+                color="#ffffff"
+                fontSize="16px"
+                fontWeight="normal"
+              >
+                {t('Fill in personal details')}
+              </PrimaryTextSpan>
             </FlexContainer>
+            <SvgIcon {...IconArrowLink} fillColor="rgba(196, 196, 196, 0.5)" />
           </ProfileMenuLink>
         </FlexContainer>
       )}
