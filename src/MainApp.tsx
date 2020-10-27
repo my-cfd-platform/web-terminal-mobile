@@ -3,7 +3,7 @@ import { Global, css } from '@emotion/core';
 import { reboot } from './styles/reboot';
 import Helmet from 'react-helmet';
 import RoutingLayout from './routing/RoutingLayout';
-import { BrowserRouter as Router } from 'react-router-dom';
+import { BrowserRouter as Router, useRouteMatch } from 'react-router-dom';
 import 'react-dates/lib/css/_datepicker.css';
 import { useStores } from './hooks/useStores';
 import injectInerceptors from './http/interceptors';
@@ -16,10 +16,15 @@ import API from './helpers/API';
 import apiResponseCodeMessages from './constants/apiResponseCodeMessages';
 import { OperationApiResponseCodes } from './enums/OperationApiResponseCodes';
 import { FULL_VH } from './constants/global';
+import Page from './constants/Pages';
 
 const MainApp: FC = () => {
   const { mainAppStore, instrumentsStore, badRequestPopupStore } = useStores();
   const { t, i18n } = useTranslation();
+
+  const match = useRouteMatch([
+    Page.ACCOUNT_VERIFICATION
+  ]);
 
   const fetchFavoriteInstruments = useCallback(async () => {
     const accountType = mainAppStore.activeAccount?.isLive
@@ -87,7 +92,9 @@ const MainApp: FC = () => {
 
   useEffect(() => {
     function handleVisibilityChange() {
-      window.location.reload();
+      if (!match?.isExact) {
+        window.location.reload();
+      }
     }
 
     document.addEventListener(
