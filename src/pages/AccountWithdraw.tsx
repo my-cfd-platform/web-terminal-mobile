@@ -99,7 +99,7 @@ const AccountWithdraw = () => {
   return (
     // backLink={Page.ACCOUNT_PROFILE}
     <BackFlowLayout pageTitle={t('Withdraw')}>
-      {userProfileStore.userProfile?.kyc !== PersonalDataKYCEnum.Verified ? (
+      {userProfileStore.userProfile?.kyc === PersonalDataKYCEnum.NotVerified ? (
         <FlexContainer
           width="100%"
           height="100%"
