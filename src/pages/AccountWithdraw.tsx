@@ -33,7 +33,7 @@ const AccountWithdraw = () => {
   const { tab, type } = useParams<QueryPropsParams>();
   const { push } = useHistory();
 
-  const { mainAppStore, withdrawalStore } = useStores();
+  const { mainAppStore, withdrawalStore, userProfileStore } = useStores();
 
   const renderHistoryPageByType = useCallback(() => {
     switch (type) {
@@ -99,7 +99,7 @@ const AccountWithdraw = () => {
   return (
     // backLink={Page.ACCOUNT_PROFILE}
     <BackFlowLayout pageTitle={t('Withdraw')}>
-      {mainAppStore.profileStatus !== PersonalDataKYCEnum.Verified ? (
+      {userProfileStore.userProfile?.kyc !== PersonalDataKYCEnum.Verified ? (
         <FlexContainer
           width="100%"
           height="100%"
