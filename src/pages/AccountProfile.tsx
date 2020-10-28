@@ -105,8 +105,10 @@ const AccountProfile = () => {
         </FlexContainer>
       </FlexContainer>
 
-      {userProfileStore.userProfile?.kyc ===
-        PersonalDataKYCEnum.NotVerified && (
+      {(userProfileStore.userProfile?.kyc ===
+        PersonalDataKYCEnum.NotVerified
+        || userProfileStore.userProfile?.kyc ===
+        PersonalDataKYCEnum.Restricted) && (
         <FlexContainer flexDirection="column" marginBottom="24px">
           <ProfileMenuLink to={Page.ACCOUNT_VERIFICATION}>
             <FlexContainer alignItems="center">
