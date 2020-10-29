@@ -135,6 +135,8 @@ const MainApp: FC = () => {
             line-height: 1.4;
             font-family: 'sf_ui_text';
             font-weight: normal;
+            height: calc(${FULL_VH});
+            height: -webkit-fill-available;
           }
 
           body {
@@ -145,8 +147,9 @@ const MainApp: FC = () => {
           html,
           body {
             overflow: hidden;
-            max-height: calc(${FULL_VH});
+            height: 100%;
             height: calc(${FULL_VH});
+            height: -webkit-fill-available;
           }
 
           .grecaptcha-badge {
