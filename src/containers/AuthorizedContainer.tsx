@@ -82,8 +82,9 @@ const AuthorizedContainer: FC = ({ children }) => {
   }, [location.pathname]);
 
   return (
-    <WrapperLayoutFix
+    <FlexContainer
       position="relative"
+      height="100%"
       width="100vw"
       flexDirection="column"
       overflow="hidden"
@@ -129,13 +130,8 @@ const AuthorizedContainer: FC = ({ children }) => {
         <Observer>{() => <ChartContainer />}</Observer>
       </FlexContainer>
       {showNavbarAndNav && <NavigationPanel />}
-    </WrapperLayoutFix>
+    </FlexContainer>
   );
 };
 
 export default AuthorizedContainer;
-
-const WrapperLayoutFix = styled(FlexContainer)`
-  height: 100vh;
-  height: calc(${FULL_VH});
-`;

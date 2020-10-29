@@ -16,7 +16,6 @@ import API from './helpers/API';
 import apiResponseCodeMessages from './constants/apiResponseCodeMessages';
 import { OperationApiResponseCodes } from './enums/OperationApiResponseCodes';
 import { FULL_VH } from './constants/global';
-import Page from './constants/Pages';
 
 const MainApp: FC = () => {
   const { mainAppStore, instrumentsStore, badRequestPopupStore } = useStores();
@@ -147,7 +146,7 @@ const MainApp: FC = () => {
           body {
             overflow: hidden;
             max-height: calc(${FULL_VH});
-            max-height: -webkit-fill-available;
+            height: calc(${FULL_VH});
           }
 
           .grecaptcha-badge {
