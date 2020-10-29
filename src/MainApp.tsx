@@ -147,6 +147,7 @@ const MainApp: FC = () => {
           body {
             overflow: hidden;
             max-height: calc(${FULL_VH});
+            max-height: -webkit-fill-available;
           }
 
           .grecaptcha-badge {
