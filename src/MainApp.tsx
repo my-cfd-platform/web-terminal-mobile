@@ -22,10 +22,6 @@ const MainApp: FC = () => {
   const { mainAppStore, instrumentsStore, badRequestPopupStore } = useStores();
   const { t, i18n } = useTranslation();
 
-  const match = useRouteMatch([
-    Page.ACCOUNT_VERIFICATION
-  ]);
-
   const fetchFavoriteInstruments = useCallback(async () => {
     const accountType = mainAppStore.activeAccount?.isLive
       ? AccountTypeEnum.Live
@@ -92,9 +88,7 @@ const MainApp: FC = () => {
 
   useEffect(() => {
     function handleVisibilityChange() {
-      if (!match?.isExact) {
-        window.location.reload();
-      }
+      window.location.reload();
     }
 
     document.addEventListener(
@@ -143,7 +137,8 @@ const MainApp: FC = () => {
             color: #fff;
           }
 
-          html, body {
+          html,
+          body {
             overflow: hidden;
             max-height: calc(${FULL_VH});
           }
