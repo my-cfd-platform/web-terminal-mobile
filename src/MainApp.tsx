@@ -77,6 +77,12 @@ const MainApp: FC = () => {
     });
     const vh = window.innerHeight * 0.01;
     document.documentElement.style.setProperty('--vh', `${vh}px`);
+
+    console.log('document.body.clientHeight', document.body.clientHeight);
+    console.log('window.innerHeight', window.innerHeight);
+    console.log('window.outerHeight', window.outerHeight);
+    const { height, y } = document.body.getBoundingClientRect();
+    console.log('getBoundingClientRect', height, y);
   }, []);
 
   useEffect(() => {
