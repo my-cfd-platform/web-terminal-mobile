@@ -363,6 +363,7 @@ const OrderPage = observer(() => {
     resetForm,
     handleSubmit,
     getFieldProps,
+    isSubmitting,
     errors,
     touched,
   } = useFormik({
@@ -481,7 +482,11 @@ const OrderPage = observer(() => {
             </MultiplierSelect>
           </FlexContainer>
 
-          <ConfirmButton type="submit" actionType={type}>
+          <ConfirmButton
+            type="submit"
+            actionType={type}
+            disabled={isSubmitting}
+          >
             {t('Confirm')} {mainAppStore.activeAccount?.symbol}
             {values.investmentAmount}
           </ConfirmButton>
