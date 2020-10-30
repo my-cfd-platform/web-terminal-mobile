@@ -74,28 +74,18 @@ const MainApp: FC = () => {
         i18n.changeLanguage(mainAppStore.lang);
       }
     });
-    const vh = window.innerHeight * 0.01;
-    document.documentElement.style.setProperty('--vh', `${vh}px`);
-
-    console.log('document.body.clientHeight', document.body.clientHeight);
-    console.log('window.innerHeight', window.innerHeight);
-    console.log('window.outerHeight', window.outerHeight);
-    const { height, y } = document.body.getBoundingClientRect();
-    console.log('getBoundingClientRect', height, y);
+    document.documentElement.style.setProperty(
+      '--vh',
+      `${window.innerHeight * 0.01}px`
+    );
   }, []);
 
   useEffect(() => {
     window.addEventListener('resize', () => {
-      const vh = window.innerHeight * 0.01;
-      document.documentElement.style.setProperty('--vh', `${vh}px`);
-      console.log(
-        'resize document.body.clientHeight',
-        document.body.clientHeight
+      document.documentElement.style.setProperty(
+        '--vh',
+        `${window.innerHeight * 0.01}px`
       );
-      console.log('resize window.innerHeight', window.innerHeight);
-      console.log('resize window.outerHeight', window.outerHeight);
-      const { height, y } = document.body.getBoundingClientRect();
-      console.log('resize getBoundingClientRect', height, y);
     });
   }, []);
 
@@ -143,19 +133,15 @@ const MainApp: FC = () => {
             line-height: 1.4;
             font-family: 'sf_ui_text';
             font-weight: normal;
-          }
-
-          body {
-            background-color: ${Colors.BACKGROUD_PAGE};
-            color: #fff;
-          }
-
-          html,
-          body {
-            overflow: hidden;
-            height: 100%;
-            height: calc(${FULL_VH});
             height: -webkit-fill-available;
+            overflow: hidden;
+          }
+
+          body {
+            color: #fff;
+            background-color: ${Colors.BACKGROUD_PAGE};
+            min-height: 100%;
+            min-height: calc(${FULL_VH});
           }
 
           .grecaptcha-badge {
