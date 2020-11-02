@@ -16,6 +16,7 @@ const Page = {
   ACCOUNT_WITHDRAW_NEW_TYPE: '/account-withdraw/:tab/:type',
   ACCOUNT_WITHDRAW_NEW: '/account-withdraw/new/all',
   ACCOUNT_WITHDRAW_NEW_BANKTRANSFER: '/account-withdraw/new/banktransfer',
+  ACCOUNT_WITHDRAW_NEW_SUCCESS: '/account-withdraw/new/success',
   ACCOUNT_WITHDRAW_NEW_BITCOIN: '/account-withdraw/new/bitcoin',
   ACCOUNT_WITHDRAW_HISTORY: '/account-withdraw/history/all',
   ACCOUNT_WITHDRAW_HISTORY_TAB: '/account-withdraw/history',

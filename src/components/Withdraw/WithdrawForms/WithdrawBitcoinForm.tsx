@@ -21,6 +21,8 @@ import { PrimaryButton } from '../../../styles/Buttons';
 import mixpanel from 'mixpanel-browser';
 import mixpanelEvents from '../../../constants/mixpanelEvents';
 import mixapanelProps from '../../../constants/mixpanelProps';
+import { useHistory } from 'react-router-dom';
+import Page from '../../../constants/Pages';
 
 interface RequestValues {
   amount: number;
@@ -31,6 +33,7 @@ const VALIDATE_BITCOIN = /^([13])[a-km-zA-HJ-NP-Z1-9]{25,34}$/;
 
 const WithdrawBitcoinForm = () => {
   const { t } = useTranslation();
+  const { push } = useHistory();
 
   const initialValues: RequestValues = {
     amount: 0,
@@ -83,7 +86,7 @@ const WithdrawBitcoinForm = () => {
       if (result.status === WithdrawalHistoryResponseStatus.Successful) {
         withdrawalStore.opentTab(WithdrawalTabsEnum.History);
         notificationStore.isSuccessfull = true;
-
+        push(Page.ACCOUNT_WITHDRAW_NEW_SUCCESS);
 
         mixpanel.track(mixpanelEvents.WITHDRAW_REQUEST, {
           [mixapanelProps.AMOUNT]: +values.amount,

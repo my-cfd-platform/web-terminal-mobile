@@ -21,6 +21,8 @@ import { PrimaryButton } from '../../../styles/Buttons';
 import mixpanel from 'mixpanel-browser';
 import mixpanelEvents from '../../../constants/mixpanelEvents';
 import mixapanelProps from '../../../constants/mixpanelProps';
+import Page from '../../../constants/Pages';
+import { useHistory } from 'react-router-dom';
 
 interface RequestValues {
   amount: number;
@@ -36,7 +38,7 @@ const WithdrawBankTransferFrom = () => {
     details: '',
   };
   const { t } = useTranslation();
-
+  const { push } = useHistory();
   const { mainAppStore, withdrawalStore, notificationStore } = useStores();
 
   const validationSchema = useCallback(
@@ -78,6 +80,7 @@ const WithdrawBankTransferFrom = () => {
       if (result.status === WithdrawalHistoryResponseStatus.Successful) {
         withdrawalStore.opentTab(WithdrawalTabsEnum.History);
         notificationStore.isSuccessfull = true;
+        push(Page.ACCOUNT_WITHDRAW_NEW_SUCCESS);
 
         mixpanel.track(mixpanelEvents.WITHDRAW_REQUEST, {
           [mixapanelProps.AMOUNT]: +values.amount,
