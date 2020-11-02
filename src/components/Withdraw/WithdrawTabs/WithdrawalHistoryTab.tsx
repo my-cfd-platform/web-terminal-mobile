@@ -54,6 +54,7 @@ const WithdrawalHistoryTab = () => {
   return (
     <FlexContainer
       height={`calc(${FULL_VH} - 136px)`}
+      overflow="auto"
       width="100%"
       flexDirection="column"
       position="relative"
