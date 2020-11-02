@@ -85,6 +85,7 @@ const WithdrawalHistoryTab = () => {
                 {withdrawalStore.history &&
                   withdrawalStore.history.map((item) => (
                     <WithdrawHistoryItem
+                      key={item.id}
                       data={item}
                       updateHistory={updateHistoryList}
                     />
