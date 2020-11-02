@@ -163,7 +163,7 @@ const AccountWithdraw = () => {
               </CustomNavLink>
             </NavWrap>
           )}
-          {renderTab()}
+          <Observer>{() => <>{renderTab()}</>}</Observer>
         </FlexContainer>
       )}
     </BackFlowLayout>
