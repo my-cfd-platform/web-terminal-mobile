@@ -41,7 +41,7 @@ const WithdrawHistoryItem = ({ data, updateHistory }: Props) => {
   };
 
   return (
-    <ItemLink to={`${Page.ACCOUNT_WITHDRAW_HISTORY}/${data?.id}`}>
+    <ItemLink to={`${Page.ACCOUNT_WITHDRAW_HISTORY_TAB}/${data?.id}`}>
       <FlexContainer
         width="100%"
         marginBottom="2px"
