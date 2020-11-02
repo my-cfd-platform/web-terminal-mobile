@@ -23,6 +23,7 @@ import mixpanel from 'mixpanel-browser';
 import mixpanelEvents from '../constants/mixpanelEvents';
 import mixapanelProps from '../constants/mixpanelProps';
 import WithdrawSuccessRequest from '../components/Withdraw/WithdrawSuccessRequest';
+import { Observer } from 'mobx-react-lite';
 
 interface QueryPropsParams {
   tab: string;
