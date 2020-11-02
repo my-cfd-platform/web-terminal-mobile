@@ -69,7 +69,6 @@ const AccountWithdraw = () => {
   }, [tab, type]);
 
   useEffect(() => {
-    console.log(type);
     if (!tab && !type) {
       push(Page.ACCOUNT_WITHDRAW_NEW);
     }
@@ -93,11 +92,15 @@ const AccountWithdraw = () => {
     };
     initHistoryList();
 
+    
+  }, [tab, type]);
+
+  useEffect(() => {
     mixpanel.track(mixpanelEvents.WITHDRAW_VIEW, {
       [mixapanelProps.AVAILABLE_BALANCE]:
         mainAppStore.accounts.find((item) => item.isLive)?.balance || 0,
     });
-  }, []);
+  }, [])
 
   return (
     // backLink={Page.ACCOUNT_PROFILE}
