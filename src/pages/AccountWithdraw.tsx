@@ -22,6 +22,7 @@ import WithdrawalHistoryDetails from '../components/Withdraw/WithdrawalHistoryDe
 import mixpanel from 'mixpanel-browser';
 import mixpanelEvents from '../constants/mixpanelEvents';
 import mixapanelProps from '../constants/mixpanelProps';
+import WithdrawSuccessRequest from '../components/Withdraw/WithdrawSuccessRequest';
 
 interface QueryPropsParams {
   tab: string;
@@ -29,7 +30,7 @@ interface QueryPropsParams {
 }
 const AccountWithdraw = () => {
   const { t } = useTranslation();
-  
+
   const { tab, type } = useParams<QueryPropsParams>();
   const { push } = useHistory();
 
@@ -50,6 +51,9 @@ const AccountWithdraw = () => {
         return <WithdrawBankTransferFrom />;
       case 'bitcoin':
         return <WithdrawBitcoinForm />;
+      case 'success':
+        return <WithdrawSuccessRequest />;
+
       default:
         return <WithdrawRequestTab />;
     }
@@ -88,7 +92,6 @@ const AccountWithdraw = () => {
       } catch (error) {}
     };
     initHistoryList();
-
 
     mixpanel.track(mixpanelEvents.WITHDRAW_VIEW, {
       [mixapanelProps.AVAILABLE_BALANCE]:
