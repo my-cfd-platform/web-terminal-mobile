@@ -31,18 +31,22 @@ const WithdrawalHistoryDetails = () => {
       });
       if (result.status === WithdrawalHistoryResponseStatus.Successful) {
         withdrawalStore.closePendingPopup();
+        push(Page.ACCOUNT_WITHDRAW_HISTORY);
       }
     } catch (error) {}
   };
 
   useEffect(() => {
-    const withdrawalItem = withdrawalStore.history?.find( item => item.id === type);
+    const withdrawalItem = withdrawalStore.history?.find(
+      (item) => item.id === type
+    );
     if (withdrawalItem) {
       setItem(withdrawalItem);
     } else {
       push(Page.ACCOUNT_WITHDRAW_HISTORY);
     }
   }, []);
+
   return (
     <FlexContainer
       width="100%"
