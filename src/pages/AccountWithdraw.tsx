@@ -73,11 +73,30 @@ const AccountWithdraw = observer(() => {
     if (!tab && !type) {
       push(Page.ACCOUNT_WITHDRAW_NEW);
     }
-    
+
     mixpanel.track(mixpanelEvents.WITHDRAW_VIEW, {
       [mixapanelProps.AVAILABLE_BALANCE]:
         mainAppStore.accounts.find((item) => item.isLive)?.balance || 0,
     });
+  }, []);
+
+  useEffect(() => {
+    function handleVisibilityChange() {
+      push(Page.ACCOUNT_PROFILE);
+    }
+
+    document.addEventListener(
+      'visibilitychange',
+      handleVisibilityChange,
+      false
+    );
+
+    return () =>
+      document.removeEventListener(
+        'visibilitychange',
+        handleVisibilityChange,
+        false
+      );
   }, []);
 
   return (
