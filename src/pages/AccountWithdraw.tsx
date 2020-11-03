@@ -35,7 +35,7 @@ const AccountWithdraw = observer(() => {
   const { tab, type } = useParams<QueryPropsParams>();
   const { push } = useHistory();
 
-  const { mainAppStore, withdrawalStore, userProfileStore } = useStores();
+  const { mainAppStore, userProfileStore } = useStores();
 
   const renderHistoryPageByType = useCallback(() => {
     switch (type) {
@@ -73,28 +73,7 @@ const AccountWithdraw = observer(() => {
     if (!tab && !type) {
       push(Page.ACCOUNT_WITHDRAW_NEW);
     }
-    const initHistoryList = async () => {
-      withdrawalStore.setLoad();
-      try {
-        const result = await API.getWithdrawalHistory();
-        if (result.status === WithdrawalHistoryResponseStatus.Successful) {
-          const isPending = result.history?.some(
-            (item) =>
-              item.status === WithdrawalStatusesEnum.Pending ||
-              item.status === WithdrawalStatusesEnum.Approved
-          );
-
-          if (isPending) {
-            withdrawalStore.setPendingPopup();
-          }
-        }
-        withdrawalStore.endLoad();
-      } catch (error) {}
-    };
-    initHistoryList();
-  }, [tab]);
-
-  useEffect(() => {
+    
     mixpanel.track(mixpanelEvents.WITHDRAW_VIEW, {
       [mixapanelProps.AVAILABLE_BALANCE]:
         mainAppStore.accounts.find((item) => item.isLive)?.balance || 0,
