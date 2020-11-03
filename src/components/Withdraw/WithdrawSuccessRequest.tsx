@@ -90,10 +90,15 @@ const CustomLink = styled(Link)`
   line-height: 100%;
   font-weight: 600;
 
+  color: #000000;
+  text-decoration: none;
+
   &:hover,
   &:focus {
     outline: none;
     cursor: pointer;
+    color: #000000;
+    text-decoration: none;
   }
 
   &:disabled {
