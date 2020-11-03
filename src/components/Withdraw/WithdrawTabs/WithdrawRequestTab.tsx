@@ -20,6 +20,7 @@ const WithdrawRequestTab = () => {
 
   useEffect(() => {
     async function fetchPersonalData() {
+      withdrawalStore.setLoad();
       try {
         const response = await API.getPersonalData(
           getProcessId(),
@@ -27,6 +28,7 @@ const WithdrawRequestTab = () => {
         );
         setEmail(response.data.email);
         userProfileStore.setUser(response.data);
+        withdrawalStore.endLoad();
       } catch (error) {}
     }
     fetchPersonalData();
