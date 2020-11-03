@@ -1,11 +1,10 @@
 import { Observer } from 'mobx-react-lite';
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { FULL_VH } from '../../../constants/global';
 import { WithdrawalHistoryResponseStatus } from '../../../enums/WithdrawalHistoryResponseStatus';
 import { WithdrawalStatusesEnum } from '../../../enums/WithdrawalStatusesEnum';
 import API from '../../../helpers/API';
-import { getProcessId } from '../../../helpers/getProcessId';
 import { useStores } from '../../../hooks/useStores';
 import { FlexContainer } from '../../../styles/FlexContainer';
 import { PrimaryTextSpan } from '../../../styles/TextsElements';
@@ -16,23 +15,8 @@ import WithdrawPaymentList from './WithdrawPaymentList';
 const WithdrawRequestTab = () => {
   const { t } = useTranslation();
   const { mainAppStore, withdrawalStore, userProfileStore } = useStores();
-  const [userEmail, setEmail] = useState('');
 
   useEffect(() => {
-    async function fetchPersonalData() {
-      withdrawalStore.setLoad();
-      try {
-        const response = await API.getPersonalData(
-          getProcessId(),
-          mainAppStore.initModel.authUrl
-        );
-        setEmail(response.data.email);
-        userProfileStore.setUser(response.data);
-        withdrawalStore.endLoad();
-      } catch (error) {}
-    }
-    fetchPersonalData();
-
     const initHistoryList = async () => {
       withdrawalStore.setLoad();
       try {
@@ -46,14 +30,12 @@ const WithdrawRequestTab = () => {
 
           if (isPending) {
             withdrawalStore.setPendingPopup();
-            
           }
         }
         withdrawalStore.endLoad();
       } catch (error) {}
     };
     initHistoryList();
-    
   }, []);
 
   return (
@@ -72,12 +54,31 @@ const WithdrawRequestTab = () => {
         <Observer>
           {() => (
             <>
-              {withdrawalStore.loading && (
-                <LoaderForComponents isLoading={withdrawalStore.loading} />
-              )}
-              {!withdrawalStore.loading && (
+              <LoaderForComponents isLoading={withdrawalStore.loading} />
+              {withdrawalStore.pendingPopup ? (
+                <FlexContainer
+                  height="calc(100% - 75px)"
+                  alignItems="center"
+                  justifyContent="center"
+                  padding="16px"
+                >
+                  <PrimaryTextSpan color="#ffffff" textAlign="center">
+                    {t('Our Customer support will contact you via')} &nbsp;
+                    <PrimaryTextSpan color="#FFFCCC">
+                      {userProfileStore.userProfile?.email || 'your@email.com'}
+                    </PrimaryTextSpan>
+                    <br />
+                    {t('to confirm and proceed with your withdrawal request.')}
+                    <br />
+                    {t(
+                      'Please be note, that you can submit only one withdrawal request at a time'
+                    )}
+                  </PrimaryTextSpan>
+                </FlexContainer>
+              ) : (
                 <>
-                  {withdrawalStore.pendingPopup ? (
+                  {mainAppStore.accounts.find((acc) => acc.isLive)?.balance ===
+                  0 ? (
                     <FlexContainer
                       height="calc(100% - 75px)"
                       alignItems="center"
@@ -85,44 +86,17 @@ const WithdrawRequestTab = () => {
                       padding="16px"
                     >
                       <PrimaryTextSpan color="#ffffff" textAlign="center">
-                        {t('Our Customer support will contact you via')} &nbsp;
-                        <PrimaryTextSpan color="#FFFCCC">
-                          {userEmail || 'your@email.com'}
-                        </PrimaryTextSpan>
-                        <br />
                         {t(
-                          'to confirm and proceed with your withdrawal request.'
-                        )}
-                        <br />
-                        {t(
-                          'Please be note, that you can submit only one withdrawal request at a time'
+                          'Withdrawal will be available after you deposit money into the system'
                         )}
                       </PrimaryTextSpan>
                     </FlexContainer>
                   ) : (
-                    <>
-                      {mainAppStore.accounts.find((acc) => acc.isLive)
-                        ?.balance === 0 ? (
-                        <FlexContainer
-                          height="calc(100% - 75px)"
-                          alignItems="center"
-                          justifyContent="center"
-                          padding="16px"
-                        >
-                          <PrimaryTextSpan color="#ffffff" textAlign="center">
-                            {t(
-                              'Withdrawal will be available after you deposit money into the system'
-                            )}
-                          </PrimaryTextSpan>
-                        </FlexContainer>
-                      ) : (
-                        <WithdrawPaymentList />
-                      )}
-                    </>
+                    <WithdrawPaymentList />
                   )}
-                  <WithdrawalFaqLink />
                 </>
               )}
+              <WithdrawalFaqLink />
             </>
           )}
         </Observer>

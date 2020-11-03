@@ -1,17 +1,13 @@
 import React, { useCallback, useEffect } from 'react';
 import { FlexContainer } from '../styles/FlexContainer';
-import { PrimaryTextSpan } from '../styles/TextsElements';
 import BackFlowLayout from '../components/BackFlowLayout';
 import { useTranslation } from 'react-i18next';
 import styled from '@emotion/styled';
-import { NavLink, useHistory, useLocation, useParams } from 'react-router-dom';
+import { NavLink, useParams } from 'react-router-dom';
 import Colors from '../constants/Colors';
 import Page from '../constants/Pages';
 import WithdrawalHistoryTab from '../components/Withdraw/WithdrawTabs/WithdrawalHistoryTab';
 import WithdrawRequestTab from '../components/Withdraw/WithdrawTabs/WithdrawRequestTab';
-import { WithdrawalHistoryResponseStatus } from '../enums/WithdrawalHistoryResponseStatus';
-import { WithdrawalStatusesEnum } from '../enums/WithdrawalStatusesEnum';
-import API from '../helpers/API';
 import { useStores } from '../hooks/useStores';
 import { PersonalDataKYCEnum } from '../enums/PersonalDataKYCEnum';
 
@@ -23,7 +19,7 @@ import mixpanel from 'mixpanel-browser';
 import mixpanelEvents from '../constants/mixpanelEvents';
 import mixapanelProps from '../constants/mixpanelProps';
 import WithdrawSuccessRequest from '../components/Withdraw/WithdrawSuccessRequest';
-import { observer, Observer } from 'mobx-react-lite';
+import { observer } from 'mobx-react-lite';
 
 interface QueryPropsParams {
   tab: string;
@@ -33,7 +29,6 @@ const AccountWithdraw = observer(() => {
   const { t } = useTranslation();
 
   const { tab, type } = useParams<QueryPropsParams>();
-  const { push } = useHistory();
 
   const { mainAppStore, userProfileStore } = useStores();
 
@@ -45,7 +40,7 @@ const AccountWithdraw = observer(() => {
         return <WithdrawalHistoryDetails />;
     }
   }, [type]);
-
+  // TODO: vinesti mozg
   const renderPageByType = useCallback(() => {
     switch (type) {
       case 'banktransfer':
@@ -70,44 +65,23 @@ const AccountWithdraw = observer(() => {
   }, [tab, type]);
 
   useEffect(() => {
-    if (!tab && !type) {
-      push(Page.ACCOUNT_WITHDRAW_NEW);
-    }
-
     mixpanel.track(mixpanelEvents.WITHDRAW_VIEW, {
       [mixapanelProps.AVAILABLE_BALANCE]:
         mainAppStore.accounts.find((item) => item.isLive)?.balance || 0,
     });
   }, []);
 
-  useEffect(() => {
-    function handleVisibilityChange() {
-      push(Page.ACCOUNT_PROFILE);
-    }
-
-    document.addEventListener(
-      'visibilitychange',
-      handleVisibilityChange,
-      false
-    );
-
-    return () =>
-      document.removeEventListener(
-        'visibilitychange',
-        handleVisibilityChange,
-        false
-      );
-  }, []);
+  
 
   return (
-    // backLink={Page.ACCOUNT_PROFILE}
-
     <BackFlowLayout pageTitle={t('Withdrawal')}>
       {![
         PersonalDataKYCEnum.OnVerification,
         PersonalDataKYCEnum.Restricted,
         PersonalDataKYCEnum.Verified,
-      ].includes(userProfileStore.userProfile?.kyc || 0) ? (
+      ].includes(
+        userProfileStore.userProfile?.kyc || PersonalDataKYCEnum.NotVerified
+      ) ? (
         <FlexContainer
           width="100%"
           height="100%"

@@ -6,8 +6,6 @@ import UserIcon from '../assets/svg/profile/icon-user.svg';
 import SvgIcon from '../components/SvgIcon';
 import { PrimaryTextSpan } from '../styles/TextsElements';
 import { useStores } from '../hooks/useStores';
-import API from '../helpers/API';
-import { getProcessId } from '../helpers/getProcessId';
 import { Link } from 'react-router-dom';
 import { ButtonWithoutStyles } from '../styles/ButtonWithoutStyles';
 import Colors from '../constants/Colors';
@@ -23,31 +21,13 @@ import IconAboutUs from '../assets/svg/profile/icon-about.svg';
 import IconVerify from '../assets/svg/profile/icon-verify.svg';
 import { PersonalDataKYCEnum } from '../enums/PersonalDataKYCEnum';
 import AchievementStatusLabel from '../components/AchievementStatusLabel';
+import { Observer } from 'mobx-react-lite';
 
 const AccountProfile = () => {
   const { mainAppStore, userProfileStore } = useStores();
   const { t } = useTranslation();
 
-  const [email, setEmail] = useState('');
-  const [name, setName] = useState('');
-
   const handleLogout = () => mainAppStore.signOut();
-
-  useEffect(() => {
-    async function fetchPersonalData() {
-      try {
-        const response = await API.getPersonalData(
-          getProcessId(),
-          mainAppStore.initModel.authUrl
-        );
-        setEmail(response.data.email || '');
-        setName(
-          `${response.data.firstName || ''} ${response.data.lastName || ''}`
-        );
-      } catch (error) {}
-    }
-    fetchPersonalData();
-  }, []);
 
   const urlParams = new URLSearchParams();
 
@@ -95,20 +75,23 @@ const AccountProfile = () => {
           >
             {name}
           </PrimaryTextSpan>
-          <PrimaryTextSpan
-            color="rgba(255, 255, 255, 0.4)"
-            fontSize="13px"
-            fontWeight={500}
-          >
-            {email}
-          </PrimaryTextSpan>
+          <Observer>
+            {() => (
+              <PrimaryTextSpan
+                color="rgba(255, 255, 255, 0.4)"
+                fontSize="13px"
+                fontWeight={500}
+              >
+                {userProfileStore.userProfile?.email}
+              </PrimaryTextSpan>
+            )}
+          </Observer>
         </FlexContainer>
       </FlexContainer>
 
-      {(userProfileStore.userProfile?.kyc ===
-        PersonalDataKYCEnum.NotVerified
-        || userProfileStore.userProfile?.kyc ===
-        PersonalDataKYCEnum.Restricted) && (
+      {(userProfileStore.userProfile?.kyc === PersonalDataKYCEnum.NotVerified ||
+        userProfileStore.userProfile?.kyc ===
+          PersonalDataKYCEnum.Restricted) && (
         <FlexContainer flexDirection="column" marginBottom="24px">
           <ProfileMenuLink to={Page.ACCOUNT_VERIFICATION}>
             <FlexContainer alignItems="center">

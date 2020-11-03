@@ -5,7 +5,7 @@ import { MainAppStore } from '../store/MainAppStore';
 import RequestHeaders from '../constants/headers';
 
 const injectInerceptors = (tradingUrl: string, mainAppStore: MainAppStore) => {
-  // TODO: research init flow 
+  // TODO: research init flow
   mainAppStore.isInterceptorsInjected = true;
   axios.interceptors.response.use(
     function (config: AxiosResponse) {
