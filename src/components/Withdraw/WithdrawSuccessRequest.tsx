@@ -88,6 +88,7 @@ const CustomLink = styled(Link)`
   background-color: transparent;
   padding: 0;
   line-height: 100%;
+  font-weight: 600;
 
   &:hover,
   &:focus {

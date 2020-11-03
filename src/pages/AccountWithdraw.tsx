@@ -92,9 +92,7 @@ const AccountWithdraw = () => {
       } catch (error) {}
     };
     initHistoryList();
-
-    
-  }, [tab, type]);
+  }, [tab]);
 
   useEffect(() => {
     mixpanel.track(mixpanelEvents.WITHDRAW_VIEW, {
@@ -164,7 +162,7 @@ const AccountWithdraw = () => {
               </CustomNavLink>
             </NavWrap>
           )}
-          <Observer>{() => <>{renderTab()}</>}</Observer>
+          {renderTab()}
         </FlexContainer>
       )}
     </BackFlowLayout>
