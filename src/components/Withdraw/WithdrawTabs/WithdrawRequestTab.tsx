@@ -2,6 +2,8 @@ import { Observer } from 'mobx-react-lite';
 import React, { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { FULL_VH } from '../../../constants/global';
+import { WithdrawalHistoryResponseStatus } from '../../../enums/WithdrawalHistoryResponseStatus';
+import { WithdrawalStatusesEnum } from '../../../enums/WithdrawalStatusesEnum';
 import API from '../../../helpers/API';
 import { getProcessId } from '../../../helpers/getProcessId';
 import { useStores } from '../../../hooks/useStores';
@@ -26,7 +28,28 @@ const WithdrawRequestTab = () => {
         setEmail(response.data.email);
       } catch (error) {}
     }
-    fetchPersonalData();
+
+    const initHistoryList = async () => {
+      withdrawalStore.setLoad();
+      try {
+        const result = await API.getWithdrawalHistory();
+        if (result.status === WithdrawalHistoryResponseStatus.Successful) {
+          const isPending = result.history?.some(
+            (item) =>
+              item.status === WithdrawalStatusesEnum.Pending ||
+              item.status === WithdrawalStatusesEnum.Approved
+          );
+
+          if (isPending) {
+            withdrawalStore.setPendingPopup();
+            fetchPersonalData();
+          }
+        }
+        withdrawalStore.endLoad();
+      } catch (error) {}
+    };
+    initHistoryList();
+    
   }, []);
 
   return (

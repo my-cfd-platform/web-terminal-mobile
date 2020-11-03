@@ -19,7 +19,7 @@ interface QueryProps {
 const WithdrawalHistoryDetails = () => {
   const { t } = useTranslation();
   const { type } = useParams<QueryProps>();
-  const { withdrawalStore } = useStores();
+  const { withdrawalStore, notificationStore } = useStores();
   const { push } = useHistory();
   const [item, setItem] = useState<WithdrawalHistoryModel>();
 
@@ -32,6 +32,11 @@ const WithdrawalHistoryDetails = () => {
       if (result.status === WithdrawalHistoryResponseStatus.Successful) {
         withdrawalStore.closePendingPopup();
         push(Page.ACCOUNT_WITHDRAW_HISTORY);
+
+        notificationStore.isSuccessfull = true;
+        notificationStore.notificationMessage = t('A withdrawal request has been cancelled');
+        notificationStore.openNotification();
+
       }
     } catch (error) {}
   };
