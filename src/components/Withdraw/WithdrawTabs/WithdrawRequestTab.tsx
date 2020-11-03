@@ -15,7 +15,7 @@ import WithdrawPaymentList from './WithdrawPaymentList';
 
 const WithdrawRequestTab = () => {
   const { t } = useTranslation();
-  const { mainAppStore, withdrawalStore } = useStores();
+  const { mainAppStore, withdrawalStore, userProfileStore } = useStores();
   const [userEmail, setEmail] = useState('');
 
   useEffect(() => {
@@ -26,8 +26,10 @@ const WithdrawRequestTab = () => {
           mainAppStore.initModel.authUrl
         );
         setEmail(response.data.email);
+        userProfileStore.setUser(response.data);
       } catch (error) {}
     }
+    fetchPersonalData();
 
     const initHistoryList = async () => {
       withdrawalStore.setLoad();
@@ -42,7 +44,7 @@ const WithdrawRequestTab = () => {
 
           if (isPending) {
             withdrawalStore.setPendingPopup();
-            fetchPersonalData();
+            
           }
         }
         withdrawalStore.endLoad();
