@@ -99,13 +99,17 @@ const AccountWithdraw = () => {
       [mixapanelProps.AVAILABLE_BALANCE]:
         mainAppStore.accounts.find((item) => item.isLive)?.balance || 0,
     });
-  }, [])
+  }, []);
 
   return (
     // backLink={Page.ACCOUNT_PROFILE}
-    
+
     <BackFlowLayout pageTitle={t('Withdrawal')}>
-      {userProfileStore.userProfile?.kyc === PersonalDataKYCEnum.NotVerified ? (
+      {![
+        PersonalDataKYCEnum.OnVerification,
+        PersonalDataKYCEnum.Restricted,
+        PersonalDataKYCEnum.Verified,
+      ].includes(userProfileStore.userProfile?.kyc || 0) ? (
         <FlexContainer
           width="100%"
           height="100%"
