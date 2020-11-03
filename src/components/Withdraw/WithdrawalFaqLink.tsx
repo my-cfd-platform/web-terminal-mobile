@@ -12,7 +12,7 @@ const WithdrawalFaqLink = () => {
   const { t } = useTranslation();
   const { mainAppStore } = useStores();
   return (
-    <FaqLink to={mainAppStore.initModel.faqUrl || ''}>
+    <FaqLink to={{pathname: mainAppStore.initModel.faqUrl || ''}} target="_blank">
       <FlexContainer width="100%" alignItems="center">
         <FaqImg src={FaqIcon} />
         <FlexContainer flexDirection="column" padding="0 0 0 16px">
