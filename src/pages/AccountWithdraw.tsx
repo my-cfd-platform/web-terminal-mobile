@@ -23,13 +23,13 @@ import mixpanel from 'mixpanel-browser';
 import mixpanelEvents from '../constants/mixpanelEvents';
 import mixapanelProps from '../constants/mixpanelProps';
 import WithdrawSuccessRequest from '../components/Withdraw/WithdrawSuccessRequest';
-import { Observer } from 'mobx-react-lite';
+import { observer, Observer } from 'mobx-react-lite';
 
 interface QueryPropsParams {
   tab: string;
   type: string;
 }
-const AccountWithdraw = () => {
+const AccountWithdraw = observer(() => {
   const { t } = useTranslation();
 
   const { tab, type } = useParams<QueryPropsParams>();
@@ -172,7 +172,7 @@ const AccountWithdraw = () => {
       )}
     </BackFlowLayout>
   );
-};
+});
 
 export default AccountWithdraw;
 
