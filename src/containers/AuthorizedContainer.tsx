@@ -9,7 +9,6 @@ import ChartContainer from './ChartContainer';
 import NavigationPanel from '../components/NavigationPanel';
 import { useRouteMatch, useHistory } from 'react-router-dom';
 import Page from '../constants/Pages';
-import styled from '@emotion/styled';
 import { FULL_VH, LAST_PAGE_VISITED } from '../constants/global';
 import API from '../helpers/API';
 import { getProcessId } from '../helpers/getProcessId';
@@ -32,7 +31,12 @@ const AuthorizedContainer: FC = ({ children }) => {
     Page.ACCOUNTS_SWITCH,
     Page.ACCOUNT_CHANGE_LANGUAGE,
     Page.ACCOUNT_VERIFICATION,
-    Page.ACCOUNT_WITHDRAW_NEW,
+    Page.WITHDRAW_LIST,
+    Page.WITHDRAW_HISTORY,
+    Page.WITHDRAW_VISAMASTER,
+    Page.WITHDRAW_BITCOIN,
+    Page.WITHDRAW_HISTORY_ID,
+    Page.WITHDRAW_SUCCESS,
   ]);
 
   const { push } = useHistory();
@@ -125,6 +129,7 @@ const AuthorizedContainer: FC = ({ children }) => {
           showNavbarAndNav ? `calc(${FULL_VH} - 128px)` : `calc(${FULL_VH})`
         }
         flexDirection="column"
+        overflow="auto"
       >
         {children}
         <Observer>{() => <ChartContainer />}</Observer>

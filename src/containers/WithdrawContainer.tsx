@@ -1,68 +1,25 @@
-import React, { useCallback, useEffect } from 'react';
+import React, { FC, useEffect } from 'react';
 import { FlexContainer } from '../styles/FlexContainer';
 import BackFlowLayout from '../components/BackFlowLayout';
 import { useTranslation } from 'react-i18next';
 import styled from '@emotion/styled';
-import { NavLink, useParams } from 'react-router-dom';
+import { NavLink, useRouteMatch } from 'react-router-dom';
 import Colors from '../constants/Colors';
 import Page from '../constants/Pages';
-import WithdrawalHistoryTab from '../components/Withdraw/WithdrawTabs/WithdrawalHistoryTab';
-import WithdrawRequestTab from '../components/Withdraw/WithdrawTabs/WithdrawRequestTab';
 import { useStores } from '../hooks/useStores';
 import { PersonalDataKYCEnum } from '../enums/PersonalDataKYCEnum';
 
 import FailImage from '../assets/images/fail.png';
-import WithdrawBankTransferFrom from '../components/Withdraw/WithdrawForms/WithdrawBankTransferFrom';
-import WithdrawBitcoinForm from '../components/Withdraw/WithdrawForms/WithdrawBitcoinForm';
-import WithdrawalHistoryDetails from '../components/Withdraw/WithdrawalHistoryDetails';
 import mixpanel from 'mixpanel-browser';
 import mixpanelEvents from '../constants/mixpanelEvents';
 import mixapanelProps from '../constants/mixpanelProps';
-import WithdrawSuccessRequest from '../components/Withdraw/WithdrawSuccessRequest';
 import { observer } from 'mobx-react-lite';
+import LoaderForComponents from '../components/LoaderForComponents';
 
-interface QueryPropsParams {
-  tab: string;
-  type: string;
-}
-const AccountWithdraw = observer(() => {
+const WithdrawContainer: FC = observer(({ children }) => {
   const { t } = useTranslation();
 
-  const { tab, type } = useParams<QueryPropsParams>();
-
-  const { mainAppStore, userProfileStore } = useStores();
-
-  const renderHistoryPageByType = useCallback(() => {
-    switch (type) {
-      case 'all':
-        return <WithdrawalHistoryTab />;
-      default:
-        return <WithdrawalHistoryDetails />;
-    }
-  }, [type]);
-  // TODO: vinesti mozg
-  const renderPageByType = useCallback(() => {
-    switch (type) {
-      case 'banktransfer':
-        return <WithdrawBankTransferFrom />;
-      case 'bitcoin':
-        return <WithdrawBitcoinForm />;
-      case 'success':
-        return <WithdrawSuccessRequest />;
-
-      default:
-        return <WithdrawRequestTab />;
-    }
-  }, [type]);
-
-  const renderTab = useCallback(() => {
-    switch (tab) {
-      case 'history':
-        return renderHistoryPageByType();
-      default:
-        return renderPageByType();
-    }
-  }, [tab, type]);
+  const { mainAppStore, userProfileStore, withdrawalStore } = useStores();
 
   useEffect(() => {
     mixpanel.track(mixpanelEvents.WITHDRAW_VIEW, {
@@ -71,7 +28,7 @@ const AccountWithdraw = observer(() => {
     });
   }, []);
 
-  
+  const match = useRouteMatch([Page.WITHDRAW_LIST, Page.WITHDRAW_HISTORY]);
 
   return (
     <BackFlowLayout pageTitle={t('Withdrawal')}>
@@ -123,30 +80,28 @@ const AccountWithdraw = observer(() => {
           flexDirection="column"
           alignItems="center"
         >
-          {type === 'all' && (
+          {match?.isExact && (
             <NavWrap>
-              <CustomNavLink
-                to={Page.ACCOUNT_WITHDRAW_NEW}
-                activeClassName="selected"
-              >
+              <CustomNavLink to={Page.WITHDRAW_LIST} activeClassName="selected">
                 {t('New Request')}
               </CustomNavLink>
               <CustomNavLink
-                to={Page.ACCOUNT_WITHDRAW_HISTORY}
+                to={Page.WITHDRAW_HISTORY}
                 activeClassName="selected"
               >
                 {t('History')}
               </CustomNavLink>
             </NavWrap>
           )}
-          {renderTab()}
+          <LoaderForComponents isLoading={withdrawalStore.loading} />
+          {children}
         </FlexContainer>
       )}
     </BackFlowLayout>
   );
 });
 
-export default AccountWithdraw;
+export default WithdrawContainer;
 
 const NavWrap = styled(FlexContainer)`
   margin-bottom: 30px;

@@ -1,28 +1,28 @@
 import styled from '@emotion/styled';
 import React, { useCallback, useEffect, useState } from 'react';
-import { FlexContainer } from '../../../styles/FlexContainer';
+import { FlexContainer } from '../styles/FlexContainer';
 import * as yup from 'yup';
-import { useFormik, FormikHelpers } from 'formik';
-import { PrimaryTextSpan } from '../../../styles/TextsElements';
+import { useFormik } from 'formik';
+import { PrimaryTextSpan } from '../styles/TextsElements';
 import { useTranslation } from 'react-i18next';
-import { useStores } from '../../../hooks/useStores';
+import { useStores } from '../hooks/useStores';
 import { css } from '@emotion/core';
-import Colors from '../../../constants/Colors';
-import Fields from '../../../constants/fields';
-import withdrawalResponseMessages from '../../../constants/withdrawalResponseMessages';
-import { WithdrawalHistoryResponseStatus } from '../../../enums/WithdrawalHistoryResponseStatus';
-import { WithdrawalTabsEnum } from '../../../enums/WithdrawalTabsEnum';
-import { WithdrawalTypesEnum } from '../../../enums/WithdrawalTypesEnum';
-import API from '../../../helpers/API';
-import { CreateWithdrawalParams } from '../../../types/WithdrawalTypes';
+import Colors from '../constants/Colors';
+import withdrawalResponseMessages from '../constants/withdrawalResponseMessages';
+import { WithdrawalHistoryResponseStatus } from '../enums/WithdrawalHistoryResponseStatus';
+import { WithdrawalTabsEnum } from '../enums/WithdrawalTabsEnum';
+import { WithdrawalTypesEnum } from '../enums/WithdrawalTypesEnum';
+import API from '../helpers/API';
+import { CreateWithdrawalParams } from '../types/WithdrawalTypes';
 import { Observer } from 'mobx-react-lite';
-import InputField from '../../InputField';
-import { PrimaryButton } from '../../../styles/Buttons';
+import InputField from '../components/InputField';
+import { PrimaryButton } from '../styles/Buttons';
 import mixpanel from 'mixpanel-browser';
-import mixpanelEvents from '../../../constants/mixpanelEvents';
-import mixapanelProps from '../../../constants/mixpanelProps';
+import mixpanelEvents from '../constants/mixpanelEvents';
+import mixapanelProps from '../constants/mixpanelProps';
 import { useHistory } from 'react-router-dom';
-import Page from '../../../constants/Pages';
+import Page from '../constants/Pages';
+import WithdrawContainer from '../containers/WithdrawContainer';
 
 interface RequestValues {
   amount: number;
@@ -66,7 +66,7 @@ const WithdrawBitcoinForm = () => {
     [mainAppStore.accounts]
   );
 
-  const [dissabled, setDissabled] = useState(true);
+  const [, setDissabled] = useState(true);
 
   const handleSubmitForm = async () => {
     const accountInfo = mainAppStore.accounts.find((item) => item.isLive);
@@ -86,7 +86,7 @@ const WithdrawBitcoinForm = () => {
       if (result.status === WithdrawalHistoryResponseStatus.Successful) {
         withdrawalStore.opentTab(WithdrawalTabsEnum.History);
         notificationStore.isSuccessfull = true;
-        push(Page.ACCOUNT_WITHDRAW_NEW_SUCCESS);
+        push(Page.WITHDRAW_SUCCESS);
 
         mixpanel.track(mixpanelEvents.WITHDRAW_REQUEST, {
           [mixapanelProps.AMOUNT]: +values.amount,
@@ -111,7 +111,6 @@ const WithdrawBitcoinForm = () => {
 
   const {
     values,
-    setFieldError,
     setFieldValue,
     validateForm,
     handleChange,
@@ -119,7 +118,6 @@ const WithdrawBitcoinForm = () => {
     errors,
     touched,
     isSubmitting,
-    setSubmitting,
   } = useFormik({
     initialValues,
     onSubmit: handleSubmitForm,
@@ -133,17 +131,6 @@ const WithdrawBitcoinForm = () => {
     setFieldValue('amount', filteredValue);
   };
 
-  const handleBlurAmount = () => {
-    let amount = values.amount.toString().replace(/,/g, '');
-    amount = parseFloat(amount || '0')
-      .toLocaleString('en-US', {
-        style: 'decimal',
-        maximumFractionDigits: 2,
-        minimumFractionDigits: 2,
-      })
-      .replace(/,/g, '');
-    setFieldValue('amount', amount);
-  };
   const amountOnBeforeInputHandler = (e: any) => {
     const currTargetValue = e.currentTarget.value;
 
@@ -202,99 +189,105 @@ const WithdrawBitcoinForm = () => {
   }, [values.amount, values.bitcoinAdress]);
 
   return (
-    <CustomForm noValidate onSubmit={handleSubmit}>
-      <FlexContainer
-        flexDirection="column"
-        height="100%"
-        justifyContent="space-between"
-      >
-        <FlexContainer flexDirection="column">
-          <FlexContainer
-            flexDirection="column"
-            width="100%"
-            marginBottom="12px"
-          >
-            <InputWrap
+    <WithdrawContainer>
+      <CustomForm noValidate onSubmit={handleSubmit}>
+        <FlexContainer
+          flexDirection="column"
+          height="100%"
+          justifyContent="space-between"
+        >
+          <FlexContainer flexDirection="column">
+            <FlexContainer
               flexDirection="column"
               width="100%"
-              backgroundColor="rgba(42, 45, 56, 0.5)"
-              padding="12px 16px"
-              position="relative"
-              marginBottom="4px"
-              hasError={!!(touched.amount && errors.amount)}
+              marginBottom="12px"
             >
-              <FlexContainer
-                position="absolute"
-                top="0"
-                bottom="0"
-                left="16px"
-                margin="auto"
-                alignItems="center"
+              <InputWrap
+                flexDirection="column"
+                width="100%"
+                backgroundColor="rgba(42, 45, 56, 0.5)"
+                padding="12px 16px"
+                position="relative"
+                marginBottom="4px"
+                hasError={!!(touched.amount && errors.amount)}
               >
-                <PrimaryTextSpan color="#ffffff" fontSize="16px" lineHeight="1">
-                  {t('Amount')}
-                </PrimaryTextSpan>
+                <FlexContainer
+                  position="absolute"
+                  top="0"
+                  bottom="0"
+                  left="16px"
+                  margin="auto"
+                  alignItems="center"
+                >
+                  <PrimaryTextSpan
+                    color="#ffffff"
+                    fontSize="16px"
+                    lineHeight="1"
+                  >
+                    {t('Amount')}
+                  </PrimaryTextSpan>
+                </FlexContainer>
+                <Input
+                  name="amount"
+                  id="amount"
+                  type="text"
+                  inputMode="decimal"
+                  onBeforeInput={amountOnBeforeInputHandler}
+                  onChange={handleChangeAmount}
+                />
+              </InputWrap>
+              <FlexContainer marginBottom="12px" padding="0 16px">
+                {touched.amount && errors.amount ? (
+                  <PrimaryTextSpan fontSize="11px" color={Colors.RED}>
+                    {errors.amount}
+                  </PrimaryTextSpan>
+                ) : (
+                  <Observer>
+                    {() => (
+                      <PrimaryTextSpan
+                        fontSize="11px"
+                        color="rgba(196, 196, 196, 0.5)"
+                      >
+                        {t('Available')}&nbsp;
+                        {
+                          mainAppStore.accounts.find((acc) => acc.isLive)
+                            ?.symbol
+                        }
+                        {mainAppStore.accounts
+                          .find((acc) => acc.isLive)
+                          ?.balance.toFixed(2)}
+                      </PrimaryTextSpan>
+                    )}
+                  </Observer>
+                )}
               </FlexContainer>
-
-              <Input
-                name="amount"
-                id="amount"
+            </FlexContainer>
+            <FlexContainer>
+              <InputField
+                name="bitcoinAdress"
+                id="bitcoinAdress"
+                onChange={handleChange}
+                value={values.bitcoinAdress}
                 type="text"
-                inputMode="decimal"
-                onBeforeInput={amountOnBeforeInputHandler}
-                onChange={handleChangeAmount}
+                placeholder={t('Bitcoin Address')}
+                hasError={!!(touched.bitcoinAdress && errors.bitcoinAdress)}
+                errorText={errors.bitcoinAdress}
               />
-            </InputWrap>
-
-            <FlexContainer marginBottom="12px" padding="0 16px">
-              {touched.amount && errors.amount ? (
-                <PrimaryTextSpan fontSize="11px" color={Colors.RED}>
-                  {errors.amount}
-                </PrimaryTextSpan>
-              ) : (
-                <Observer>
-                  {() => (
-                    <PrimaryTextSpan
-                      fontSize="11px"
-                      color="rgba(196, 196, 196, 0.5)"
-                    >
-                      {t('Available')}&nbsp;
-                      {mainAppStore.accounts.find((acc) => acc.isLive)?.symbol}
-                      {mainAppStore.accounts
-                        .find((acc) => acc.isLive)
-                        ?.balance.toFixed(2)}
-                    </PrimaryTextSpan>
-                  )}
-                </Observer>
-              )}
             </FlexContainer>
           </FlexContainer>
-
-          <FlexContainer>
-            <InputField
-              name="bitcoinAdress"
-              id="bitcoinAdress"
-              onChange={handleChange}
-              value={values.bitcoinAdress}
-              type="text"
-              placeholder={t('Bitcoin Address')}
-              hasError={!!(touched.bitcoinAdress && errors.bitcoinAdress)}
-              errorText={errors.bitcoinAdress}
-            />
+          <FlexContainer padding="16px" width="100%">
+            <PrimaryButton
+              type="submit"
+              onClick={handlerClickSubmit}
+              width="100%"
+              disabled={isSubmitting}
+            >
+              {t('Next')}
+            </PrimaryButton>
           </FlexContainer>
         </FlexContainer>
-
-        <FlexContainer padding="16px" width="100%">
-          <PrimaryButton
-            type="submit"
-            onClick={handlerClickSubmit}
-            width="100%"
-          >
-            {t('Next')}
-          </PrimaryButton>
-        </FlexContainer>
-      </FlexContainer>
-    </CustomForm>
+      </CustomForm>
+    </WithdrawContainer>
   );
 };
 

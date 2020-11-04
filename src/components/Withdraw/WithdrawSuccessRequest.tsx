@@ -56,9 +56,8 @@ const WithdrawSuccessRequest = () => {
           </FlexContainer>
         </FlexContainer>
       </FlexContainer>
-
       <FlexContainer padding="16px" width="100%">
-        <CustomLink to={Page.ACCOUNT_WITHDRAW_HISTORY}>{t('Next')}</CustomLink>
+        <CustomLink to={Page.WITHDRAW_HISTORY}>{t('Next')}</CustomLink>
       </FlexContainer>
     </FlexContainer>
   );
@@ -70,7 +69,6 @@ const CustomLink = styled(Link)`
   display: flex;
   align-items: center;
   justify-content: center;
-
   border: none;
   outline: none;
   background-color: transparent;
