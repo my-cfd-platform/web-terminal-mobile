@@ -84,7 +84,7 @@ const WithdrawalHistoryDetails = () => {
             <PrimaryTextSpan color="#fff" fontSize="16px">
               {t('Amount')}
             </PrimaryTextSpan>
-            <PrimaryTextSpan fontSize="16px">${item?.amount}</PrimaryTextSpan>
+            <PrimaryTextSpan fontSize="16px">${item?.amount.toFixed(2)}</PrimaryTextSpan>
           </FlexContainer>
 
           <FlexContainer
