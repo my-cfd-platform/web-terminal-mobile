@@ -1,12 +1,9 @@
-import { css } from '@emotion/core';
 import styled from '@emotion/styled';
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import Colors from '../../constants/Colors';
 import Page from '../../constants/Pages';
-import API from '../../helpers/API';
-import { getProcessId } from '../../helpers/getProcessId';
 import { useStores } from '../../hooks/useStores';
 import { FlexContainer } from '../../styles/FlexContainer';
 import { PrimaryTextSpan } from '../../styles/TextsElements';
@@ -15,21 +12,7 @@ import SuccessImage from '../../assets/images/success.png';
 const WithdrawSuccessRequest = () => {
   const { t } = useTranslation();
 
-  const { mainAppStore, withdrawalStore } = useStores();
-  const [userEmail, setEmail] = useState('');
-
-  useEffect(() => {
-    async function fetchPersonalData() {
-      try {
-        const response = await API.getPersonalData(
-          getProcessId(),
-          mainAppStore.initModel.authUrl
-        );
-        setEmail(response.data.email);
-      } catch (error) {}
-    }
-    fetchPersonalData();
-  }, []);
+  const { userProfileStore } = useStores();
 
   return (
     <FlexContainer
@@ -39,14 +22,19 @@ const WithdrawSuccessRequest = () => {
       justifyContent="space-between"
     >
       <FlexContainer flexDirection="column">
-        <FlexContainer flexDirection="column" width="100%" marginBottom="12px" padding="40px 0 0 0">
         <FlexContainer
-          justifyContent={'center'}
-          alignItems={'center'}
-          marginBottom="40px"
+          flexDirection="column"
+          width="100%"
+          marginBottom="12px"
+          padding="40px 0 0 0"
         >
-          <img src={SuccessImage} width={138} />
-        </FlexContainer>
+          <FlexContainer
+            justifyContent={'center'}
+            alignItems={'center'}
+            marginBottom="40px"
+          >
+            <img src={SuccessImage} width={138} />
+          </FlexContainer>
 
           <FlexContainer
             alignItems="center"
@@ -56,7 +44,7 @@ const WithdrawSuccessRequest = () => {
             <PrimaryTextSpan color="#ffffff" textAlign="center">
               {t('Our Customer support will contact you via')} &nbsp;
               <PrimaryTextSpan color="#FFFCCC">
-                {userEmail || 'your@email.com'}
+                {userProfileStore.userProfile?.email || 'your@email.com'}
               </PrimaryTextSpan>
               <br />
               {t('to confirm and proceed with your withdrawal request.')}

@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { ChangeEvent, useCallback, useEffect, useState } from 'react';
 import { FlexContainer } from '../../../styles/FlexContainer';
 import * as yup from 'yup';
 import { useFormik, FormikHelpers } from 'formik';
@@ -157,7 +157,8 @@ const WithdrawBankTransferFrom = () => {
     if ([',', '.'].includes(e.data)) {
       if (
         !currTargetValue ||
-        (currTargetValue && currTargetValue.includes('.'))
+        (currTargetValue && currTargetValue.includes('.')) ||
+        (currTargetValue && currTargetValue.includes(','))
       ) {
         e.preventDefault();
         return;
@@ -184,6 +185,7 @@ const WithdrawBankTransferFrom = () => {
   };
 
   const textOnBeforeInputHandler = () => {};
+
 
   const handlerClickSubmit = async () => {
     const curErrors = await validateForm();
@@ -239,6 +241,7 @@ const WithdrawBankTransferFrom = () => {
                 type="text"
                 inputMode="decimal"
                 onBeforeInput={amountOnBeforeInputHandler}
+                onBlur={handleBlurAmount}
                 onChange={handleChangeAmount}
               />
             </InputWrap>

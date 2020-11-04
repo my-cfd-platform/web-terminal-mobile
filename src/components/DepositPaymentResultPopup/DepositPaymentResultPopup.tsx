@@ -6,12 +6,11 @@ import { FlexContainer } from '../../styles/FlexContainer';
 import { useLocation, useHistory } from 'react-router-dom';
 import DepositPaymentSuccess from './DepositPaymentSuccess';
 import { ButtonWithoutStyles } from '../../styles/ButtonWithoutStyles';
-import SvgIcon from '../SvgIcon';
-import IconClose from '../../assets/svg/icon-close.svg';
 import DepositPaymentFail from './DepositPaymentFail';
 import { useStores } from '../../hooks/useStores';
 import Pages from '../../constants/Pages';
-import {PrimaryTextSpan} from "../../styles/TextsElements";
+import { PrimaryTextSpan } from '../../styles/TextsElements';
+import { useTranslation } from 'react-i18next';
 
 interface Params {
   hash: string;
@@ -21,6 +20,7 @@ interface Params {
 
 const DepositPaymentResultPopup: FC = () => {
   const { mainAppStore } = useStores();
+  const { t } = useTranslation();
 
   const { push } = useHistory();
   const location = useLocation();
@@ -62,7 +62,9 @@ const DepositPaymentResultPopup: FC = () => {
   };
 
   if (
-    (queryParams.status === 'success' || queryParams.status === 'fail' || queryParams.status === 'failed')
+    queryParams.status === 'success' ||
+    queryParams.status === 'fail' ||
+    queryParams.status === 'failed'
   ) {
     return (
       <Modal>
@@ -85,11 +87,8 @@ const DepositPaymentResultPopup: FC = () => {
               left="0"
               zIndex="299"
             >
-              <PrimaryTextSpan
-                fontSize="18px"
-                color="#ffffff"
-              >
-                Withdrawal
+              <PrimaryTextSpan fontSize="18px" color="#ffffff">
+                {t('Deposit')}
               </PrimaryTextSpan>
             </FlexContainer>
             <FlexContainer
@@ -99,11 +98,8 @@ const DepositPaymentResultPopup: FC = () => {
               zIndex="300"
             >
               <ButtonWithoutStyles onClick={handleClosePopup}>
-                <PrimaryTextSpan
-                    fontSize="13px"
-                    color="#ffffff"
-                >
-                  Done
+                <PrimaryTextSpan fontSize="13px" color="#ffffff">
+                  {t('Done')}
                 </PrimaryTextSpan>
               </ButtonWithoutStyles>
             </FlexContainer>
