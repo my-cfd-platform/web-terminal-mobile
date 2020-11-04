@@ -4,9 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import Page from '../../../constants/Pages';
 import { PaymentNameEnum } from '../../../enums/PaymentNameEnum';
-import { WithdrawalHistoryResponseStatus } from '../../../enums/WithdrawalHistoryResponseStatus';
 import { WithdrawalStatusesEnum } from '../../../enums/WithdrawalStatusesEnum';
-import API from '../../../helpers/API';
 import { useStores } from '../../../hooks/useStores';
 import { FlexContainer } from '../../../styles/FlexContainer';
 import { PrimaryTextSpan } from '../../../styles/TextsElements';
@@ -41,7 +39,7 @@ const WithdrawHistoryItem = ({ data, updateHistory }: Props) => {
   };
 
   return (
-    <ItemLink to={`${Page.ACCOUNT_WITHDRAW_HISTORY_TAB}/${data?.id}`}>
+    <ItemLink to={`${Page.ACCOUNT_WITHDRAW_HISTORY}/${data?.id}`}>
       <FlexContainer
         width="100%"
         marginBottom="2px"

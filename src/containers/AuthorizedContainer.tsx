@@ -32,7 +32,6 @@ const AuthorizedContainer: FC = ({ children }) => {
     Page.ACCOUNTS_SWITCH,
     Page.ACCOUNT_CHANGE_LANGUAGE,
     Page.ACCOUNT_VERIFICATION,
-    Page.ACCOUNT_WITHDRAW_NEW_TYPE,
   ]);
 
   const { push } = useHistory();
