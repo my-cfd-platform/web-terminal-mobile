@@ -1,28 +1,28 @@
 import styled from '@emotion/styled';
-import React, { ChangeEvent, useCallback, useEffect, useState } from 'react';
-import { FlexContainer } from '../../../styles/FlexContainer';
+import React, { useCallback } from 'react';
+import { FlexContainer } from '../styles/FlexContainer';
 import * as yup from 'yup';
-import { useFormik, FormikHelpers } from 'formik';
-import { PrimaryTextSpan } from '../../../styles/TextsElements';
+import { useFormik } from 'formik';
+import { PrimaryTextSpan } from '../styles/TextsElements';
 import { useTranslation } from 'react-i18next';
-import { useStores } from '../../../hooks/useStores';
+import { useStores } from '../hooks/useStores';
 import { css } from '@emotion/core';
-import Colors from '../../../constants/Colors';
-import Fields from '../../../constants/fields';
-import withdrawalResponseMessages from '../../../constants/withdrawalResponseMessages';
-import { WithdrawalHistoryResponseStatus } from '../../../enums/WithdrawalHistoryResponseStatus';
-import { WithdrawalTabsEnum } from '../../../enums/WithdrawalTabsEnum';
-import { WithdrawalTypesEnum } from '../../../enums/WithdrawalTypesEnum';
-import API from '../../../helpers/API';
-import { CreateWithdrawalParams } from '../../../types/WithdrawalTypes';
+import Colors from '../constants/Colors';
+import withdrawalResponseMessages from '../constants/withdrawalResponseMessages';
+import { WithdrawalHistoryResponseStatus } from '../enums/WithdrawalHistoryResponseStatus';
+import { WithdrawalTabsEnum } from '../enums/WithdrawalTabsEnum';
+import { WithdrawalTypesEnum } from '../enums/WithdrawalTypesEnum';
+import API from '../helpers/API';
+import { CreateWithdrawalParams } from '../types/WithdrawalTypes';
 import { Observer } from 'mobx-react-lite';
-import InputField from '../../InputField';
-import { PrimaryButton } from '../../../styles/Buttons';
+import InputField from '../components/InputField';
+import { PrimaryButton } from '../styles/Buttons';
 import mixpanel from 'mixpanel-browser';
-import mixpanelEvents from '../../../constants/mixpanelEvents';
-import mixapanelProps from '../../../constants/mixpanelProps';
-import Page from '../../../constants/Pages';
+import mixpanelEvents from '../constants/mixpanelEvents';
+import mixapanelProps from '../constants/mixpanelProps';
+import Page from '../constants/Pages';
 import { useHistory } from 'react-router-dom';
+import WithdrawContainer from '../containers/WithdrawContainer';
 
 interface RequestValues {
   amount: number;
@@ -30,9 +30,8 @@ interface RequestValues {
 }
 
 const PRECISION_USD = 2;
-const VALIDATE_BITCOIN = /^([13])[a-km-zA-HJ-NP-Z1-9]{25,34}$/;
 
-const WithdrawBankTransferFrom = () => {
+const WithdrawVisaMasterForm = () => {
   const initialValues: RequestValues = {
     amount: 0,
     details: '',
@@ -49,7 +48,9 @@ const WithdrawBankTransferFrom = () => {
           .min(10, `${t('min')}: $10`)
           .max(
             mainAppStore.activeAccount?.balance || 0,
-            `${t('max')}: ${mainAppStore.accounts.find((item) => item.isLive)?.balance.toFixed(2)}`
+            `${t('max')}: ${mainAppStore.accounts
+              .find((item) => item.isLive)
+              ?.balance.toFixed(2)}`
           ),
         details: yup
           .string()
@@ -58,15 +59,13 @@ const WithdrawBankTransferFrom = () => {
     [mainAppStore.accounts]
   );
 
-  const [dissabled, setDissabled] = useState(true);
-
   const handleSubmitForm = async () => {
     try {
       const dataParam = {
         details: values.details,
       };
 
-      const accountInfo = mainAppStore.accounts.find(item => item.isLive);
+      const accountInfo = mainAppStore.accounts.find((item) => item.isLive);
 
       const data: CreateWithdrawalParams = {
         accountId: accountInfo?.id || '',
@@ -80,9 +79,8 @@ const WithdrawBankTransferFrom = () => {
       if (result.status === WithdrawalHistoryResponseStatus.Successful) {
         // TODO: redirect to success page
 
-
         notificationStore.isSuccessfull = true;
-        push(Page.ACCOUNT_WITHDRAW_NEW_SUCCESS);
+        push(Page.WITHDRAW_SUCCESS);
 
         mixpanel.track(mixpanelEvents.WITHDRAW_REQUEST, {
           [mixapanelProps.AMOUNT]: +values.amount,
@@ -91,7 +89,7 @@ const WithdrawBankTransferFrom = () => {
       } else {
         notificationStore.isSuccessfull = false;
       }
-      
+
       if (
         result.status ===
         WithdrawalHistoryResponseStatus.WithdrawalRequestAlreadyCreated
@@ -108,9 +106,7 @@ const WithdrawBankTransferFrom = () => {
 
   const {
     values,
-    setFieldError,
     setFieldValue,
-    setSubmitting,
     validateForm,
     handleChange,
     handleSubmit,
@@ -186,7 +182,6 @@ const WithdrawBankTransferFrom = () => {
 
   const textOnBeforeInputHandler = () => {};
 
-
   const handlerClickSubmit = async () => {
     const curErrors = await validateForm();
     const curErrorsKeys = Object.keys(curErrors);
@@ -196,106 +191,116 @@ const WithdrawBankTransferFrom = () => {
     }
   };
 
-  useEffect(() => {
-    setDissabled(!values.amount);
-  }, [values.amount]);
-
   return (
-    <CustomForm noValidate onSubmit={handleSubmit}>
-      <FlexContainer
-        flexDirection="column"
-        height="100%"
-        justifyContent="space-between"
-      >
-        <FlexContainer flexDirection="column">
-          <FlexContainer
-            flexDirection="column"
-            width="100%"
-            marginBottom="12px"
-          >
-            <InputWrap
+    <WithdrawContainer>
+      <CustomForm noValidate onSubmit={handleSubmit}>
+        <FlexContainer
+          flexDirection="column"
+          height="100%"
+          justifyContent="space-between"
+        >
+          <FlexContainer flexDirection="column">
+            <FlexContainer
               flexDirection="column"
               width="100%"
-              backgroundColor="rgba(42, 45, 56, 0.5)"
-              padding="12px 16px"
-              position="relative"
-              marginBottom="4px"
-              hasError={!!(touched.amount && errors.amount)}
+              marginBottom="12px"
             >
-              <FlexContainer
-                position="absolute"
-                top="0"
-                bottom="0"
-                left="16px"
-                margin="auto"
-                alignItems="center"
+              <InputWrap
+                flexDirection="column"
+                width="100%"
+                backgroundColor="rgba(42, 45, 56, 0.5)"
+                padding="12px 16px"
+                position="relative"
+                marginBottom="4px"
+                hasError={!!(touched.amount && errors.amount)}
               >
-                <PrimaryTextSpan color="#ffffff" fontSize="16px" lineHeight="1">
-                  {t('Amount')}
-                </PrimaryTextSpan>
+                <FlexContainer
+                  position="absolute"
+                  top="0"
+                  bottom="0"
+                  left="16px"
+                  margin="auto"
+                  alignItems="center"
+                >
+                  <PrimaryTextSpan
+                    color="#ffffff"
+                    fontSize="16px"
+                    lineHeight="1"
+                  >
+                    {t('Amount')}
+                  </PrimaryTextSpan>
+                </FlexContainer>
+
+                <Input
+                  name="amount"
+                  id="amount"
+                  type="text"
+                  inputMode="decimal"
+                  onBeforeInput={amountOnBeforeInputHandler}
+                  onBlur={handleBlurAmount}
+                  onChange={handleChangeAmount}
+                />
+              </InputWrap>
+
+              <FlexContainer marginBottom="12px" padding="0 16px">
+                {touched.amount && errors.amount ? (
+                  <PrimaryTextSpan fontSize="11px" color={Colors.RED}>
+                    {errors.amount}
+                  </PrimaryTextSpan>
+                ) : (
+                  <Observer>
+                    {() => (
+                      <PrimaryTextSpan
+                        fontSize="11px"
+                        color="rgba(196, 196, 196, 0.5)"
+                      >
+                        {t('Available')}&nbsp;
+                        {
+                          mainAppStore.accounts.find((acc) => acc.isLive)
+                            ?.symbol
+                        }
+                        {mainAppStore.accounts
+                          .find((acc) => acc.isLive)
+                          ?.balance.toFixed(2)}
+                      </PrimaryTextSpan>
+                    )}
+                  </Observer>
+                )}
               </FlexContainer>
+            </FlexContainer>
 
-              <Input
-                name="amount"
-                id="amount"
+            <FlexContainer>
+              <InputField
+                name="details"
+                id="details"
+                onBeforeInput={textOnBeforeInputHandler}
+                onChange={handleChange}
+                value={values.details}
                 type="text"
-                inputMode="decimal"
-                onBeforeInput={amountOnBeforeInputHandler}
-                onBlur={handleBlurAmount}
-                onChange={handleChangeAmount}
+                placeholder={t('Details')}
+                hasError={!!(touched.details && errors.details)}
+                errorText={errors.details}
               />
-            </InputWrap>
-
-            <FlexContainer marginBottom="12px" padding="0 16px">
-              {touched.amount && errors.amount ? (
-                <PrimaryTextSpan fontSize="11px" color={Colors.RED}>
-                  {errors.amount}
-                </PrimaryTextSpan>
-              ) : (
-                <Observer>
-                  {() => (
-                    <PrimaryTextSpan
-                      fontSize="11px"
-                      color="rgba(196, 196, 196, 0.5)"
-                    >
-                      {t('Balance')}&nbsp;
-                      {mainAppStore.accounts.find((acc) => acc.isLive)?.symbol}
-                      {mainAppStore.accounts
-                        .find((acc) => acc.isLive)
-                        ?.balance.toFixed(2)}
-                    </PrimaryTextSpan>
-                  )}
-                </Observer>
-              )}
             </FlexContainer>
           </FlexContainer>
 
-          <FlexContainer>
-            <InputField
-              name="details"
-              id="details"
-              onBeforeInput={textOnBeforeInputHandler}
-              onChange={handleChange}
-              value={values.details}
-              type="text"
-              placeholder={t('Details')}
-              hasError={!!(touched.details && errors.details)}
-              errorText={errors.details}
-            />
+          <FlexContainer padding="16px" width="100%">
+            <PrimaryButton
+              type="submit"
+              onClick={handlerClickSubmit}
+              width="100%"
+              disabled={isSubmitting}
+            >
+              {t('Next')}
+            </PrimaryButton>
           </FlexContainer>
         </FlexContainer>
-
-        <FlexContainer padding="16px" width="100%">
-          <PrimaryButton type="submit" onClick={handlerClickSubmit} width="100%">
-            {t('Confirm')}
-          </PrimaryButton>
-        </FlexContainer>
-      </FlexContainer>
-    </CustomForm>
+      </CustomForm>
+    </WithdrawContainer>
   );
 };
 
-export default WithdrawBankTransferFrom;
+export default WithdrawVisaMasterForm;
 
 const CustomForm = styled.form`
   height: 100%;

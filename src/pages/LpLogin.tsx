@@ -32,7 +32,7 @@ const LpLogin = observer(() => {
               break;
 
             case 'withdrawal':
-              push(Page.ACCOUNT_WITHDRAW_NEW);
+              push(Page.WITHDRAW_LIST);
               break;
 
             default:

@@ -8,6 +8,7 @@ import { useStores } from '../../hooks/useStores';
 import { FlexContainer } from '../../styles/FlexContainer';
 import { PrimaryTextSpan } from '../../styles/TextsElements';
 import SuccessImage from '../../assets/images/success.png';
+import WithdrawContainer from '../../containers/WithdrawContainer';
 
 const WithdrawSuccessRequest = () => {
   const { t } = useTranslation();
@@ -15,52 +16,53 @@ const WithdrawSuccessRequest = () => {
   const { userProfileStore } = useStores();
 
   return (
-    <FlexContainer
-      flexDirection="column"
-      height="100%"
-      width="100%"
-      justifyContent="space-between"
-    >
-      <FlexContainer flexDirection="column">
-        <FlexContainer
-          flexDirection="column"
-          width="100%"
-          marginBottom="12px"
-          padding="40px 0 0 0"
-        >
+    <WithdrawContainer>
+      <FlexContainer
+        flexDirection="column"
+        height="100%"
+        width="100%"
+        justifyContent="space-between"
+      >
+        <FlexContainer flexDirection="column">
           <FlexContainer
-            justifyContent={'center'}
-            alignItems={'center'}
-            marginBottom="40px"
+            flexDirection="column"
+            width="100%"
+            marginBottom="12px"
+            padding="40px 0 0 0"
           >
-            <img src={SuccessImage} width={138} />
-          </FlexContainer>
+            <FlexContainer
+              justifyContent={'center'}
+              alignItems={'center'}
+              marginBottom="40px"
+            >
+              <img src={SuccessImage} width={138} />
+            </FlexContainer>
 
-          <FlexContainer
-            alignItems="center"
-            justifyContent="center"
-            padding="16px"
-          >
-            <PrimaryTextSpan color="#ffffff" textAlign="center">
-              {t('Our Customer support will contact you via')} &nbsp;
-              <PrimaryTextSpan color="#FFFCCC">
-                {userProfileStore.userProfile?.email || 'your@email.com'}
+            <FlexContainer
+              alignItems="center"
+              justifyContent="center"
+              padding="16px"
+            >
+              <PrimaryTextSpan color="#ffffff" textAlign="center">
+                {t('Our Customer support will contact you via')} &nbsp;
+                <PrimaryTextSpan color="#FFFCCC">
+                  {userProfileStore.userProfile?.email || 'your@email.com'}
+                </PrimaryTextSpan>
+                <br />
+                {t('to confirm and proceed with your withdrawal request.')}
+                <br />
+                {t(
+                  'Please be note, that you can submit only one withdrawal request at a time'
+                )}
               </PrimaryTextSpan>
-              <br />
-              {t('to confirm and proceed with your withdrawal request.')}
-              <br />
-              {t(
-                'Please be note, that you can submit only one withdrawal request at a time'
-              )}
-            </PrimaryTextSpan>
+            </FlexContainer>
           </FlexContainer>
         </FlexContainer>
+        <FlexContainer padding="16px" width="100%">
+          <CustomLink to={Page.WITHDRAW_HISTORY}>{t('Next')}</CustomLink>
+        </FlexContainer>
       </FlexContainer>
-
-      <FlexContainer padding="16px" width="100%">
-        <CustomLink to={Page.ACCOUNT_WITHDRAW_HISTORY}>{t('Next')}</CustomLink>
-      </FlexContainer>
-    </FlexContainer>
+    </WithdrawContainer>
   );
 };
 
@@ -70,7 +72,6 @@ const CustomLink = styled(Link)`
   display: flex;
   align-items: center;
   justify-content: center;
-
   border: none;
   outline: none;
   background-color: transparent;

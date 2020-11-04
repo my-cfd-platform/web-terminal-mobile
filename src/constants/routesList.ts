@@ -12,7 +12,7 @@ import News from '../pages/News';
 import ChartSetting from '../pages/ChartSetting';
 import OrderPage from '../pages/OrderPage';
 import AccountBalanceHistory from '../pages/AccountBalanceHistory';
-import AccountWithdraw from '../pages/AccountWithdraw';
+import WithdrawList from '../pages/WithdrawList';
 import AccountLanguage from '../pages/AccountLanguage';
 import AccountVerification from '../pages/AccountVerification';
 import AccountAboutUs from '../pages/AccountAboutUs';
@@ -20,6 +20,11 @@ import RecoveryPassword from '../pages/RecoveryPassword';
 import PhoneVerification from '../pages/PhoneVerification';
 import LpLogin from '../pages/LpLogin';
 import ConfirmEmail from '../pages/ConfirmEmail';
+import WithdrawalHistory from '../pages/WithdrawHistory';
+import WithdrawVisaMasterForm from '../pages/WithdrawVisaMasterForm';
+import WithdrawBitcoinForm from '../pages/WithdrawBitcoinForm';
+import WithdrawalHistoryDetails from '../pages/WithdrawalHistoryDetails';
+import WithdrawSuccessRequest from '../components/Withdraw/WithdrawSuccessRequest';
 
 export enum RouteLayoutType {
   Authorized,
@@ -51,8 +56,6 @@ const routesList = [
     strict: true,
     layoutType: RouteLayoutType.Public,
   },
-
-
   {
     component: RecoveryPassword,
     path: Page.RESET_PASSWORD,
@@ -60,7 +63,6 @@ const routesList = [
     strict: true,
     layoutType: RouteLayoutType.Public,
   },
-
   {
     component: ConfirmEmail,
     path: Page.EMAIL_CONFIRMATION,
@@ -68,7 +70,6 @@ const routesList = [
     strict: true,
     layoutType: RouteLayoutType.Public,
   },
-
   {
     component: Dashboard,
     path: Page.DASHBOARD,
@@ -76,7 +77,6 @@ const routesList = [
     strict: true,
     layoutType: RouteLayoutType.Authorized,
   },
-
   {
     component: ChartSetting,
     path: Page.CHART_SETTING,
@@ -84,7 +84,6 @@ const routesList = [
     strict: true,
     layoutType: RouteLayoutType.Authorized,
   },
-
   {
     component: AccountsPage,
     path: Page.ACCOUNTS_SWITCH,
@@ -92,7 +91,6 @@ const routesList = [
     strict: true,
     layoutType: RouteLayoutType.Authorized,
   },
-
   {
     component: Markets,
     path: Page.MARKETS,
@@ -100,7 +98,6 @@ const routesList = [
     strict: true,
     layoutType: RouteLayoutType.Authorized,
   },
-
   {
     component: Portfolio,
     path: Page.PORTFOLIO_MAIN,
@@ -115,7 +112,6 @@ const routesList = [
     strict: true,
     layoutType: RouteLayoutType.Authorized,
   },
-
   {
     component: Portfolio,
     path: Page.PORTFOLIO,
@@ -145,7 +141,6 @@ const routesList = [
     strict: true,
     layoutType: RouteLayoutType.Authorized,
   },
-  
   {
     component: AccountBalanceHistory,
     path: Page.ACCOUNT_BALANCE_HISTORY,
@@ -153,10 +148,45 @@ const routesList = [
     strict: true,
     layoutType: RouteLayoutType.Authorized,
   },
+  {
+    component: WithdrawList,
+    path: Page.WITHDRAW_LIST,
+    exact: true,
+    strict: true,
+    layoutType: RouteLayoutType.Authorized,
+  },
+  {
+    component: WithdrawalHistory,
+    path: Page.WITHDRAW_HISTORY,
+    exact: true,
+    strict: true,
+    layoutType: RouteLayoutType.Authorized,
+  },
+  {
+    component: WithdrawVisaMasterForm,
+    path: Page.WITHDRAW_VISAMASTER,
+    exact: true,
+    strict: true,
+    layoutType: RouteLayoutType.Authorized,
+  },
+  {
+    component: WithdrawBitcoinForm,
+    path: Page.WITHDRAW_BITCOIN,
+    exact: true,
+    strict: true,
+    layoutType: RouteLayoutType.Authorized,
+  },
+  {
+    component: WithdrawalHistoryDetails,
+    path: Page.WITHDRAW_HISTORY_ID,
+    exact: true,
+    strict: true,
+    layoutType: RouteLayoutType.Authorized,
+  },
 
   {
-    component: AccountWithdraw,
-    path: Page.ACCOUNT_WITHDRAW_NEW,
+    component: WithdrawSuccessRequest,
+    path: Page.WITHDRAW_SUCCESS,
     exact: true,
     strict: true,
     layoutType: RouteLayoutType.Authorized,

@@ -21,9 +21,9 @@ import IconAboutUs from '../assets/svg/profile/icon-about.svg';
 import IconVerify from '../assets/svg/profile/icon-verify.svg';
 import { PersonalDataKYCEnum } from '../enums/PersonalDataKYCEnum';
 import AchievementStatusLabel from '../components/AchievementStatusLabel';
-import { Observer } from 'mobx-react-lite';
+import { observer, Observer } from 'mobx-react-lite';
 
-const AccountProfile = () => {
+const AccountProfile = observer(() => {
   const { mainAppStore, userProfileStore } = useStores();
   const { t } = useTranslation();
 
@@ -155,7 +155,7 @@ const AccountProfile = () => {
           <SvgIcon {...IconArrowLink} fillColor="rgba(196, 196, 196, 0.5)" />
         </ProfileMenuA>
 
-        <ProfileMenuLink to={Page.ACCOUNT_WITHDRAW_NEW}>
+        <ProfileMenuLink to={Page.WITHDRAW_LIST}>
           <FlexContainer alignItems="center">
             <FlexContainer
               width="28px"
@@ -296,7 +296,7 @@ const AccountProfile = () => {
       </FlexContainer>
     </FlexContainer>
   );
-};
+});
 
 export default AccountProfile;
 
