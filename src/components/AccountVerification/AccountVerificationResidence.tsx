@@ -264,7 +264,7 @@ const AccountVerificationResidence: FC<Props> = (props) => {
                     </label>
                   </MenuToUploadItem>
                 </MenuToUpload>
-                <PrimaryButton
+                <CancelButton
                   padding="12px"
                   type="button"
                   width="100%"
@@ -278,7 +278,7 @@ const AccountVerificationResidence: FC<Props> = (props) => {
                   >
                     {t('Cancel')}
                   </PrimaryTextSpan>
-                </PrimaryButton>
+                </CancelButton>
               </>
               : <PrimaryButton
                 padding="12px"
@@ -303,6 +303,12 @@ const AccountVerificationResidence: FC<Props> = (props) => {
 };
 
 export default AccountVerificationResidence;
+
+const CancelButton = styled(PrimaryButton)`
+  &:hover {
+    background-color: ${Colors.NOTIFICATION_BG};
+  }
+`;
 
 const IdentifyRequire = styled(FlexContainer)`
   background: #23262F;

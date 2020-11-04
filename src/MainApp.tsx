@@ -10,6 +10,7 @@ import injectInerceptors from './http/interceptors';
 import { useTranslation } from 'react-i18next';
 import { autorun } from 'mobx';
 import Colors from './constants/Colors';
+import pagesWithoutReload from './constants/pagesWithoutReload';
 import { SFfonts } from './styles/SFfonts';
 import { AccountTypeEnum } from './enums/AccountTypeEnum';
 import API from './helpers/API';
@@ -91,6 +92,10 @@ const MainApp: FC = () => {
 
   useEffect(() => {
     function handleVisibilityChange() {
+      const currentLocation = window.location.pathname;
+      if (pagesWithoutReload.includes(currentLocation)) {
+        return false;
+      }
       window.location.reload();
     }
 
