@@ -160,7 +160,8 @@ const WithdrawBitcoinForm = () => {
     if ([',', '.'].includes(e.data)) {
       if (
         !currTargetValue ||
-        (currTargetValue && currTargetValue.includes('.'))
+        (currTargetValue && currTargetValue.includes('.')) ||
+        (currTargetValue && currTargetValue.includes(','))
       ) {
         e.preventDefault();
         return;
@@ -284,7 +285,11 @@ const WithdrawBitcoinForm = () => {
         </FlexContainer>
 
         <FlexContainer padding="16px" width="100%">
-          <PrimaryButton type="submit" onClick={handlerClickSubmit} width="100%">
+          <PrimaryButton
+            type="submit"
+            onClick={handlerClickSubmit}
+            width="100%"
+          >
             {t('Next')}
           </PrimaryButton>
         </FlexContainer>
