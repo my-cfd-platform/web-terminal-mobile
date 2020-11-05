@@ -237,6 +237,7 @@ const WithdrawVisaMasterForm = () => {
                   id="amount"
                   type="text"
                   inputMode="decimal"
+                  value={values.amount || ''}
                   onBeforeInput={amountOnBeforeInputHandler}
                   onBlur={handleBlurAmount}
                   onChange={handleChangeAmount}
