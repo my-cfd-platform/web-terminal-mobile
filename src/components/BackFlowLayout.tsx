@@ -13,17 +13,22 @@ import { FULL_VH } from '../constants/global';
 interface Props {
   pageTitle?: string;
   handleGoBack?: any;
-  type?: string
+  type?: string;
   backLink?: string;
 }
 
-const BackFlowLayout: FC<Props> = ({ children, pageTitle, backLink, handleGoBack, type }) => {
+const BackFlowLayout: FC<Props> = ({
+  children,
+  pageTitle,
+  backLink,
+  handleGoBack,
+  type,
+}) => {
   const { goBack, push } = useHistory();
   const useIcon = type === 'close' ? IconClose : IconBack;
   const handleClickBack = () => {
     if (backLink) {
       push(backLink);
-      console.log(backLink)
       return;
     }
     if (handleGoBack) {
@@ -31,7 +36,7 @@ const BackFlowLayout: FC<Props> = ({ children, pageTitle, backLink, handleGoBack
     } else {
       goBack();
     }
-  }
+  };
 
   return (
     <FlexContainer
@@ -49,7 +54,11 @@ const BackFlowLayout: FC<Props> = ({ children, pageTitle, backLink, handleGoBack
             hoverFillColor="#ffffff"
           />
         </BackButton>
-        <PrimaryTextSpan fontSize="16px" color="#ffffff" textTransform="capitalize">
+        <PrimaryTextSpan
+          fontSize="16px"
+          color="#ffffff"
+          textTransform="capitalize"
+        >
           {pageTitle}
         </PrimaryTextSpan>
       </PageHeaderWrap>
