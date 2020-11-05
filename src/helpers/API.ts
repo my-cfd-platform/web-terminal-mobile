@@ -259,7 +259,7 @@ class API {
       `${API_AUTH_STRING || authUrl}${AUTH_API_LIST.PERSONAL_DATA.GET}`,
       {
         params: {
-          processId,
+          processId: encodeURIComponent(processId),
         },
       }
     );
