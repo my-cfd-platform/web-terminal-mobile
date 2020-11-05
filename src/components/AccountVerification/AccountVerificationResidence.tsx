@@ -1,9 +1,8 @@
-import React, {FC, useEffect, useState} from 'react';
+import React, { FC, useState } from 'react';
 import { FlexContainer } from '../../styles/FlexContainer';
 import BackFlowLayout from '../BackFlowLayout';
 import { useStores } from '../../hooks/useStores';
 import { useTranslation } from 'react-i18next';
-import { useHistory } from 'react-router-dom';
 import SvgIcon from '../SvgIcon';
 import IconIdentCard from '../../assets/svg/profile/icon-ident-card.svg';
 import { PrimaryTextSpan } from '../../styles/TextsElements';
@@ -13,7 +12,7 @@ import Colors from '../../constants/Colors';
 import accountVerifySteps from '../../constants/accountVerifySteps';
 import IconCamera from '../../assets/svg/profile/icon-open-camera.svg';
 import IconPhotos from '../../assets/svg/profile/icon-upload.svg';
-import AccountVerificationPreview from "./AccountVerificationPreview";
+import AccountVerificationPreview from './AccountVerificationPreview';
 import API from '../../helpers/API';
 import { DocumentTypeEnum } from '../../enums/DocumentTypeEnum';
 import mixpanel from 'mixpanel-browser';
@@ -71,44 +70,48 @@ const AccountVerificationResidence: FC<Props> = (props) => {
         DocumentTypeEnum.ProofOfAddress,
         file,
         mainAppStore.initModel.authUrl
-      )
+      );
       mixpanel.track(mixpanelEvents.KYC_STEP_2);
       await postPersonalData();
     } catch (error) {}
   };
 
   return (
-    <BackFlowLayout handleGoBack={backToIdentify} pageTitle={t('Proof of Residence')}>
+    <BackFlowLayout
+      handleGoBack={backToIdentify}
+      pageTitle={t('Proof of Residence')}
+    >
       <LoaderForComponents isLoading={loader} />
-      {image
-        ? <AccountVerificationPreview
-            changeStep={changeStep}
-            pageTitle={'Proof of Residence'}
-            toClosePopup={() => setImage('')}
-            nextPage={accountVerifySteps.VERIFICATION_SUCCESS}
-            photo={image}
-            submit={handleSubmitPhoto}
+      {image ? (
+        <AccountVerificationPreview
+          changeStep={changeStep}
+          pageTitle="Proof of Residence"
+          toClosePopup={() => setImage('')}
+          nextPage={accountVerifySteps.VERIFICATION_SUCCESS}
+          photo={image}
+          submit={handleSubmitPhoto}
         />
-        : <FlexContainer
+      ) : (
+        <FlexContainer
           flexDirection="column"
           justifyContent="space-between"
           width="100%"
           height="100%"
         >
           <FlexContainer
-            margin={'10px auto 50px'}
-            justifyContent={'center'}
-            width={'100%'}
-            flexDirection={'column'}
+            margin="10px auto 50px"
+            justifyContent="center"
+            width="100%"
+            flexDirection="column"
           >
             <FlexContainer
-              padding={'0 30px'}
-              justifyContent={'center'}
-              flexDirection={'column'}
-              alignItems={'center'}
-              width={'100%'}
-              marginBottom={'40px'}
-              flex={'1 0 auto'}
+              padding="0 30px"
+              justifyContent="center"
+              flexDirection="column"
+              alignItems="center"
+              width="100%"
+              marginBottom="40px"
+              flex="1 0 auto"
             >
               <FlexContainer
                 width="184px"
@@ -119,58 +122,65 @@ const AccountVerificationResidence: FC<Props> = (props) => {
                 alignItems="center"
                 marginBottom="16px"
               >
-                <SvgIcon width={82} height={68} {...IconIdentCard} fillColor="#111111" />
+                <SvgIcon
+                  width={82}
+                  height={68}
+                  {...IconIdentCard}
+                  fillColor="#111111"
+                />
               </FlexContainer>
               <PrimaryTextSpan
                 fontSize="18px"
                 color="#ffffff"
-                textAlign={'center'}
-                marginBottom={'10px'}
+                textAlign="center"
+                marginBottom="10px"
               >
                 {t('Proof of Residence')}
               </PrimaryTextSpan>
               <PrimaryTextSpan
                 fontSize="13px"
                 color="rgba(196, 196, 196, 0.5)"
-                textAlign={'center'}
-                marginBottom={'20px'}
+                textAlign="center"
+                marginBottom="20px"
               >
-                {t('Please upload another document that should contain the address of your current residence')}
+                {t(
+                  'Please upload another document that should contain the address of your current residence'
+                )}
               </PrimaryTextSpan>
-              <IdentifyRequire flexDirection={'column'}>
+              <IdentifyRequire flexDirection="column">
                 <PrimaryTextSpan
                   fontSize="13px"
                   color="#ffffff"
-                  textAlign={'center'}
-                  marginBottom={'10px'}
+                  textAlign="center"
+                  marginBottom="10px"
                 >
                   {t('The document should clearly show')}:
                 </PrimaryTextSpan>
                 <PrimaryTextSpan
                   fontSize="13px"
                   color="#FFFCCC"
-                  textAlign={'center'}
+                  textAlign="center"
                 >
                   · {t('Street address')}
                 </PrimaryTextSpan>
                 <PrimaryTextSpan
                   fontSize="13px"
                   color="#FFFCCC"
-                  textAlign={'center'}
+                  textAlign="center"
                 >
                   · {t('City')}
                 </PrimaryTextSpan>
                 <PrimaryTextSpan
                   fontSize="13px"
                   color="#FFFCCC"
-                  textAlign={'center'}
+                  textAlign="center"
                 >
                   · {t('Province')}/{t('State')}
                 </PrimaryTextSpan>
                 <PrimaryTextSpan
                   fontSize="13px"
                   color="#FFFCCC"
-                  textAlign={'center'}
+                  textAlign="center"
                 >
                   · {t('Country')}
                 </PrimaryTextSpan>
@@ -183,10 +193,7 @@ const AccountVerificationResidence: FC<Props> = (props) => {
                 >
                   {t('Extension')}:
                 </PrimaryTextSpan>
-                <PrimaryTextSpan
-                  fontSize="13px"
-                  color="#fffccc"
-                >
+                <PrimaryTextSpan fontSize="13px" color="#fffccc">
                   {t('png, jpg, psd')}
                 </PrimaryTextSpan>
               </FlexContainer>
@@ -198,10 +205,7 @@ const AccountVerificationResidence: FC<Props> = (props) => {
                 >
                   {t('Allowed maximum size')}:
                 </PrimaryTextSpan>
-                <PrimaryTextSpan
-                  fontSize="13px"
-                  color="#fffccc"
-                >
+                <PrimaryTextSpan fontSize="13px" color="#fffccc">
                   {t('5MB')}
                 </PrimaryTextSpan>
               </FlexContainer>
@@ -214,13 +218,24 @@ const AccountVerificationResidence: FC<Props> = (props) => {
             padding="0 16px 40px"
             position="relative"
           >
-            {isOpen
-              ? <>
-                <MenuToUpload flexDirection={'column'}>
-                  <input type="file" onChange={handlerUploadImage} accept="image/*" capture="camera" id='fileFromCamera' />
-                  <input type="file" onChange={handlerUploadImage} accept="image/*" id='fileWithoutCamera' />
+            {isOpen ? (
+              <>
+                <MenuToUpload flexDirection="column">
+                  <input
+                    type="file"
+                    onChange={handlerUploadImage}
+                    accept="image/*"
+                    capture="camera"
+                    id="fileFromCamera"
+                  />
+                  <input
+                    type="file"
+                    onChange={handlerUploadImage}
+                    accept="image/*"
+                    id="fileWithoutCamera"
+                  />
                   <MenuToUploadItem>
-                    <label htmlFor={'fileFromCamera'}>
+                    <label htmlFor="fileFromCamera">
                       <FlexContainer alignItems="center">
                         <FlexContainer
                           width="24px"
@@ -229,7 +244,12 @@ const AccountVerificationResidence: FC<Props> = (props) => {
                           alignItems="center"
                           marginRight="14px"
                         >
-                          <SvgIcon {...IconCamera} width={24} height={24} fillColor="#ffffff" />
+                          <SvgIcon
+                            {...IconCamera}
+                            width={24}
+                            height={24}
+                            fillColor="#ffffff"
+                          />
                         </FlexContainer>
                         <PrimaryTextSpan
                           color="#ffffff"
@@ -242,7 +262,7 @@ const AccountVerificationResidence: FC<Props> = (props) => {
                     </label>
                   </MenuToUploadItem>
                   <MenuToUploadItem>
-                    <label htmlFor={'fileWithoutCamera'}>
+                    <label htmlFor="fileWithoutCamera">
                       <FlexContainer alignItems="center">
                         <FlexContainer
                           width="24px"
@@ -251,7 +271,12 @@ const AccountVerificationResidence: FC<Props> = (props) => {
                           alignItems="center"
                           marginRight="14px"
                         >
-                          <SvgIcon {...IconPhotos} width={24} height={24} fillColor="#ffffff" />
+                          <SvgIcon
+                            {...IconPhotos}
+                            width={24}
+                            height={24}
+                            fillColor="#ffffff"
+                          />
                         </FlexContainer>
                         <PrimaryTextSpan
                           color="#ffffff"
@@ -280,7 +305,8 @@ const AccountVerificationResidence: FC<Props> = (props) => {
                   </PrimaryTextSpan>
                 </CancelButton>
               </>
-              : <PrimaryButton
+            ) : (
+              <PrimaryButton
                 padding="12px"
                 type="button"
                 width="100%"
@@ -294,10 +320,10 @@ const AccountVerificationResidence: FC<Props> = (props) => {
                   {t('Upload documents')}
                 </PrimaryTextSpan>
               </PrimaryButton>
-            }
+            )}
           </FlexContainer>
         </FlexContainer>
-      }
+      )}
     </BackFlowLayout>
   );
 };
@@ -311,8 +337,8 @@ const CancelButton = styled(PrimaryButton)`
 `;
 
 const IdentifyRequire = styled(FlexContainer)`
-  background: #23262F;
-  border: 1px solid #23262F;
+  background: #23262f;
+  border: 1px solid #23262f;
   box-sizing: border-box;
   border-radius: 5px;
   padding: 20px;
@@ -328,7 +354,7 @@ const MenuToUpload = styled(FlexContainer)`
   position: absolute;
   bottom: 75px;
   width: calc(100% - 30px);
-  input[type=file] {
+  input[type='file'] {
     display: none;
   }
 `;
