@@ -6,6 +6,7 @@ import { useTranslation } from 'react-i18next';
 import WithdrawHistoryItem from '../components/Withdraw/WithdrawTabs/WithdrawHistoryItem';
 import mixpanelEvents from '../constants/mixpanelEvents';
 import mixapanelProps from '../constants/mixpanelProps';
+import Page from '../constants/Pages';
 import WithdrawContainer from '../containers/WithdrawContainer';
 import { WithdrawalHistoryResponseStatus } from '../enums/WithdrawalHistoryResponseStatus';
 import API from '../helpers/API';
@@ -47,7 +48,7 @@ const WithdrawalHistory = observer(() => {
   }, []);
 
   return (
-    <WithdrawContainer>
+    <WithdrawContainer backBtn={Page.ACCOUNT_PROFILE}>
       {!withdrawalStore.history && (
         <FlexContainer
           width="100%"

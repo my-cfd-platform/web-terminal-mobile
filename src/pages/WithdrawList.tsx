@@ -14,6 +14,7 @@ import API from '../helpers/API';
 import { FlexContainer } from '../styles/FlexContainer';
 import { PrimaryTextSpan } from '../styles/TextsElements';
 import { useTranslation } from 'react-i18next';
+import Page from '../constants/Pages';
 
 const WithdrawList = observer(() => {
   const { mainAppStore, withdrawalStore, userProfileStore } = useStores();
@@ -48,7 +49,7 @@ const WithdrawList = observer(() => {
   }, []);
 
   return (
-    <WithdrawContainer>
+    <WithdrawContainer backBtn={Page.ACCOUNT_PROFILE}>
       <FlexContainer
         flexDirection="column"
         justifyContent="space-between"

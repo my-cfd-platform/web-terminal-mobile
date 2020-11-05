@@ -23,6 +23,7 @@ const BackFlowLayout: FC<Props> = ({ children, pageTitle, backLink, handleGoBack
   const handleClickBack = () => {
     if (backLink) {
       push(backLink);
+      console.log(backLink)
       return;
     }
     if (handleGoBack) {

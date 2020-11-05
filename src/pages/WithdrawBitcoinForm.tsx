@@ -189,7 +189,7 @@ const WithdrawBitcoinForm = () => {
   }, [values.amount, values.bitcoinAdress]);
 
   return (
-    <WithdrawContainer>
+    <WithdrawContainer backBtn={Page.WITHDRAW_LIST}>
       <CustomForm noValidate onSubmit={handleSubmit}>
         <FlexContainer
           flexDirection="column"
