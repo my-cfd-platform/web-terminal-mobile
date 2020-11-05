@@ -111,9 +111,11 @@ const WithdrawVisaMasterForm = () => {
     handleSubmit,
     errors,
     touched,
-    isSubmitting,
+    isValid,
+    dirty
   } = useFormik({
     initialValues,
+    
     onSubmit: handleSubmitForm,
     validationSchema,
     validateOnBlur: true,
@@ -191,7 +193,7 @@ const WithdrawVisaMasterForm = () => {
   };
 
   return (
-    <WithdrawContainer>
+    <WithdrawContainer backBtn={Page.WITHDRAW_LIST}>
       <CustomForm noValidate onSubmit={handleSubmit}>
         <FlexContainer
           flexDirection="column"
@@ -235,6 +237,7 @@ const WithdrawVisaMasterForm = () => {
                   id="amount"
                   type="text"
                   inputMode="decimal"
+                  value={values.amount || ''}
                   onBeforeInput={amountOnBeforeInputHandler}
                   onBlur={handleBlurAmount}
                   onChange={handleChangeAmount}
@@ -288,7 +291,7 @@ const WithdrawVisaMasterForm = () => {
               type="submit"
               onClick={handlerClickSubmit}
               width="100%"
-              disabled={isSubmitting}
+              disabled={!(values.amount > 0 && values.amount.toString().length > 0)}
             >
               {t('Next')}
             </PrimaryButton>

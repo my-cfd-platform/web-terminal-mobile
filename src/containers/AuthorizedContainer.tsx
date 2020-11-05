@@ -32,6 +32,7 @@ const AuthorizedContainer: FC = ({ children }) => {
     Page.ACCOUNT_CHANGE_LANGUAGE,
     Page.ACCOUNT_VERIFICATION,
     Page.WITHDRAW_LIST,
+    Page.WITHDRAW_HISTORY_ID,
     Page.WITHDRAW_HISTORY,
     Page.WITHDRAW_VISAMASTER,
     Page.WITHDRAW_BITCOIN,

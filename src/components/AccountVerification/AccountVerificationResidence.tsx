@@ -26,7 +26,7 @@ interface Props {
 
 const AccountVerificationResidence: FC<Props> = (props) => {
   const { changeStep } = props;
-  const { mainAppStore } = useStores();
+  const { mainAppStore, userProfileStore } = useStores();
   const { t } = useTranslation();
   const [isOpen, setOpen] = useState(false);
   const [file, setFile] = useState(new Blob());
@@ -58,6 +58,11 @@ const AccountVerificationResidence: FC<Props> = (props) => {
         mainAppStore.initModel.authUrl
       );
       mixpanel.track(mixpanelEvents.KYC_STEP_3);
+      const response = await API.getPersonalData(
+        getProcessId(),
+        mainAppStore.initModel.authUrl
+      );
+      userProfileStore.setUser(response.data);
       setLoader(false);
       changeStep(accountVerifySteps.VERIFICATION_SUCCESS);
     } catch (error) {}

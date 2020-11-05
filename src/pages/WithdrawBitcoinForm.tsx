@@ -128,6 +128,8 @@ const WithdrawBitcoinForm = () => {
 
   const handleChangeAmount = (e: any) => {
     let filteredValue: any = e.target.value.replace(',', '.');
+    console.log('replace');
+    console.log(filteredValue);
     setFieldValue('amount', filteredValue);
   };
 
@@ -189,7 +191,7 @@ const WithdrawBitcoinForm = () => {
   }, [values.amount, values.bitcoinAdress]);
 
   return (
-    <WithdrawContainer>
+    <WithdrawContainer backBtn={Page.WITHDRAW_LIST}>
       <CustomForm noValidate onSubmit={handleSubmit}>
         <FlexContainer
           flexDirection="column"
@@ -232,6 +234,7 @@ const WithdrawBitcoinForm = () => {
                   id="amount"
                   type="text"
                   inputMode="decimal"
+                  value={values.amount || ''}
                   onBeforeInput={amountOnBeforeInputHandler}
                   onChange={handleChangeAmount}
                 />
@@ -280,7 +283,13 @@ const WithdrawBitcoinForm = () => {
               type="submit"
               onClick={handlerClickSubmit}
               width="100%"
-              disabled={isSubmitting}
+              disabled={
+                !(
+                  values.amount > 0 &&
+                  values.amount.toString().length > 0 &&
+                  values.bitcoinAdress.length > 0
+                )
+              }
             >
               {t('Next')}
             </PrimaryButton>

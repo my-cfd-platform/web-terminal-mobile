@@ -9,6 +9,7 @@ import { PrimaryTextSpan } from '../../../styles/TextsElements';
 import { WithdrawalHistoryModel } from '../../../types/WithdrawalTypes';
 import moment from 'moment';
 import { WithdrawHistoryStatusName } from '../../../enums/WithdrawHistoryStatusName';
+import Colors from '../../../constants/Colors';
 
 interface Props {
   data: WithdrawalHistoryModel;
@@ -18,11 +19,11 @@ const WithdrawHistoryItem: FC<Props> = ({ data }) => {
   const selectStatusColor = (status: WithdrawalStatusesEnum | null) => {
     switch (status) {
       case WithdrawalStatusesEnum.Pending:
-        return '#FFFCCC';
+        return 'rgba(255, 255, 255, 0.4)';
       case WithdrawalStatusesEnum.Canceled:
         return '#FF557E';
       case WithdrawalStatusesEnum.Approved:
-        return '#FFFCCC';
+        return Colors.ACCENT_BLUE;
       case WithdrawalStatusesEnum.Declined:
         return '#FF557E';
       default:

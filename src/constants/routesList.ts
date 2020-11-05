@@ -24,6 +24,7 @@ import WithdrawalHistory from '../pages/WithdrawHistory';
 import WithdrawVisaMasterForm from '../pages/WithdrawVisaMasterForm';
 import WithdrawBitcoinForm from '../pages/WithdrawBitcoinForm';
 import WithdrawalHistoryDetails from '../pages/WithdrawalHistoryDetails';
+import WithdrawSuccessRequest from '../components/Withdraw/WithdrawSuccessRequest';
 
 export enum RouteLayoutType {
   Authorized,
@@ -178,6 +179,14 @@ const routesList = [
   {
     component: WithdrawalHistoryDetails,
     path: Page.WITHDRAW_HISTORY_ID,
+    exact: true,
+    strict: true,
+    layoutType: RouteLayoutType.Authorized,
+  },
+
+  {
+    component: WithdrawSuccessRequest,
+    path: Page.WITHDRAW_SUCCESS,
     exact: true,
     strict: true,
     layoutType: RouteLayoutType.Authorized,
