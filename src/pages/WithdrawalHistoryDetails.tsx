@@ -55,7 +55,7 @@ const WithdrawalHistoryDetails = () => {
   }, []);
 
   return (
-    <WithdrawContainer>
+    <WithdrawContainer backBtn={Page.WITHDRAW_HISTORY}>
       <FlexContainer
         width="100%"
         height="100%"

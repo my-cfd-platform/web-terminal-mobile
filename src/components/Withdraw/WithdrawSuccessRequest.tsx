@@ -16,7 +16,7 @@ const WithdrawSuccessRequest = () => {
   const { userProfileStore } = useStores();
 
   return (
-    <WithdrawContainer>
+    <WithdrawContainer backBtn={Page.WITHDRAW_HISTORY}>
       <FlexContainer
         flexDirection="column"
         height="100%"

@@ -16,7 +16,10 @@ import mixapanelProps from '../constants/mixpanelProps';
 import { observer } from 'mobx-react-lite';
 import LoaderForComponents from '../components/LoaderForComponents';
 
-const WithdrawContainer: FC = observer(({ children }) => {
+interface Props {
+  backBtn?: string;
+}
+const WithdrawContainer: FC<Props> = observer(({ children, backBtn }) => {
   const { t } = useTranslation();
 
   const { mainAppStore, userProfileStore, withdrawalStore } = useStores();
@@ -31,7 +34,7 @@ const WithdrawContainer: FC = observer(({ children }) => {
   const match = useRouteMatch([Page.WITHDRAW_LIST, Page.WITHDRAW_HISTORY]);
 
   return (
-    <BackFlowLayout pageTitle={t('Withdrawal')}>
+    <BackFlowLayout pageTitle={t('Withdrawal')} backLink={backBtn}>
       {![
         PersonalDataKYCEnum.OnVerification,
         PersonalDataKYCEnum.Restricted,
