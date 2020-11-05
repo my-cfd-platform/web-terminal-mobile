@@ -280,7 +280,7 @@ const WithdrawBitcoinForm = () => {
               type="submit"
               onClick={handlerClickSubmit}
               width="100%"
-              disabled={isSubmitting}
+              disabled={!(values.amount > 0 && values.amount.toString().length > 0 && values.bitcoinAdress.length > 0)}
             >
               {t('Next')}
             </PrimaryButton>

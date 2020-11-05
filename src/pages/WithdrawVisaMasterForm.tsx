@@ -112,9 +112,11 @@ const WithdrawVisaMasterForm = () => {
     handleSubmit,
     errors,
     touched,
-    isSubmitting,
+    isValid,
+    dirty
   } = useFormik({
     initialValues,
+    
     onSubmit: handleSubmitForm,
     validationSchema,
     validateOnBlur: true,
@@ -289,7 +291,7 @@ const WithdrawVisaMasterForm = () => {
               type="submit"
               onClick={handlerClickSubmit}
               width="100%"
-              disabled={isSubmitting}
+              disabled={!(values.amount > 0 && values.amount.toString().length > 0)}
             >
               {t('Next')}
             </PrimaryButton>
