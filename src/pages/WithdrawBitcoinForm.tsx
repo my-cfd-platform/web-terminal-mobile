@@ -128,8 +128,8 @@ const WithdrawBitcoinForm = () => {
 
   const handleChangeAmount = (e: any) => {
     let filteredValue: any = e.target.value.replace(',', '.');
-    console.log('replace')
-    console.log(filteredValue)
+    console.log('replace');
+    console.log(filteredValue);
     setFieldValue('amount', filteredValue);
   };
 
@@ -283,7 +283,6 @@ const WithdrawBitcoinForm = () => {
               type="submit"
               onClick={handlerClickSubmit}
               width="100%"
-              
               disabled={
                 !(
                   values.amount > 0 &&
