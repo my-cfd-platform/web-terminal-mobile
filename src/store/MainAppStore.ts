@@ -515,6 +515,7 @@ export class MainAppStore implements MainAppStoreProps {
 
   @action
   signOut = () => {
+    localStorage.removeItem('kyc_step')
     localStorage.removeItem(LOCAL_STORAGE_TOKEN_KEY);
     localStorage.removeItem(LOCAL_STORAGE_REFRESH_TOKEN_KEY);
     localStorage.removeItem(LAST_PAGE_VISITED);
