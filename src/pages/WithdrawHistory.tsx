@@ -33,6 +33,7 @@ const WithdrawalHistory = observer(() => {
 
         withdrawalStore.setHistory(sortedList);
       }
+      console.log(result)
       withdrawalStore.endLoad();
     } catch (error) {}
   }, []);
