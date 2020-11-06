@@ -17,7 +17,8 @@ import { PrimaryTextSpan } from '../styles/TextsElements';
 const WithdrawalHistory = observer(() => {
   const { withdrawalStore, mainAppStore } = useStores();
   const { t } = useTranslation();
-  const initHistoryList = useCallback(async () => {
+  const initHistoryList = useCallback(
+    async () => {
     withdrawalStore.setLoad();
     try {
       const result = await API.getWithdrawalHistory();
