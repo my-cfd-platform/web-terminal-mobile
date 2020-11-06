@@ -21,7 +21,7 @@ import { getProcessId } from '../../helpers/getProcessId';
 import LoaderForComponents from '../LoaderForComponents';
 
 interface Props {
-  changeStep?: any;
+  changeStep: (name: string) => void;
 }
 
 const AccountVerificationResidence: FC<Props> = (props) => {
