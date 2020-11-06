@@ -21,7 +21,7 @@ import mixpanelEvents from '../../constants/mixpanelEvents';
 import LoaderForComponents from '../../components/LoaderForComponents';
 
 interface Props {
-  changeStep?: any;
+  changeStep: (name: string) => void;
 }
 
 const AccountVerificationIdentify: FC<Props> = (props) => {

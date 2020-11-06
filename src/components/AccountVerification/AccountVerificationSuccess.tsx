@@ -1,4 +1,4 @@
-import React, {FC, useEffect, useState} from 'react';
+import React, { FC } from 'react';
 import { FlexContainer } from '../../styles/FlexContainer';
 import BackFlowLayout from '../BackFlowLayout';
 import { useStores } from '../../hooks/useStores';
@@ -7,18 +7,14 @@ import { useHistory } from 'react-router-dom';
 import SvgIcon from '../SvgIcon';
 import IconChecked from '../../assets/svg/profile/icon-checked.svg';
 import { PrimaryTextSpan } from '../../styles/TextsElements';
-import styled from '@emotion/styled';
 import { PrimaryButton } from '../../styles/Buttons';
 import Colors from '../../constants/Colors';
-import accountVerifySteps from '../../constants/accountVerifySteps';
 
 interface Props {
-  changeStep?: any;
+  changeStep: (name: string) => void;
 }
 
-const AccountVerificationSuccess: FC<Props> = (props) => {
-  const { changeStep } = props;
-  const { mainAppStore } = useStores();
+const AccountVerificationSuccess: FC<Props> = () => {
   const { t } = useTranslation();
   const { goBack } = useHistory();
 
@@ -54,7 +50,12 @@ const AccountVerificationSuccess: FC<Props> = (props) => {
               alignItems="center"
               marginBottom="16px"
             >
-              <SvgIcon width={50} height={38} {...IconChecked} fillColor={Colors.DARK_BLACK} />
+              <SvgIcon
+                width={50}
+                height={38}
+                {...IconChecked}
+                fillColor={Colors.DARK_BLACK}
+              />
             </FlexContainer>
             <PrimaryTextSpan
               fontSize="18px"
