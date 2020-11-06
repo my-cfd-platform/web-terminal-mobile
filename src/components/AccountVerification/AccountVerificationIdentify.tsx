@@ -106,7 +106,6 @@ const AccountVerificationIdentify: FC<Props> = (props) => {
           position="relative"
         >
           <FlexContainer
-            margin="10px auto 50px"
             justifyContent="center"
             width="100%"
             flexDirection="column"
@@ -117,7 +116,6 @@ const AccountVerificationIdentify: FC<Props> = (props) => {
               flexDirection="column"
               alignItems="center"
               width="100%"
-              marginBottom="40px"
               flex="1 0 auto"
             >
               <FlexContainer
@@ -229,7 +227,7 @@ const AccountVerificationIdentify: FC<Props> = (props) => {
             width="100%"
             alignItems="center"
             justifyContent="center"
-            padding="0 16px 32px"
+            padding="16px 16px 32px"
             position="sticky"
             bottom="0"
           >
