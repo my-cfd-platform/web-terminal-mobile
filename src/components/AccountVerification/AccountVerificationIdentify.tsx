@@ -23,6 +23,8 @@ interface Props {
   changeStep: (name: string) => void;
 }
 
+const MAX_FILE_UPLOAD_5_MB = 5242880;
+
 const AccountVerificationIdentify: FC<Props> = (props) => {
   const { changeStep } = props;
   const { mainAppStore } = useStores();
@@ -32,15 +34,26 @@ const AccountVerificationIdentify: FC<Props> = (props) => {
   const [loader, setLoader] = useState(false);
   const { t } = useTranslation();
 
-  const handlerUploadImage = (e: any) => {
-    if (e.target.files[0].size > 5242880) {
+  const handlerUploadImage = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (!e.target.files || !e.target.files.length) {
+      console.log('no file uploaded');
+      return;
+    }
+    if (e.target.files[0].size > MAX_FILE_UPLOAD_5_MB) {
+      console.log('filesize', e.target.files[0].size);
       changeStep(accountVerifySteps.VERIFICATION_LARGE_FILE);
     } else {
       setFile(e.target.files[0]);
       setOpen(false);
       const reader = new FileReader();
+      console.log('start file read');
+
       reader.onload = (event: any) => {
-        setImage(event.target.result);
+        console.log('stopped file read');
+
+        if (event.target) {
+          setImage(event.target.result);
+        }
       };
       reader.readAsDataURL(e.target.files[0]);
     }
@@ -89,6 +102,8 @@ const AccountVerificationIdentify: FC<Props> = (props) => {
           justifyContent="space-between"
           width="100%"
           height="100%"
+          overflow="auto"
+          position="relative"
         >
           <FlexContainer
             margin="10px auto 50px"
@@ -214,8 +229,9 @@ const AccountVerificationIdentify: FC<Props> = (props) => {
             width="100%"
             alignItems="center"
             justifyContent="center"
-            padding="0 16px 40px"
-            position="relative"
+            padding="0 16px 32px"
+            position="sticky"
+            bottom="0"
           >
             {isOpen ? (
               <>

@@ -9,7 +9,8 @@ import AccountVerificationLargeFile from '../components/AccountVerification/Acco
 
 const AccountVerification = () => {
   const [stepOfVerification, setStepOfVerification] = useState(
-    localStorage.getItem('kyc_step') || 'flow'
+    localStorage.getItem(accountVerifySteps.KYC_STEP) ||
+      accountVerifySteps.VERIFICATION_FLOW
   );
   const [lastStep, setLastStep] = useState('');
 
@@ -18,7 +19,7 @@ const AccountVerification = () => {
       setLastStep(stepOfVerification);
       setStepOfVerification(name);
     } else {
-      localStorage.setItem('kyc_step', name);
+      localStorage.setItem(accountVerifySteps.KYC_STEP, name);
       setStepOfVerification(name);
     }
   };

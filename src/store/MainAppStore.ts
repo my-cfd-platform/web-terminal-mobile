@@ -40,6 +40,7 @@ import mixapanelProps from '../constants/mixpanelProps';
 import { PositionModelWSDTO } from '../types/Positions';
 import { PendingOrderWSDTO } from '../types/PendingOrdersTypes';
 import { BidAskModelWSDTO } from '../types/BidAsk';
+import accountVerifySteps from '../constants/accountVerifySteps';
 
 interface MainAppStoreProps {
   token: string;
@@ -515,7 +516,7 @@ export class MainAppStore implements MainAppStoreProps {
 
   @action
   signOut = () => {
-    localStorage.removeItem('kyc_step')
+    localStorage.removeItem(accountVerifySteps.KYC_STEP);
     localStorage.removeItem(LOCAL_STORAGE_TOKEN_KEY);
     localStorage.removeItem(LOCAL_STORAGE_REFRESH_TOKEN_KEY);
     localStorage.removeItem(LAST_PAGE_VISITED);
@@ -530,7 +531,7 @@ export class MainAppStore implements MainAppStoreProps {
     delete Axios.defaults.headers[RequestHeaders.AUTHORIZATION];
     this.activeAccount = undefined;
     this.activeAccountId = '';
-    mixpanel.reset(); 
+    mixpanel.reset();
   };
 
   @action
