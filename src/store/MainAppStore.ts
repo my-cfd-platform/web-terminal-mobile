@@ -121,6 +121,8 @@ export class MainAppStore implements MainAppStoreProps {
     this.refreshToken =
       localStorage.getItem(LOCAL_STORAGE_REFRESH_TOKEN_KEY) || '';
     Axios.defaults.headers[RequestHeaders.AUTHORIZATION] = this.token;
+    Axios.defaults.headers[RequestHeaders.CACHE_CONTROL] = 'no-cache';
+    
     // @ts-ignore
     this.lang =
       localStorage.getItem(LOCAL_STORAGE_LANGUAGE) || CountriesEnum.EN;
