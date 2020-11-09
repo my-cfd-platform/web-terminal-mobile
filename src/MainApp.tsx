@@ -59,11 +59,10 @@ const MainApp: FC = () => {
   ]);
 
   useEffect(() => {
+    mainAppStore.isLoading = true;
     if (IS_LIVE) {
-      mainAppStore.fetchTradingUrl();
+      mainAppStore.handleInitConnection();
     } else {
-      mainAppStore.isLoading = true;
-      mainAppStore.setTradingUrl('/');
       injectInerceptors('/', mainAppStore);
       mainAppStore.handleInitConnection();
     }

@@ -17,14 +17,21 @@ import { useTranslation } from 'react-i18next';
 import Page from '../constants/Pages';
 
 const WithdrawList = observer(() => {
-  const { mainAppStore, withdrawalStore, userProfileStore, notificationStore } = useStores();
+  const {
+    mainAppStore,
+    withdrawalStore,
+    userProfileStore,
+    notificationStore,
+  } = useStores();
   const { t } = useTranslation();
 
   useEffect(() => {
     const initHistoryList = async () => {
       withdrawalStore.setLoad();
       try {
-        const result = await API.getWithdrawalHistory(mainAppStore.tradingUrl);
+        const result = await API.getWithdrawalHistory(
+          mainAppStore.initModel.tradingUrl
+        );
         if (result.status === WithdrawalHistoryResponseStatus.Successful) {
           const isPending = result.history?.some(
             (item) =>

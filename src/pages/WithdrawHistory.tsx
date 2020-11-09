@@ -20,7 +20,9 @@ const WithdrawalHistory = observer(() => {
   const initHistoryList = useCallback(async () => {
     withdrawalStore.setLoad();
     try {
-      const result = await API.getWithdrawalHistory(mainAppStore.tradingUrl);
+      const result = await API.getWithdrawalHistory(
+        mainAppStore.initModel.tradingUrl
+      );
       if (result.status === WithdrawalHistoryResponseStatus.Successful) {
         const sortedList = result.history
           ? result.history.sort(

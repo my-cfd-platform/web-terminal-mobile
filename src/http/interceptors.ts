@@ -6,7 +6,6 @@ import RequestHeaders from '../constants/headers';
 
 const injectInerceptors = (tradingUrl: string, mainAppStore: MainAppStore) => {
   // TODO: research init flow
-  mainAppStore.isInterceptorsInjected = true;
   axios.interceptors.response.use(
     function (config: AxiosResponse) {
       if (config.data.result === OperationApiResponseCodes.TechnicalError) {
