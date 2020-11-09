@@ -59,7 +59,7 @@ const MainApp: FC = () => {
 
   useEffect(() => {
     mainAppStore.handleInitConnection();
-  }, []);
+  }, [mainAppStore.isAuthorized]);
 
   useEffect(() => {
     autorun(() => {

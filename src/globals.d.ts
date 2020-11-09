@@ -28,7 +28,6 @@ declare module '*.json' {
   export default value;
 }
 
-declare const WS_HOST: string;
 declare const API_STRING: string;
 declare const API_DEPOSIT_STRING: string;
 declare const API_WITHDRAWAL_STRING: string;
