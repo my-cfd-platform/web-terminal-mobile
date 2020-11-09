@@ -52,10 +52,16 @@ const WithdrawalHistory = observer(() => {
   }, []);
 
   useEffect(() => {
-    if (userProfileStore.userProfile?.kyc === PersonalDataKYCEnum.Verified) {
+    if (
+      userProfileStore.userProfile &&
+      [
+        PersonalDataKYCEnum.Verified,
+        PersonalDataKYCEnum.OnVerification,
+      ].includes(userProfileStore.userProfile.kyc)
+    ) {
       initHistoryList();
     }
-  }, [userProfileStore.userProfile?.kyc]);
+  }, [userProfileStore.userProfile]);
 
   useEffect(() => {
     mixpanel.track(mixpanelEvents.WITHDRAW_HISTORY_VIEW, {
