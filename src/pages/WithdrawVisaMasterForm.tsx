@@ -75,7 +75,10 @@ const WithdrawVisaMasterForm = () => {
         data: JSON.stringify(dataParam),
       };
 
-      const result = await API.createWithdrawal(data);
+      const result = await API.createWithdrawal(
+        data,
+        mainAppStore.initModel.tradingUrl
+      );
       if (result.status === WithdrawalHistoryResponseStatus.Successful) {
         // TODO: redirect to success page
 
@@ -113,10 +116,10 @@ const WithdrawVisaMasterForm = () => {
     errors,
     touched,
     isValid,
-    dirty
+    dirty,
   } = useFormik({
     initialValues,
-    
+
     onSubmit: handleSubmitForm,
     validationSchema,
     validateOnBlur: true,
@@ -292,7 +295,9 @@ const WithdrawVisaMasterForm = () => {
               type="submit"
               onClick={handlerClickSubmit}
               width="100%"
-              disabled={!(values.amount > 0 && values.amount.toString().length > 0)}
+              disabled={
+                !(values.amount > 0 && values.amount.toString().length > 0)
+              }
             >
               {t('Next')}
             </PrimaryButton>

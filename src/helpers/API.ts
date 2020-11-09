@@ -422,16 +422,26 @@ class API {
       : await axios.get<InitModel>(`${API_LIST.INIT.GET}`);
     return response.data;
   };
-  createWithdrawal = async (params: CreateWithdrawalParams) => {
+
+  createWithdrawal = async (
+    params: CreateWithdrawalParams,
+    tradingUrl: string
+  ) => {
     const response = await axios.post<{
       status: WithdrawalHistoryResponseStatus;
-    }>(`${API_WITHDRAWAL_STRING}${API_LIST.WITHWRAWAL.CREATE}`, params);
+    }>(
+      `${API_WITHDRAWAL_STRING || tradingUrl}${API_LIST.WITHWRAWAL.CREATE}`,
+      params
+    );
     return response.data;
   };
 
-  cancelWithdrawal = async (params: cancelWithdrawalParams) => {
+  cancelWithdrawal = async (
+    params: cancelWithdrawalParams,
+    tradingUrl: string
+  ) => {
     const response = await axios.post<WithdrawalHistoryDTO>(
-      `${API_WITHDRAWAL_STRING}${API_LIST.WITHWRAWAL.CANCEL}`,
+      `${API_WITHDRAWAL_STRING || tradingUrl}${API_LIST.WITHWRAWAL.CANCEL}`,
       params
     );
     return response.data;

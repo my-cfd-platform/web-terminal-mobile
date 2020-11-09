@@ -82,7 +82,10 @@ const WithdrawBitcoinForm = () => {
         data: JSON.stringify(dataParam),
       };
 
-      const result = await API.createWithdrawal(data);
+      const result = await API.createWithdrawal(
+        data,
+        mainAppStore.initModel.tradingUrl
+      );
       if (result.status === WithdrawalHistoryResponseStatus.Successful) {
         withdrawalStore.opentTab(WithdrawalTabsEnum.History);
         notificationStore.isSuccessfull = true;

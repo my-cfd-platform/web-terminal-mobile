@@ -21,15 +21,18 @@ interface QueryProps {
 const WithdrawalHistoryDetails = () => {
   const { t } = useTranslation();
   const { id: withdrawalId } = useParams<QueryProps>();
-  const { withdrawalStore, notificationStore } = useStores();
+  const { withdrawalStore, notificationStore, mainAppStore } = useStores();
   const { push } = useHistory();
   const [item, setItem] = useState<WithdrawalHistoryModel>();
 
   const handleCancel = async () => {
     try {
-      const result = await API.cancelWithdrawal({
-        withdrawalId,
-      });
+      const result = await API.cancelWithdrawal(
+        {
+          withdrawalId,
+        },
+        mainAppStore.initModel.tradingUrl
+      );
       if (result.status === WithdrawalHistoryResponseStatus.Successful) {
         withdrawalStore.closePendingPopup();
         push(Page.WITHDRAW_HISTORY);
@@ -84,7 +87,9 @@ const WithdrawalHistoryDetails = () => {
             <PrimaryTextSpan color="#fff" fontSize="16px">
               {t('Amount')}
             </PrimaryTextSpan>
-            <PrimaryTextSpan fontSize="16px">${item?.amount.toFixed(2)}</PrimaryTextSpan>
+            <PrimaryTextSpan fontSize="16px">
+              ${item?.amount.toFixed(2)}
+            </PrimaryTextSpan>
           </FlexContainer>
 
           <FlexContainer
