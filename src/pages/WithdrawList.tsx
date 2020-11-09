@@ -15,6 +15,7 @@ import { FlexContainer } from '../styles/FlexContainer';
 import { PrimaryTextSpan } from '../styles/TextsElements';
 import { useTranslation } from 'react-i18next';
 import Page from '../constants/Pages';
+import { PersonalDataKYCEnum } from '../enums/PersonalDataKYCEnum';
 
 const WithdrawList = observer(() => {
   const {
@@ -52,8 +53,10 @@ const WithdrawList = observer(() => {
         withdrawalStore.endLoad();
       } catch (error) {}
     };
-    initHistoryList();
-  }, []);
+    if (userProfileStore.userProfile?.kyc === PersonalDataKYCEnum.Verified) {
+      initHistoryList();
+    }
+  }, [userProfileStore.userProfile?.kyc]);
   useEffect(() => {
     mixpanel.track(mixpanelEvents.WITHDRAW_VIEW, {
       [mixapanelProps.AVAILABLE_BALANCE]:

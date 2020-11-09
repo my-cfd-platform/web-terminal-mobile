@@ -8,6 +8,7 @@ import mixpanelEvents from '../constants/mixpanelEvents';
 import mixapanelProps from '../constants/mixpanelProps';
 import Page from '../constants/Pages';
 import WithdrawContainer from '../containers/WithdrawContainer';
+import { PersonalDataKYCEnum } from '../enums/PersonalDataKYCEnum';
 import { WithdrawalHistoryResponseStatus } from '../enums/WithdrawalHistoryResponseStatus';
 import API from '../helpers/API';
 import { useStores } from '../hooks/useStores';
@@ -15,7 +16,12 @@ import { FlexContainer } from '../styles/FlexContainer';
 import { PrimaryTextSpan } from '../styles/TextsElements';
 
 const WithdrawalHistory = observer(() => {
-  const { withdrawalStore, mainAppStore, notificationStore } = useStores();
+  const {
+    withdrawalStore,
+    mainAppStore,
+    notificationStore,
+    userProfileStore,
+  } = useStores();
   const { t } = useTranslation();
   const initHistoryList = useCallback(async () => {
     withdrawalStore.setLoad();
@@ -46,8 +52,10 @@ const WithdrawalHistory = observer(() => {
   }, []);
 
   useEffect(() => {
-    initHistoryList();
-  }, []);
+    if (userProfileStore.userProfile?.kyc === PersonalDataKYCEnum.Verified) {
+      initHistoryList();
+    }
+  }, [userProfileStore.userProfile?.kyc]);
 
   useEffect(() => {
     mixpanel.track(mixpanelEvents.WITHDRAW_HISTORY_VIEW, {

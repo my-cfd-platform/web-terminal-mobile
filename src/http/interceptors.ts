@@ -39,7 +39,6 @@ const injectInerceptors = (mainAppStore: MainAppStore) => {
     },
 
     async function (error: AxiosError) {
-      console.log(error);
       if (!error.response?.status) {
         mainAppStore.rootStore.badRequestPopupStore.setRecconect();
         setTimeout(() => {
