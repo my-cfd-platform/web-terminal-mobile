@@ -17,7 +17,7 @@ import { useTranslation } from 'react-i18next';
 import Page from '../constants/Pages';
 
 const WithdrawList = observer(() => {
-  const { mainAppStore, withdrawalStore, userProfileStore } = useStores();
+  const { mainAppStore, withdrawalStore, userProfileStore, notificationStore } = useStores();
   const { t } = useTranslation();
 
   useEffect(() => {
@@ -35,6 +35,12 @@ const WithdrawList = observer(() => {
           if (isPending) {
             withdrawalStore.setPendingPopup();
           }
+        }
+
+        if (result.status === WithdrawalHistoryResponseStatus.SystemError) {
+          notificationStore.isSuccessfull = false;
+          notificationStore.notificationMessage = t('Technical Error');
+          notificationStore.openNotification();
         }
         withdrawalStore.endLoad();
       } catch (error) {}

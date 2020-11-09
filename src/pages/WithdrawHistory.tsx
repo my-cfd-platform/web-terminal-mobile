@@ -15,7 +15,7 @@ import { FlexContainer } from '../styles/FlexContainer';
 import { PrimaryTextSpan } from '../styles/TextsElements';
 
 const WithdrawalHistory = observer(() => {
-  const { withdrawalStore, mainAppStore } = useStores();
+  const { withdrawalStore, mainAppStore, notificationStore } = useStores();
   const { t } = useTranslation();
   const initHistoryList = useCallback(async () => {
     withdrawalStore.setLoad();
@@ -32,7 +32,13 @@ const WithdrawalHistory = observer(() => {
 
         withdrawalStore.setHistory(sortedList);
       }
-      console.log(result);
+
+      if (result.status === WithdrawalHistoryResponseStatus.SystemError) {
+        notificationStore.isSuccessfull = false;
+        notificationStore.notificationMessage = t('Technical Error');
+        notificationStore.openNotification();
+      }
+
       withdrawalStore.endLoad();
     } catch (error) {}
   }, []);
