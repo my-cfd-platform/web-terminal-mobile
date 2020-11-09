@@ -41,9 +41,9 @@ const API_LIST = {
     GET: '/init/',
   },
   WITHWRAWAL: {
-    CREATE: '/create',
-    HISTORY: '/history',
-    CANCEL: '/cancel'
+    CREATE: '/withdrawal/create',
+    HISTORY: '/withdrawal/history',
+    CANCEL: '/withdrawal/cancel'
   }
 };
 
