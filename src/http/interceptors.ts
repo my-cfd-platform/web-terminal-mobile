@@ -104,6 +104,7 @@ const injectInerceptors = (tradingUrl: string, mainAppStore: MainAppStore) => {
     }
     config.headers[RequestHeaders.ACCEPT_LANGUAGE] = `${mainAppStore.lang}`;
     config.headers[RequestHeaders.CACHE_CONTROL] = 'no-cache';
+    config.headers[RequestHeaders.VARY] = '*';
 
     return config;
   });
