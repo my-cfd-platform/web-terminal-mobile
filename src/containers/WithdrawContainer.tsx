@@ -110,7 +110,7 @@ const NavWrap = styled(FlexContainer)`
   margin-bottom: 30px;
   width: calc(100% - 32px);
   background-color: ${Colors.INPUT_BG};
-  height: 32px;
+  min-height: 32px;
   justify-content: center;
   border-radius: 8px;
   padding: 2px;
