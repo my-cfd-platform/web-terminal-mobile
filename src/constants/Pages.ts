@@ -23,6 +23,7 @@ const Page = {
   ACCOUNT_HISTORY_QUOTES: '/account-history-quotes',
   ACCOUNT_ABOUT_US: '/account-about-us',
   ACCOUNT_CHANGE_LANGUAGE: '/account-change-language',
+  ACCOUNT_CHANGE_PASSWORD: '/account-change-password',
   ACCOUNT_VERIFICATION: '/account-verification',
   PAYMENTS: '/payments/:status',
 

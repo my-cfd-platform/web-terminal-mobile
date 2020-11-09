@@ -19,6 +19,7 @@ import IconBalanceHistory from '../assets/svg/profile/icon-balance-history.svg';
 import IconLogout from '../assets/svg/profile/icon-logout.svg';
 import IconAboutUs from '../assets/svg/profile/icon-about.svg';
 import IconVerify from '../assets/svg/profile/icon-verify.svg';
+import IconPassword from '../assets/svg/profile/icon-account-password.svg';
 import { PersonalDataKYCEnum } from '../enums/PersonalDataKYCEnum';
 import AchievementStatusLabel from '../components/AchievementStatusLabel';
 import { observer, Observer } from 'mobx-react-lite';
@@ -215,6 +216,30 @@ const AccountProfile = observer(() => {
             {t('Settings')}
           </PrimaryTextSpan>
         </FlexContainer>
+
+        <ProfileMenuLink to={Page.ACCOUNT_CHANGE_PASSWORD}>
+          <FlexContainer alignItems="center">
+            <FlexContainer
+              width="28px"
+              height="28px"
+              backgroundColor="#77787E"
+              borderRadius="50%"
+              justifyContent="center"
+              alignItems="center"
+              marginRight="14px"
+            >
+              <SvgIcon {...IconPassword} fillColor="#ffffff" />
+            </FlexContainer>
+            <PrimaryTextSpan
+              color="#ffffff"
+              fontSize="16px"
+              fontWeight="normal"
+            >
+              {t('Change password')}
+            </PrimaryTextSpan>
+          </FlexContainer>
+          <SvgIcon {...IconArrowLink} fillColor="rgba(196, 196, 196, 0.5)" />
+        </ProfileMenuLink>
 
         <ProfileMenuLink to={Page.ACCOUNT_CHANGE_LANGUAGE}>
           <FlexContainer alignItems="center">

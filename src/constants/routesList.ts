@@ -15,6 +15,7 @@ import AccountBalanceHistory from '../pages/AccountBalanceHistory';
 import WithdrawList from '../pages/WithdrawList';
 import AccountLanguage from '../pages/AccountLanguage';
 import AccountVerification from '../pages/AccountVerification';
+import AccountChangePassword from '../pages/AccountChangePassword';
 import AccountAboutUs from '../pages/AccountAboutUs';
 import RecoveryPassword from '../pages/RecoveryPassword';
 import PhoneVerification from '../pages/PhoneVerification';
@@ -208,6 +209,13 @@ const routesList = [
   {
     component: AccountVerification,
     path: Page.ACCOUNT_VERIFICATION,
+    exact: true,
+    strict: true,
+    layoutType: RouteLayoutType.Authorized,
+  },
+  {
+    component: AccountChangePassword,
+    path: Page.ACCOUNT_CHANGE_PASSWORD,
     exact: true,
     strict: true,
     layoutType: RouteLayoutType.Authorized,
