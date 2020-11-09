@@ -84,7 +84,7 @@ export class MainAppStore implements MainAppStoreProps {
     policyUrl: '',
     supportUrl: '',
     termsUrl: '',
-    tradingUrl: '',
+    tradingUrl: '/',
     authUrl: '',
     mixpanelToken: '582507549d28c813188211a0d15ec940',
     recaptchaToken: '',
@@ -121,6 +121,7 @@ export class MainAppStore implements MainAppStoreProps {
     // @ts-ignore
     this.lang =
       localStorage.getItem(LOCAL_STORAGE_LANGUAGE) || CountriesEnum.EN;
+    injectInerceptors(this);
   }
 
   initApp = async () => {
@@ -135,6 +136,7 @@ export class MainAppStore implements MainAppStoreProps {
   };
 
   handleInitConnection = async (token = this.token) => {
+    this.isLoading = true;
     const wsConnectSub =
       this.initModel.tradingUrl.slice(-1) === '/' ? 'signalr' : `/signalr`;
     const connectionString = IS_LIVE
