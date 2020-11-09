@@ -449,9 +449,7 @@ class API {
 
   getWithdrawalHistory = async (tradingUrl: string) => {
     const response = await axios.get<WithdrawalHistoryDTO>(
-      `${API_WITHDRAWAL_STRING || tradingUrl}/withdrawal${
-        API_LIST.WITHWRAWAL.HISTORY
-      }`
+      `${API_WITHDRAWAL_STRING || tradingUrl}${API_LIST.WITHWRAWAL.HISTORY}`
     );
     return response.data;
   };
