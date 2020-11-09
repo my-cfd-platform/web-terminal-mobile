@@ -22,24 +22,35 @@ build-dev:
     - npm -v
     - node -v
     - npm i
-    - npm run build
+    - npm run buildTest
   artifacts:
     paths:
       - ${BUILD_FOLDER}
   only:
     - development
 
-build:
+build-test:
   stage: build
   image: node:14.6.0
   script:
     - npm i
-    - npm run build
+    - npm run buildTest
   artifacts:
     paths:
       - ${BUILD_FOLDER}
   only:
     - test
+
+build-master:
+  stage: build
+  image: node:14.6.0
+  script:
+    - npm i
+    - npm run buildProd
+  artifacts:
+    paths:
+      - ${BUILD_FOLDER}
+  only:
     - master
 
 publish-test:
