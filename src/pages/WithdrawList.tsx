@@ -24,7 +24,7 @@ const WithdrawList = observer(() => {
     const initHistoryList = async () => {
       withdrawalStore.setLoad();
       try {
-        const result = await API.getWithdrawalHistory();
+        const result = await API.getWithdrawalHistory(mainAppStore.tradingUrl);
         if (result.status === WithdrawalHistoryResponseStatus.Successful) {
           const isPending = result.history?.some(
             (item) =>

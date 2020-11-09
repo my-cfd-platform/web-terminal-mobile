@@ -117,8 +117,8 @@ module.exports = (env, argv) => {
             : JSON.stringify('http://localhost:8081'),
         API_WITHDRAWAL_STRING:
           argv.mode === 'production'
-            ? JSON.stringify('/withdrawal')
-            : JSON.stringify('http://localhost:5681/withdrawal'),
+            ? JSON.stringify('')
+            : JSON.stringify('http://localhost:5681'),
         CHARTING_LIBRARY_PATH:
           argv.mode === 'production'
             ? JSON.stringify('/charting_library/')
