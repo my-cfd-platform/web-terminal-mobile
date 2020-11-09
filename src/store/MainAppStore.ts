@@ -430,6 +430,7 @@ export class MainAppStore implements MainAppStoreProps {
       this.signalRReconnectTimeOut = response.data.reconnectTimeOut;
       this.connectTimeOut = response.data.connectionTimeOut;
       this.setTokenHandler(response.data.token);
+      this.handleInitConnection(response.data.token);
       this.setRefreshToken(response.data.refreshToken);
       mixpanel.track(mixpanelEvents.LOGIN, {
         [mixapanelProps.BRAND_NAME]: this.initModel.brandName.toLowerCase(),
@@ -453,6 +454,7 @@ export class MainAppStore implements MainAppStoreProps {
       this.isAuthorized = true;
       this.signalRReconnectTimeOut = response.data.reconnectTimeOut;
       this.setTokenHandler(response.data.token);
+      this.handleInitConnection(response.data.token);
       this.setRefreshToken(response.data.refreshToken);
       mixpanel.track(mixpanelEvents.LOGIN);
     }
@@ -476,6 +478,7 @@ export class MainAppStore implements MainAppStoreProps {
       this.signalRReconnectTimeOut = response.data.reconnectTimeOut;
       this.isAuthorized = true;
       this.setTokenHandler(response.data.token);
+      this.handleInitConnection(response.data.token);
       this.setRefreshToken(response.data.refreshToken);
     }
 
