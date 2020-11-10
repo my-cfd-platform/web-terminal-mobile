@@ -87,7 +87,7 @@ const WithdrawBitcoinForm = () => {
         mainAppStore.initModel.tradingUrl
       );
       if (result.status === WithdrawalHistoryResponseStatus.Successful) {
-        withdrawalStore.opentTab(WithdrawalTabsEnum.History);
+        withdrawalStore.setPendingPopup();
         notificationStore.isSuccessfull = true;
         push(Page.WITHDRAW_SUCCESS);
 

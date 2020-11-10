@@ -80,8 +80,7 @@ const WithdrawVisaMasterForm = () => {
         mainAppStore.initModel.tradingUrl
       );
       if (result.status === WithdrawalHistoryResponseStatus.Successful) {
-        // TODO: redirect to success page
-
+        withdrawalStore.setPendingPopup();
         notificationStore.isSuccessfull = true;
         push(Page.WITHDRAW_SUCCESS);
 
