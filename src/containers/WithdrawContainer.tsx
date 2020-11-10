@@ -148,6 +148,12 @@ const OtherMethodsButton = styled.a`
   font-weight: bold;
   color: #252636;
   text-align: center;
+  text-decoration: none;
+
+  &:hover, &:active, &:focus, &:visited {
+    color: #252636;
+    text-decoration: none;
+  }
 `;
 
 const FailText = styled.span`
