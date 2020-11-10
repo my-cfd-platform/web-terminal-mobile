@@ -37,7 +37,6 @@ const WithdrawContainer: FC<Props> = observer(({ children, backBtn }) => {
     <BackFlowLayout pageTitle={t('Withdrawal')} backLink={backBtn}>
       {![
         PersonalDataKYCEnum.OnVerification,
-        PersonalDataKYCEnum.Restricted,
         PersonalDataKYCEnum.Verified,
       ].includes(
         userProfileStore.userProfile?.kyc || PersonalDataKYCEnum.NotVerified
