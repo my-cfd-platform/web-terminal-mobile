@@ -54,11 +54,10 @@ const WithdrawalHistory = observer(() => {
   useEffect(() => {
     if (
       userProfileStore.userProfile &&
-      mainAppStore.accounts.find((acc) => acc.isLive) &&
-      mainAppStore.accounts.find((acc) => acc.isLive)?.balance !== 0 &&
       [
         PersonalDataKYCEnum.Verified,
         PersonalDataKYCEnum.OnVerification,
+        PersonalDataKYCEnum.Restricted,
       ].includes(userProfileStore.userProfile.kyc)
     ) {
       initHistoryList();

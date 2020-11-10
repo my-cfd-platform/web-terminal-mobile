@@ -38,6 +38,7 @@ const WithdrawContainer: FC<Props> = observer(({ children, backBtn }) => {
       {![
         PersonalDataKYCEnum.OnVerification,
         PersonalDataKYCEnum.Verified,
+        PersonalDataKYCEnum.Restricted,
       ].includes(
         userProfileStore.userProfile?.kyc || PersonalDataKYCEnum.NotVerified
       ) ? (

@@ -45,22 +45,15 @@ const WithdrawList = observer(() => {
           }
         }
 
-        if (result.status === WithdrawalHistoryResponseStatus.SystemError) {
-          notificationStore.isSuccessfull = false;
-          notificationStore.notificationMessage = t('Technical Error');
-          notificationStore.openNotification();
-        }
-
         withdrawalStore.endLoad();
       } catch (error) {}
     };
     if (
       userProfileStore.userProfile &&
-      mainAppStore.accounts.find((acc) => acc.isLive) &&
-      mainAppStore.accounts.find((acc) => acc.isLive)?.balance !== 0 &&
       [
         PersonalDataKYCEnum.Verified,
         PersonalDataKYCEnum.OnVerification,
+        PersonalDataKYCEnum.Restricted
       ].includes(userProfileStore.userProfile.kyc)
     ) {
       initHistoryList();
