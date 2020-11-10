@@ -61,6 +61,7 @@ const WithdrawList = observer(() => {
       [
         PersonalDataKYCEnum.Verified,
         PersonalDataKYCEnum.OnVerification,
+        PersonalDataKYCEnum.Restricted
       ].includes(userProfileStore.userProfile.kyc)
     ) {
       initHistoryList();
