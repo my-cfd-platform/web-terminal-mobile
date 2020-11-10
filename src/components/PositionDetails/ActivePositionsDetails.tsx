@@ -14,7 +14,7 @@ import ClosePositionButton from '../ClosePositionButton';
 import { getProcessId } from '../../helpers/getProcessId';
 import API from '../../helpers/API';
 import { OperationApiResponseCodes } from '../../enums/OperationApiResponseCodes';
-import { useHistory } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import EquityPnL from './EquityPnL';
 import calculateFloatingProfitAndLoss from '../../helpers/calculateFloatingProfitAndLoss';
 import { AskBidEnum } from '../../enums/AskBid';
@@ -310,24 +310,29 @@ const ActivePositionsDetails: FC<Props> = observer((props) => {
                 {t('Stop Loss')}
               </PrimaryTextSpan>
 
-              <PrimaryTextSpan color="rgba(196, 196, 196, 0.5)" fontSize="16px">
-                {position.sl !== null ? (
-                  <>
-                    {position.slType !== TpSlTypeEnum.Price &&
-                      position.sl < 0 &&
-                      '-'}
-                    {position.slType !== TpSlTypeEnum.Price &&
-                      mainAppStore.activeAccount?.symbol}
-                    {position.slType === TpSlTypeEnum.Price
-                      ? Math.abs(position.sl).toFixed(
-                          getPressision(position.instrument)
-                        )
-                      : Math.abs(position.sl).toFixed(2)}
-                  </>
-                ) : (
-                  t('Add')
-                )}
-              </PrimaryTextSpan>
+              <Link to={`${Page.SL_EDIT_MAIN}/${positionId}`}>
+                <PrimaryTextSpan
+                  color="rgba(196, 196, 196, 0.5)"
+                  fontSize="16px"
+                >
+                  {position.sl !== null ? (
+                    <>
+                      {position.slType !== TpSlTypeEnum.Price &&
+                        position.sl < 0 &&
+                        '-'}
+                      {position.slType !== TpSlTypeEnum.Price &&
+                        mainAppStore.activeAccount?.symbol}
+                      {position.slType === TpSlTypeEnum.Price
+                        ? Math.abs(position.sl).toFixed(
+                            getPressision(position.instrument)
+                          )
+                        : Math.abs(position.sl).toFixed(2)}
+                    </>
+                  ) : (
+                    t('Add')
+                  )}
+                </PrimaryTextSpan>
+              </Link>
             </FlexContainer>
 
             <FlexContainer
@@ -341,25 +346,29 @@ const ActivePositionsDetails: FC<Props> = observer((props) => {
               <PrimaryTextSpan color="#ffffff" fontSize="16px">
                 {t('Take Profit')}
               </PrimaryTextSpan>
-
-              <PrimaryTextSpan color="rgba(196, 196, 196, 0.5)" fontSize="16px">
-                {position.tp !== null ? (
-                  <>
-                    {position.tpType !== TpSlTypeEnum.Price &&
-                      position.tp < 0 &&
-                      '-'}
-                    {position.tpType !== TpSlTypeEnum.Price &&
-                      mainAppStore.activeAccount?.symbol}
-                    {position.tpType === TpSlTypeEnum.Price
-                      ? Math.abs(position.tp).toFixed(
-                          getPressision(position.instrument)
-                        )
-                      : Math.abs(position.tp).toFixed(2)}
-                  </>
-                ) : (
-                  t('Add')
-                )}
-              </PrimaryTextSpan>
+              <Link to={`${Page.TP_EDIT_MAIN}/${positionId}`}>
+                <PrimaryTextSpan
+                  color="rgba(196, 196, 196, 0.5)"
+                  fontSize="16px"
+                >
+                  {position.tp !== null ? (
+                    <>
+                      {position.tpType !== TpSlTypeEnum.Price &&
+                        position.tp < 0 &&
+                        '-'}
+                      {position.tpType !== TpSlTypeEnum.Price &&
+                        mainAppStore.activeAccount?.symbol}
+                      {position.tpType === TpSlTypeEnum.Price
+                        ? Math.abs(position.tp).toFixed(
+                            getPressision(position.instrument)
+                          )
+                        : Math.abs(position.tp).toFixed(2)}
+                    </>
+                  ) : (
+                    t('Add')
+                  )}
+                </PrimaryTextSpan>
+              </Link>
             </FlexContainer>
           </FlexContainer>
 

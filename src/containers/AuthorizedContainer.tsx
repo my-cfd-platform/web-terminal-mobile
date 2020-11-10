@@ -38,6 +38,8 @@ const AuthorizedContainer: FC = ({ children }) => {
     Page.WITHDRAW_BITCOIN,
     Page.WITHDRAW_HISTORY_ID,
     Page.WITHDRAW_SUCCESS,
+    Page.SL_EDIT,
+    Page.TP_EDIT,
   ]);
 
   const { push } = useHistory();

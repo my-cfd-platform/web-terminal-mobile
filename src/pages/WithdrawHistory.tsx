@@ -29,7 +29,6 @@ const WithdrawalHistory = observer(() => {
                 moment(a.creationDate).valueOf()
             )
           : result.history;
-
         withdrawalStore.setHistory(sortedList);
       }
 
@@ -38,16 +37,13 @@ const WithdrawalHistory = observer(() => {
         notificationStore.notificationMessage = t('Technical Error');
         notificationStore.openNotification();
       }
-
       withdrawalStore.endLoad();
     } catch (error) {}
   }, []);
 
   useEffect(() => {
     initHistoryList();
-  }, []);
-
-  useEffect(() => {
+  
     mixpanel.track(mixpanelEvents.WITHDRAW_HISTORY_VIEW, {
       [mixapanelProps.AVAILABLE_BALANCE]:
         mainAppStore.accounts.find((item) => item.isLive)?.balance || 0,
