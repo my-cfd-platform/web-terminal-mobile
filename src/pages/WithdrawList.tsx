@@ -72,10 +72,6 @@ const WithdrawList = observer(() => {
       [mixapanelProps.AVAILABLE_BALANCE]:
         mainAppStore.accounts.find((item) => item.isLive)?.balance || 0,
     });
-
-    return () => {
-      withdrawalStore.setHistory(null);
-    }
   }, []);
 
   return (
