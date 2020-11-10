@@ -63,7 +63,7 @@ const WithdrawalHistory = observer(() => {
     ) {
       initHistoryList();
     }
-  }, [userProfileStore.userProfile]);
+  }, [userProfileStore.userProfile, mainAppStore.accounts]);
 
   useEffect(() => {
     mixpanel.track(mixpanelEvents.WITHDRAW_HISTORY_VIEW, {
