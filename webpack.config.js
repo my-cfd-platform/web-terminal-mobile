@@ -101,6 +101,7 @@ module.exports = (env, argv) => {
         ),
       }),
       new webpack.DefinePlugin({
+        WS_HOST: JSON.stringify('http://localhost:5678/signalr'),
         API_STRING: ['production', 'none'].includes(argv.mode)
           ? JSON.stringify('')
           : JSON.stringify('http://localhost:5678'),
