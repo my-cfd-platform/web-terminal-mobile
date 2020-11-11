@@ -46,7 +46,7 @@ const injectInerceptors = (mainAppStore: MainAppStore) => {
           mainAppStore.rootStore.badRequestPopupStore.stopRecconect();
         }, +mainAppStore.connectTimeOut);
       }
-
+      
       switch (error.response?.status) {
         case 400:
         case 500:
@@ -56,7 +56,6 @@ const injectInerceptors = (mainAppStore: MainAppStore) => {
               mainAppStore.rootStore.serverErrorPopupStore.openModal();
             }
           }
-          requestAgain();
           setTimeout(requestAgain, +mainAppStore.connectTimeOut);
           mainAppStore.isLoading = false;
           break;
