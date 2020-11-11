@@ -80,10 +80,11 @@ const WithdrawVisaMasterForm = () => {
         mainAppStore.initModel.tradingUrl
       );
       if (result.status === WithdrawalHistoryResponseStatus.Successful) {
-        withdrawalStore.setPendingPopup();
+        
         notificationStore.isSuccessfull = true;
         push(Page.WITHDRAW_SUCCESS);
-
+        withdrawalStore.setPendingPopup();
+        
         mixpanel.track(mixpanelEvents.WITHDRAW_REQUEST, {
           [mixapanelProps.AMOUNT]: +values.amount,
           [mixapanelProps.WITHDRAWAL_METHOD]: 'Bankwire',
