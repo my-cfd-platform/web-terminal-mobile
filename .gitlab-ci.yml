@@ -1,5 +1,5 @@
 variables:
-  BUILD_VERSION: 1.0.6
+  BUILD_VERSION: 1.0.7
   DOCKER_IMAGE_TAG: monfex/simple-trading-web-terminal-mobile:${BUILD_VERSION}
   DOCKER_DEV_IMAGE_TAG: monfex/simple-trading-web-terminal-mobile:${CI_COMMIT_REF_NAME}
   K8S_DEV_APP_SELECTOR: simple-trading-web-terminal-mobile
@@ -22,24 +22,35 @@ build-dev:
     - npm -v
     - node -v
     - npm i
-    - npm run build
+    - npm run buildTest
   artifacts:
     paths:
       - ${BUILD_FOLDER}
   only:
     - development
 
-build:
+build-test:
   stage: build
   image: node:14.6.0
   script:
     - npm i
-    - npm run build
+    - npm run buildTest
   artifacts:
     paths:
       - ${BUILD_FOLDER}
   only:
     - test
+
+build-master:
+  stage: build
+  image: node:14.6.0
+  script:
+    - npm i
+    - npm run buildProd
+  artifacts:
+    paths:
+      - ${BUILD_FOLDER}
+  only:
     - master
 
 publish-test:

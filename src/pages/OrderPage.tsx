@@ -38,6 +38,7 @@ const OrderPage = observer(() => {
     quotesStore,
     activePositionNotificationStore,
     notificationStore,
+    markersOnChartStore,
   } = useStores();
   const { push } = useHistory();
 
@@ -47,7 +48,7 @@ const OrderPage = observer(() => {
   );
 
   if (!instrumentsStore.activeInstrument) {
-    push(Page.DASHBOARD)
+    push(Page.DASHBOARD);
     return null;
   }
 
@@ -245,6 +246,8 @@ const OrderPage = observer(() => {
       const balanceBeforeOrder = getActiveAccountBalance();
       const response = await API.openPosition(modelToSubmit);
       if (response.result === OperationApiResponseCodes.Ok) {
+        markersOnChartStore.addNewMarker(response.position);
+
         if (instrumentsStore.activeInstrument) {
           activePositionNotificationStore.notificationMessageData = {
             equity: 0,
@@ -360,6 +363,7 @@ const OrderPage = observer(() => {
     resetForm,
     handleSubmit,
     getFieldProps,
+    isSubmitting,
     errors,
     touched,
   } = useFormik({
@@ -478,7 +482,11 @@ const OrderPage = observer(() => {
             </MultiplierSelect>
           </FlexContainer>
 
-          <ConfirmButton type="submit" actionType={type}>
+          <ConfirmButton
+            type="submit"
+            actionType={type}
+            disabled={isSubmitting}
+          >
             {t('Confirm')} {mainAppStore.activeAccount?.symbol}
             {values.investmentAmount}
           </ConfirmButton>

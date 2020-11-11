@@ -80,16 +80,16 @@ const SignUp = () => {
                   captcha,
                 });
                 if (result !== OperationApiResponseCodes.Ok) {
-                  notificationStore.notificationMessage =
-                    apiResponseCodeMessages[result];
+                  notificationStore.notificationMessage = t(
+                    apiResponseCodeMessages[result]
+                  );
                   notificationStore.isSuccessfull = false;
                   notificationStore.openNotification();
                   mainAppStore.isLoading = false;
                   mixpanel.track(mixpanelEvents.SIGN_UP_FAILED, {
                     [mixapanelProps.BRAND_NAME]: mainAppStore.initModel.brandName.toLowerCase(),
-                    [mixapanelProps.ERROR_TEXT]: t(
-                      apiResponseCodeMessages[result]
-                    ),
+                    [mixapanelProps.ERROR_TEXT]:
+                      apiResponseCodeMessages[result],
                     [mixapanelProps.EMAIL]: values.email,
                   });
                 } else {

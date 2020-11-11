@@ -39,4 +39,10 @@ export class WithdrawalStore {
   setHistory = (list: WithdrawalHistoryModel[] | null) => {
     this.history = list;
   }
+
+  @action
+  clearStore = () => {
+    this.closePendingPopup();
+    this.setHistory(null);
+  }
 }

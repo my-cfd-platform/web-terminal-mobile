@@ -56,8 +56,7 @@ const RoutingLayout: FC = () => {
     default:
       return (
         <FlexContainer
-          maxHeight={`calc(${FULL_VH})`}
-          height={`calc(${FULL_VH})`}
+          height="100%"
           width="100%"
         >
           <Observer>

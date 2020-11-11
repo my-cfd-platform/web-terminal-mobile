@@ -9,7 +9,6 @@ import ChartContainer from './ChartContainer';
 import NavigationPanel from '../components/NavigationPanel';
 import { useRouteMatch, useHistory } from 'react-router-dom';
 import Page from '../constants/Pages';
-import styled from '@emotion/styled';
 import { FULL_VH, LAST_PAGE_VISITED } from '../constants/global';
 import API from '../helpers/API';
 import { getProcessId } from '../helpers/getProcessId';
@@ -31,7 +30,16 @@ const AuthorizedContainer: FC = ({ children }) => {
     Page.ACCOUNT_ABOUT_US,
     Page.ACCOUNTS_SWITCH,
     Page.ACCOUNT_CHANGE_LANGUAGE,
+    Page.ACCOUNT_VERIFICATION,
+    Page.WITHDRAW_LIST,
+    Page.WITHDRAW_HISTORY_ID,
+    Page.WITHDRAW_HISTORY,
+    Page.WITHDRAW_VISAMASTER,
+    Page.WITHDRAW_BITCOIN,
+    Page.WITHDRAW_HISTORY_ID,
+    Page.WITHDRAW_SUCCESS,
   ]);
+
   const { push } = useHistory();
   const { mainAppStore, userProfileStore, serverErrorPopupStore } = useStores();
   const showNavbarAndNav = !match?.isExact;
@@ -79,8 +87,9 @@ const AuthorizedContainer: FC = ({ children }) => {
   }, [location.pathname]);
 
   return (
-    <WrapperLayoutFix
+    <FlexContainer
       position="relative"
+      height="100%"
       width="100vw"
       flexDirection="column"
       overflow="hidden"
@@ -121,18 +130,14 @@ const AuthorizedContainer: FC = ({ children }) => {
           showNavbarAndNav ? `calc(${FULL_VH} - 128px)` : `calc(${FULL_VH})`
         }
         flexDirection="column"
+        overflow="auto"
       >
         {children}
         <Observer>{() => <ChartContainer />}</Observer>
       </FlexContainer>
       {showNavbarAndNav && <NavigationPanel />}
-    </WrapperLayoutFix>
+    </FlexContainer>
   );
 };
 
 export default AuthorizedContainer;
-
-const WrapperLayoutFix = styled(FlexContainer)`
-  height: 100vh;
-  height: calc(${FULL_VH});
-`;

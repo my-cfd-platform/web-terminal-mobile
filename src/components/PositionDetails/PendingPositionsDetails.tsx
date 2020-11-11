@@ -108,6 +108,7 @@ const PendingPositionsDetails: FC<Props> = observer((props) => {
         >
           {position && (
             <PendingOrderItem
+              isInner={true}
               pendingOrder={position}
               currencySymbol={mainAppStore.activeAccount?.symbol || ''}
             />

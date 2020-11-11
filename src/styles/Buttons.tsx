@@ -15,6 +15,7 @@ export const PrimaryButton = styled(ButtonWithoutStyles)<PrimaryButtonProps>`
   background-color: ${props => props.backgroundColor || Colors.ACCENT_BLUE};
   border-radius: 12px;
   transition: background-color 0.2s ease;
+  font-weight: 600;
 
   &:hover {
     background-color: #9ffff2;
@@ -26,6 +27,7 @@ export const PrimaryButton = styled(ButtonWithoutStyles)<PrimaryButtonProps>`
 
   &:disabled {
     background-color: ${Colors.DISSABLED};
+    color: #252636;
   }
 `;
 

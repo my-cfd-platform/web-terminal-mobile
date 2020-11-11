@@ -6,8 +6,6 @@ import UserIcon from '../assets/svg/profile/icon-user.svg';
 import SvgIcon from '../components/SvgIcon';
 import { PrimaryTextSpan } from '../styles/TextsElements';
 import { useStores } from '../hooks/useStores';
-import API from '../helpers/API';
-import { getProcessId } from '../helpers/getProcessId';
 import { Link } from 'react-router-dom';
 import { ButtonWithoutStyles } from '../styles/ButtonWithoutStyles';
 import Colors from '../constants/Colors';
@@ -20,31 +18,16 @@ import IconWithdraw from '../assets/svg/profile/icon-withdrawal.svg';
 import IconBalanceHistory from '../assets/svg/profile/icon-balance-history.svg';
 import IconLogout from '../assets/svg/profile/icon-logout.svg';
 import IconAboutUs from '../assets/svg/profile/icon-about.svg';
+import IconVerify from '../assets/svg/profile/icon-verify.svg';
+import { PersonalDataKYCEnum } from '../enums/PersonalDataKYCEnum';
+import AchievementStatusLabel from '../components/AchievementStatusLabel';
+import { observer, Observer } from 'mobx-react-lite';
 
-const AccountProfile = () => {
+const AccountProfile = observer(() => {
   const { mainAppStore, userProfileStore } = useStores();
   const { t } = useTranslation();
 
-  const [email, setEmail] = useState('');
-  const [name, setName] = useState('');
-
   const handleLogout = () => mainAppStore.signOut();
-
-  useEffect(() => {
-    async function fetchPersonalData() {
-      try {
-        const response = await API.getPersonalData(
-          getProcessId(),
-          mainAppStore.initModel.authUrl
-        );
-        setEmail(response.data.email || '');
-        setName(
-          `${response.data.firstName || ''} ${response.data.lastName || ''}`
-        );
-      } catch (error) {}
-    }
-    fetchPersonalData();
-  }, []);
 
   const urlParams = new URLSearchParams();
 
@@ -64,6 +47,7 @@ const AccountProfile = () => {
 
   return (
     <FlexContainer flexDirection="column">
+      <AchievementStatusLabel />
       <FlexContainer padding="16px" marginBottom="24px">
         <UserPhoto
           alignItems="center"
@@ -91,15 +75,47 @@ const AccountProfile = () => {
           >
             {name}
           </PrimaryTextSpan>
-          <PrimaryTextSpan
-            color="rgba(255, 255, 255, 0.4)"
-            fontSize="13px"
-            fontWeight={500}
-          >
-            {email}
-          </PrimaryTextSpan>
+          <Observer>
+            {() => (
+              <PrimaryTextSpan
+                color="rgba(255, 255, 255, 0.4)"
+                fontSize="13px"
+                fontWeight={500}
+              >
+                {userProfileStore.userProfile?.email}
+              </PrimaryTextSpan>
+            )}
+          </Observer>
         </FlexContainer>
       </FlexContainer>
+
+      {(userProfileStore.userProfile?.kyc === PersonalDataKYCEnum.NotVerified) && (
+        <FlexContainer flexDirection="column" marginBottom="24px">
+          <ProfileMenuLink to={Page.ACCOUNT_VERIFICATION}>
+            <FlexContainer alignItems="center">
+              <FlexContainer
+                width="28px"
+                height="28px"
+                backgroundColor="#00000000"
+                borderRadius="50%"
+                justifyContent="center"
+                alignItems="center"
+                marginRight="14px"
+              >
+                <SvgIcon {...IconVerify} fillColor="#ED145B" />
+              </FlexContainer>
+              <PrimaryTextSpan
+                color="#ffffff"
+                fontSize="16px"
+                fontWeight="normal"
+              >
+                {t('Fill in personal details')}
+              </PrimaryTextSpan>
+            </FlexContainer>
+            <SvgIcon {...IconArrowLink} fillColor="rgba(196, 196, 196, 0.5)" />
+          </ProfileMenuLink>
+        </FlexContainer>
+      )}
 
       <FlexContainer flexDirection="column" marginBottom="24px">
         <FlexContainer padding="0 16px" marginBottom="8px">
@@ -137,7 +153,7 @@ const AccountProfile = () => {
           <SvgIcon {...IconArrowLink} fillColor="rgba(196, 196, 196, 0.5)" />
         </ProfileMenuA>
 
-        <ProfileMenuLink to={Page.ACCOUNT_WITHDRAW}>
+        <ProfileMenuLink to={Page.WITHDRAW_LIST}>
           <FlexContainer alignItems="center">
             <FlexContainer
               width="28px"
@@ -210,9 +226,9 @@ const AccountProfile = () => {
               marginRight="14px"
             >
               <PrimaryTextSpan
-                  color="#ffffff"
-                  fontSize="9px"
-                  fontWeight="normal"
+                color="#ffffff"
+                fontSize="9px"
+                fontWeight="normal"
               >
                 {mainAppStore.lang.substr(0, 2).toUpperCase()}
               </PrimaryTextSpan>
@@ -278,7 +294,7 @@ const AccountProfile = () => {
       </FlexContainer>
     </FlexContainer>
   );
-};
+});
 
 export default AccountProfile;
 

@@ -36,6 +36,7 @@ export interface FlexContainerProps {
   flex?: string;
   opacity?: string;
   order?: string;
+  backgroundImage?: string;
 }
 
 export const FlexContainer = styled.div<FlexContainerProps>`
@@ -56,6 +57,7 @@ export const FlexContainer = styled.div<FlexContainerProps>`
   flex-wrap: ${(props) => props.flexWrap};
   flex-direction: ${(props) => props.flexDirection};
   background-color: ${(props) => props.backgroundColor};
+  background-image: ${(props) => props.backgroundImage};
   color: ${(props) => props.textColor};
   top: ${(props) => props.top};
   right: ${(props) => props.right};
