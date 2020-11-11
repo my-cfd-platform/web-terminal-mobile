@@ -1,0 +1,121 @@
+variables:
+  BUILD_VERSION: 1.0.6
+  DOCKER_IMAGE_TAG: monfex/simple-trading-web-terminal-mobile:${BUILD_VERSION}
+  DOCKER_DEV_IMAGE_TAG: monfex/simple-trading-web-terminal-mobile:${CI_COMMIT_REF_NAME}
+  K8S_DEV_APP_SELECTOR: simple-trading-web-terminal-mobile
+  K8S_DEV_NAMESPACE: simple-trading-dev
+  K8S_DEV_CONTEXT: SimpleTradingDevKubernetes
+  BUILD_FOLDER: wwwroot
+  KUBERNETES_APP_SELECTOR_NAME: web-terminal-mobile
+
+stages:
+  - build
+  - publish
+  - publish-kubernetes
+
+build-dev:
+  stage: build
+  image: node:14.6.0
+  script:
+    - pwd
+    - ls -la
+    - npm -v
+    - node -v
+    - npm i
+    - npm run build
+  artifacts:
+    paths:
+      - ${BUILD_FOLDER}
+  only:
+    - development
+
+build:
+  stage: build
+  image: node:14.6.0
+  script:
+    - npm i
+    - npm run build
+  artifacts:
+    paths:
+      - ${BUILD_FOLDER}
+  only:
+    - test
+    - master
+
+publish-test:
+  stage: publish
+  services:
+    - docker:dind
+  variables:
+    DOCKER_DRIVER: overlay
+  script:
+    - ls ${BUILD_FOLDER}
+    - ls
+    - echo "$DOCKER_LOGIN"
+    - echo "$DOCKER_PASSWORD" | docker login $DOCKER_REGISTRY_HOST --username $DOCKER_LOGIN --password-stdin
+    - docker build --no-cache --build-arg BUILD_VERSION=${BUILD_VERSION} -t $DOCKER_REGISTRY_HOST/${DOCKER_IMAGE_TAG}-${CI_COMMIT_REF_NAME}-${CI_PIPELINE_ID} .
+    - docker push $DOCKER_REGISTRY_HOST/${DOCKER_IMAGE_TAG}-${CI_COMMIT_REF_NAME}-${CI_PIPELINE_ID}
+  image: docker:latest
+  only:
+    - test
+
+publish-prod:
+  stage: publish
+  services:
+    - docker:dind
+  variables:
+    DOCKER_DRIVER: overlay
+  script:
+    - ls ${BUILD_FOLDER}
+    - ls
+    - echo "$DOCKER_LOGIN"
+    - echo "$DOCKER_PASSWORD" | docker login $DOCKER_REGISTRY_HOST --username $DOCKER_LOGIN --password-stdin
+    - docker build --no-cache --build-arg BUILD_VERSION=${BUILD_VERSION} -t $DOCKER_REGISTRY_HOST/${DOCKER_IMAGE_TAG} .
+    - docker push $DOCKER_REGISTRY_HOST/${DOCKER_IMAGE_TAG}
+  image: docker:latest
+  only:
+    - master
+
+publish-dev:
+  stage: publish
+  tags: [monfex]
+  services:
+    - docker:dind
+  variables:
+    DOCKER_DRIVER: overlay
+  script:
+    - ls ${BUILD_FOLDER}
+    - ls
+    - echo "$DOCKER_LOGIN"
+    - echo "$DOCKER_PASSWORD" | docker login $DOCKER_REGISTRY_HOST --username $DOCKER_LOGIN --password-stdin
+    - docker build --build-arg BUILD_VERSION=${BUILD_VERSION} -t $DOCKER_REGISTRY_HOST/${DOCKER_DEV_IMAGE_TAG} .
+    - docker push $DOCKER_REGISTRY_HOST/${DOCKER_DEV_IMAGE_TAG}
+  image: docker:latest
+  only:
+    - development
+
+publish-kubernetes-dev:
+  stage: publish-kubernetes
+  image: simpletrading.azurecr.io/monfex/simple-trading-kubectl:latest
+  services:
+    - docker:dind
+  before_script:
+    - kubectl config use-context $KUBERNETES_DEV_CONTEXT
+  script:
+    - kubectl delete pods -l app=${KUBERNETES_APP_SELECTOR_NAME} --namespace=$KUBERNETES_DEV_NAMESPACE
+  only:
+    - development
+
+publish-kubernetes-test:
+  stage: publish-kubernetes
+  image: simpletrading.azurecr.io/monfex/simple-trading-kubectl:latest
+  services:
+    - docker:dind
+  before_script:
+    - kubectl config use-context $KUBERNETES_TEST_CONTEXT
+  script:
+    - kubectl delete pods -l app=${KUBERNETES_APP_SELECTOR_NAME} --namespace=$KUBERNETES_TEST_NAMESPACE
+    - kubectl set image deployments/${KUBERNETES_APP_SELECTOR_NAME} ${KUBERNETES_APP_SELECTOR_NAME}=$DOCKER_REGISTRY_HOST/${DOCKER_IMAGE_TAG}-${CI_COMMIT_REF_NAME}-${CI_PIPELINE_ID} --namespace=$KUBERNETES_TEST_NAMESPACE
+    - kubectl patch deployment ${KUBERNETES_APP_SELECTOR_NAME} -p "{\"spec\":{\"template\":{\"metadata\":{\"labels\":{\"date\":\"`date +'%s'`\"}}}}}" --namespace=$KUBERNETES_TEST_NAMESPACE
+  only:
+    - test

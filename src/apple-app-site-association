@@ -1,0 +1,11 @@
+{
+  "applinks": {
+    "apps": [],
+    "details": [
+    {
+      "appID": "NP352Z7R38.monfex.simple.trading",
+      "paths": ["/recovery/*"]
+    }
+    ]
+  }
+}
