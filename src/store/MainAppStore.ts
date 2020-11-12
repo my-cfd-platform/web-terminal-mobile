@@ -383,7 +383,8 @@ export class MainAppStore implements MainAppStoreProps {
   getActiveAccount = async () => {
     try {
       const activeAccountId = await API.getKeyValue(
-        KeysInApi.ACTIVE_ACCOUNT_ID
+        KeysInApi.ACTIVE_ACCOUNT_ID,
+        this.initModel.tradingUrl
       );
       const activeAccount = this.accounts.find(
         (item) => item.id === activeAccountId
@@ -413,10 +414,13 @@ export class MainAppStore implements MainAppStoreProps {
     // TODO: think how remove crutch
     this.rootStore.historyStore.positionsHistoryReport.positionsHistory = [];
     this.rootStore.tradingViewStore.tradingWidget = undefined;
-    API.setKeyValue({
-      key: KeysInApi.ACTIVE_ACCOUNT_ID,
-      value: account.id,
-    });
+    API.setKeyValue(
+      {
+        key: KeysInApi.ACTIVE_ACCOUNT_ID,
+        value: account.id,
+      },
+      this.initModel.tradingUrl
+    );
   };
 
   @action
