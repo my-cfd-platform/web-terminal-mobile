@@ -93,7 +93,8 @@ const injectInerceptors = (mainAppStore: MainAppStore) => {
       IS_LIVE &&
       config.url &&
       config.url.includes('://') &&
-      !config.url.includes('auth/')
+      !config.url.includes('auth/') &&
+      mainAppStore.initModel.tradingUrl
     ) {
       const arrayOfSubpath = config.url.split('://')[1].split('/');
       const subPath = arrayOfSubpath.slice(1).join('/');
