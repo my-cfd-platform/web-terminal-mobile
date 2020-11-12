@@ -137,7 +137,7 @@ export class MainAppStore implements MainAppStoreProps {
   };
 
   setInterceptors = () => {
-    axios.interceptors.request.use(function (config: AxiosRequestConfig) {
+    axios.interceptors.request.use((config: AxiosRequestConfig) => {
       if (
         IS_LIVE &&
         this.initModel.tradingUrl &&
