@@ -93,15 +93,12 @@ const injectInerceptors = (mainAppStore: MainAppStore) => {
       IS_LIVE &&
       mainAppStore.initModel.tradingUrl &&
       config.url &&
-      !config.url.includes('auth/')
+      !config.url.includes('auth/') &&
+      config.url.includes('://')
     ) {
-      if (config.url.includes('://')) {
-        const arrayOfSubpath = config.url.split('://')[1].split('/');
-        const subPath = arrayOfSubpath.slice(1).join('/');
-        config.url = `${mainAppStore.initModel.tradingUrl}/${subPath}`;
-      } else {
-        config.url = `${mainAppStore.initModel.tradingUrl}${config.url}`;
-      }
+      const arrayOfSubpath = config.url.split('://')[1].split('/');
+      const subPath = arrayOfSubpath.slice(1).join('/');
+      config.url = `${mainAppStore.initModel.tradingUrl}/${subPath}`;
     }
     config.headers[RequestHeaders.ACCEPT_LANGUAGE] = `${mainAppStore.lang}`;
     return config;
