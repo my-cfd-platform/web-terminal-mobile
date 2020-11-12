@@ -147,9 +147,9 @@ class API {
     return bars;
   };
 
-  getKeyValue = async (key: string) => {
+  getKeyValue = async (key: string, tradingUrl: string) => {
     const response = await axios.get<string>(
-      `${API_STRING}${API_LIST.KEY_VALUE.GET}`,
+      `${API_STRING || tradingUrl}${API_LIST.KEY_VALUE.GET}`,
       {
         params: {
           key,
@@ -159,10 +159,13 @@ class API {
     return response.data;
   };
 
-  setKeyValue = async (params: { key: string; value: string }) => {
+  setKeyValue = async (
+    params: { key: string; value: string },
+    tradingUrl: string
+  ) => {
     const formData = this.convertParamsToFormData(params);
     const response = await axios.post<void>(
-      `${API_STRING}${API_LIST.KEY_VALUE.POST}`,
+      `${API_STRING || tradingUrl}${API_LIST.KEY_VALUE.POST}`,
       formData
     );
     return response.data;
