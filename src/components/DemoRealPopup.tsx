@@ -70,7 +70,9 @@ const DemoRealPopup = () => {
         });
         mainAppStore.setActiveAccount(acc);
         mainAppStore.isLoading = true;
-        window.location.href = `${API_DEPOSIT_STRING}/?${parsedParams}`;
+        window.location.href = `${
+          IS_LIVE ? mainAppStore.initModel.tradingUrl : ''
+        }${API_DEPOSIT_STRING}/?${parsedParams}`;
         mainAppStore.isDemoRealPopup = false;
       } catch (error) {
         badRequestPopupStore.openModal();
