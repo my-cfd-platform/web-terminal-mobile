@@ -4,7 +4,7 @@ import {
   LOCAL_STORAGE_LANGUAGE,
   LAST_PAGE_VISITED,
 } from './../constants/global';
-import axios from 'axios';
+import axios, { AxiosRequestConfig } from 'axios';
 import {
   UserAuthenticate,
   UserRegistration,
@@ -128,11 +128,30 @@ export class MainAppStore implements MainAppStoreProps {
     try {
       const initModel = await API.getInitModel();
       this.initModel = initModel;
+      this.setInterceptors();
     } catch (error) {
       this.isInitLoading = false;
       this.rootStore.badRequestPopupStore.openModal();
       this.rootStore.badRequestPopupStore.setMessage(error);
     }
+  };
+
+  setInterceptors = () => {
+    axios.interceptors.request.use(function (config: AxiosRequestConfig) {
+      if (
+        IS_LIVE &&
+        this.initModel.tradingUrl &&
+        config.url &&
+        !config.url.includes('auth/') &&
+        config.url.includes('://')
+      ) {
+        const arrayOfSubpath = config.url.split('://')[1].split('/');
+        const subPath = arrayOfSubpath.slice(1).join('/');
+        config.url = `${this.initModel.tradingUrl}/${subPath}`;
+      }
+      config.headers[RequestHeaders.ACCEPT_LANGUAGE] = `${this.lang}`;
+      return config;
+    });
   };
 
   handleInitConnection = async (token = this.token) => {
