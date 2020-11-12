@@ -142,13 +142,17 @@ export class MainAppStore implements MainAppStoreProps {
         IS_LIVE &&
         this.initModel.tradingUrl &&
         config.url &&
-        !config.url.includes('auth/') &&
-        config.url.includes('://')
+        !config.url.includes('auth/')
       ) {
-        const arrayOfSubpath = config.url.split('://')[1].split('/');
-        const subPath = arrayOfSubpath.slice(1).join('/');
-        config.url = `${this.initModel.tradingUrl}/${subPath}`;
+        if (config.url.includes('://')) {
+          const arrayOfSubpath = config.url.split('://')[1].split('/');
+          const subPath = arrayOfSubpath.slice(1).join('/');
+          config.url = `${this.initModel.tradingUrl}/${subPath}`;
+        } else {
+          config.url = `${this.initModel.tradingUrl}${config.url}`;
+        }
       }
+
       config.headers[RequestHeaders.ACCEPT_LANGUAGE] = `${this.lang}`;
       return config;
     });
