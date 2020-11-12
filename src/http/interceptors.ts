@@ -89,7 +89,12 @@ const injectInerceptors = (mainAppStore: MainAppStore) => {
     }
   );
   axios.interceptors.request.use(function (config: AxiosRequestConfig) {
-    if (IS_LIVE && config.url && config.url.includes('://')) {
+    if (
+      IS_LIVE &&
+      config.url &&
+      config.url.includes('://') &&
+      !config.url.includes('auth/')
+    ) {
       const arrayOfSubpath = config.url.split('://')[1].split('/');
       const subPath = arrayOfSubpath.slice(1).join('/');
       config.url = `${mainAppStore.initModel.tradingUrl}/${subPath}`;
