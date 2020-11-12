@@ -68,9 +68,7 @@ const LpLogin = observer(() => {
       urlParams.set('lang', mainAppStore.lang);
       urlParams.set('env', 'web_mob');
       urlParams.set('trader_id', userProfileStore.userProfileId);
-      window.location.href = `${
-        IS_LIVE ? mainAppStore.initModel.tradingUrl : ''
-      }${API_DEPOSIT_STRING}/?${urlParams.toString()}`;
+      window.location.href = `${API_DEPOSIT_STRING}/?${urlParams.toString()}`;
     }
   }, [
     page,

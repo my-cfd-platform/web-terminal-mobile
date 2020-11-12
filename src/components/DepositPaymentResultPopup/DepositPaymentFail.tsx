@@ -58,9 +58,7 @@ const DepositPaymentFail: FC = () => {
       </FlexContainer>
       <FlexContainer padding="0 16px" width="100%">
         <OtherMethodsButton
-          href={`${
-            IS_LIVE ? mainAppStore.initModel.tradingUrl : ''
-          }${API_DEPOSIT_STRING}/?${parsedParams}`}
+          href={`${API_DEPOSIT_STRING}/?${parsedParams}`}
           onClick={replaceCurrentState}
         >
           {t('Back to Deposit')}

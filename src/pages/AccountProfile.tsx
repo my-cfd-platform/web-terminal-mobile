@@ -89,8 +89,7 @@ const AccountProfile = observer(() => {
         </FlexContainer>
       </FlexContainer>
 
-      {userProfileStore.userProfile?.kyc ===
-        PersonalDataKYCEnum.NotVerified && (
+      {(userProfileStore.userProfile?.kyc === PersonalDataKYCEnum.NotVerified) && (
         <FlexContainer flexDirection="column" marginBottom="24px">
           <ProfileMenuLink to={Page.ACCOUNT_VERIFICATION}>
             <FlexContainer alignItems="center">
@@ -130,11 +129,7 @@ const AccountProfile = observer(() => {
           </PrimaryTextSpan>
         </FlexContainer>
 
-        <ProfileMenuA
-          href={`${
-            IS_LIVE ? mainAppStore.initModel.tradingUrl : ''
-          }${API_DEPOSIT_STRING}/?${parsedParams}`}
-        >
+        <ProfileMenuA href={`${API_DEPOSIT_STRING}/?${parsedParams}`}>
           <FlexContainer alignItems="center">
             <FlexContainer
               width="28px"
