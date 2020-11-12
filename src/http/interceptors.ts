@@ -46,7 +46,7 @@ const injectInerceptors = (mainAppStore: MainAppStore) => {
           mainAppStore.rootStore.badRequestPopupStore.stopRecconect();
         }, +mainAppStore.connectTimeOut);
       }
-      
+
       switch (error.response?.status) {
         case 400:
         case 500:
@@ -89,10 +89,14 @@ const injectInerceptors = (mainAppStore: MainAppStore) => {
     }
   );
   axios.interceptors.request.use(function (config: AxiosRequestConfig) {
+    if (IS_LIVE && config.url && config.url.includes('://')) {
+      const arrayOfSubpath = config.url.split('://')[1].split('/');
+      const subPath = arrayOfSubpath.slice(1).join('/');
+      config.url = `${mainAppStore.initModel.tradingUrl}/${subPath}`;
+    } else {
+      config.url = `${mainAppStore.initModel.tradingUrl}${config.url}`;
+    }
     config.headers[RequestHeaders.ACCEPT_LANGUAGE] = `${mainAppStore.lang}`;
-    config.headers[RequestHeaders.CACHE_CONTROL] =
-      'no-cache, no-store, must-revalidate';
-
     return config;
   });
 };
