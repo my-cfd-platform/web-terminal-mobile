@@ -91,16 +91,17 @@ const injectInerceptors = (mainAppStore: MainAppStore) => {
   axios.interceptors.request.use(function (config: AxiosRequestConfig) {
     if (
       IS_LIVE &&
+      mainAppStore.initModel.tradingUrl &&
       config.url &&
-      config.url.includes('://') &&
-      !config.url.includes('auth/') &&
-      mainAppStore.initModel.tradingUrl
+      !config.url.includes('auth/')
     ) {
-      const arrayOfSubpath = config.url.split('://')[1].split('/');
-      const subPath = arrayOfSubpath.slice(1).join('/');
-      config.url = `${mainAppStore.initModel.tradingUrl}/${subPath}`;
-    } else {
-      config.url = `${mainAppStore.initModel.tradingUrl}${config.url}`;
+      if (config.url.includes('://')) {
+        const arrayOfSubpath = config.url.split('://')[1].split('/');
+        const subPath = arrayOfSubpath.slice(1).join('/');
+        config.url = `${mainAppStore.initModel.tradingUrl}/${subPath}`;
+      } else {
+        config.url = `${mainAppStore.initModel.tradingUrl}${config.url}`;
+      }
     }
     config.headers[RequestHeaders.ACCEPT_LANGUAGE] = `${mainAppStore.lang}`;
     return config;
