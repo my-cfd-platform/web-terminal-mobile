@@ -535,7 +535,6 @@ export class MainAppStore implements MainAppStoreProps {
     this.activeAccount = undefined;
     this.activeAccountId = '';
     this.rootStore.withdrawalStore.clearStore();
-    mixpanel.reset();
   };
 
   setTokenHandler = (token: string) => {
