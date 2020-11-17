@@ -23,8 +23,14 @@ const NavBar = observer(() => {
     urlParams.set('lang', mainAppStore.lang);
     urlParams.set('env', 'web_mob');
     urlParams.set('trader_id', userProfileStore.userProfileId || '');
+    urlParams.set('api', mainAppStore.initModel.tradingUrl);
     setParsedParams(urlParams.toString());
-  }, [mainAppStore.token, mainAppStore.lang, mainAppStore.accounts, userProfileStore.userProfileId]);
+  }, [
+    mainAppStore.token,
+    mainAppStore.lang,
+    mainAppStore.accounts,
+    userProfileStore.userProfileId,
+  ]);
   return (
     <FlexContainer
       width="100vw"
