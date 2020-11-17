@@ -102,9 +102,9 @@ const AccountVerificationResidence: FC<Props> = (props) => {
           justifyContent="space-between"
           width="100%"
           height="100%"
+          overflow="auto"
         >
           <FlexContainer
-            margin="10px auto 50px"
             justifyContent="center"
             width="100%"
             flexDirection="column"
@@ -115,7 +115,6 @@ const AccountVerificationResidence: FC<Props> = (props) => {
               flexDirection="column"
               alignItems="center"
               width="100%"
-              marginBottom="40px"
               flex="1 0 auto"
             >
               <FlexContainer
@@ -220,8 +219,9 @@ const AccountVerificationResidence: FC<Props> = (props) => {
             width="100%"
             alignItems="center"
             justifyContent="center"
-            padding="0 16px 40px"
-            position="relative"
+            padding="16px 16px 32px"
+            position="sticky"
+            bottom="0"
           >
             {isOpen ? (
               <>

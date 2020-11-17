@@ -15,16 +15,24 @@ import { FlexContainer } from '../styles/FlexContainer';
 import { PrimaryTextSpan } from '../styles/TextsElements';
 import { useTranslation } from 'react-i18next';
 import Page from '../constants/Pages';
+import { PersonalDataKYCEnum } from '../enums/PersonalDataKYCEnum';
 
 const WithdrawList = observer(() => {
-  const { mainAppStore, withdrawalStore, userProfileStore } = useStores();
+  const {
+    mainAppStore,
+    withdrawalStore,
+    userProfileStore,
+    notificationStore,
+  } = useStores();
   const { t } = useTranslation();
 
   useEffect(() => {
     const initHistoryList = async () => {
       withdrawalStore.setLoad();
       try {
-        const result = await API.getWithdrawalHistory();
+        const result = await API.getWithdrawalHistory(
+          mainAppStore.initModel.tradingUrl
+        );
         if (result.status === WithdrawalHistoryResponseStatus.Successful) {
           const isPending = result.history?.some(
             (item) =>
@@ -36,11 +44,22 @@ const WithdrawList = observer(() => {
             withdrawalStore.setPendingPopup();
           }
         }
+
         withdrawalStore.endLoad();
       } catch (error) {}
     };
-    initHistoryList();
-  }, []);
+    if (
+      userProfileStore.userProfile &&
+      [
+        PersonalDataKYCEnum.Verified,
+        PersonalDataKYCEnum.OnVerification,
+        PersonalDataKYCEnum.Restricted
+      ].includes(userProfileStore.userProfile.kyc)
+    ) {
+      initHistoryList();
+    }
+  }, [userProfileStore.userProfile]);
+
   useEffect(() => {
     mixpanel.track(mixpanelEvents.WITHDRAW_VIEW, {
       [mixapanelProps.AVAILABLE_BALANCE]:

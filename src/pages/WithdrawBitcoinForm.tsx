@@ -82,11 +82,15 @@ const WithdrawBitcoinForm = () => {
         data: JSON.stringify(dataParam),
       };
 
-      const result = await API.createWithdrawal(data);
+      const result = await API.createWithdrawal(
+        data,
+        mainAppStore.initModel.tradingUrl
+      );
       if (result.status === WithdrawalHistoryResponseStatus.Successful) {
-        withdrawalStore.opentTab(WithdrawalTabsEnum.History);
         notificationStore.isSuccessfull = true;
         push(Page.WITHDRAW_SUCCESS);
+
+        withdrawalStore.setPendingPopup();
 
         mixpanel.track(mixpanelEvents.WITHDRAW_REQUEST, {
           [mixapanelProps.AMOUNT]: +values.amount,

@@ -14,7 +14,9 @@ const ImageContainer: FC<Props> = observer((props) => {
 
   return (
     <ImageElem
-      src={`${mainAppStore.tradingUrl}${getImageSource(instrumentId)}`}
+      src={`${mainAppStore.initModel.tradingUrl}${getImageSource(
+        instrumentId
+      )}`}
     />
   );
 });

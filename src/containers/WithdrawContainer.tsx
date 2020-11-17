@@ -37,8 +37,8 @@ const WithdrawContainer: FC<Props> = observer(({ children, backBtn }) => {
     <BackFlowLayout pageTitle={t('Withdrawal')} backLink={backBtn}>
       {![
         PersonalDataKYCEnum.OnVerification,
-        PersonalDataKYCEnum.Restricted,
         PersonalDataKYCEnum.Verified,
+        PersonalDataKYCEnum.Restricted,
       ].includes(
         userProfileStore.userProfile?.kyc || PersonalDataKYCEnum.NotVerified
       ) ? (
@@ -148,6 +148,12 @@ const OtherMethodsButton = styled.a`
   font-weight: bold;
   color: #252636;
   text-align: center;
+  text-decoration: none;
+
+  &:hover, &:active, &:focus, &:visited {
+    color: #252636;
+    text-decoration: none;
+  }
 `;
 
 const FailText = styled.span`

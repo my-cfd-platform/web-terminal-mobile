@@ -3,10 +3,9 @@ import { Global, css } from '@emotion/core';
 import { reboot } from './styles/reboot';
 import Helmet from 'react-helmet';
 import RoutingLayout from './routing/RoutingLayout';
-import { BrowserRouter as Router, useRouteMatch } from 'react-router-dom';
+import { BrowserRouter as Router } from 'react-router-dom';
 import 'react-dates/lib/css/_datepicker.css';
 import { useStores } from './hooks/useStores';
-import injectInerceptors from './http/interceptors';
 import { useTranslation } from 'react-i18next';
 import { autorun } from 'mobx';
 import Colors from './constants/Colors';
@@ -59,14 +58,7 @@ const MainApp: FC = () => {
   ]);
 
   useEffect(() => {
-    if (IS_LIVE) {
-      mainAppStore.fetchTradingUrl();
-    } else {
-      mainAppStore.isLoading = true;
-      mainAppStore.setTradingUrl('/');
-      injectInerceptors('/', mainAppStore);
-      mainAppStore.handleInitConnection();
-    }
+    mainAppStore.handleInitConnection();
   }, [mainAppStore.isAuthorized]);
 
   useEffect(() => {

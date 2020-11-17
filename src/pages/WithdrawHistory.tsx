@@ -8,6 +8,7 @@ import mixpanelEvents from '../constants/mixpanelEvents';
 import mixapanelProps from '../constants/mixpanelProps';
 import Page from '../constants/Pages';
 import WithdrawContainer from '../containers/WithdrawContainer';
+import { PersonalDataKYCEnum } from '../enums/PersonalDataKYCEnum';
 import { WithdrawalHistoryResponseStatus } from '../enums/WithdrawalHistoryResponseStatus';
 import API from '../helpers/API';
 import { useStores } from '../hooks/useStores';
@@ -15,13 +16,19 @@ import { FlexContainer } from '../styles/FlexContainer';
 import { PrimaryTextSpan } from '../styles/TextsElements';
 
 const WithdrawalHistory = observer(() => {
-  const { withdrawalStore, mainAppStore } = useStores();
+  const {
+    withdrawalStore,
+    mainAppStore,
+    notificationStore,
+    userProfileStore,
+  } = useStores();
   const { t } = useTranslation();
-  const initHistoryList = useCallback(
-    async () => {
+  const initHistoryList = useCallback(async () => {
     withdrawalStore.setLoad();
     try {
-      const result = await API.getWithdrawalHistory();
+      const result = await API.getWithdrawalHistory(
+        mainAppStore.initModel.tradingUrl
+      );
       if (result.status === WithdrawalHistoryResponseStatus.Successful) {
         const sortedList = result.history
           ? result.history.sort(
@@ -33,14 +40,29 @@ const WithdrawalHistory = observer(() => {
 
         withdrawalStore.setHistory(sortedList);
       }
-      console.log(result)
+
+      if (result.status === WithdrawalHistoryResponseStatus.SystemError) {
+        notificationStore.isSuccessfull = false;
+        notificationStore.notificationMessage = t('Technical Error');
+        notificationStore.openNotification();
+      }
+
       withdrawalStore.endLoad();
     } catch (error) {}
   }, []);
 
   useEffect(() => {
-    initHistoryList();
-  }, []);
+    if (
+      userProfileStore.userProfile &&
+      [
+        PersonalDataKYCEnum.Verified,
+        PersonalDataKYCEnum.OnVerification,
+        PersonalDataKYCEnum.Restricted,
+      ].includes(userProfileStore.userProfile.kyc)
+    ) {
+      initHistoryList();
+    }
+  }, [userProfileStore.userProfile, mainAppStore.accounts]);
 
   useEffect(() => {
     mixpanel.track(mixpanelEvents.WITHDRAW_HISTORY_VIEW, {

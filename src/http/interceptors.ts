@@ -4,9 +4,8 @@ import apiResponseCodeMessages from '../constants/apiResponseCodeMessages';
 import { MainAppStore } from '../store/MainAppStore';
 import RequestHeaders from '../constants/headers';
 
-const injectInerceptors = (tradingUrl: string, mainAppStore: MainAppStore) => {
+const injectInerceptors = (mainAppStore: MainAppStore) => {
   // TODO: research init flow
-  mainAppStore.isInterceptorsInjected = true;
   axios.interceptors.response.use(
     function (config: AxiosResponse) {
       if (config.data.result === OperationApiResponseCodes.TechnicalError) {
@@ -40,7 +39,6 @@ const injectInerceptors = (tradingUrl: string, mainAppStore: MainAppStore) => {
     },
 
     async function (error: AxiosError) {
-      console.log(error);
       if (!error.response?.status) {
         mainAppStore.rootStore.badRequestPopupStore.setRecconect();
         setTimeout(() => {
@@ -58,7 +56,6 @@ const injectInerceptors = (tradingUrl: string, mainAppStore: MainAppStore) => {
               mainAppStore.rootStore.serverErrorPopupStore.openModal();
             }
           }
-          requestAgain();
           setTimeout(requestAgain, +mainAppStore.connectTimeOut);
           mainAppStore.isLoading = false;
           break;
@@ -91,21 +88,5 @@ const injectInerceptors = (tradingUrl: string, mainAppStore: MainAppStore) => {
       return Promise.reject(error);
     }
   );
-  axios.interceptors.request.use(function (config: AxiosRequestConfig) {
-    // TODO: sink about eat
-    if (IS_LIVE && tradingUrl && config.url && !config.url.includes('auth/')) {
-      if (config.url.includes('://')) {
-        const arrayOfSubpath = config.url.split('://')[1].split('/');
-        const subPath = arrayOfSubpath.slice(1).join('/');
-        config.url = `${tradingUrl}/${subPath}`;
-      } else {
-        config.url = `${tradingUrl}${config.url}`;
-      }
-    }
-    config.headers[RequestHeaders.ACCEPT_LANGUAGE] = `${mainAppStore.lang}`;
-    config.headers[RequestHeaders.CACHE_CONTROL] = 'no-cache';
-
-    return config;
-  });
 };
 export default injectInerceptors;
