@@ -27,7 +27,7 @@ import mixapanelProps from '../constants/mixpanelProps';
 import Page from '../constants/Pages';
 
 const PRECISION_USD = 2;
-const DEFAULT_INVEST_AMOUNT = 10;
+const DEFAULT_INVEST_AMOUNT = 50;
 
 const OrderPage = observer(() => {
   const { type } = useParams<{ type: string }>();
