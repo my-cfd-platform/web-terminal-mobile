@@ -75,7 +75,7 @@ const WithdrawalHistoryDetails = () => {
               {t('Opening Time')}
             </PrimaryTextSpan>
             <PrimaryTextSpan fontSize="16px">
-              {moment(item?.creationDate).format('HH:MM, DD MMM YYYY')}
+              {moment(item?.creationDate).local(true).format('HH:MM, DD MMM YYYY')}
             </PrimaryTextSpan>
           </FlexContainer>
 
