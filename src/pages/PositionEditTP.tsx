@@ -1,4 +1,3 @@
-import { css } from '@emotion/core';
 import styled from '@emotion/styled';
 import * as yup from 'yup';
 import { useFormik } from 'formik';
@@ -18,17 +17,14 @@ import { FlexContainer } from '../styles/FlexContainer';
 import { PrimaryTextSpan } from '../styles/TextsElements';
 import { InstrumentModelWSDTO } from '../types/InstrumentsTypes';
 import { PositionModelWSDTO, UpdateSLTP } from '../types/Positions';
-import API from '../helpers/API';
+import { observer } from 'mobx-react-lite';
 
-const PositionEditTP = () => {
+const PositionEditTP = observer(() => {
   const { id } = useParams<{ id: string }>();
+  const positionId = +id;
   const { t } = useTranslation();
 
-  const {
-    mainAppStore,
-    quotesStore,
-    instrumentsStore,
-  } = useStores();
+  const { mainAppStore, quotesStore, instrumentsStore } = useStores();
 
   const [position, setPosition] = useState<PositionModelWSDTO>();
   const [instrument, setInstrument] = useState<InstrumentModelWSDTO>();
@@ -36,14 +32,8 @@ const PositionEditTP = () => {
 
   const initialValues = useCallback(
     () => ({
-      value:
-        position?.tpType === TpSlTypeEnum.Currency
-          ? position.tp?.toFixed(2)
-          : null,
-      price:
-        position?.tpType === TpSlTypeEnum.Price
-          ? position.tp?.toFixed(instrument?.digits || 2)
-          : null,
+      value: position?.tpType === TpSlTypeEnum.Currency ? position.tp : null,
+      price: position?.tpType === TpSlTypeEnum.Price ? position.tp : null,
       operation: position?.operation,
     }),
     [position]
@@ -63,32 +53,30 @@ const PositionEditTP = () => {
     return 0;
   }, [instrument, position, quotesStore.quotes]);
 
-  
   const validationSchema = useCallback(
     () =>
       yup.object().shape({
-        value: yup
-          .number()
-          .nullable(),
-
+        value: yup.number().nullable(),
         price: yup
           .number()
           .nullable()
-          .when(['operation'], {
-            is: (operation) => operation === AskBidEnum.Buy,
+          .when(['operation', 'value'], {
+            is: (operation, value) =>
+              operation === AskBidEnum.Buy && value === null,
             then: yup
-            .number()
-            .nullable()
-            .test(
-              'price',
-              `${t('Error message')}: ${t(
-                'This level is higher or lower than the one currently allowed'
-              )}`,
-              (value) => value > currentPriceAsk()
-            ),
+              .number()
+              .nullable()
+              .test(
+                'price',
+                `${t('Error message')}: ${t(
+                  'This level is higher or lower than the one currently allowed'
+                )}`,
+                (value) => value > currentPriceAsk()
+              ),
           })
-          .when(['operation'], {
-            is: (operation) => operation === AskBidEnum.Sell,
+          .when(['operation', 'value'], {
+            is: (operation, value) =>
+              operation === AskBidEnum.Sell && value === null,
             then: yup
               .number()
               .nullable()
@@ -103,31 +91,6 @@ const PositionEditTP = () => {
       }),
     [position]
   );
-
-  const handleSubmitForm = async () => {
-    const valuesToSubmit: UpdateSLTP = {
-      processId: getProcessId(),
-      accountId: mainAppStore.activeAccount?.id || '',
-      positionId: +id || 0,
-      tp: values.value?.length
-        ? values.value
-          ? +values.value
-          : null
-        : values.price
-        ? +values.price
-        : null,
-      sl: position?.sl || null,
-      tpType: values.value ? TpSlTypeEnum.Currency : TpSlTypeEnum.Price,
-      slType: position?.slType || null,
-    };
-
-    console.log(valuesToSubmit);
-
-    try {
-    } catch (error) {
-      console.log(error);
-    }
-  };
 
   const {
     values,
@@ -144,6 +107,44 @@ const PositionEditTP = () => {
     validateOnBlur: true,
     validateOnChange: true,
   });
+
+  useEffect(() => {
+    const pos = quotesStore.activePositions.find(
+      (pos) => pos.id === positionId
+    );
+    if (pos) {
+      console.log('useEffect set Position');
+      setPosition(pos);
+
+      const instr = instrumentsStore.instruments.find(
+        (inst) => inst.instrumentItem.id === pos.instrument
+      )?.instrumentItem;
+      setInstrument(instr);
+    }
+  }, [quotesStore.activePositions]);
+
+  if (!mainAppStore.activeAccount || !position) {
+    return <LoaderForComponents isLoading={true} />;
+  }
+
+  async function handleSubmitForm() {
+    const valuesToSubmit: UpdateSLTP = {
+      processId: getProcessId(),
+      accountId: mainAppStore.activeAccount?.id || '',
+      positionId: positionId,
+      tp: values.value !== null ? values.value : values.price,
+      sl: position?.sl || null,
+      tpType: values.value ? TpSlTypeEnum.Currency : TpSlTypeEnum.Price,
+      slType: position?.slType || null,
+    };
+
+    console.log(valuesToSubmit);
+
+    try {
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
   const handleToggleSlideSLTP = (on: boolean) => {
     setActiveSL(on);
@@ -228,34 +229,22 @@ const PositionEditTP = () => {
   const handleBlurInput = (e: ChangeEvent<HTMLInputElement>) => {
     switch (e.target.name) {
       case 'value':
-        setFieldValue('value', Number(e.target.value || 0).toFixed(2));
+        setFieldValue(
+          'value',
+          e.target.value ? +(+e.target.value).toFixed(2) : null
+        );
         break;
 
-      default:
+      case 'price':
         setFieldValue(
           'price',
-          Number(e.target.value || 0).toFixed(instrument?.digits || 2)
+          e.target.value
+            ? Number(e.target.value).toFixed(instrument?.digits || 2)
+            : null
         );
         break;
     }
   };
-
-  useEffect(() => {
-    const pos = quotesStore.activePositions.find((pos) => pos.id === +id);
-    if (pos) {
-      console.log('useEffect set Position');
-      setPosition(pos);
-
-      const instr = instrumentsStore.instruments.find(
-        (inst) => inst.instrumentItem.id === pos.instrument
-      )?.instrumentItem;
-      setInstrument(instr);
-    }
-  }, [quotesStore.activePositions]);
-
-  if (!mainAppStore.activeAccount || !position) {
-    return <LoaderForComponents isLoading={true} />;
-  }
 
   return (
     <BackFlowLayout pageTitle={t('Take Profit')}>
@@ -267,7 +256,7 @@ const PositionEditTP = () => {
             top="16px"
             zIndex="300"
           >
-            <ButtonWithoutStyles onClick={handleSubmitForm} type="submit">
+            <ButtonWithoutStyles type="submit">
               <PrimaryTextSpan fontSize="16px" color="#ffffff">
                 {t('Save')}
               </PrimaryTextSpan>
@@ -284,7 +273,7 @@ const PositionEditTP = () => {
             marginBottom="1px"
           >
             <PrimaryTextSpan color="#ffffff" fontSize="16px">
-              {t('Stop Loss')}
+              {t('Take Profit')}
             </PrimaryTextSpan>
 
             <SlideCheckbox
@@ -320,7 +309,7 @@ const PositionEditTP = () => {
                 id="value"
                 type="text"
                 inputMode="decimal"
-                placeholder="-30.00"
+                placeholder="30.00"
                 readOnly={!activeSL}
                 onBeforeInput={handleBeforeInput(TpSlTypeEnum.Currency)}
                 value={values.value || ''}
@@ -403,7 +392,7 @@ const PositionEditTP = () => {
       </CustomForm>
     </BackFlowLayout>
   );
-};
+});
 
 export default PositionEditTP;
 
@@ -416,13 +405,10 @@ const CustomForm = styled.form`
 const InputWrap = styled(FlexContainer)`
   border-bottom: 2px solid
     ${(props) => (props.hasError ? Colors.RED : 'transparent')};
-  ${(props) =>
-    props.hasError &&
-    css`
-      input {
-        color: ${Colors.RED};
-      }
-    `};
+
+  input {
+    color: ${(props) => props.hasError && Colors.RED};
+  }
 `;
 
 const Input = styled.input<{ autocomplete?: string }>`

@@ -1,14 +1,8 @@
-import { css } from '@emotion/core';
 import styled from '@emotion/styled';
 import * as yup from 'yup';
 import { useFormik } from 'formik';
 import { observer } from 'mobx-react-lite';
-import React, {
-  ChangeEvent,
-  useCallback,
-  useEffect,
-  useState,
-} from 'react';
+import React, { ChangeEvent, useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import BackFlowLayout from '../components/BackFlowLayout';
 import SlideCheckbox from '../components/SlideCheckbox';
@@ -25,51 +19,53 @@ import { TpSlTypeEnum } from '../enums/TpSlTypeEnum';
 import { ButtonWithoutStyles } from '../styles/ButtonWithoutStyles';
 import { getProcessId } from '../helpers/getProcessId';
 import API from '../helpers/API';
-
+import InputMaskedField from '../components/InputMaskedField';
 
 const PositionEditSL = observer(() => {
   const { id } = useParams<{ id: string }>();
   const { t } = useTranslation();
 
-  const {
-    mainAppStore,
-    quotesStore,
-    instrumentsStore,
-  } = useStores();
+  const { mainAppStore, quotesStore, instrumentsStore } = useStores();
 
   const [position, setPosition] = useState<PositionModelWSDTO>();
   const [instrument, setInstrument] = useState<InstrumentModelWSDTO>();
   const [activeSL, setActiveSL] = useState(true);
 
-  const initialValues = useCallback(
-    () => ({
-      value:
-        position?.slType === TpSlTypeEnum.Currency
-          ? position.sl?.toFixed(2)
-          : null,
-      price:
-        position?.slType === TpSlTypeEnum.Price
-          ? position.sl?.toFixed(instrument?.digits || 2)
-          : null,
+  const initialValues = useCallback(() => {
+    let value: UpdateSLTP['sl'] = null;
+    let price: UpdateSLTP['sl'] = null;
+
+    if (position?.slType === TpSlTypeEnum.Currency) {
+      value = position.sl !== null ? +Math.abs(position.sl).toFixed(2) : null;
+    }
+
+    if (position?.slType === TpSlTypeEnum.Price) {
+      price =
+        position.sl !== null
+          ? +position.sl.toFixed(instrument?.digits || 2)
+          : null;
+    }
+
+    return {
+      value,
+      price,
       operation: position?.operation,
-    }),
-    [position]
-  );
+    };
+  }, [position]);
 
   const currentPriceAsk = useCallback(() => {
     if (instrument) {
       return quotesStore.quotes[instrument.id].ask.c;
     }
     return 0;
-  }, [instrument, position, quotesStore.quotes]);
+  }, [instrument, quotesStore.quotes]);
 
   const currentPriceBid = useCallback(() => {
     if (instrument) {
       return quotesStore.quotes[instrument.id].bid.c;
     }
     return 0;
-  }, [instrument, position, quotesStore.quotes]);
-
+  }, [instrument, quotesStore.quotes]);
 
   const validationSchema = useCallback(
     () =>
@@ -82,7 +78,10 @@ const PositionEditSL = observer(() => {
             t('Stop loss level can not be lower than the Invest amount'),
             function (value) {
               if (position) {
-                console.log(value < +position?.investmentAmount);
+                console.log(
+                  'value < +position?.investmentAmount',
+                  value < +position?.investmentAmount
+                );
                 return value < +position?.investmentAmount;
               }
               return false;
@@ -127,13 +126,7 @@ const PositionEditSL = observer(() => {
       processId: getProcessId(),
       accountId: mainAppStore.activeAccount?.id || '',
       positionId: +id || 0,
-      sl: values.value?.length
-        ? values.value
-          ? +values.value
-          : null
-        : values.price
-        ? +values.price
-        : null,
+      sl: values.value !== null ? values.value : values.price,
       tp: position?.tp || null,
       slType: values.value ? TpSlTypeEnum.Currency : TpSlTypeEnum.Price,
       tpType: position?.tpType || null,
@@ -153,6 +146,7 @@ const PositionEditSL = observer(() => {
     setFieldValue,
     handleSubmit,
     touched,
+    getFieldProps,
     errors,
     dirty,
   } = useFormik({
@@ -247,13 +241,18 @@ const PositionEditSL = observer(() => {
   const handleBlurInput = (e: ChangeEvent<HTMLInputElement>) => {
     switch (e.target.name) {
       case 'value':
-        setFieldValue('value', Number(e.target.value || 0).toFixed(2));
+        setFieldValue(
+          'value',
+          e.target.value ? +(+e.target.value).toFixed(2) : null
+        );
         break;
 
-      default:
+      case 'price':
         setFieldValue(
           'price',
-          Number(e.target.value || 0).toFixed(instrument?.digits || 2)
+          e.target.value
+            ? Number(e.target.value).toFixed(instrument?.digits || 2)
+            : null
         );
         break;
     }
@@ -286,7 +285,7 @@ const PositionEditSL = observer(() => {
             top="16px"
             zIndex="300"
           >
-            <ButtonWithoutStyles onClick={handleSubmitForm} type="submit">
+            <ButtonWithoutStyles type="submit">
               <PrimaryTextSpan fontSize="16px" color="#ffffff">
                 {t('Save')}
               </PrimaryTextSpan>
@@ -314,38 +313,42 @@ const PositionEditSL = observer(() => {
 
           <FlexContainer flexDirection="column" width="100%">
             <InputWrap
-              flexDirection="column"
               width="100%"
               backgroundColor="rgba(42, 45, 56, 0.5)"
               padding="12px 16px"
               position="relative"
               marginBottom="1px"
               hasError={!!(touched.value && errors.value)}
+              justifyContent="space-between"
+              alignItems="center"
             >
-              <FlexContainer
-                position="absolute"
-                top="0"
-                bottom="0"
-                left="16px"
-                margin="auto"
-                alignItems="center"
-              >
-                <PrimaryTextSpan color="#ffffff" fontSize="16px" lineHeight="1">
-                  {t('Value')}, $
-                </PrimaryTextSpan>
+              <PrimaryTextSpan color="#ffffff" fontSize="16px" lineHeight="1">
+                {t('Value')}, $
+              </PrimaryTextSpan>
+              <FlexContainer justifyContent="flex-end" alignItems="center">
+                {values.value && (
+                  <ExtraMinus color="#ffffff" fontSize="16px" lineHeight="1">
+                    -
+                  </ExtraMinus>
+                )}
+                <Input
+                  customWidth={
+                    values.value !== null
+                      ? `${`${values.value}`.length}.5ch`
+                      : 'auto'
+                  }
+                  name="value"
+                  id="value"
+                  type="text"
+                  inputMode="decimal"
+                  placeholder="-30.00"
+                  readOnly={!activeSL}
+                  onBeforeInput={handleBeforeInput(TpSlTypeEnum.Currency)}
+                  value={values.value !== null ? values.value : ''}
+                  onBlur={handleBlurInput}
+                  onChange={handleChangeInput}
+                />
               </FlexContainer>
-              <Input
-                name="value"
-                id="value"
-                type="text"
-                inputMode="decimal"
-                placeholder="-30.00"
-                readOnly={!activeSL}
-                onBeforeInput={handleBeforeInput(TpSlTypeEnum.Currency)}
-                value={values.value || ''}
-                onBlur={handleBlurInput}
-                onChange={handleChangeInput}
-              />
             </InputWrap>
             {touched.value && errors.value && (
               <FlexContainer padding="12px 16px">
@@ -435,21 +438,19 @@ const CustomForm = styled.form`
 const InputWrap = styled(FlexContainer)`
   border-bottom: 2px solid
     ${(props) => (props.hasError ? Colors.RED : 'transparent')};
-  ${(props) =>
-    props.hasError &&
-    css`
-      input {
-        color: ${Colors.RED};
-      }
-    `};
+
+  input {
+    color: ${(props) => props.hasError && Colors.RED};
+  }
 `;
 
-const Input = styled.input<{ autocomplete?: string }>`
+const Input = styled.input<{ autocomplete?: string; customWidth?: string }>`
   background-color: transparent;
   outline: none;
   border: none;
   font-size: 16px;
   color: #fffccc;
+  text-align: center;
   font-weight: 500;
   line-height: 22px;
   text-align: right;
@@ -464,4 +465,7 @@ const Input = styled.input<{ autocomplete?: string }>`
     -webkit-text-fill-color: #fffccc !important;
     font-size: 16px;
   }
+  width: ${(props) => props.customWidth};
 `;
+
+const ExtraMinus = styled(PrimaryTextSpan)``;
