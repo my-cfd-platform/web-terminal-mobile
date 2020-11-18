@@ -83,7 +83,7 @@ const DepositPaymentResultPopup: FC = () => {
               position="absolute"
               width="100%"
               justifyContent="center"
-              top="9px"
+              top="29px"
               left="0"
               zIndex="299"
             >
@@ -94,7 +94,7 @@ const DepositPaymentResultPopup: FC = () => {
             <FlexContainer
               position="absolute"
               right="12px"
-              top="12px"
+              top="32px"
               zIndex="300"
             >
               <ButtonWithoutStyles onClick={handleClosePopup}>

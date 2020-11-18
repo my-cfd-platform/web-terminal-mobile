@@ -79,6 +79,10 @@ const OtherMethodsButton = styled.a`
   font-weight: bold;
   color: #252636;
   text-align: center;
+  &:hover {
+    color: #252636;
+    text-decoration: none;
+  }
 `;
 
 const FailText = styled.span`
