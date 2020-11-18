@@ -128,7 +128,7 @@ const PositionEditSL = observer(() => {
       positionId: +id || 0,
       sl: values.value !== null ? values.value : values.price,
       tp: position?.tp || null,
-      slType: values.value ? TpSlTypeEnum.Currency : TpSlTypeEnum.Price,
+      slType: values.value === null && values.price === null ? null : values.value !== null ? TpSlTypeEnum.Currency : TpSlTypeEnum.Price,
       tpType: position?.tpType || null,
     };
 
@@ -327,7 +327,7 @@ const PositionEditSL = observer(() => {
               </PrimaryTextSpan>
               <FlexContainer justifyContent="flex-end" alignItems="center">
                 {values.value && (
-                  <ExtraMinus color="#ffffff" fontSize="16px" lineHeight="1">
+                  <ExtraMinus color={touched.value && errors.value ? Colors.RED : '#ffffff'} fontSize="16px" lineHeight="1">
                     -
                   </ExtraMinus>
                 )}
