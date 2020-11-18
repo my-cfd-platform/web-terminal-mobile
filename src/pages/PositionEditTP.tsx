@@ -52,7 +52,7 @@ const PositionEditTP = observer(() => {
     }
     return 0;
   }, [instrument, position, quotesStore.quotes]);
-
+  // test
   const validationSchema = useCallback(
     () =>
       yup.object().shape({
