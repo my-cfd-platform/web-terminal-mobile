@@ -139,6 +139,7 @@ const MainApp: FC = () => {
             background-color: ${Colors.BACKGROUD_PAGE};
             min-height: 100%;
             min-height: calc(${FULL_VH});
+            overscroll-behavior: contain;
           }
 
           .grecaptcha-badge {
