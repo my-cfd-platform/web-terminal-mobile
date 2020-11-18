@@ -17,7 +17,7 @@ const SlideCheckbox: FC<Props> = ({ isActive, handleClick }) => {
   }
 
   return (
-    <ButtonWithoutStyles onClick={handleClickAction}>
+    <ButtonWithoutStyles onClick={handleClickAction} type="button">
       <FlexContainer
       width="52px"
       height="31px"
