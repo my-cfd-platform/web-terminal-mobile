@@ -43,6 +43,7 @@ const AccountProfile = observer(() => {
     urlParams.set('env', 'web_mob');
     urlParams.set('trader_id', userProfileStore.userProfileId || '');
     urlParams.set('lang', mainAppStore.lang);
+    urlParams.set('api', mainAppStore.initModel.tradingUrl);
     setParsedParams(urlParams.toString());
   }, [mainAppStore.token, mainAppStore.lang, mainAppStore.accounts]);
 
@@ -90,7 +91,8 @@ const AccountProfile = observer(() => {
         </FlexContainer>
       </FlexContainer>
 
-      {(userProfileStore.userProfile?.kyc === PersonalDataKYCEnum.NotVerified) && (
+      {userProfileStore.userProfile?.kyc ===
+        PersonalDataKYCEnum.NotVerified && (
         <FlexContainer flexDirection="column" marginBottom="24px">
           <ProfileMenuLink to={Page.ACCOUNT_VERIFICATION}>
             <FlexContainer alignItems="center">
