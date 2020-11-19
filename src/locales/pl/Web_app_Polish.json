@@ -385,5 +385,7 @@
     "Use camera": "Użyj aparatu",
     "Photos": "Zdjęcia",
     "Personal data is not valid.": "Dane osobowe są nieprawidłowe.",
-    "User not found.": "Użytkownik nie znaleziony."
+    "User not found.": "Użytkownik nie znaleziony.",
+    "Your new password must be between 8 and 31 characters": "Twoje nowe hasło musi mieć od 8 do 31 znaków",
+    "Your password must be between 8 and 31 characters": "Twoje hasło musi mieć od 8 do 31 znaków"
 }

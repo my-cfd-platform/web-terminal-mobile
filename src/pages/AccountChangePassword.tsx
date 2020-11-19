@@ -28,30 +28,30 @@ const AccountChangePassword: FC = () => {
     oldPassword: yup
       .string()
       .required(t(validationInputTexts.REQUIRED_FIELD))
-      .min(8, t(validationInputTexts.PASSWORD_MAX_MIN_OLD_CHARACTERS))
-      .max(31, t(validationInputTexts.PASSWORD_MAX_MIN_OLD_CHARACTERS))
-      .matches(
-        /^(?=.*\d)(?=.*[a-zA-Z])/,
-        t(validationInputTexts.PASSWORD_MATCH)
-      ),
-    newPassword: yup
-      .string()
-      .required(t(validationInputTexts.REQUIRED_FIELD))
-      .min(8, t(validationInputTexts.PASSWORD_MAX_MIN_CHARACTERS))
-      .max(31, t(validationInputTexts.PASSWORD_MAX_MIN_CHARACTERS))
-      .matches(
-        /^(?=.*\d)(?=.*[a-zA-Z])/,
-        t(validationInputTexts.PASSWORD_MATCH)
-      ),
-    repeatPassword: yup
-      .string()
-      .required(t(validationInputTexts.REQUIRED_FIELD))
-      .min(8, t(validationInputTexts.PASSWORD_MAX_MIN_CHARACTERS))
-      .max(31, t(validationInputTexts.PASSWORD_MAX_MIN_CHARACTERS))
       .matches(
         /^(?=.*\d)(?=.*[a-zA-Z])/,
         t(validationInputTexts.PASSWORD_MATCH)
       )
+      .min(8, t(validationInputTexts.PASSWORD_MAX_MIN_OLD_CHARACTERS))
+      .max(31, t(validationInputTexts.PASSWORD_MAX_MIN_OLD_CHARACTERS)),
+    newPassword: yup
+      .string()
+      .required(t(validationInputTexts.REQUIRED_FIELD))
+      .matches(
+        /^(?=.*\d)(?=.*[a-zA-Z])/,
+        t(validationInputTexts.PASSWORD_MATCH)
+      )
+      .min(8, t(validationInputTexts.PASSWORD_MAX_MIN_CHARACTERS))
+      .max(31, t(validationInputTexts.PASSWORD_MAX_MIN_CHARACTERS)),
+    repeatPassword: yup
+      .string()
+      .required(t(validationInputTexts.REQUIRED_FIELD))
+      .matches(
+        /^(?=.*\d)(?=.*[a-zA-Z])/,
+        t(validationInputTexts.PASSWORD_MATCH)
+      )
+      .min(8, t(validationInputTexts.PASSWORD_MAX_MIN_CHARACTERS))
+      .max(31, t(validationInputTexts.PASSWORD_MAX_MIN_CHARACTERS))
       .oneOf(
         [yup.ref(Fields.NEW_PASSWORD), null],
         t(validationInputTexts.CONFIRMATION_PASSWORD)

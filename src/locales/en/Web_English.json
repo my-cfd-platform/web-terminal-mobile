@@ -397,5 +397,7 @@
     "Use camera": "Use camera",
     "Photos": "Photos",
     "Personal data is not valid.": "Personal data is not valid.",
-    "User not found.": "User not found."
+    "User not found.": "User not found.",
+    "Your new password must be between 8 and 31 characters": "Your new password must be between 8 and 31 characters",
+    "Your password must be between 8 and 31 characters": "Your password must be between 8 and 31 characters"
 }
