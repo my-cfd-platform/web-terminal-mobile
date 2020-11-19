@@ -3,7 +3,7 @@ import * as yup from 'yup';
 import { useFormik } from 'formik';
 import React, { ChangeEvent, useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useParams } from 'react-router-dom';
+import { useHistory, useParams } from 'react-router-dom';
 import BackFlowLayout from '../components/BackFlowLayout';
 import LoaderForComponents from '../components/LoaderForComponents';
 import SlideCheckbox from '../components/SlideCheckbox';
@@ -18,26 +18,43 @@ import { PrimaryTextSpan } from '../styles/TextsElements';
 import { InstrumentModelWSDTO } from '../types/InstrumentsTypes';
 import { PositionModelWSDTO, UpdateSLTP } from '../types/Positions';
 import { observer } from 'mobx-react-lite';
+import API from '../helpers/API';
+import { OperationApiResponseCodes } from '../enums/OperationApiResponseCodes';
 
 const PositionEditTP = observer(() => {
   const { id } = useParams<{ id: string }>();
   const positionId = +id;
   const { t } = useTranslation();
+  const { goBack } = useHistory();
 
   const { mainAppStore, quotesStore, instrumentsStore } = useStores();
 
   const [position, setPosition] = useState<PositionModelWSDTO>();
   const [instrument, setInstrument] = useState<InstrumentModelWSDTO>();
   const [activeSL, setActiveSL] = useState(true);
+  const [loading, setLoading] = useState(false);
 
-  const initialValues = useCallback(
-    () => ({
-      value: position?.tpType === TpSlTypeEnum.Currency ? position.tp : null,
-      price: position?.tpType === TpSlTypeEnum.Price ? position.tp : null,
+  const initialValues = useCallback(() => {
+    let value: UpdateSLTP['tp'] = null;
+    let price: UpdateSLTP['tp'] = null;
+
+    if (position?.tpType === TpSlTypeEnum.Currency) {
+      value = position.tp !== null ? +Math.abs(position.tp).toFixed(2) : null;
+    }
+
+    if (position?.tp === TpSlTypeEnum.Price) {
+      price =
+        position.tp !== null
+          ? +position.tp.toFixed(instrument?.digits || 2)
+          : null;
+    }
+
+    return {
+      value,
+      price,
       operation: position?.operation,
-    }),
-    [position]
-  );
+    };
+  }, [position]);
 
   const currentPriceAsk = useCallback(() => {
     if (instrument) {
@@ -92,6 +109,34 @@ const PositionEditTP = observer(() => {
     [position]
   );
 
+  const handleSubmitForm = async () => {
+    const valuesToSubmit: UpdateSLTP = {
+      processId: getProcessId(),
+      accountId: mainAppStore.activeAccount?.id || '',
+      positionId: positionId,
+      tp: values.value !== null ? values.value : values.price,
+      sl: position?.sl || null,
+      tpType:
+        values.value === null && values.price === null
+          ? null
+          : values.value !== null
+          ? TpSlTypeEnum.Currency
+          : TpSlTypeEnum.Price,
+      slType: position?.slType || null,
+    };
+
+    setLoading(true);
+    try {
+      const response = await API.updateSLTP(valuesToSubmit);
+      if (response.result === OperationApiResponseCodes.Ok) {
+        goBack();
+      }
+      setLoading(false);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   const {
     values,
     setFieldValue,
@@ -107,44 +152,6 @@ const PositionEditTP = observer(() => {
     validateOnBlur: true,
     validateOnChange: true,
   });
-
-  useEffect(() => {
-    const pos = quotesStore.activePositions.find(
-      (pos) => pos.id === positionId
-    );
-    if (pos) {
-      console.log('useEffect set Position');
-      setPosition(pos);
-
-      const instr = instrumentsStore.instruments.find(
-        (inst) => inst.instrumentItem.id === pos.instrument
-      )?.instrumentItem;
-      setInstrument(instr);
-    }
-  }, [quotesStore.activePositions]);
-
-  if (!mainAppStore.activeAccount || !position) {
-    return <LoaderForComponents isLoading={true} />;
-  }
-
-  async function handleSubmitForm() {
-    const valuesToSubmit: UpdateSLTP = {
-      processId: getProcessId(),
-      accountId: mainAppStore.activeAccount?.id || '',
-      positionId: positionId,
-      tp: values.value !== null ? values.value : values.price,
-      sl: position?.sl || null,
-      tpType: values.value === null && values.price === null ? null : values.value !== null ? TpSlTypeEnum.Currency : TpSlTypeEnum.Price,
-      slType: position?.slType || null,
-    };
-
-    console.log(valuesToSubmit);
-
-    try {
-    } catch (error) {
-      console.log(error);
-    }
-  }
 
   const handleToggleSlideSLTP = (on: boolean) => {
     setActiveSL(on);
@@ -246,8 +253,28 @@ const PositionEditTP = observer(() => {
     }
   };
 
+  useEffect(() => {
+    const pos = quotesStore.activePositions.find(
+      (pos) => pos.id === positionId
+    );
+    if (pos) {
+      console.log('useEffect set Position');
+      setPosition(pos);
+
+      const instr = instrumentsStore.instruments.find(
+        (inst) => inst.instrumentItem.id === pos.instrument
+      )?.instrumentItem;
+      setInstrument(instr);
+    }
+  }, [quotesStore.activePositions]);
+
+  if (!mainAppStore.activeAccount || !position) {
+    return <LoaderForComponents isLoading={true} />;
+  }
+
   return (
     <BackFlowLayout pageTitle={t('Take Profit')}>
+      <LoaderForComponents isLoading={loading} />
       <CustomForm noValidate onSubmit={handleSubmit}>
         {dirty && (
           <FlexContainer

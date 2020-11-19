@@ -10,7 +10,7 @@ import Colors from '../constants/Colors';
 import { useStores } from '../hooks/useStores';
 import { FlexContainer } from '../styles/FlexContainer';
 import { PrimaryTextSpan } from '../styles/TextsElements';
-import { useParams } from 'react-router-dom';
+import { useHistory, useParams } from 'react-router-dom';
 import { PositionModelWSDTO, UpdateSLTP } from '../types/Positions';
 import LoaderForComponents from '../components/LoaderForComponents';
 import { InstrumentModelWSDTO } from '../types/InstrumentsTypes';
@@ -20,16 +20,19 @@ import { ButtonWithoutStyles } from '../styles/ButtonWithoutStyles';
 import { getProcessId } from '../helpers/getProcessId';
 import API from '../helpers/API';
 import InputMaskedField from '../components/InputMaskedField';
+import { OperationApiResponseCodes } from '../enums/OperationApiResponseCodes';
 
 const PositionEditSL = observer(() => {
   const { id } = useParams<{ id: string }>();
   const { t } = useTranslation();
 
+  const { goBack } = useHistory();
   const { mainAppStore, quotesStore, instrumentsStore } = useStores();
 
   const [position, setPosition] = useState<PositionModelWSDTO>();
   const [instrument, setInstrument] = useState<InstrumentModelWSDTO>();
   const [activeSL, setActiveSL] = useState(true);
+  const [loading, setLoading] = useState(false);
 
   const initialValues = useCallback(() => {
     let value: UpdateSLTP['sl'] = null;
@@ -128,14 +131,22 @@ const PositionEditSL = observer(() => {
       positionId: +id || 0,
       sl: values.value !== null ? values.value : values.price,
       tp: position?.tp || null,
-      slType: values.value === null && values.price === null ? null : values.value !== null ? TpSlTypeEnum.Currency : TpSlTypeEnum.Price,
+      slType:
+        values.value === null && values.price === null
+          ? null
+          : values.value !== null
+          ? TpSlTypeEnum.Currency
+          : TpSlTypeEnum.Price,
       tpType: position?.tpType || null,
     };
 
-    console.log(valuesToSubmit);
-
+    setLoading(true);
     try {
       const response = await API.updateSLTP(valuesToSubmit);
+      if (response.result === OperationApiResponseCodes.Ok) {
+        goBack();
+      }
+      setLoading(false);
     } catch (error) {
       console.log(error);
     }
@@ -277,6 +288,7 @@ const PositionEditSL = observer(() => {
 
   return (
     <BackFlowLayout pageTitle={'Stop Loss'}>
+      <LoaderForComponents isLoading={loading} />;
       <CustomForm noValidate onSubmit={handleSubmit}>
         {dirty && (
           <FlexContainer
@@ -327,7 +339,13 @@ const PositionEditSL = observer(() => {
               </PrimaryTextSpan>
               <FlexContainer justifyContent="flex-end" alignItems="center">
                 {values.value && (
-                  <ExtraMinus color={touched.value && errors.value ? Colors.RED : '#ffffff'} fontSize="16px" lineHeight="1">
+                  <ExtraMinus
+                    color={
+                      touched.value && errors.value ? Colors.RED : '#ffffff'
+                    }
+                    fontSize="16px"
+                    lineHeight="1"
+                  >
                     -
                   </ExtraMinus>
                 )}
