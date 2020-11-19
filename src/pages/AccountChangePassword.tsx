@@ -36,7 +36,7 @@ const AccountChangePassword: FC = () => {
       ),
     newPassword: yup
       .string()
-      .required(t(validationInputTexts.NEW_PASSWORD))
+      .required(t(validationInputTexts.REQUIRED_FIELD))
       .min(8, t(validationInputTexts.PASSWORD_MAX_MIN_CHARACTERS))
       .max(31, t(validationInputTexts.PASSWORD_MAX_MIN_CHARACTERS))
       .matches(
@@ -45,7 +45,7 @@ const AccountChangePassword: FC = () => {
       ),
     repeatPassword: yup
       .string()
-      .required(t(validationInputTexts.NEW_PASSWORD))
+      .required(t(validationInputTexts.REQUIRED_FIELD))
       .min(8, t(validationInputTexts.PASSWORD_MAX_MIN_CHARACTERS))
       .max(31, t(validationInputTexts.PASSWORD_MAX_MIN_CHARACTERS))
       .matches(
