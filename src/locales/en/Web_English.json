@@ -8,6 +8,7 @@
     "Required amount": "Required amount",
     "This level is higher or lower than the one currently allowed": "This level is higher or lower than the one currently allowed",
     "Error message": "Error message",
+    "Error": "Error",
     "Stop loss level can not be lower than the Invest amount": "Stop loss level can not be lower than the Invest amount",
     "Invest": "Invest",
     "The amount you’d like to invest": "The amount you’d like to invest",
@@ -394,5 +395,6 @@
     "Scan the front": "Scan the front",
     "Remove": "Remove",
     "Use camera": "Use camera",
-    "Photos": "Photos"
+    "Photos": "Photos",
+    "Personal data is not valid.": "Personal data is not valid."
 }

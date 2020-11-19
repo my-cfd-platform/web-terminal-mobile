@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, { FC, useState } from 'react';
 import { FlexContainer } from '../styles/FlexContainer';
 import { PrimaryTextSpan } from '../styles/TextsElements';
 import { useFormik } from 'formik';
@@ -18,6 +18,9 @@ import changePasswordMessages from '../constants/changePasswordMessages';
 import Page from '../constants/Pages';
 import BackFlowLayout from '../components/BackFlowLayout';
 import { useHistory } from 'react-router-dom';
+import IconShow from '../assets/svg/icon-show-password.svg';
+import IconHide from '../assets/svg/icon-hide-password.svg';
+import SvgIcon from '../components/SvgIcon';
 
 const AccountChangePassword: FC = () => {
   const { t } = useTranslation();
@@ -25,8 +28,8 @@ const AccountChangePassword: FC = () => {
     oldPassword: yup
       .string()
       .required(t(validationInputTexts.REQUIRED_FIELD))
-      .min(8, t(validationInputTexts.PASSWORD_MIN_CHARACTERS))
-      .max(31, t(validationInputTexts.PASSWORD_MAX_CHARACTERS))
+      .min(8, t(validationInputTexts.PASSWORD_MAX_MIN_OLD_CHARACTERS))
+      .max(31, t(validationInputTexts.PASSWORD_MAX_MIN_OLD_CHARACTERS))
       .matches(
         /^(?=.*\d)(?=.*[a-zA-Z])/,
         t(validationInputTexts.PASSWORD_MATCH)
@@ -34,19 +37,29 @@ const AccountChangePassword: FC = () => {
     newPassword: yup
       .string()
       .required(t(validationInputTexts.NEW_PASSWORD))
-      .min(8, t(validationInputTexts.NEW_PASSWORD))
-      .max(31, t(validationInputTexts.NEW_PASSWORD))
+      .min(8, t(validationInputTexts.PASSWORD_MAX_MIN_CHARACTERS))
+      .max(31, t(validationInputTexts.PASSWORD_MAX_MIN_CHARACTERS))
       .matches(
         /^(?=.*\d)(?=.*[a-zA-Z])/,
         t(validationInputTexts.PASSWORD_MATCH)
       ),
     repeatPassword: yup
       .string()
+      .required(t(validationInputTexts.NEW_PASSWORD))
+      .min(8, t(validationInputTexts.PASSWORD_MAX_MIN_CHARACTERS))
+      .max(31, t(validationInputTexts.PASSWORD_MAX_MIN_CHARACTERS))
+      .matches(
+        /^(?=.*\d)(?=.*[a-zA-Z])/,
+        t(validationInputTexts.PASSWORD_MATCH)
+      )
       .oneOf(
         [yup.ref(Fields.NEW_PASSWORD), null],
         t(validationInputTexts.CONFIRMATION_PASSWORD)
       ),
   });
+  const [showedCurrent, setCurrent] = useState<boolean>(false);
+  const [showedNew, setNew] = useState<boolean>(false);
+  const [showedConfirm, setConfirm] = useState<boolean>(false);
 
   const { mainAppStore, notificationStore } = useStores();
   const { push } = useHistory();
@@ -55,6 +68,18 @@ const AccountChangePassword: FC = () => {
     oldPassword: '',
     newPassword: '',
     repeatPassword: '',
+  };
+
+  const changeCurrent = (value: boolean) => {
+    setCurrent(value);
+  };
+
+  const changeNew = (value: boolean) => {
+    setNew(value);
+  };
+
+  const changeConfirm = (value: boolean) => {
+    setConfirm(value);
   };
 
   const handleSubmitForm = async (props: ChangePassword) => {
@@ -133,10 +158,31 @@ const AccountChangePassword: FC = () => {
                       onBlur={handleBlur}
                       value={values.oldPassword || ''}
                       id={Fields.OLD_PASSWORD}
-                      type="password"
+                      type={showedCurrent ? 'text' : 'password'}
                       hasError={!!(touched.oldPassword && errors.oldPassword)}
                       errorText={errors.oldPassword}
+                      padding={'14px 52px 14px 165px'}
                     />
+                    <ShowHideButton>
+                      {showedCurrent
+                        ? <SvgIcon
+                          {...IconHide}
+                          hoverFillColor="rgba(255, 255, 255, 1)"
+                          fillColor="rgba(255, 255, 255, 0.4)"
+                          width="20"
+                          height="20"
+                          onClick={() => changeCurrent(false)}
+                        />
+                        : <SvgIcon
+                          {...IconShow}
+                          hoverFillColor="rgba(255, 255, 255, 1)"
+                          fillColor="rgba(255, 255, 255, 0.4)"
+                          width="20"
+                          height="20"
+                          onClick={() => changeCurrent(true)}
+                        />
+                      }
+                    </ShowHideButton>
                   </PasswordInputWrapper>
                 </FlexContainer>
                 <FlexContainer width="100%">
@@ -148,10 +194,31 @@ const AccountChangePassword: FC = () => {
                       onBlur={handleBlur}
                       value={values.newPassword || ''}
                       id={Fields.NEW_PASSWORD}
-                      type="password"
+                      type={showedNew ? 'text' : 'password'}
                       hasError={!!(touched.newPassword && errors.newPassword)}
                       errorText={errors.newPassword}
+                      padding={'14px 52px 14px 165px'}
                     />
+                    <ShowHideButton>
+                      {showedNew
+                        ? <SvgIcon
+                          {...IconHide}
+                          hoverFillColor="rgba(255, 255, 255, 1)"
+                          fillColor="rgba(255, 255, 255, 0.4)"
+                          width="20"
+                          height="20"
+                          onClick={() => changeNew(false)}
+                        />
+                        : <SvgIcon
+                          {...IconShow}
+                          hoverFillColor="rgba(255, 255, 255, 1)"
+                          fillColor="rgba(255, 255, 255, 0.4)"
+                          width="20"
+                          height="20"
+                          onClick={() => changeNew(true)}
+                        />
+                      }
+                    </ShowHideButton>
                   </PasswordInputWrapper>
                 </FlexContainer>
                 <FlexContainer width="100%">
@@ -163,10 +230,31 @@ const AccountChangePassword: FC = () => {
                       onBlur={handleBlur}
                       value={values.repeatPassword || ''}
                       id={Fields.REPEAT_PASSWORD}
-                      type="password"
+                      type={showedConfirm ? 'text' : 'password'}
                       hasError={!!(touched.repeatPassword && errors.repeatPassword)}
                       errorText={errors.repeatPassword}
+                      padding={'14px 52px 14px 165px'}
                     />
+                    <ShowHideButton>
+                      {showedConfirm
+                        ? <SvgIcon
+                          {...IconHide}
+                          hoverFillColor="rgba(255, 255, 255, 1)"
+                          fillColor="rgba(255, 255, 255, 0.4)"
+                          width="20"
+                          height="20"
+                          onClick={() => changeConfirm(false)}
+                        />
+                        : <SvgIcon
+                          {...IconShow}
+                          hoverFillColor="rgba(255, 255, 255, 1)"
+                          fillColor="rgba(255, 255, 255, 0.4)"
+                          width="20"
+                          height="20"
+                          onClick={() => changeConfirm(true)}
+                        />
+                      }
+                    </ShowHideButton>
                   </PasswordInputWrapper>
                 </FlexContainer>
               </FlexContainer>
@@ -209,6 +297,13 @@ const PasswordInputWrapper = styled(FlexContainer)`
   input {
     text-align: right;
   }
+`;
+
+const ShowHideButton = styled(FlexContainer)`
+  position: absolute;
+  right: 16px;
+  top: 15px;
+  cursor: pointer;
 `;
 
 const Label = styled(PrimaryTextSpan)`

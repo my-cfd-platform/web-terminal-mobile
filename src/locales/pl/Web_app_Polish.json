@@ -8,6 +8,7 @@
     "Required amount": "Wymagana kwota",
     "This level is higher or lower than the one currently allowed": "Ten poziom jest wyższy lub niższy od obecnie dozwolonego",
     "Error message": "Błąd",
+    "Error": "Błąd",
     "Stop loss level can not be lower than the Invest amount": "Poziom Stop Loss nie może być niższy kwoty inwestycji",
     "Invest": "Zakup",
     "The amount you’d like to invest": "Kwota, którą chciałbyś zainwestować",
@@ -382,5 +383,6 @@
     "Scan the front": "Zeskanuj przód",
     "Remove": "Usunąć",
     "Use camera": "Użyj aparatu",
-    "Photos": "Zdjęcia"
+    "Photos": "Zdjęcia",
+    "Personal data is not valid.": "Dane osobowe są nieprawidłowe."
 }
