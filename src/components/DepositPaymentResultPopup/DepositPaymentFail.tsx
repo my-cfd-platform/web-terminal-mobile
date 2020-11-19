@@ -21,6 +21,7 @@ const DepositPaymentFail: FC = () => {
     urlParams.set('lang', mainAppStore.lang);
     urlParams.set('env', 'web_mob');
     urlParams.set('trader_id', userProfileStore.userProfileId || '');
+    urlParams.set('api', mainAppStore.initModel.tradingUrl);
     setParsedParams(urlParams.toString());
   }, [
     mainAppStore.token,
