@@ -47,7 +47,7 @@ const WithdrawHistoryItem: FC<Props> = ({ data }) => {
             {PaymentNameEnum[data.type || 0]}
           </PrimaryTextSpan>
           <PrimaryTextSpan color="rgba(255, 255, 255, 0.4)" lineHeight="1.8">
-            {moment(data.creationDate).local(true).format('HH:MM, DD MMM YYYY')}
+            {moment(data.creationDate).local(true).format('HH:mm, DD MMM YYYY')}
           </PrimaryTextSpan>
         </FlexContainer>
 
