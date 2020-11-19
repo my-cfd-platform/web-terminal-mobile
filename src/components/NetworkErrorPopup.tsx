@@ -99,7 +99,8 @@ const ModalWrap = styled(FlexContainer)`
   justify-content: center;
   flex-direction: column;
   border-radius: 8px;
-  background-color: rgba(0, 0, 0, 0.7);
+  background-color: #23262f;
+
   @supports ((-webkit-backdrop-filter: none) or (backdrop-filter: none)) {
     background-color: rgba(0, 0, 0, 0.34);
     backdrop-filter: blur(12px);

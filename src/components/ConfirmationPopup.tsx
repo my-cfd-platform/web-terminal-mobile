@@ -69,8 +69,8 @@ const PopupWrap = styled(FlexContainer)`
 const ModalBody = styled(FlexContainer)`
   width: 270px;
   border-radius: 16px;
-
   background-color: #23262f;
+  
   @supports ((-webkit-backdrop-filter: none) or (backdrop-filter: none)) {
     background-color: rgba(35, 38, 47, 0.7);
     backdrop-filter: blur(12px);
