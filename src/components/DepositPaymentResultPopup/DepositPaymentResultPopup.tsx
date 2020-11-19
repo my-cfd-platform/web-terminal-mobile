@@ -11,6 +11,7 @@ import { useStores } from '../../hooks/useStores';
 import Pages from '../../constants/Pages';
 import { PrimaryTextSpan } from '../../styles/TextsElements';
 import { useTranslation } from 'react-i18next';
+import { FULL_VH } from '../../constants/global';
 
 interface Params {
   hash: string;
@@ -78,7 +79,12 @@ const DepositPaymentResultPopup: FC = () => {
           justifyContent="center"
           zIndex="1001"
         >
-          <PopupWrap flexDirection="column" position="relative">
+          <PopupWrap
+            flexDirection="column"
+            position="relative"
+            height={`calc(${FULL_VH})`}
+            minHeight={`calc(${FULL_VH})`}
+          >
             <FlexContainer
               position="absolute"
               width="100%"
@@ -118,7 +124,6 @@ export default DepositPaymentResultPopup;
 
 const PopupWrap = styled(FlexContainer)`
   width: 100%;
-  height: 100vh;
   border-radius: 8px;
   box-sizing: border-box;
   background-color: #1c1f26;
