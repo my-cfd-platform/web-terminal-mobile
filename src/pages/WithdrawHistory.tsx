@@ -37,7 +37,6 @@ const WithdrawalHistory = observer(() => {
                 moment(a.creationDate).valueOf()
             )
           : result.history;
-
         withdrawalStore.setHistory(sortedList);
       }
 
@@ -46,7 +45,6 @@ const WithdrawalHistory = observer(() => {
         notificationStore.notificationMessage = t('Technical Error');
         notificationStore.openNotification();
       }
-
       withdrawalStore.endLoad();
     } catch (error) {}
   }, []);

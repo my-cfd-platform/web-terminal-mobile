@@ -26,6 +26,9 @@ import WithdrawVisaMasterForm from '../pages/WithdrawVisaMasterForm';
 import WithdrawBitcoinForm from '../pages/WithdrawBitcoinForm';
 import WithdrawalHistoryDetails from '../pages/WithdrawalHistoryDetails';
 import WithdrawSuccessRequest from '../components/Withdraw/WithdrawSuccessRequest';
+import PositionEditSLTP from '../pages/PositionEditSL';
+import PositionEditSL from '../pages/PositionEditSL';
+import PositionEditTP from '../pages/PositionEditTP';
 
 export enum RouteLayoutType {
   Authorized,
@@ -189,6 +192,21 @@ const routesList = [
     component: WithdrawSuccessRequest,
     path: Page.WITHDRAW_SUCCESS,
     exact: true,
+    strict: true,
+    layoutType: RouteLayoutType.Authorized,
+  },
+
+  {
+    component: PositionEditSL,
+    path: Page.SL_EDIT,
+    exact: false,
+    strict: true,
+    layoutType: RouteLayoutType.Authorized,
+  },
+  {
+    component: PositionEditTP,
+    path: Page.TP_EDIT,
+    exact: false,
     strict: true,
     layoutType: RouteLayoutType.Authorized,
   },

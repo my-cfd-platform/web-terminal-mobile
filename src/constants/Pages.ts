@@ -47,6 +47,12 @@ const Page = {
   ORDER_MAIN: '/order',
   ORDER: '/order/:type/:id',
 
+  SL_EDIT_MAIN: '/edit-sl',
+  SL_EDIT: '/edit-sl/:id',
+
+  TP_EDIT_MAIN: '/edit-tp',
+  TP_EDIT: '/edit-tp/:id',
+
 };
 
 Object.freeze(Page);

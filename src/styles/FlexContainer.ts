@@ -37,9 +37,11 @@ export interface FlexContainerProps {
   opacity?: string;
   order?: string;
   backgroundImage?: string;
+  transition?: string;
 }
 
 export const FlexContainer = styled.div<FlexContainerProps>`
+
   display: flex;
   flex: ${(props) => props.flex};
   position: ${(props) => props.position};
@@ -70,4 +72,5 @@ export const FlexContainer = styled.div<FlexContainerProps>`
   box-shadow: ${(props) => props.boxShadow};
   opacity: ${(props) => props.opacity};
   order: ${(props) => props.order};
+  transition: ${(props) => props.transition};
 `;
