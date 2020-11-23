@@ -62,9 +62,12 @@ const PositionEditTP = observer(() => {
           : null;
     }
 
+    const valueSL = position && Math.abs(position.sl || 0) || null;
+
     return {
       value,
       price,
+      valueSL,
       operation: position?.operation,
     };
   }, [position]);
@@ -136,7 +139,7 @@ const PositionEditTP = observer(() => {
       accountId: mainAppStore.activeAccount?.id || '',
       positionId: positionId,
       tp: values.value !== null ? values.value : values.price,
-      sl: position?.sl || null,
+      sl: values.valueSL,
       tpType:
         values.value === null && values.price === null
           ? TpSlTypeEnum.Currency
