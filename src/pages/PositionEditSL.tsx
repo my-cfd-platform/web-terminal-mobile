@@ -157,12 +157,12 @@ const PositionEditSL = observer(() => {
       tp: values.valueTp,
       slType:
         values.value === null && values.price === null
-          ? TpSlTypeEnum.Currency
+          ? null
           : values.value !== null
           ? TpSlTypeEnum.Currency
           : TpSlTypeEnum.Price,
 
-      tpType: position?.tpType || TpSlTypeEnum.Currency,
+      tpType: position?.tp ? position.tpType : null,
     };
 
     setLoading(true);

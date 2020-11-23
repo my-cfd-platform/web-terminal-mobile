@@ -103,7 +103,7 @@ const PositionEditTP = observer(() => {
           })
           .when(['operation', 'value'], {
             is: (operation, value) =>
-              operation === AskBidEnum.Buy && value === null,
+              operation === AskBidEnum.Buy && value !== null,
             then: yup
               .number()
               .nullable()
@@ -117,7 +117,7 @@ const PositionEditTP = observer(() => {
           })
           .when(['operation', 'value'], {
             is: (operation, value) =>
-              operation === AskBidEnum.Sell && value === null,
+              operation === AskBidEnum.Sell && value !== null,
             then: yup
               .number()
               .nullable()
@@ -138,17 +138,19 @@ const PositionEditTP = observer(() => {
       processId: getProcessId(),
       accountId: mainAppStore.activeAccount?.id || '',
       positionId: positionId,
+
       tp: values.value !== null ? values.value : values.price,
-      sl: values.valueSL,
       tpType:
         values.value === null && values.price === null
-          ? TpSlTypeEnum.Currency
+          ? null
           : values.value !== null
           ? TpSlTypeEnum.Currency
           : TpSlTypeEnum.Price,
-
-      slType: position?.slType || TpSlTypeEnum.Currency,
+      
+          sl: values.valueSL,
+      slType: position?.sl ? position.slType : null,
     };
+    console.log(valuesToSubmit)
 
     setLoading(true);
     try {
