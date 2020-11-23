@@ -98,12 +98,13 @@ const PositionEditTP = observer(() => {
         price: yup
           .number()
           .nullable()
+          
           .test('price', t('Take Profit can not be zero'), (value) => {
             return value !== 0;
           })
-          .when(['operation', 'value'], {
+          .when(['operation', 'value',], {
             is: (operation, value) =>
-              operation === AskBidEnum.Buy && value !== null,
+              operation === AskBidEnum.Buy && value === null,
             then: yup
               .number()
               .nullable()
@@ -112,12 +113,12 @@ const PositionEditTP = observer(() => {
                 `${t('Error message')}: ${t(
                   'This level is higher or lower than the one currently allowed'
                 )}`,
-                (value) => value > currentPriceAsk()
+                (value) => value === null || value > currentPriceAsk()
               ),
           })
           .when(['operation', 'value'], {
-            is: (operation, value) =>
-              operation === AskBidEnum.Sell && value !== null,
+            is: (operation, value,) =>
+              operation === AskBidEnum.Sell && value === null,
             then: yup
               .number()
               .nullable()
@@ -126,7 +127,7 @@ const PositionEditTP = observer(() => {
                 `${t('Error message')}: ${t(
                   'This level is higher or lower than the one currently allowed'
                 )}`,
-                (value) => value < currentPriceBid()
+                (value) => value === null || value < currentPriceBid()
               ),
           }),
       }),
