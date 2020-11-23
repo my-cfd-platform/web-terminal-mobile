@@ -20,6 +20,7 @@ import { PositionModelWSDTO, UpdateSLTP } from '../types/Positions';
 import { observer } from 'mobx-react-lite';
 import API from '../helpers/API';
 import { OperationApiResponseCodes } from '../enums/OperationApiResponseCodes';
+import apiResponseCodeMessages from '../constants/apiResponseCodeMessages';
 
 const PositionEditTP = observer(() => {
   const { id } = useParams<{ id: string }>();
@@ -27,7 +28,12 @@ const PositionEditTP = observer(() => {
   const { t } = useTranslation();
   const { goBack } = useHistory();
 
-  const { mainAppStore, quotesStore, instrumentsStore } = useStores();
+  const {
+    mainAppStore,
+    quotesStore,
+    instrumentsStore,
+    notificationStore,
+  } = useStores();
 
   const [position, setPosition] = useState<PositionModelWSDTO>();
   const [instrument, setInstrument] = useState<InstrumentModelWSDTO>();
@@ -130,6 +136,12 @@ const PositionEditTP = observer(() => {
       const response = await API.updateSLTP(valuesToSubmit);
       if (response.result === OperationApiResponseCodes.Ok) {
         goBack();
+      } else {
+        notificationStore.notificationMessage = t(
+          apiResponseCodeMessages[response.result]
+        );
+        notificationStore.isSuccessfull = false;
+        notificationStore.openNotification();
       }
       setLoading(false);
     } catch (error) {

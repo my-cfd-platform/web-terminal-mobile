@@ -21,13 +21,19 @@ import { getProcessId } from '../helpers/getProcessId';
 import API from '../helpers/API';
 import InputMaskedField from '../components/InputMaskedField';
 import { OperationApiResponseCodes } from '../enums/OperationApiResponseCodes';
+import apiResponseCodeMessages from '../constants/apiResponseCodeMessages';
 
 const PositionEditSL = observer(() => {
   const { id } = useParams<{ id: string }>();
   const { t } = useTranslation();
 
   const { goBack } = useHistory();
-  const { mainAppStore, quotesStore, instrumentsStore } = useStores();
+  const {
+    mainAppStore,
+    quotesStore,
+    instrumentsStore,
+    notificationStore,
+  } = useStores();
 
   const [position, setPosition] = useState<PositionModelWSDTO>();
   const [instrument, setInstrument] = useState<InstrumentModelWSDTO>();
@@ -145,6 +151,12 @@ const PositionEditSL = observer(() => {
       const response = await API.updateSLTP(valuesToSubmit);
       if (response.result === OperationApiResponseCodes.Ok) {
         goBack();
+      } else {
+        notificationStore.notificationMessage = t(
+          apiResponseCodeMessages[response.result]
+        );
+        notificationStore.isSuccessfull = false;
+        notificationStore.openNotification();
       }
       setLoading(false);
     } catch (error) {
