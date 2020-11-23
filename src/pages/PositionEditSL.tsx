@@ -302,10 +302,7 @@ const PositionEditSL = observer(() => {
     }
   };
 
-  useEffect(() => {
-    valueInput.current?.focus();
-  });
-
+  
   useEffect(() => {
     const pos = quotesStore.activePositions.find((pos) => pos.id === +id);
     if (pos) {
