@@ -2,7 +2,14 @@ import styled from '@emotion/styled';
 import * as yup from 'yup';
 import { useFormik } from 'formik';
 import { observer } from 'mobx-react-lite';
-import React, { ChangeEvent, useCallback, useEffect, useState } from 'react';
+import React, {
+  ChangeEvent,
+  createRef,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
 import { useTranslation } from 'react-i18next';
 import BackFlowLayout from '../components/BackFlowLayout';
 import SlideCheckbox from '../components/SlideCheckbox';
@@ -26,6 +33,8 @@ import apiResponseCodeMessages from '../constants/apiResponseCodeMessages';
 const PositionEditSL = observer(() => {
   const { id } = useParams<{ id: string }>();
   const { t } = useTranslation();
+
+  const valueInput = useRef<HTMLInputElement>(null);
 
   const { goBack } = useHistory();
   const {
@@ -82,13 +91,9 @@ const PositionEditSL = observer(() => {
         value: yup
           .number()
           .nullable()
-          .test(
-            'value',
-            t('Stop Loss can not be zero'),
-            (value) => {
-              return value !== 0
-            }
-          )
+          .test('value', t('Stop Loss can not be zero'), (value) => {
+            return value !== 0;
+          })
           .test(
             'value',
             t('Stop loss level can not be lower than the Invest amount'),
@@ -107,13 +112,9 @@ const PositionEditSL = observer(() => {
         price: yup
           .number()
           .nullable()
-          .test(
-            'price',
-            t('Stop Loss can not be zero'),
-            (value) => {
-              return value !== 0
-            }
-          )
+          .test('price', t('Stop Loss can not be zero'), (value) => {
+            return value !== 0;
+          })
           .when(['operation'], {
             is: (operation) => operation === AskBidEnum.Buy,
             then: yup
@@ -200,6 +201,8 @@ const PositionEditSL = observer(() => {
     if (!on) {
       setFieldValue('value', null);
       setFieldValue('price', null);
+    } else {
+      valueInput.current?.focus();
     }
   };
 
@@ -296,7 +299,10 @@ const PositionEditSL = observer(() => {
   };
 
   useEffect(() => {
-    console.log('useEffect set Position');
+    valueInput.current?.focus();
+  });
+
+  useEffect(() => {
     const pos = quotesStore.activePositions.find((pos) => pos.id === +id);
     if (pos) {
       setPosition(pos);
@@ -364,7 +370,7 @@ const PositionEditSL = observer(() => {
                 {t('Value')}, $
               </PrimaryTextSpan>
               <FlexContainer justifyContent="flex-end" alignItems="center">
-                {(values.value !== null) && (
+                {values.value !== null && (
                   <ExtraMinus
                     color={
                       touched.value && errors.value ? Colors.RED : '#ffffff'
@@ -376,6 +382,7 @@ const PositionEditSL = observer(() => {
                   </ExtraMinus>
                 )}
                 <Input
+                  ref={valueInput}
                   customWidth={
                     values.value !== null
                       ? `${`${values.value}`.length}.5ch`

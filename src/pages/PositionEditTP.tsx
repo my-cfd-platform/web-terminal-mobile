@@ -1,7 +1,13 @@
 import styled from '@emotion/styled';
 import * as yup from 'yup';
 import { useFormik } from 'formik';
-import React, { ChangeEvent, useCallback, useEffect, useState } from 'react';
+import React, {
+  ChangeEvent,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
 import { useTranslation } from 'react-i18next';
 import { useHistory, useParams } from 'react-router-dom';
 import BackFlowLayout from '../components/BackFlowLayout';
@@ -26,6 +32,7 @@ const PositionEditTP = observer(() => {
   const { id } = useParams<{ id: string }>();
   const positionId = +id;
   const { t } = useTranslation();
+  const valueInput = useRef<HTMLInputElement>(null);
   const { goBack } = useHistory();
 
   const {
@@ -82,23 +89,15 @@ const PositionEditTP = observer(() => {
         value: yup
           .number()
           .nullable()
-          .test(
-            'value',
-            t('Take Profit can not be zero'),
-            (value) => {
-              return value !== 0;
-            }
-          ),
+          .test('value', t('Take Profit can not be zero'), (value) => {
+            return value !== 0;
+          }),
         price: yup
           .number()
           .nullable()
-          .test(
-            'price',
-            t('Take Profit can not be zero'),
-            (value) => {
-              return value !== 0;
-            }
-          )
+          .test('price', t('Take Profit can not be zero'), (value) => {
+            return value !== 0;
+          })
           .when(['operation', 'value'], {
             is: (operation, value) =>
               operation === AskBidEnum.Buy && value === null,
@@ -186,6 +185,8 @@ const PositionEditTP = observer(() => {
     if (!on) {
       setFieldValue('value', null);
       setFieldValue('price', null);
+    } else {
+      valueInput.current?.focus();
     }
   };
 
@@ -280,6 +281,10 @@ const PositionEditTP = observer(() => {
         break;
     }
   };
+
+  useEffect(() => {
+    valueInput.current?.focus();
+  });
 
   useEffect(() => {
     const pos = quotesStore.activePositions.find(
