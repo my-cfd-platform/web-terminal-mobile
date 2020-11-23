@@ -7,7 +7,7 @@ import { useTranslation } from 'react-i18next';
 const AccountBalanceHistory = () => {
   const { t } = useTranslation();
   return (
-    <BackFlowLayout pageTitle={t('Withdraw')}>
+    <BackFlowLayout pageTitle={t('Balance History')}>
       <FlexContainer
         alignItems="center"
         justifyContent="center"
