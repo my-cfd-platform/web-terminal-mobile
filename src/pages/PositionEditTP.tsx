@@ -55,7 +55,7 @@ const PositionEditTP = observer(() => {
       value = position.tp !== null ? +Math.abs(position.tp).toFixed(2) : null;
     }
 
-    if (position?.tp === TpSlTypeEnum.Price) {
+    if (position?.tpType === TpSlTypeEnum.Price) {
       price =
         position.tp !== null
           ? +position.tp.toFixed(instrument?.digits || 2)
