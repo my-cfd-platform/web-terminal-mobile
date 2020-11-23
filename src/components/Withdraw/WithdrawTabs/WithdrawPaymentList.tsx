@@ -37,13 +37,14 @@ const WithdrawPaymentList = () => {
               <SvgIcon {...IconBankTransfer} width="28px" fillColor="#fffee6" />
             </FlexContainer>
 
-            <FlexContainer flexDirection="column" padding="0 0 0 16px" justifyContent="center">
+            <FlexContainer
+              flexDirection="column"
+              padding="0 0 0 16px"
+              justifyContent="center"
+            >
               <PrimaryTextSpan color="#ffffff" fontSize="16px">
                 {t('Bank Transfer')}
               </PrimaryTextSpan>
-              {/* <PrimaryTextSpan color="rgba(255,255,255,0.5)" lineHeight="1.8">
-                {t('Other methods will be available')}
-              </PrimaryTextSpan> */}
             </FlexContainer>
           </FlexContainer>
           <FlexContainer>
@@ -72,13 +73,14 @@ const WithdrawPaymentList = () => {
               <SvgIcon {...IconBitcoin} width="28px" fillColor="#fffee6" />
             </FlexContainer>
 
-            <FlexContainer flexDirection="column" padding="0 0 0 16px" justifyContent="center">
+            <FlexContainer
+              flexDirection="column"
+              padding="0 0 0 16px"
+              justifyContent="center"
+            >
               <PrimaryTextSpan color="#ffffff" fontSize="16px">
                 {t('Bitcoin')}
               </PrimaryTextSpan>
-              {/* <PrimaryTextSpan color="rgba(255,255,255,0.5)" lineHeight="1.8">
-                {t('Other methods will be available')}
-              </PrimaryTextSpan> */}
             </FlexContainer>
           </FlexContainer>
           <FlexContainer>
