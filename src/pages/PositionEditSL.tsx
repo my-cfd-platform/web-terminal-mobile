@@ -197,13 +197,14 @@ const PositionEditSL = observer(() => {
   });
 
   const handleToggleSlideSLTP = (on: boolean) => {
-    setActiveSL(on);
     if (!on) {
       setFieldValue('value', null);
       setFieldValue('price', null);
-    } else {
+    }
+    if (!activeSL) {
       valueInput.current?.focus();
     }
+    setActiveSL(on);
   };
 
   const handleBeforeInput = (fieldType: TpSlTypeEnum | null) => (e: any) => {
@@ -298,9 +299,9 @@ const PositionEditSL = observer(() => {
     }
   };
 
-  useEffect(() => {
-    valueInput.current?.focus();
-  });
+  // useEffect(() => {
+  //     valueInput.current?.focus();
+  // }, []);
 
   useEffect(() => {
     const pos = quotesStore.activePositions.find((pos) => pos.id === +id);
@@ -388,6 +389,7 @@ const PositionEditSL = observer(() => {
                       ? `${`${values.value}`.length}.5ch`
                       : 'auto'
                   }
+                  autoFocus
                   name="value"
                   id="value"
                   type="text"

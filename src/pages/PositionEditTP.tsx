@@ -185,7 +185,8 @@ const PositionEditTP = observer(() => {
     if (!on) {
       setFieldValue('value', null);
       setFieldValue('price', null);
-    } else {
+    }
+    if (!activeSL) {
       valueInput.current?.focus();
     }
   };
@@ -283,10 +284,6 @@ const PositionEditTP = observer(() => {
   };
 
   useEffect(() => {
-    valueInput.current?.focus();
-  });
-
-  useEffect(() => {
     const pos = quotesStore.activePositions.find(
       (pos) => pos.id === positionId
     );
@@ -365,6 +362,8 @@ const PositionEditTP = observer(() => {
                 </PrimaryTextSpan>
               </FlexContainer>
               <Input
+                ref={valueInput}
+                autoFocus
                 name="value"
                 id="value"
                 type="text"
