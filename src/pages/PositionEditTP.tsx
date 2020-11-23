@@ -79,10 +79,26 @@ const PositionEditTP = observer(() => {
   const validationSchema = useCallback(
     () =>
       yup.object().shape({
-        value: yup.number().nullable(),
+        value: yup
+          .number()
+          .nullable()
+          .test(
+            'value',
+            t('Take Profit can not be zero'),
+            (value) => {
+              return value !== 0;
+            }
+          ),
         price: yup
           .number()
           .nullable()
+          .test(
+            'price',
+            t('Take Profit can not be zero'),
+            (value) => {
+              return value !== 0;
+            }
+          )
           .when(['operation', 'value'], {
             is: (operation, value) =>
               operation === AskBidEnum.Buy && value === null,

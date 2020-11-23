@@ -84,6 +84,13 @@ const PositionEditSL = observer(() => {
           .nullable()
           .test(
             'value',
+            t('Stop Loss can not be zero'),
+            (value) => {
+              return value !== 0
+            }
+          )
+          .test(
+            'value',
             t('Stop loss level can not be lower than the Invest amount'),
             function (value) {
               if (position) {
@@ -100,6 +107,13 @@ const PositionEditSL = observer(() => {
         price: yup
           .number()
           .nullable()
+          .test(
+            'price',
+            t('Stop Loss can not be zero'),
+            (value) => {
+              return value !== 0
+            }
+          )
           .when(['operation'], {
             is: (operation) => operation === AskBidEnum.Buy,
             then: yup
@@ -300,7 +314,7 @@ const PositionEditSL = observer(() => {
 
   return (
     <BackFlowLayout pageTitle={'Stop Loss'}>
-      <LoaderForComponents isLoading={loading} />;
+      <LoaderForComponents isLoading={loading} />
       <CustomForm noValidate onSubmit={handleSubmit}>
         {dirty && (
           <FlexContainer
@@ -350,7 +364,7 @@ const PositionEditSL = observer(() => {
                 {t('Value')}, $
               </PrimaryTextSpan>
               <FlexContainer justifyContent="flex-end" alignItems="center">
-                {values.value && (
+                {(values.value !== null) && (
                   <ExtraMinus
                     color={
                       touched.value && errors.value ? Colors.RED : '#ffffff'
