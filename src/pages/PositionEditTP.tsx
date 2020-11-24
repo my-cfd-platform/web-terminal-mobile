@@ -63,9 +63,10 @@ const PositionEditTP = observer(() => {
           : null;
     }
 
-    const valueSL = position && Math.abs(position.sl || 0) || null;
+    const valueSL = (position && Math.abs(position.sl || 0)) || null;
 
     return {
+      toggle: true,
       value,
       price,
       valueSL,
@@ -86,24 +87,23 @@ const PositionEditTP = observer(() => {
     }
     return 0;
   }, [instrument, position, quotesStore.quotes]);
-  
 
-  const PnL = useCallback(
-    () => {
-      if (position) {
-        return calculateFloatingProfitAndLoss({
-          investment: position.investmentAmount,
-          multiplier: position.multiplier,
-          costs: position.swap + position.commission,
-          side: position.operation ===  AskBidEnum.Buy ? 1 : -1,
-          currentPrice: position.operation ===  AskBidEnum.Buy ? currentPriceBid() : currentPriceAsk(),
-          openPrice: position.openPrice,
-        })
-      }
-      return 0;
-    },
-    [currentPriceBid, currentPriceAsk, position]
-  );
+  const PnL = useCallback(() => {
+    if (position) {
+      return calculateFloatingProfitAndLoss({
+        investment: position.investmentAmount,
+        multiplier: position.multiplier,
+        costs: position.swap + position.commission,
+        side: position.operation === AskBidEnum.Buy ? 1 : -1,
+        currentPrice:
+          position.operation === AskBidEnum.Buy
+            ? currentPriceBid()
+            : currentPriceAsk(),
+        openPrice: position.openPrice,
+      });
+    }
+    return 0;
+  }, [currentPriceBid, currentPriceAsk, position]);
 
   const validationSchema = useCallback(
     () =>
@@ -123,11 +123,11 @@ const PositionEditTP = observer(() => {
         price: yup
           .number()
           .nullable()
-          
+
           .test('price', t('Take Profit can not be zero'), (value) => {
             return value !== 0;
           })
-          .when(['operation', 'value',], {
+          .when(['operation', 'value'], {
             is: (operation, value) =>
               operation === AskBidEnum.Buy && value === null,
             then: yup
@@ -135,21 +135,21 @@ const PositionEditTP = observer(() => {
               .nullable()
               .test(
                 'price',
-                `${t('Error message')}: ${t(
+                `${t(
                   'This level is higher or lower than the one currently allowed'
                 )}`,
                 (value) => value === null || value > currentPriceBid()
               ),
           })
           .when(['operation', 'value'], {
-            is: (operation, value,) =>
+            is: (operation, value) =>
               operation === AskBidEnum.Sell && value === null,
             then: yup
               .number()
               .nullable()
               .test(
                 'price',
-                `${t('Error message')}: ${t(
+                `${t(
                   'This level is higher or lower than the one currently allowed'
                 )}`,
                 (value) => value === null || value < currentPriceAsk()
@@ -172,11 +172,11 @@ const PositionEditTP = observer(() => {
           : values.value !== null
           ? TpSlTypeEnum.Currency
           : TpSlTypeEnum.Price,
-      
-          sl: values.valueSL,
+
+      sl: values.valueSL,
       slType: position?.sl ? position.slType : null,
     };
-    console.log(valuesToSubmit)
+    console.log(valuesToSubmit);
 
     setLoading(true);
     try {
@@ -203,6 +203,7 @@ const PositionEditTP = observer(() => {
     touched,
     errors,
     dirty,
+    setTouched,
   } = useFormik({
     initialValues: initialValues(),
     enableReinitialize: true,
@@ -221,6 +222,7 @@ const PositionEditTP = observer(() => {
     if (!activeSL) {
       valueInput.current?.focus();
     }
+    setTouched({ toggle: true });
   };
 
   const handleBeforeInput = (fieldType: TpSlTypeEnum | null) => (e: any) => {

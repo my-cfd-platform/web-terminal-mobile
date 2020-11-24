@@ -68,6 +68,7 @@ const PositionEditSL = observer(() => {
     const valueTp = position?.tp || null;
 
     return {
+      toggle: true,
       value,
       price,
       valueTp,
@@ -126,7 +127,7 @@ const PositionEditSL = observer(() => {
             t('Stop loss level can not be higher than the Invest amount'),
             (value) => {
               if (position) {
-                return Math.abs(value) <= position.investmentAmount;
+                return Math.abs(value) <= +position.investmentAmount;
               }
               return false;
             }
@@ -145,7 +146,7 @@ const PositionEditSL = observer(() => {
               .nullable()
               .test(
                 'price',
-                `${t('Error message')}: ${t(
+                `${t(
                   'This level is higher or lower than the one currently allowed'
                 )}`,
                 (value) => value < currentPriceBid()
@@ -158,7 +159,7 @@ const PositionEditSL = observer(() => {
               .nullable()
               .test(
                 'price',
-                `${t('Error message')}: ${t(
+                `${t(
                   'This level is higher or lower than the one currently allowed'
                 )}`,
                 (value) => value > currentPriceAsk()
@@ -211,6 +212,7 @@ const PositionEditSL = observer(() => {
     getFieldProps,
     errors,
     dirty,
+    setTouched,
   } = useFormik({
     initialValues: initialValues(),
     enableReinitialize: true,
@@ -228,6 +230,7 @@ const PositionEditSL = observer(() => {
     } else {
       valueInput.current?.focus();
     }
+    setTouched({ toggle: true });
   };
 
   const handleBeforeInput = (fieldType: TpSlTypeEnum | null) => (e: any) => {
@@ -390,7 +393,7 @@ const PositionEditSL = observer(() => {
                 {t('Value')}, $
               </PrimaryTextSpan>
               <FlexContainer justifyContent="flex-end" alignItems="center">
-                {values.value !== null && (
+                {/* {values.value !== null && (
                   <ExtraMinus
                     color={
                       touched.value && errors.value ? Colors.RED : '#ffffff'
@@ -400,14 +403,10 @@ const PositionEditSL = observer(() => {
                   >
                     -
                   </ExtraMinus>
-                )}
+                )} */}
                 <Input
                   ref={valueInput}
-                  customWidth={
-                    values.value !== null
-                      ? `${`${values.value}`.length}.5ch`
-                      : 'auto'
-                  }
+                  customWidth={'auto'}
                   name="value"
                   id="value"
                   type="text"
