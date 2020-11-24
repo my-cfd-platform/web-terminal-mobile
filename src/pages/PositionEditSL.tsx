@@ -29,6 +29,7 @@ import API from '../helpers/API';
 import InputMaskedField from '../components/InputMaskedField';
 import { OperationApiResponseCodes } from '../enums/OperationApiResponseCodes';
 import apiResponseCodeMessages from '../constants/apiResponseCodeMessages';
+import calculateFloatingProfitAndLoss from '../helpers/calculateFloatingProfitAndLoss';
 
 const PositionEditSL = observer(() => {
   const { id } = useParams<{ id: string }>();
@@ -70,6 +71,7 @@ const PositionEditSL = observer(() => {
       value,
       price,
       valueTp,
+      slType: position?.slType,
       operation: position?.operation,
     };
   }, [position]);
@@ -88,6 +90,23 @@ const PositionEditSL = observer(() => {
     return 0;
   }, [instrument, quotesStore.quotes]);
 
+  const PnL = useCallback(() => {
+    if (position) {
+      return calculateFloatingProfitAndLoss({
+        investment: position.investmentAmount,
+        multiplier: position.multiplier,
+        costs: position.swap + position.commission,
+        side: position.operation === AskBidEnum.Buy ? 1 : -1,
+        currentPrice:
+          position.operation === AskBidEnum.Buy
+            ? currentPriceBid()
+            : currentPriceAsk(),
+        openPrice: position.openPrice,
+      });
+    }
+    return 0;
+  }, [currentPriceBid, currentPriceAsk, position]);
+
   const validationSchema = useCallback(
     () =>
       yup.object().shape({
@@ -99,10 +118,15 @@ const PositionEditSL = observer(() => {
           })
           .test(
             'value',
-            t('Stop loss level can not be lower than the Invest amount'),
-            function (value) {
+            t('Stop loss level should be lower than the current P/L'),
+            (value) => -1 * Math.abs(value) < PnL()
+          )
+          .test(
+            'value',
+            t('Stop loss level can not be higher than the Invest amount'),
+            (value) => {
               if (position) {
-                return value < +position?.investmentAmount;
+                return Math.abs(value) <= position.investmentAmount;
               }
               return false;
             }
@@ -124,7 +148,7 @@ const PositionEditSL = observer(() => {
                 `${t('Error message')}: ${t(
                   'This level is higher or lower than the one currently allowed'
                 )}`,
-                (value) => value < currentPriceAsk()
+                (value) => value < currentPriceBid()
               ),
           })
           .when(['operation'], {
@@ -137,7 +161,7 @@ const PositionEditSL = observer(() => {
                 `${t('Error message')}: ${t(
                   'This level is higher or lower than the one currently allowed'
                 )}`,
-                (value) => value > currentPriceBid()
+                (value) => value > currentPriceAsk()
               ),
           }),
       }),
@@ -298,7 +322,6 @@ const PositionEditSL = observer(() => {
     }
   };
 
-  
   useEffect(() => {
     const pos = quotesStore.activePositions.find((pos) => pos.id === +id);
     if (pos) {

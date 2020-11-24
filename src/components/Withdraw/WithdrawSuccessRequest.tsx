@@ -31,8 +31,8 @@ const WithdrawSuccessRequest = () => {
             padding="40px 0 0 0"
           >
             <FlexContainer
-              justifyContent={'center'}
-              alignItems={'center'}
+              justifyContent="center"
+              alignItems="center"
               marginBottom="40px"
             >
               <img src={SuccessImage} width={138} />

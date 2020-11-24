@@ -17,7 +17,7 @@ const WithdrawalFaqLink = () => {
         <FaqImg src={FaqIcon} />
         <FlexContainer flexDirection="column" padding="0 0 0 16px">
           <PrimaryTextSpan textTransform="uppercase">
-            {t('Faq')}
+            {t('FAQ')}
           </PrimaryTextSpan>
           <PrimaryTextSpan color="#ffffff" lineHeight="1.8">
             {t('Frequently Asked Questions')}

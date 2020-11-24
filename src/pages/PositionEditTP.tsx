@@ -27,6 +27,7 @@ import { observer } from 'mobx-react-lite';
 import API from '../helpers/API';
 import { OperationApiResponseCodes } from '../enums/OperationApiResponseCodes';
 import apiResponseCodeMessages from '../constants/apiResponseCodeMessages';
+import calculateFloatingProfitAndLoss from '../helpers/calculateFloatingProfitAndLoss';
 
 const PositionEditTP = observer(() => {
   const { id } = useParams<{ id: string }>();
@@ -85,7 +86,25 @@ const PositionEditTP = observer(() => {
     }
     return 0;
   }, [instrument, position, quotesStore.quotes]);
-  // test
+  
+
+  const PnL = useCallback(
+    () => {
+      if (position) {
+        return calculateFloatingProfitAndLoss({
+          investment: position.investmentAmount,
+          multiplier: position.multiplier,
+          costs: position.swap + position.commission,
+          side: position.operation ===  AskBidEnum.Buy ? 1 : -1,
+          currentPrice: position.operation ===  AskBidEnum.Buy ? currentPriceBid() : currentPriceAsk(),
+          openPrice: position.openPrice,
+        })
+      }
+      return 0;
+    },
+    [currentPriceBid, currentPriceAsk, position]
+  );
+
   const validationSchema = useCallback(
     () =>
       yup.object().shape({
@@ -94,7 +113,13 @@ const PositionEditTP = observer(() => {
           .nullable()
           .test('value', t('Take Profit can not be zero'), (value) => {
             return value !== 0;
-          }),
+          })
+          .test(
+            'value',
+            t('Take profit level should be higher than the current P/L'),
+            (value) => value > PnL()
+          ),
+
         price: yup
           .number()
           .nullable()
@@ -113,7 +138,7 @@ const PositionEditTP = observer(() => {
                 `${t('Error message')}: ${t(
                   'This level is higher or lower than the one currently allowed'
                 )}`,
-                (value) => value === null || value > currentPriceAsk()
+                (value) => value === null || value > currentPriceBid()
               ),
           })
           .when(['operation', 'value'], {
@@ -127,7 +152,7 @@ const PositionEditTP = observer(() => {
                 `${t('Error message')}: ${t(
                   'This level is higher or lower than the one currently allowed'
                 )}`,
-                (value) => value === null || value < currentPriceBid()
+                (value) => value === null || value < currentPriceAsk()
               ),
           }),
       }),
