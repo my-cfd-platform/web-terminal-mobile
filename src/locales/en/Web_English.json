@@ -399,5 +399,11 @@
     "Personal data is not valid.": "Personal data is not valid.",
     "User not found.": "User not found.",
     "Your new password must be between 8 and 31 characters": "Your new password must be between 8 and 31 characters",
-    "Your password must be between 8 and 31 characters": "Your password must be between 8 and 31 characters"
+    "Your password must be between 8 and 31 characters": "Your password must be between 8 and 31 characters",
+    "Status": "Status",
+    "Confirm closing of": "Confirm closing of",
+    "withdrawal request": "withdrawal request",
+    "Next": "Next",
+    "No history yet": "No history yet",
+    "Withdrawal will be available after you deposit money into the system": "Withdrawal will be available after you deposit money into the system"
 }

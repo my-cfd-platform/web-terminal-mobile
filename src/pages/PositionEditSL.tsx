@@ -102,10 +102,6 @@ const PositionEditSL = observer(() => {
             t('Stop loss level can not be lower than the Invest amount'),
             function (value) {
               if (position) {
-                console.log(
-                  'value < +position?.investmentAmount',
-                  value < +position?.investmentAmount
-                );
                 return value < +position?.investmentAmount;
               }
               return false;
