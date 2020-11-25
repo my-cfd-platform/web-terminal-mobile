@@ -294,7 +294,7 @@ const PositionEditSL = observer(() => {
   };
 
   const handleChangeInput = (e: ChangeEvent<HTMLInputElement>) => {
-    setFieldValue(e.target.name, e.target.value.replace(',', '.'));
+    setFieldValue(e.target.name, e.target.value.replace(',', '.') || null);
 
     switch (e.target.name) {
       case 'value':
