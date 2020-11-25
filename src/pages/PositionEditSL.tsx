@@ -30,6 +30,7 @@ import InputMaskedField from '../components/InputMaskedField';
 import { OperationApiResponseCodes } from '../enums/OperationApiResponseCodes';
 import apiResponseCodeMessages from '../constants/apiResponseCodeMessages';
 import calculateFloatingProfitAndLoss from '../helpers/calculateFloatingProfitAndLoss';
+import Page from '../constants/Pages';
 
 const PositionEditSL = observer(() => {
   const { id } = useParams<{ id: string }>();
@@ -37,7 +38,7 @@ const PositionEditSL = observer(() => {
 
   const valueInput = useRef<HTMLInputElement>(null);
 
-  const { goBack } = useHistory();
+  const { goBack, push } = useHistory();
   const {
     mainAppStore,
     quotesStore,
@@ -334,11 +335,13 @@ const PositionEditSL = observer(() => {
     const pos = quotesStore.activePositions.find((pos) => pos.id === +id);
     if (pos) {
       setPosition(pos);
-
       const instr = instrumentsStore.instruments.find(
         (inst) => inst.instrumentItem.id === pos.instrument
       )?.instrumentItem;
       setInstrument(instr);
+    }
+    if (quotesStore.activePositions && !pos) {
+      push(Page.PORTFOLIO_MAIN);
     }
   }, [quotesStore.activePositions]);
 

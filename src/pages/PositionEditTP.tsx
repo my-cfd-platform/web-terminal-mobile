@@ -34,7 +34,7 @@ const PositionEditTP = observer(() => {
   const positionId = +id;
   const { t } = useTranslation();
   const valueInput = useRef<HTMLInputElement>(null);
-  const { goBack } = useHistory();
+  const { goBack, push } = useHistory();
 
   const {
     mainAppStore,
@@ -327,6 +327,9 @@ const PositionEditTP = observer(() => {
         (inst) => inst.instrumentItem.id === pos.instrument
       )?.instrumentItem;
       setInstrument(instr);
+    }
+    if (quotesStore.activePositions && !pos) {
+      push(Page.PORTFOLIO_MAIN);
     }
   }, [quotesStore.activePositions]);
 
