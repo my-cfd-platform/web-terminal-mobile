@@ -117,13 +117,11 @@ const PositionEditTP = observer(() => {
           .test(
             'value',
             t('Take profit level should be higher than the current P/L'),
-            (value) => value > PnL()
+            (value) => value === null || value > PnL()
           ),
-
         price: yup
           .number()
           .nullable()
-
           .test('price', t('Take Profit can not be zero'), (value) => {
             return value !== 0;
           })

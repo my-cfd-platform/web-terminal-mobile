@@ -114,7 +114,7 @@ const PositionEditSL = observer(() => {
         value: yup
           .number()
           .nullable()
-          .test('value', t('Stop Loss can not be zero'), (value) => {
+          .test('value', t('value Stop Loss can not be zero'), (value) => {
             return value !== 0;
           })
           .test(
@@ -136,11 +136,12 @@ const PositionEditSL = observer(() => {
         price: yup
           .number()
           .nullable()
-          .test('price', t('Stop Loss can not be zero'), (value) => {
+          .test('price', t('price Stop Loss can not be zero'), (value) => {
             return value !== 0;
           })
-          .when(['operation'], {
-            is: (operation) => operation === AskBidEnum.Buy,
+          .when(['operation', 'value'], {
+            is: (operation, value) =>
+              operation === AskBidEnum.Buy && value === null,
             then: yup
               .number()
               .nullable()
@@ -152,8 +153,9 @@ const PositionEditSL = observer(() => {
                 (value) => value < currentPriceBid()
               ),
           })
-          .when(['operation'], {
-            is: (operation) => operation === AskBidEnum.Sell,
+          .when(['operation', 'value'], {
+            is: (operation, value) =>
+              operation === AskBidEnum.Sell && value === null,
             then: yup
               .number()
               .nullable()
