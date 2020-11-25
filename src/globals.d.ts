@@ -34,7 +34,7 @@ declare const API_DEPOSIT_STRING: string;
 declare const API_WITHDRAWAL_STRING: string;
 declare const API_AUTH_STRING: string;
 declare const CHARTING_LIBRARY_PATH: string;
-declare const IS_LIVE: string;
+declare const IS_LIVE: boolean;
 declare const BUILD_VERSION: string;
 declare const grecaptcha: any;
 declare const IS_LOCAL: boolean;
