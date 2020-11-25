@@ -114,20 +114,20 @@ const PositionEditSL = observer(() => {
         value: yup
           .number()
           .nullable()
-          .test('value', t('value Stop Loss can not be zero'), (value) => {
+          .test('value', t('Stop Loss can not be zero'), (value) => {
             return value !== 0;
           })
           .test(
             'value',
             t('Stop loss level should be lower than the current P/L'),
-            (value) => -1 * Math.abs(value) < PnL()
+            (value) => value === null || -1 * Math.abs(value) < PnL()
           )
           .test(
             'value',
             t('Stop loss level can not be higher than the Invest amount'),
             (value) => {
               if (position) {
-                return Math.abs(value) <= +position.investmentAmount;
+                return value === null || Math.abs(value) <= +position.investmentAmount;
               }
               return false;
             }
@@ -136,7 +136,7 @@ const PositionEditSL = observer(() => {
         price: yup
           .number()
           .nullable()
-          .test('price', t('price Stop Loss can not be zero'), (value) => {
+          .test('price', t('Stop Loss can not be zero'), (value) => {
             return value !== 0;
           })
           .when(['operation', 'value'], {

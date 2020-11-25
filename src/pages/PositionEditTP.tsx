@@ -112,7 +112,7 @@ const PositionEditTP = observer(() => {
           .number()
           .nullable()
           .test('value', t('Take Profit can not be zero'), (value) => {
-            return value !== 0;
+            return value === null || value !== 0;
           })
           .test(
             'value',
