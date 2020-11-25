@@ -127,7 +127,10 @@ const PositionEditSL = observer(() => {
             t('Stop loss level can not be higher than the Invest amount'),
             (value) => {
               if (position) {
-                return value === null || Math.abs(value) <= +position.investmentAmount;
+                return (
+                  value === null ||
+                  Math.abs(value) <= +position.investmentAmount
+                );
               }
               return false;
             }
@@ -347,7 +350,9 @@ const PositionEditSL = observer(() => {
     <BackFlowLayout pageTitle={'Stop Loss'}>
       <LoaderForComponents isLoading={loading} />
       <CustomForm noValidate onSubmit={handleSubmit}>
-        {dirty && (
+        {((touched.toggle && !activeSL) ||
+          (dirty && values.value !== null && values.price !== null) ||
+          (dirty && (values.value !== null || values.price !== null))) && (
           <FlexContainer
             position="absolute"
             right="16px"
