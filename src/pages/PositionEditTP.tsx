@@ -28,13 +28,14 @@ import API from '../helpers/API';
 import { OperationApiResponseCodes } from '../enums/OperationApiResponseCodes';
 import apiResponseCodeMessages from '../constants/apiResponseCodeMessages';
 import calculateFloatingProfitAndLoss from '../helpers/calculateFloatingProfitAndLoss';
+import Page from '../constants/Pages';
 
 const PositionEditTP = observer(() => {
   const { id } = useParams<{ id: string }>();
   const positionId = +id;
   const { t } = useTranslation();
   const valueInput = useRef<HTMLInputElement>(null);
-  const { goBack } = useHistory();
+  const { goBack, push } = useHistory();
 
   const {
     mainAppStore,
@@ -320,13 +321,14 @@ const PositionEditTP = observer(() => {
       (pos) => pos.id === positionId
     );
     if (pos) {
-      console.log('useEffect set Position');
       setPosition(pos);
-
       const instr = instrumentsStore.instruments.find(
         (inst) => inst.instrumentItem.id === pos.instrument
       )?.instrumentItem;
       setInstrument(instr);
+    }
+    if (quotesStore.activePositions && !pos) {
+      push(Page.PORTFOLIO_MAIN);
     }
   }, [quotesStore.activePositions]);
 

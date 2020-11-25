@@ -30,6 +30,7 @@ import InputMaskedField from '../components/InputMaskedField';
 import { OperationApiResponseCodes } from '../enums/OperationApiResponseCodes';
 import apiResponseCodeMessages from '../constants/apiResponseCodeMessages';
 import calculateFloatingProfitAndLoss from '../helpers/calculateFloatingProfitAndLoss';
+import Page from '../constants/Pages';
 
 const PositionEditSL = observer(() => {
   const { id } = useParams<{ id: string }>();
@@ -37,7 +38,7 @@ const PositionEditSL = observer(() => {
 
   const valueInput = useRef<HTMLInputElement>(null);
 
-  const { goBack } = useHistory();
+  const { goBack, push } = useHistory();
   const {
     mainAppStore,
     quotesStore,
@@ -75,7 +76,7 @@ const PositionEditSL = observer(() => {
       slType: position?.slType,
       operation: position?.operation,
     };
-  }, [position]);
+  }, [position, instrument]);
 
   const currentPriceAsk = useCallback(() => {
     if (instrument) {
@@ -334,11 +335,13 @@ const PositionEditSL = observer(() => {
     const pos = quotesStore.activePositions.find((pos) => pos.id === +id);
     if (pos) {
       setPosition(pos);
-
       const instr = instrumentsStore.instruments.find(
         (inst) => inst.instrumentItem.id === pos.instrument
       )?.instrumentItem;
       setInstrument(instr);
+    }
+    if (quotesStore.activePositions && !pos) {
+      push(Page.PORTFOLIO_MAIN);
     }
   }, [quotesStore.activePositions]);
 
@@ -421,7 +424,7 @@ const PositionEditSL = observer(() => {
                   placeholder="-30.00"
                   readOnly={!activeSL}
                   onBeforeInput={handleBeforeInput(TpSlTypeEnum.Currency)}
-                  value={values.value !== null ? values.value : ''}
+                  value={values.value || ''}
                   onBlur={handleBlurInput}
                   onChange={handleChangeInput}
                 />
