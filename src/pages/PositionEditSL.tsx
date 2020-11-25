@@ -76,7 +76,7 @@ const PositionEditSL = observer(() => {
       slType: position?.slType,
       operation: position?.operation,
     };
-  }, [position]);
+  }, [position, instrument]);
 
   const currentPriceAsk = useCallback(() => {
     if (instrument) {
@@ -424,7 +424,7 @@ const PositionEditSL = observer(() => {
                   placeholder="-30.00"
                   readOnly={!activeSL}
                   onBeforeInput={handleBeforeInput(TpSlTypeEnum.Currency)}
-                  value={values.value !== null ? values.value : ''}
+                  value={values.value || ''}
                   onBlur={handleBlurInput}
                   onChange={handleChangeInput}
                 />

@@ -142,6 +142,9 @@ const ActivePositionsDetails: FC<Props> = observer((props) => {
     if (positionById) {
       setPosition(positionById);
     }
+    if (quotesStore.activePositions && !positionById) {
+      push(Page.PORTFOLIO_MAIN);
+    }
   }, [quotesStore.activePositions, positionId]);
 
   const positionInstrumentDigits = useCallback(
