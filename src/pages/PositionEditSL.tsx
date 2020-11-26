@@ -253,8 +253,7 @@ const PositionEditSL = observer(() => {
         break;
     }
 
-    const currTargetValue = e.currentTarget.value;
-
+    const currTargetValue = e.currentTarget.value.replace('- ', '');
     if (!e.data.match(/^[0-9.,]*$/g)) {
       e.preventDefault();
       return;
@@ -295,7 +294,11 @@ const PositionEditSL = observer(() => {
   };
 
   const handleChangeInput = (e: ChangeEvent<HTMLInputElement>) => {
-    setFieldValue(e.target.name, e.target.value.replace(',', '.') || null);
+    const newValue =
+      +e.target.value === 0
+        ? e.target.value
+        : e.target.value.replace('- ', '').replace(',', '.') || null;
+    setFieldValue(e.target.name, newValue);
 
     switch (e.target.name) {
       case 'value':
@@ -312,11 +315,12 @@ const PositionEditSL = observer(() => {
   };
 
   const handleBlurInput = (e: ChangeEvent<HTMLInputElement>) => {
+    const value = +e.target.value.replace('- ', '');
     switch (e.target.name) {
       case 'value':
         setFieldValue(
           'value',
-          e.target.value ? +(+e.target.value).toFixed(2) : null
+          +value === 0 ? value : value ? value.toFixed(2) : null
         );
         break;
 
@@ -330,6 +334,17 @@ const PositionEditSL = observer(() => {
         break;
     }
   };
+
+  const renderNegativeValue = useCallback(() => {
+    if (values.value !== null && +values.value === 0) {
+      return 0;
+    }
+    if (values.value && values.value !== null) {
+      return `- ${values.value}`;
+    } else {
+      return '';
+    }
+  }, [values.value]);
 
   useEffect(() => {
     const pos = quotesStore.activePositions.find((pos) => pos.id === +id);
@@ -424,7 +439,7 @@ const PositionEditSL = observer(() => {
                   placeholder="-30.00"
                   readOnly={!activeSL}
                   onBeforeInput={handleBeforeInput(TpSlTypeEnum.Currency)}
-                  value={values.value || ''}
+                  value={renderNegativeValue()}
                   onBlur={handleBlurInput}
                   onChange={handleChangeInput}
                 />
