@@ -141,7 +141,7 @@ const PositionEditSL = observer(() => {
           .number()
           .nullable()
           .test('price', t('Stop Loss can not be zero'), (value) => {
-            return value !== 0 && value === null;
+            return value !== 0 || value === null;
           })
           .when(['operation', 'value'], {
             is: (operation, value) =>

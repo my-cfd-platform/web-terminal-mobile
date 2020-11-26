@@ -42,6 +42,8 @@ const WithdrawList = observer(() => {
 
           if (isPending) {
             withdrawalStore.setPendingPopup();
+          } else {
+            withdrawalStore.closePendingPopup();
           }
         }
 
