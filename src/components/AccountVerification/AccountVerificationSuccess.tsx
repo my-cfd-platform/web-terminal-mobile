@@ -9,6 +9,7 @@ import IconChecked from '../../assets/svg/profile/icon-checked.svg';
 import { PrimaryTextSpan } from '../../styles/TextsElements';
 import { PrimaryButton } from '../../styles/Buttons';
 import Colors from '../../constants/Colors';
+import Pages from '../../constants/Pages';
 
 interface Props {
   changeStep: (name: string) => void;
@@ -16,10 +17,10 @@ interface Props {
 
 const AccountVerificationSuccess: FC<Props> = () => {
   const { t } = useTranslation();
-  const { goBack } = useHistory();
+  const { push } = useHistory();
 
   return (
-    <BackFlowLayout type={'close'} pageTitle={t('Verification Flow')}>
+    <BackFlowLayout type={'close'} backLink={Pages.ACCOUNT_PROFILE} pageTitle={t('Verification Flow')}>
       <FlexContainer
         flexDirection="column"
         justifyContent="space-between"
@@ -76,7 +77,7 @@ const AccountVerificationSuccess: FC<Props> = () => {
             padding="12px"
             type="button"
             width="100%"
-            onClick={goBack}
+            onClick={() => push(Pages.ACCOUNT_PROFILE)}
           >
             <PrimaryTextSpan
               color={Colors.BLACK}
