@@ -3,4 +3,5 @@ export enum WithdrawHistoryStatusName {
   'Canceled',
   'Approved',
   'Declined',
+  'Proccesing',
 }

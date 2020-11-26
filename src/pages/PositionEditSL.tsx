@@ -141,7 +141,7 @@ const PositionEditSL = observer(() => {
           .number()
           .nullable()
           .test('price', t('Stop Loss can not be zero'), (value) => {
-            return value !== 0;
+            return value !== 0 && value === null;
           })
           .when(['operation', 'value'], {
             is: (operation, value) =>
@@ -154,7 +154,7 @@ const PositionEditSL = observer(() => {
                 `${t(
                   'This level is higher or lower than the one currently allowed'
                 )}`,
-                (value) => value < currentPriceBid()
+                (value) => value === null || value < currentPriceBid()
               ),
           })
           .when(['operation', 'value'], {
@@ -168,7 +168,7 @@ const PositionEditSL = observer(() => {
                 `${t(
                   'This level is higher or lower than the one currently allowed'
                 )}`,
-                (value) => value > currentPriceAsk()
+                (value) => value === null || value > currentPriceAsk()
               ),
           }),
       }),
