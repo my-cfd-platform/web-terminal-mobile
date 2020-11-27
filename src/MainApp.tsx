@@ -136,10 +136,11 @@ const MainApp: FC = () => {
           body {
             color: #fff;
             background-color: ${Colors.BACKGROUD_PAGE};
-            min-height: 100%;
-            min-height: calc(${FULL_VH});
+            height: calc(${FULL_VH});
+            height: -moz-available;
+            height: -webkit-fill-available;
+            height: fill-available;
             overscroll-behavior: contain;
-            overflow: hidden;
           }
 
           .grecaptcha-badge {
