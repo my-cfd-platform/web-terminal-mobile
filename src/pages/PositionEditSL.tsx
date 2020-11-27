@@ -337,7 +337,7 @@ const PositionEditSL = observer(() => {
 
   const renderNegativeValue = useCallback(() => {
     if (values.value !== null && +values.value === 0) {
-      return 0;
+      return values.value;
     }
     if (values.value && values.value !== null) {
       return `- ${values.value}`;
