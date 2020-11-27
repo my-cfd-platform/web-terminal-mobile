@@ -130,7 +130,6 @@ const MainApp: FC = () => {
             line-height: 1.4;
             font-family: 'sf_ui_text';
             font-weight: normal;
-            height: -webkit-fill-available;
             overflow: hidden;
           }
 
@@ -140,6 +139,7 @@ const MainApp: FC = () => {
             min-height: 100%;
             min-height: calc(${FULL_VH});
             overscroll-behavior: contain;
+            overflow: hidden;
           }
 
           .grecaptcha-badge {
