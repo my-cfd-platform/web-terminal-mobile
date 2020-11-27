@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, ChangeEvent } from 'react';
+import React, {useCallback, useEffect, ChangeEvent, FocusEvent} from 'react';
 import * as yup from 'yup';
 import { useFormik, FormikHelpers } from 'formik';
 import BackFlowLayout from '../components/BackFlowLayout';
@@ -356,6 +356,14 @@ const OrderPage = observer(() => {
     setFieldError(Fields.AMOUNT, '');
   };
 
+  const checkEmpty = (e: FocusEvent<HTMLInputElement>) => {
+    const checkedValue: any = e.target.value;
+    if (!checkedValue.length) {
+      setFieldValue(Fields.AMOUNT, DEFAULT_INVEST_AMOUNT);
+      setFieldError(Fields.AMOUNT, '');
+    }
+  }
+
   const {
     values,
     setFieldError,
@@ -424,6 +432,7 @@ const OrderPage = observer(() => {
               inputMode="decimal"
               onBeforeInput={investOnBeforeInputHandler}
               onChange={investOnChangeHandler}
+              onBlur={checkEmpty}
             />
           </InputWrap>
 
