@@ -29,6 +29,10 @@ import { OperationApiResponseCodes } from '../enums/OperationApiResponseCodes';
 import apiResponseCodeMessages from '../constants/apiResponseCodeMessages';
 import calculateFloatingProfitAndLoss from '../helpers/calculateFloatingProfitAndLoss';
 import Page from '../constants/Pages';
+import mixpanel from 'mixpanel-browser';
+import mixpanelEvents from '../constants/mixpanelEvents';
+import mixapanelProps from '../constants/mixpanelProps';
+import mixpanelValues from '../constants/mixpanelValues';
 
 const PositionEditTP = observer(() => {
   const { id } = useParams<{ id: string }>();
@@ -175,14 +179,70 @@ const PositionEditTP = observer(() => {
       sl: values.valueSL,
       slType: position?.sl ? position.slType : null,
     };
-    console.log(valuesToSubmit);
 
     setLoading(true);
     try {
       const response = await API.updateSLTP(valuesToSubmit);
       if (response.result === OperationApiResponseCodes.Ok) {
+        mixpanel.track(mixpanelEvents.EDIT_SLTP, {
+          [mixapanelProps.AMOUNT]: response.position.investmentAmount,
+          [mixapanelProps.ACCOUNT_CURRENCY]:
+            mainAppStore.activeAccount?.currency || '',
+          [mixapanelProps.INSTRUMENT_ID]: response.position.instrument,
+          [mixapanelProps.MULTIPLIER]: response.position.multiplier,
+          [mixapanelProps.TREND]:
+            response.position.operation === AskBidEnum.Buy ? 'buy' : 'sell',
+          [mixapanelProps.SL_TYPE]:
+            response.position.slType !== null
+              ? mixpanelValues[response.position.slType]
+              : null,
+          [mixapanelProps.TP_TYPE]:
+            response.position.tpType !== null
+              ? mixpanelValues[response.position.tpType]
+              : null,
+          [mixapanelProps.SL_VALUE]:
+            response.position.sl !== null
+              ? Math.abs(response.position.sl)
+              : null,
+          [mixapanelProps.TP_VALUE]: response.position.tp,
+          [mixapanelProps.AVAILABLE_BALANCE]:
+            mainAppStore.activeAccount?.balance || 0,
+          [mixapanelProps.ACCOUNT_ID]: mainAppStore.activeAccount?.id || '',
+          [mixapanelProps.ACCOUNT_TYPE]: mainAppStore.activeAccount?.isLive
+            ? 'real'
+            : 'demo',
+          [mixapanelProps.EVENT_REF]: mixpanelValues.PORTFOLIO,
+          [mixapanelProps.POSITION_ID]: response.position.id,
+        });
         goBack();
       } else {
+        mixpanel.track(mixpanelEvents.EDIT_SLTP_FAILED, {
+          [mixapanelProps.AMOUNT]: position?.investmentAmount,
+          [mixapanelProps.ACCOUNT_CURRENCY]:
+            mainAppStore.activeAccount?.currency || '',
+          [mixapanelProps.INSTRUMENT_ID]: position?.instrument,
+          [mixapanelProps.MULTIPLIER]: position?.multiplier,
+          [mixapanelProps.TREND]:
+            position?.operation === AskBidEnum.Buy ? 'buy' : 'sell',
+          [mixapanelProps.SL_TYPE]:
+            valuesToSubmit.slType !== null
+              ? mixpanelValues[valuesToSubmit.slType]
+              : null,
+          [mixapanelProps.TP_TYPE]:
+            valuesToSubmit.tpType !== null
+              ? mixpanelValues[valuesToSubmit.tpType]
+              : null,
+          [mixapanelProps.SL_VALUE]:
+            valuesToSubmit.sl !== null ? Math.abs(valuesToSubmit.sl) : null,
+          [mixapanelProps.TP_VALUE]: valuesToSubmit.tp,
+          [mixapanelProps.AVAILABLE_BALANCE]:
+            mainAppStore.activeAccount?.balance || 0,
+          [mixapanelProps.ACCOUNT_ID]: mainAppStore.activeAccount?.id || '',
+          [mixapanelProps.ACCOUNT_TYPE]: mainAppStore.activeAccount?.isLive
+            ? 'real'
+            : 'demo',
+          [mixapanelProps.EVENT_REF]: mixpanelValues.PORTFOLIO,
+        });
         notificationStore.notificationMessage = t(
           apiResponseCodeMessages[response.result]
         );

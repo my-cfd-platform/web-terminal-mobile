@@ -23,12 +23,20 @@ import IconPassword from '../assets/svg/profile/icon-account-password.svg';
 import { PersonalDataKYCEnum } from '../enums/PersonalDataKYCEnum';
 import AchievementStatusLabel from '../components/AchievementStatusLabel';
 import { observer, Observer } from 'mobx-react-lite';
+import mixpanel from 'mixpanel-browser';
+import mixpanelEvents from '../constants/mixpanelEvents';
+import mixapanelProps from '../constants/mixpanelProps';
 
 const AccountProfile = observer(() => {
   const { mainAppStore, userProfileStore } = useStores();
   const { t } = useTranslation();
 
-  const handleLogout = () => mainAppStore.signOut();
+  const handleLogout = () => {
+    mixpanel.track(mixpanelEvents.LOGOUT, {
+      [mixapanelProps.BRAND_NAME]: mainAppStore.initModel.brandProperty,
+    });
+    mainAppStore.signOut();
+  };
 
   const urlParams = new URLSearchParams();
 

@@ -31,6 +31,10 @@ import { OperationApiResponseCodes } from '../enums/OperationApiResponseCodes';
 import apiResponseCodeMessages from '../constants/apiResponseCodeMessages';
 import calculateFloatingProfitAndLoss from '../helpers/calculateFloatingProfitAndLoss';
 import Page from '../constants/Pages';
+import mixpanel from 'mixpanel-browser';
+import mixpanelEvents from '../constants/mixpanelEvents';
+import mixapanelProps from '../constants/mixpanelProps';
+import mixpanelValues from '../constants/mixpanelValues';
 
 const PositionEditSL = observer(() => {
   const { id } = useParams<{ id: string }>();
@@ -141,7 +145,7 @@ const PositionEditSL = observer(() => {
           .number()
           .nullable()
           .test('price', t('Stop Loss can not be zero'), (value) => {
-            return value !== 0 && value === null;
+            return value !== 0 || value === null;
           })
           .when(['operation', 'value'], {
             is: (operation, value) =>
@@ -177,6 +181,7 @@ const PositionEditSL = observer(() => {
 
   const handleSubmitForm = async () => {
     const valuesToSubmit: UpdateSLTP = {
+      ...values,
       processId: getProcessId(),
       accountId: mainAppStore.activeAccount?.id || '',
       positionId: +id || 0,
@@ -196,14 +201,72 @@ const PositionEditSL = observer(() => {
     try {
       const response = await API.updateSLTP(valuesToSubmit);
       if (response.result === OperationApiResponseCodes.Ok) {
+        mixpanel.track(mixpanelEvents.EDIT_SLTP, {
+          [mixapanelProps.AMOUNT]: response.position.investmentAmount,
+          [mixapanelProps.ACCOUNT_CURRENCY]:
+            mainAppStore.activeAccount?.currency || '',
+          [mixapanelProps.INSTRUMENT_ID]: response.position.instrument,
+          [mixapanelProps.MULTIPLIER]: response.position.multiplier,
+          [mixapanelProps.TREND]:
+            response.position.operation === AskBidEnum.Buy ? 'buy' : 'sell',
+          [mixapanelProps.SL_TYPE]:
+            response.position.slType !== null
+              ? mixpanelValues[response.position.slType]
+              : null,
+          [mixapanelProps.TP_TYPE]:
+            response.position.tpType !== null
+              ? mixpanelValues[response.position.tpType]
+              : null,
+          [mixapanelProps.SL_VALUE]:
+            response.position.sl !== null
+              ? Math.abs(response.position.sl)
+              : null,
+          [mixapanelProps.TP_VALUE]: response.position.tp,
+          [mixapanelProps.AVAILABLE_BALANCE]:
+            mainAppStore.activeAccount?.balance || 0,
+          [mixapanelProps.ACCOUNT_ID]: mainAppStore.activeAccount?.id || '',
+          [mixapanelProps.ACCOUNT_TYPE]: mainAppStore.activeAccount?.isLive
+            ? 'real'
+            : 'demo',
+          [mixapanelProps.EVENT_REF]: mixpanelValues.PORTFOLIO,
+          [mixapanelProps.POSITION_ID]: response.position.id,
+        });
         goBack();
       } else {
+        mixpanel.track(mixpanelEvents.EDIT_SLTP_FAILED, {
+          [mixapanelProps.AMOUNT]: position?.investmentAmount,
+          [mixapanelProps.ACCOUNT_CURRENCY]:
+            mainAppStore.activeAccount?.currency || '',
+          [mixapanelProps.INSTRUMENT_ID]: position?.instrument,
+          [mixapanelProps.MULTIPLIER]: position?.multiplier,
+          [mixapanelProps.TREND]:
+            position?.operation === AskBidEnum.Buy ? 'buy' : 'sell',
+          [mixapanelProps.SL_TYPE]:
+            valuesToSubmit.slType !== null
+              ? mixpanelValues[valuesToSubmit.slType]
+              : null,
+          [mixapanelProps.TP_TYPE]:
+            valuesToSubmit.tpType !== null
+              ? mixpanelValues[valuesToSubmit.tpType]
+              : null,
+          [mixapanelProps.SL_VALUE]:
+            valuesToSubmit.sl !== null ? Math.abs(valuesToSubmit.sl) : null,
+          [mixapanelProps.TP_VALUE]: valuesToSubmit.tp,
+          [mixapanelProps.AVAILABLE_BALANCE]:
+            mainAppStore.activeAccount?.balance || 0,
+          [mixapanelProps.ACCOUNT_ID]: mainAppStore.activeAccount?.id || '',
+          [mixapanelProps.ACCOUNT_TYPE]: mainAppStore.activeAccount?.isLive
+            ? 'real'
+            : 'demo',
+          [mixapanelProps.EVENT_REF]: mixpanelValues.PORTFOLIO,
+        });
         notificationStore.notificationMessage = t(
           apiResponseCodeMessages[response.result]
         );
         notificationStore.isSuccessfull = false;
         notificationStore.openNotification();
       }
+
       setLoading(false);
     } catch (error) {
       console.log(error);
@@ -253,8 +316,7 @@ const PositionEditSL = observer(() => {
         break;
     }
 
-    const currTargetValue = e.currentTarget.value;
-
+    const currTargetValue = e.currentTarget.value.replace('- ', '');
     if (!e.data.match(/^[0-9.,]*$/g)) {
       e.preventDefault();
       return;
@@ -295,7 +357,11 @@ const PositionEditSL = observer(() => {
   };
 
   const handleChangeInput = (e: ChangeEvent<HTMLInputElement>) => {
-    setFieldValue(e.target.name, e.target.value.replace(',', '.') || null);
+    const newValue =
+      +e.target.value === 0
+        ? e.target.value
+        : e.target.value.replace('- ', '').replace(',', '.') || null;
+    setFieldValue(e.target.name, newValue);
 
     switch (e.target.name) {
       case 'value':
@@ -312,11 +378,12 @@ const PositionEditSL = observer(() => {
   };
 
   const handleBlurInput = (e: ChangeEvent<HTMLInputElement>) => {
+    const value = +e.target.value.replace('- ', '');
     switch (e.target.name) {
       case 'value':
         setFieldValue(
           'value',
-          e.target.value ? +(+e.target.value).toFixed(2) : null
+          +value === 0 ? value : value ? value.toFixed(2) : null
         );
         break;
 
@@ -330,6 +397,17 @@ const PositionEditSL = observer(() => {
         break;
     }
   };
+
+  const renderNegativeValue = useCallback(() => {
+    if (values.value !== null && +values.value === 0) {
+      return values.value;
+    }
+    if (values.value && values.value !== null) {
+      return `- ${values.value}`;
+    } else {
+      return '';
+    }
+  }, [values.value]);
 
   useEffect(() => {
     const pos = quotesStore.activePositions.find((pos) => pos.id === +id);
@@ -424,7 +502,7 @@ const PositionEditSL = observer(() => {
                   placeholder="-30.00"
                   readOnly={!activeSL}
                   onBeforeInput={handleBeforeInput(TpSlTypeEnum.Currency)}
-                  value={values.value || ''}
+                  value={renderNegativeValue()}
                   onBlur={handleBlurInput}
                   onChange={handleChangeInput}
                 />
