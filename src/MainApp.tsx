@@ -143,6 +143,10 @@ const MainApp: FC = () => {
             overscroll-behavior: contain;
           }
 
+          #root {
+            height: 100%;
+          }
+
           .grecaptcha-badge {
             visibility: hidden;
           }
