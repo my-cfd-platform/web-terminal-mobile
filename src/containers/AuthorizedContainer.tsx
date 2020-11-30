@@ -128,7 +128,13 @@ const AuthorizedContainer: FC = ({ children }) => {
         )}
       </Observer>
       {showNavbarAndNav && <NavBar />}
-      <FlexContainer height="100%" flexDirection="column" overflow="auto">
+      <FlexContainer
+        height={
+          showNavbarAndNav ? `calc(${FULL_VH} - 128px)` : `calc(${FULL_VH})`
+        }
+        flexDirection="column"
+        overflow="auto"
+      >
         {children}
         <Observer>{() => <ChartContainer />}</Observer>
       </FlexContainer>

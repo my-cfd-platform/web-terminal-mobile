@@ -15,6 +15,7 @@ import { observer } from 'mobx-react-lite';
 import { useRouteMatch } from 'react-router-dom';
 import Page from '../constants/Pages';
 import styled from '@emotion/styled';
+import { FULL_VH } from '../constants/global';
 
 const containerId = 'tv_chart_container';
 
@@ -138,7 +139,7 @@ const ChartContainer: FC = observer(() => {
   return (
     <ChartElement
       width="100%"
-      height="100%"
+      height={`calc(${FULL_VH} - 252px)`}
       id={containerId}
       order="2"
       display={match?.isExact ? 'flex' : 'none'}
