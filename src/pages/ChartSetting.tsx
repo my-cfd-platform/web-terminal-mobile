@@ -13,7 +13,10 @@ import Colors from '../constants/Colors';
 import { useTranslation } from 'react-i18next';
 import { observer } from 'mobx-react-lite';
 import { useStores } from '../hooks/useStores';
-import { SeriesStyle } from '../vendor/charting_library/charting_library.min';
+import {
+  ResolutionString,
+  SeriesStyle,
+} from '../vendor/charting_library/charting_library';
 import {
   SupportedResolutionsType,
   supportedResolutions,
@@ -32,16 +35,19 @@ const ChartSetting = observer(() => {
   ) => () => {
     tradingViewStore.tradingWidget
       ?.chart()
-      .setResolution(supportedResolutions[resolutionKey], () => {
-        if (instrumentsStore.activeInstrument) {
-          instrumentsStore.editActiveInstrument({
-            ...instrumentsStore.activeInstrument,
-            resolution: resolutionKey,
-            interval: null,
-          });
+      .setResolution(
+        supportedResolutions[resolutionKey] as ResolutionString,
+        () => {
+          if (instrumentsStore.activeInstrument) {
+            instrumentsStore.editActiveInstrument({
+              ...instrumentsStore.activeInstrument,
+              resolution: resolutionKey,
+              interval: null,
+            });
+          }
+          goBack();
         }
-        goBack();
-      });
+      );
   };
   const handleChangeChartType = (chartType: SeriesStyle) => () => {
     if (instrumentsStore.activeInstrument) {

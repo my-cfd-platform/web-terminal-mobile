@@ -1,4 +1,4 @@
-import { SeriesStyle } from '../vendor/charting_library/charting_library.min';
+import { SeriesStyle } from '../vendor/charting_library/charting_library';
 import {
   SupportedResolutionsType,
   SupportedIntervalsType,

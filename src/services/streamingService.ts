@@ -3,7 +3,7 @@ import {
   ResolutionString,
   SubscribeBarsCallback,
   Bar,
-} from '../vendor/charting_library/charting_library.min';
+} from '../vendor/charting_library/charting_library';
 import historyProvider from './historyProvider';
 import { HubConnection } from '@aspnet/signalr';
 import Topics from '../constants/websocketTopics';

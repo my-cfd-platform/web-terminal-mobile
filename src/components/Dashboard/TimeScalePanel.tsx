@@ -13,6 +13,7 @@ import styled from '@emotion/styled';
 import moment from 'moment';
 import { IActiveInstrument } from '../../types/InstrumentsTypes';
 import { observer } from 'mobx-react-lite';
+import { ResolutionString } from '../../vendor/charting_library/charting_library';
 
 const TimeScalePanel = observer(() => {
   const { instrumentsStore, tradingViewStore } = useStores();
@@ -73,12 +74,15 @@ const TimeScalePanel = observer(() => {
       newActiveInstrument.resolution = newResolutionKey;
       tradingViewStore.tradingWidget
         ?.chart()
-        .setResolution(supportedResolutions[newResolutionKey], () => {
-          tradingViewStore.tradingWidget?.chart().setVisibleRange({
-            from: from.valueOf(),
-            to: moment().valueOf(),
-          });
-        });
+        .setResolution(
+          supportedResolutions[newResolutionKey] as ResolutionString,
+          () => {
+            tradingViewStore.tradingWidget?.chart().setVisibleRange({
+              from: from.valueOf(),
+              to: moment().valueOf(),
+            });
+          }
+        );
     }
     instrumentsStore.editActiveInstrument(newActiveInstrument);
   };

@@ -1,7 +1,7 @@
 import { action, computed, observable } from 'mobx';
 import { AskBidEnum } from '../enums/AskBid';
 import { PositionModelWSDTO } from '../types/Positions';
-import { IExecutionLineAdapter } from '../vendor/charting_library/charting_library.min';
+import { IExecutionLineAdapter } from '../vendor/charting_library/charting_library';
 import { RootStore } from './RootStore';
 
 interface IMarkersOnChartStore {

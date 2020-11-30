@@ -1,7 +1,7 @@
 import {
   ResolutionString,
   Bar,
-} from '../vendor/charting_library/charting_library.min';
+} from '../vendor/charting_library/charting_library';
 import API from '../helpers/API';
 import { CandleTypeEnum } from '../enums/CandleType';
 import { HistoryCandlesType } from '../types/HistoryTypes';

@@ -2,7 +2,7 @@ import {
   supportedInterval,
   SupportedResolutionsType,
 } from './supportedTimeScales';
-import { SeriesStyle } from '../vendor/charting_library/charting_library.min';
+import { SeriesStyle } from '../vendor/charting_library/charting_library';
 import IconAreaChart from '../assets/svg/icon-chart-area.svg';
 import IconLineChart from '../assets/svg/icon-chart-line-style.svg';
 import IconCandleChart from '../assets/svg/icon-chart-candle.svg';
