@@ -138,7 +138,7 @@ const ChartContainer: FC = observer(() => {
   return (
     <ChartElement
       width="100%"
-      height="calc(100% - 252px)"
+      height="100%"
       id={containerId}
       order="2"
       display={match?.isExact ? 'flex' : 'none'}

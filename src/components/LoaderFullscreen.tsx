@@ -8,7 +8,6 @@ import Logo from './Logo';
 import { useStores } from '../hooks/useStores';
 import { useTranslation } from 'react-i18next';
 import LogoMonfex from '../assets/images/logo.png';
-import { FULL_VH } from '../constants/global';
 
 interface Props {
   isLoading: boolean;
@@ -25,7 +24,7 @@ const LoaderFullscreen: FC<Props> = ({ isLoading }) => {
           top="0"
           left="0"
           right="0"
-          height="100%"
+          bottom="0"
           zIndex="1000"
           backgroundColor="#1C2026"
           justifyContent="center"
