@@ -405,5 +405,9 @@
     "withdrawal request": "withdrawal request",
     "Next": "Next",
     "No history yet": "No history yet",
-    "Withdrawal will be available after you deposit money into the system": "Withdrawal will be available after you deposit money into the system"
+    "Withdrawal will be available after you deposit money into the system": "Withdrawal will be available after you deposit money into the system",
+    "Proccesing": "Proccesing",
+	"Canceled": "Canceled",
+	"Approved": "Approved",
+	"Declined": "Declined"
 }

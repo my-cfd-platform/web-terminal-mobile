@@ -195,15 +195,14 @@ const PositionEditSL = observer(() => {
     setLoading(true);
     try {
       const response = await API.updateSLTP(valuesToSubmit);
-      if (response.result === OperationApiResponseCodes.Ok) {
-        goBack();
-      } else {
+      if (response.result !== OperationApiResponseCodes.Ok) {
         notificationStore.notificationMessage = t(
           apiResponseCodeMessages[response.result]
         );
         notificationStore.isSuccessfull = false;
         notificationStore.openNotification();
       }
+      goBack();
       setLoading(false);
     } catch (error) {
       console.log(error);
