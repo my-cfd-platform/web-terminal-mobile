@@ -25,7 +25,7 @@ const LoaderFullscreen: FC<Props> = ({ isLoading }) => {
           top="0"
           left="0"
           right="0"
-          height={`calc(${FULL_VH}`}
+          height="100%"
           zIndex="1000"
           backgroundColor="#1C2026"
           justifyContent="center"
