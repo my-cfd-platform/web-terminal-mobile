@@ -214,7 +214,6 @@ const PositionEditTP = observer(() => {
           [mixapanelProps.EVENT_REF]: mixpanelValues.PORTFOLIO,
           [mixapanelProps.POSITION_ID]: response.position.id,
         });
-        goBack();
       } else {
         mixpanel.track(mixpanelEvents.EDIT_SLTP_FAILED, {
           [mixapanelProps.AMOUNT]: position?.investmentAmount,
@@ -249,10 +248,9 @@ const PositionEditTP = observer(() => {
         notificationStore.isSuccessfull = false;
         notificationStore.openNotification();
       }
+      goBack();
       setLoading(false);
-    } catch (error) {
-      console.log(error);
-    }
+    } catch (error) {}
   };
 
   const {
