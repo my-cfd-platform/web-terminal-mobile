@@ -39,7 +39,7 @@ const SellButton: FC<Props> = observer(({ handleClick }) => {
             {
               quotesStore.quotes[
                 instrumentsStore.activeInstrument.instrumentItem.id
-              ].bid.c
+              ].bid.c.toFixed(instrumentsStore.activeInstrument.instrumentItem.digits)
             }
           </PrimaryTextSpan>
         )}
