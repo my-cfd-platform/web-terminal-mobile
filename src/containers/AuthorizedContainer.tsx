@@ -92,7 +92,7 @@ const AuthorizedContainer: FC = ({ children }) => {
   return (
     <FlexContainer
       position="relative"
-      height="100%"
+      height={`calc(${FULL_VH})`}
       width="100vw"
       flexDirection="column"
       overflow="hidden"
