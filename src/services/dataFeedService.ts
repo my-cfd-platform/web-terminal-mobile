@@ -13,7 +13,7 @@ import {
   TimescaleMark,
   ServerTimeCallback,
   IBasicDataFeed,
-} from '../vendor/charting_library/charting_library.min';
+} from '../vendor/charting_library/charting_library';
 
 import historyProvider from './historyProvider';
 
@@ -25,7 +25,9 @@ import moment from 'moment';
 
 class DataFeedService implements IBasicDataFeed {
   static config = {
-    supported_resolutions: Object.values(supportedResolutions),
+    supported_resolutions: Object.values(
+      supportedResolutions
+    ) as ResolutionString[],
     supports_search: false,
     supports_group_request: false,
     supports_marks: false,
@@ -87,7 +89,9 @@ class DataFeedService implements IBasicDataFeed {
       has_weekly_and_monthly: true,
       has_no_volume: true,
       has_empty_bars: false,
-      supported_resolutions: Object.values(supportedResolutions),
+      supported_resolutions: Object.values(
+        supportedResolutions
+      ) as ResolutionString[],
       data_status: 'streaming',
       format: 'price',
     };

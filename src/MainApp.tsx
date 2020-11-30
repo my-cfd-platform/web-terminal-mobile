@@ -130,16 +130,23 @@ const MainApp: FC = () => {
             line-height: 1.4;
             font-family: 'sf_ui_text';
             font-weight: normal;
+            height: 100%;
+            height: calc(${FULL_VH});
+            height: -moz-available;
             height: -webkit-fill-available;
+            height: fill-available;
             overflow: hidden;
           }
 
           body {
             color: #fff;
             background-color: ${Colors.BACKGROUD_PAGE};
-            min-height: 100%;
-            min-height: calc(${FULL_VH});
+            height: 100%;
             overscroll-behavior: contain;
+          }
+
+          #root {
+            height: 100%;
           }
 
           .grecaptcha-badge {

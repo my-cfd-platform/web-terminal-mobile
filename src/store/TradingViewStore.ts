@@ -1,5 +1,5 @@
 import { observable } from 'mobx';
-import { IChartingLibraryWidget } from '../vendor/charting_library/charting_library.min';
+import { IChartingLibraryWidget } from '../vendor/charting_library/charting_library';
 
 interface ContextProps {
   tradingWidget?: IChartingLibraryWidget;

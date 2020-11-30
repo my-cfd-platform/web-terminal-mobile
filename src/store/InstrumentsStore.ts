@@ -7,7 +7,10 @@ import {
 } from '../types/InstrumentsTypes';
 import { RootStore } from './RootStore';
 import { SortByMarketsEnum } from '../enums/SortByMarketsEnum';
-import { SeriesStyle } from '../vendor/charting_library/charting_library.min';
+import {
+  ResolutionString,
+  SeriesStyle,
+} from '../vendor/charting_library/charting_library';
 import {
   supportedResolutions,
   supportedInterval,
@@ -181,7 +184,9 @@ export class InstrumentsStore implements ContextProps {
               this.rootStore.tradingViewStore.tradingWidget
                 ?.chart()
                 .setResolution(
-                  supportedResolutions[newActiveInstrument.resolution],
+                  supportedResolutions[
+                    newActiveInstrument.resolution
+                  ] as ResolutionString,
                   () => {
                     if (newActiveInstrument.interval) {
                       const fromTo = {
@@ -198,7 +203,7 @@ export class InstrumentsStore implements ContextProps {
                 ?.chart()
                 .setChartType(newActiveInstrument.chartType);
             });
-            
+
           this.rootStore.markersOnChartStore.renderActivePositionsMarkersOnChart();
         }
       } catch (error) {}

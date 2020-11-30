@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, ChangeEvent } from 'react';
+import React, {useCallback, useEffect, ChangeEvent, FocusEvent} from 'react';
 import * as yup from 'yup';
 import { useFormik, FormikHelpers } from 'formik';
 import BackFlowLayout from '../components/BackFlowLayout';
@@ -25,6 +25,7 @@ import mixpanel from 'mixpanel-browser';
 import mixpanelEvents from '../constants/mixpanelEvents';
 import mixapanelProps from '../constants/mixpanelProps';
 import Page from '../constants/Pages';
+import mixpanelValues from '../constants/mixpanelValues';
 
 const PRECISION_USD = 2;
 const DEFAULT_INVEST_AMOUNT = 50;
@@ -266,37 +267,65 @@ const OrderPage = observer(() => {
           activePositionNotificationStore.openNotification();
         }
         mixpanel.track(mixpanelEvents.MARKET_ORDER, {
-          [mixapanelProps.AMOUNT]: otherValues.investmentAmount,
+          [mixapanelProps.AMOUNT]: response.position.investmentAmount,
           [mixapanelProps.ACCOUNT_CURRENCY]:
             mainAppStore.activeAccount?.currency || '',
-          [mixapanelProps.INSTRUMENT_ID]: otherValues.instrumentId,
-          [mixapanelProps.MULTIPLIER]: otherValues.multiplier,
-          [mixapanelProps.TREND]: type,
-          [mixapanelProps.SLTP]: !!(otherValues.sl || otherValues.tp),
+          [mixapanelProps.INSTRUMENT_ID]: response.position.instrument,
+          [mixapanelProps.MULTIPLIER]: response.position.multiplier,
+          [mixapanelProps.TREND]:
+            response.position.operation === AskBidEnum.Buy ? 'buy' : 'sell',
+          [mixapanelProps.SL_TYPE]:
+            response.position.slType !== null
+              ? mixpanelValues[response.position.slType]
+              : null,
+          [mixapanelProps.TP_TYPE]:
+            response.position.tpType !== null
+              ? mixpanelValues[response.position.tpType]
+              : null,
+          [mixapanelProps.SL_VALUE]:
+            response.position.sl !== null
+              ? Math.abs(response.position.sl)
+              : null,
+          [mixapanelProps.TP_VALUE]: response.position.tp,
           [mixapanelProps.AVAILABLE_BALANCE]: balanceBeforeOrder,
           [mixapanelProps.ACCOUNT_ID]: mainAppStore.activeAccount?.id || '',
           [mixapanelProps.ACCOUNT_TYPE]: mainAppStore.activeAccount?.isLive
             ? 'real'
             : 'demo',
+          [mixapanelProps.EVENT_REF]: mixpanelValues.PORTFOLIO,
+          [mixapanelProps.POSITION_ID]: response.position.id,
         });
         resetForm();
         push(Page.DASHBOARD);
       } else {
         mixpanel.track(mixpanelEvents.MARKET_ORDER_FAILED, {
-          [mixapanelProps.AMOUNT]: otherValues.investmentAmount,
+          [mixapanelProps.AMOUNT]: modelToSubmit.investmentAmount,
           [mixapanelProps.ACCOUNT_CURRENCY]:
             mainAppStore.activeAccount?.currency || '',
-          [mixapanelProps.INSTRUMENT_ID]: otherValues.instrumentId,
-          [mixapanelProps.MULTIPLIER]: otherValues.multiplier,
-          [mixapanelProps.TREND]: type,
-          [mixapanelProps.SLTP]: !!(otherValues.sl || otherValues.tp),
+          [mixapanelProps.INSTRUMENT_ID]: modelToSubmit.instrumentId,
+          [mixapanelProps.MULTIPLIER]: modelToSubmit.multiplier,
+          [mixapanelProps.TREND]:
+            modelToSubmit.operation === AskBidEnum.Buy ? 'buy' : 'sell',
+          [mixapanelProps.SL_TYPE]:
+            modelToSubmit.slType !== null
+              ? mixpanelValues[modelToSubmit.slType]
+              : null,
+          [mixapanelProps.TP_TYPE]:
+            modelToSubmit.tpType !== null
+              ? mixpanelValues[modelToSubmit.tpType]
+              : null,
+          [mixapanelProps.SL_VALUE]:
+            modelToSubmit.sl !== null ? Math.abs(modelToSubmit.sl) : null,
+          [mixapanelProps.TP_VALUE]: modelToSubmit.tp,
           [mixapanelProps.AVAILABLE_BALANCE]: balanceBeforeOrder,
           [mixapanelProps.ACCOUNT_ID]: mainAppStore.activeAccount?.id || '',
           [mixapanelProps.ACCOUNT_TYPE]: mainAppStore.activeAccount?.isLive
             ? 'real'
             : 'demo',
           [mixapanelProps.ERROR_TEXT]: apiResponseCodeMessages[response.result],
+          [mixapanelProps.EVENT_REF]: mixpanelValues.PORTFOLIO,
         });
+
         notificationStore.notificationMessage = t(
           apiResponseCodeMessages[response.result]
         );
@@ -355,6 +384,14 @@ const OrderPage = observer(() => {
     setFieldValue(Fields.AMOUNT, filteredValue);
     setFieldError(Fields.AMOUNT, '');
   };
+
+  const checkEmpty = (e: FocusEvent<HTMLInputElement>) => {
+    const checkedValue: any = e.target.value;
+    if (!checkedValue.length) {
+      setFieldValue(Fields.AMOUNT, DEFAULT_INVEST_AMOUNT);
+      setFieldError(Fields.AMOUNT, '');
+    }
+  }
 
   const {
     values,
@@ -424,6 +461,7 @@ const OrderPage = observer(() => {
               inputMode="decimal"
               onBeforeInput={investOnBeforeInputHandler}
               onChange={investOnChangeHandler}
+              onBlur={checkEmpty}
             />
           </InputWrap>
 
