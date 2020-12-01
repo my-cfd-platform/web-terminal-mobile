@@ -271,7 +271,7 @@ const OrderPage = observer(() => {
           [mixapanelProps.ACCOUNT_CURRENCY]:
             mainAppStore.activeAccount?.currency || '',
           [mixapanelProps.INSTRUMENT_ID]: response.position.instrument,
-          [mixapanelProps.MULTIPLIER]: response.position.multiplier,
+          [mixapanelProps.MULTIPLIER]: values.multiplier,
           [mixapanelProps.TREND]:
             response.position.operation === AskBidEnum.Buy ? 'buy' : 'sell',
           [mixapanelProps.SL_TYPE]:
