@@ -50,8 +50,8 @@ const TimeScaleWrapper = observer(() => {
         return (
           <SvgIcon
             {...IconArea}
-            width={16}
-            height={16}
+            width={18}
+            height={18}
             fillColor="rgba(196, 196, 196, 0.5)"
           />
         );
