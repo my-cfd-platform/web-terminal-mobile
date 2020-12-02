@@ -56,7 +56,8 @@ const AccountProfile = observer(() => {
   }, [mainAppStore.token, mainAppStore.lang, mainAppStore.accounts]);
 
   return (
-    <FlexContainer flexDirection="column">
+    // TODO: Refactor Safari 
+    <FlexContainer flexDirection="column" minHeight="600px">
       <AchievementStatusLabel />
       <FlexContainer padding="16px" marginBottom="24px">
         <UserPhoto
