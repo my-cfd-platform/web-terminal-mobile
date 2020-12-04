@@ -76,7 +76,10 @@ const AccountsPage = () => {
                 fontSize="13px"
                 textTransform="uppercase"
               >
-                {item.isLive ? `USD ${t('Account')}` : t('Demo')}
+                {item.isLive
+                  ? `USD ${t('Account')}`
+                  : `${t('Demo')} ${t('Account')}`
+                } ({item.id})
               </PrimaryTextSpan>
             </FlexContainer>
 
