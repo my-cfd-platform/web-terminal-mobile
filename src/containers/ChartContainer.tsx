@@ -127,6 +127,9 @@ const ChartContainer: FC = observer(() => {
         tradingViewStore.tradingWidget = tvWidget;
         mainAppStore.isLoading = false;
         markersOnChartStore.renderActivePositionsMarkersOnChart();
+        if (instrumentsStore?.activeInstrument && instrumentsStore?.activeInstrument?.chartType) {
+          tvWidget?.chart().setChartType(instrumentsStore?.activeInstrument?.chartType)
+        }
       });
     }
   }, [

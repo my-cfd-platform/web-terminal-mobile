@@ -19,6 +19,8 @@ import { getIntervalByKey } from '../helpers/getIntervalByKey';
 import moment from 'moment';
 import { AccountTypeEnum } from '../enums/AccountTypeEnum';
 import API from '../helpers/API';
+import { LOCAL_CHART_TYPE } from '../constants/global';
+import { getChartTypeByLabel } from '../constants/chartValues';
 
 interface IPriceChange {
   [key: string]: number;
@@ -80,10 +82,14 @@ export class InstrumentsStore implements ContextProps {
 
   @action
   setInstruments = (instruments: InstrumentModelWSDTO[]) => {
+    const localType = localStorage.getItem(LOCAL_CHART_TYPE);
+    const currentType = localType
+      ? getChartTypeByLabel(localType)
+      : SeriesStyle.Area;
     this.instruments = instruments.map(
       (item) =>
         <IActiveInstrument>{
-          chartType: SeriesStyle.Area,
+          chartType: currentType,
           instrumentItem: item,
           interval: supportedInterval['15m'],
           resolution: '1m',

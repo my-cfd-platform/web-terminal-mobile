@@ -10,6 +10,8 @@ import IconArea from '../assets/svg/chart-types/icon-area.svg';
 import IconLine from '../assets/svg_no_compress/icon-line.svg';
 import IconCandle from '../assets/svg/chart-types/icon-candle.svg';
 import Colors from '../constants/Colors';
+import { LOCAL_CHART_TYPE } from '../constants/global';
+import { getChartLabelByType } from '../constants/chartValues';
 import { useTranslation } from 'react-i18next';
 import { observer } from 'mobx-react-lite';
 import { useStores } from '../hooks/useStores';
@@ -56,6 +58,7 @@ const ChartSetting = observer(() => {
         ...instrumentsStore.activeInstrument,
         chartType: chartType,
       };
+      localStorage.setItem(LOCAL_CHART_TYPE, getChartLabelByType(chartType));
       instrumentsStore.editActiveInstrument(newActiveInstrument);
       goBack();
     }

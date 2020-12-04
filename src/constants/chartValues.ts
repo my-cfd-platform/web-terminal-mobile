@@ -49,6 +49,25 @@ export const getChartLabelByType = (chartType: SeriesStyle) => {
   }
 };
 
+export const getChartTypeByLabel = (chartLabel: string) => {
+  switch (chartLabel) {
+    case 'Area chart':
+      return SeriesStyle.Area;
+
+    case 'Line chart':
+      return SeriesStyle.Line;
+
+    case 'Candle chart':
+      return SeriesStyle.Candles;
+
+    case 'Bars chart':
+      return SeriesStyle.Bars;
+
+    default:
+      return 'Area chart';
+  }
+};
+
 export const availableChartTypes = [
   SeriesStyle.Candles,
   SeriesStyle.Line,
