@@ -59,6 +59,7 @@ const ChartSetting = observer(() => {
         chartType: chartType,
       };
       localStorage.setItem(LOCAL_CHART_TYPE, getChartLabelByType(chartType));
+      instrumentsStore.changeInstruments(chartType);
       instrumentsStore.editActiveInstrument(newActiveInstrument);
       goBack();
     }

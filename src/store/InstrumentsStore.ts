@@ -51,6 +51,7 @@ export class InstrumentsStore implements ContextProps {
   @observable activeInstrumentGroupId?: InstrumentGroupWSDTO['id'];
 
   @observable sortByField: string | null = null;
+  @observable manualChange: boolean = false;
 
   @observable pricesChange: IPriceChange = {};
   @observable searchValue: string = '';
@@ -91,6 +92,20 @@ export class InstrumentsStore implements ContextProps {
         <IActiveInstrument>{
           chartType: currentType,
           instrumentItem: item,
+          interval: supportedInterval['15m'],
+          resolution: '1m',
+        }
+    );
+  };
+
+  @action
+  changeInstruments = (type: SeriesStyle) => {
+    this.manualChange = true;
+    this.instruments = this.instruments.map(
+      (item) =>
+        <IActiveInstrument>{
+          chartType: type,
+          instrumentItem: item.instrumentItem,
           interval: supportedInterval['15m'],
           resolution: '1m',
         }
