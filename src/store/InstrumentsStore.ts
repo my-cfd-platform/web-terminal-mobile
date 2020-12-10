@@ -211,8 +211,9 @@ export class InstrumentsStore implements ContextProps {
                   () => {
                     if (newActiveInstrument.interval) {
                       const fromTo = {
-                        from: getIntervalByKey(newActiveInstrument.interval),
-                        to: moment().valueOf(),
+                        from:
+                          getIntervalByKey(newActiveInstrument.interval) / 1000,
+                        to: moment.utc().valueOf() / 1000,
                       };
                       this.rootStore.tradingViewStore.tradingWidget
                         ?.chart()

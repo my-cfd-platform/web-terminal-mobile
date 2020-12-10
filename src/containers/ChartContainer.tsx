@@ -15,7 +15,8 @@ import { observer } from 'mobx-react-lite';
 import { useRouteMatch } from 'react-router-dom';
 import Page from '../constants/Pages';
 import styled from '@emotion/styled';
-import { FULL_VH } from '../constants/global';
+import { getIntervalByKey } from '../helpers/getIntervalByKey';
+import moment from 'moment';
 
 const containerId = 'tv_chart_container';
 
@@ -127,8 +128,21 @@ const ChartContainer: FC = observer(() => {
         tradingViewStore.tradingWidget = tvWidget;
         mainAppStore.isLoading = false;
         markersOnChartStore.renderActivePositionsMarkersOnChart();
-        if (instrumentsStore?.activeInstrument && instrumentsStore?.activeInstrument?.chartType) {
-          tvWidget?.chart().setChartType(instrumentsStore?.activeInstrument?.chartType)
+
+        const fromTo = {
+          from: getIntervalByKey('15m') / 1000,
+          to: moment.utc().valueOf() / 1000,
+        };
+
+        tvWidget.activeChart().setVisibleRange(fromTo);
+
+        if (
+          instrumentsStore.activeInstrument &&
+          instrumentsStore.activeInstrument.chartType
+        ) {
+          tvWidget
+            .chart()
+            .setChartType(instrumentsStore.activeInstrument?.chartType);
         }
       });
     }

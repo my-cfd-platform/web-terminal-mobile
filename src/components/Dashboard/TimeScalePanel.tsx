@@ -66,20 +66,20 @@ const TimeScalePanel = observer(() => {
     };
 
     if (newResolutionKey === instrumentsStore.activeInstrument.resolution) {
-      tradingViewStore.tradingWidget?.chart().setVisibleRange({
-        from: from.valueOf(),
-        to: moment().valueOf(),
+      tradingViewStore.tradingWidget?.activeChart().setVisibleRange({
+        from: from.valueOf() / 1000,
+        to: moment.utc().valueOf() / 1000,
       });
     } else {
       newActiveInstrument.resolution = newResolutionKey;
       tradingViewStore.tradingWidget
-        ?.chart()
+        ?.activeChart()
         .setResolution(
           supportedResolutions[newResolutionKey] as ResolutionString,
           () => {
-            tradingViewStore.tradingWidget?.chart().setVisibleRange({
-              from: from.valueOf(),
-              to: moment().valueOf(),
+            tradingViewStore.tradingWidget?.activeChart().setVisibleRange({
+              from: from.valueOf() / 1000,
+              to: moment.utc().valueOf() / 1000,
             });
           }
         );
