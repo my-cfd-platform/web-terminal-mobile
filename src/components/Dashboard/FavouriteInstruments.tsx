@@ -50,7 +50,7 @@ const FavouriteInstruments = observer(() => {
   };
 
   return (
-    <FlexContainer marginBottom="14px" padding="16px 0">
+    <FlexContainer padding="16px 0">
       <FlexContainer padding="0 16px" marginRight="8px" alignItems="flex-start">
         <ButtonWithoutStyles onClick={gotoMarkets}>
           <SvgIcon
