@@ -406,8 +406,9 @@
     "Next": "Next",
     "No history yet": "No history yet",
     "Withdrawal will be available after you deposit money into the system": "Withdrawal will be available after you deposit money into the system",
-    "Proccesing": "Proccesing",
+    "Processing": "Processing",
 	"Canceled": "Canceled",
 	"Approved": "Approved",
-	"Declined": "Declined"
+    "Declined": "Declined",
+    "New Request": "New Request"
 }
