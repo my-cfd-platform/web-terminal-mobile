@@ -74,12 +74,26 @@ const AccountsPage = () => {
               <PrimaryTextSpan
                 color="rgba(255, 255, 255, 0.4)"
                 fontSize="13px"
-                textTransform="uppercase"
+                marginRight="4px"
               >
                 {item.isLive
-                  ? `USD ${t('Account')}`
-                  : `${t('Demo')} ${t('Account')}`
-                } ({item.id})
+                  ? `${t('Real')}`
+                  : `${t('Demo')}`
+                }
+              </PrimaryTextSpan>
+              <PrimaryTextSpan
+                color="rgba(255, 255, 255, 0.4)"
+                fontSize="13px"
+                marginRight="4px"
+              >
+                {t('account')}
+              </PrimaryTextSpan>
+              <PrimaryTextSpan
+                color="rgba(255, 255, 255, 0.4)"
+                fontSize="13px"
+                textTransform="uppercase"
+              >
+                ({item.id})
               </PrimaryTextSpan>
             </FlexContainer>
 
