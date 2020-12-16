@@ -8,7 +8,7 @@ export const ListForEN = {
   },
   [CountriesEnum.PL]: {
     name: 'Polish',
-    originName: 'Polskie',
+    originName: 'Polski',
     shortName: 'PL',
   },
 };
@@ -20,8 +20,8 @@ export const ListForPL = {
     shortName: 'EN',
   },
   [CountriesEnum.PL]: {
-    name: 'Polskie',
-    originName: 'Polskie',
+    name: 'Polski',
+    originName: 'Polski',
     shortName: 'PL',
   },
 };
@@ -34,7 +34,7 @@ export const ListForES = {
   },
   [CountriesEnum.PL]: {
     name: 'Polaco',
-    originName: 'Polskie',
+    originName: 'Polski',
     shortName: 'PL',
   },
 };
