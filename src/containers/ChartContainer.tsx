@@ -120,7 +120,7 @@ const ChartContainer: FC = observer(() => {
           'mainSeriesProperties.priceLineColor': '#fff',
           'mainSeriesProperties.priceLineWidth': 2,
           'scalesProperties.showSeriesLastValue': true,
-          'timeScale.rightOffset': 5,
+          'timeScale.rightOffset': 0,
         },
       };
       const tvWidget = new widget(widgetOptions);
