@@ -89,6 +89,8 @@ const OrderPage = observer(() => {
     ]
   );
 
+  const getPlaceholderOpenPrice = () => type.toLowerCase() === 'buy' ? currentPriceAsk() : currentPriceBid();
+
   const validationSchema: any = useCallback(
     () =>
       yup.object().shape({
@@ -237,103 +239,185 @@ const OrderPage = observer(() => {
   ) => {
     formikHelpers.setSubmitting(true);
     const { operation, ...otherValues } = values;
-
     const modelToSubmit = {
       ...otherValues,
       operation: type === 'buy' ? AskBidEnum.Buy : AskBidEnum.Sell,
       investmentAmount: +otherValues.investmentAmount,
     };
-    try {
-      const balanceBeforeOrder = getActiveAccountBalance();
-      const response = await API.openPosition(modelToSubmit);
-      if (response.result === OperationApiResponseCodes.Ok) {
-        markersOnChartStore.addNewMarker(response.position);
-
-        if (instrumentsStore.activeInstrument) {
-          activePositionNotificationStore.notificationMessageData = {
-            equity: 0,
-            instrumentName:
-              instrumentsStore.activeInstrument.instrumentItem.name,
-            instrumentGroup:
-              instrumentsStore.instrumentGroups.find(
-                (item) =>
-                  item.id ===
-                  instrumentsStore.activeInstrument?.instrumentItem.id
-              )?.name || '',
-            instrumentId: instrumentsStore.activeInstrument.instrumentItem.id,
-            type: 'open',
-          };
-          activePositionNotificationStore.isSuccessfull = true;
-          activePositionNotificationStore.openNotification();
-        }
-        mixpanel.track(mixpanelEvents.MARKET_ORDER, {
-          [mixapanelProps.AMOUNT]: response.position.investmentAmount,
-          [mixapanelProps.ACCOUNT_CURRENCY]:
-            mainAppStore.activeAccount?.currency || '',
-          [mixapanelProps.INSTRUMENT_ID]: response.position.instrument,
-          [mixapanelProps.MULTIPLIER]: values.multiplier,
-          [mixapanelProps.TREND]:
-            response.position.operation === AskBidEnum.Buy ? 'buy' : 'sell',
-          [mixapanelProps.SL_TYPE]:
-            response.position.slType !== null
-              ? mixpanelValues[response.position.slType]
-              : null,
-          [mixapanelProps.TP_TYPE]:
-            response.position.tpType !== null
-              ? mixpanelValues[response.position.tpType]
-              : null,
-          [mixapanelProps.SL_VALUE]:
-            response.position.sl !== null
-              ? Math.abs(response.position.sl)
-              : null,
-          [mixapanelProps.TP_VALUE]: response.position.tp,
-          [mixapanelProps.AVAILABLE_BALANCE]: balanceBeforeOrder,
-          [mixapanelProps.ACCOUNT_ID]: mainAppStore.activeAccount?.id || '',
-          [mixapanelProps.ACCOUNT_TYPE]: mainAppStore.activeAccount?.isLive
-            ? 'real'
-            : 'demo',
-          [mixapanelProps.EVENT_REF]: mixpanelValues.PORTFOLIO,
-          [mixapanelProps.POSITION_ID]: response.position.id,
-        });
-        resetForm();
-        push(Page.DASHBOARD);
-      } else {
-        mixpanel.track(mixpanelEvents.MARKET_ORDER_FAILED, {
-          [mixapanelProps.AMOUNT]: modelToSubmit.investmentAmount,
-          [mixapanelProps.ACCOUNT_CURRENCY]:
-            mainAppStore.activeAccount?.currency || '',
-          [mixapanelProps.INSTRUMENT_ID]: modelToSubmit.instrumentId,
-          [mixapanelProps.MULTIPLIER]: modelToSubmit.multiplier,
-          [mixapanelProps.TREND]:
-            modelToSubmit.operation === AskBidEnum.Buy ? 'buy' : 'sell',
-          [mixapanelProps.SL_TYPE]:
-            modelToSubmit.slType !== null
-              ? mixpanelValues[modelToSubmit.slType]
-              : null,
-          [mixapanelProps.TP_TYPE]:
-            modelToSubmit.tpType !== null
-              ? mixpanelValues[modelToSubmit.tpType]
-              : null,
-          [mixapanelProps.SL_VALUE]:
-            modelToSubmit.sl !== null ? Math.abs(modelToSubmit.sl) : null,
-          [mixapanelProps.TP_VALUE]: modelToSubmit.tp,
-          [mixapanelProps.AVAILABLE_BALANCE]: balanceBeforeOrder,
-          [mixapanelProps.ACCOUNT_ID]: mainAppStore.activeAccount?.id || '',
-          [mixapanelProps.ACCOUNT_TYPE]: mainAppStore.activeAccount?.isLive
-            ? 'real'
-            : 'demo',
-          [mixapanelProps.ERROR_TEXT]: apiResponseCodeMessages[response.result],
-          [mixapanelProps.EVENT_REF]: mixpanelValues.PORTFOLIO,
-        });
-
+    if (!!otherValues.openPrice) {
+      try {
+        const modelToPendingOrder = {
+          processId: otherValues.processId,
+          accountId: otherValues.accountId,
+          investmentAmount: +otherValues.investmentAmount,
+          instrumentId: otherValues.instrumentId,
+          operation: type === 'buy' ? AskBidEnum.Buy : AskBidEnum.Sell,
+          multiplier: otherValues.multiplier,
+          openPrice: +otherValues.openPrice
+        };
+        const balanceBeforeOrder = getActiveAccountBalance();
+        const response = await API.openPendingOrder(modelToPendingOrder);
         notificationStore.notificationMessage = t(
           apiResponseCodeMessages[response.result]
         );
-        notificationStore.isSuccessfull = false;
+        notificationStore.isSuccessfull =
+          response.result === OperationApiResponseCodes.Ok;
         notificationStore.openNotification();
-        resetForm();
-      }
-    } catch (error) {}
+        if (response.result === OperationApiResponseCodes.Ok) {
+          mixpanel.track(mixpanelEvents.LIMIT_ORDER, {
+            [mixapanelProps.AMOUNT]: response.order.investmentAmount,
+            [mixapanelProps.ACCOUNT_CURRENCY]:
+            mainAppStore.activeAccount?.currency || '',
+            [mixapanelProps.INSTRUMENT_ID]: response.order.instrument,
+            [mixapanelProps.MULTIPLIER]: response.order?.multiplier || modelToPendingOrder.multiplier,
+            [mixapanelProps.TREND]:
+              response.order.operation === AskBidEnum.Buy ? 'buy' : 'sell',
+            [mixapanelProps.SL_TYPE]:
+              response.order.slType !== null
+                ? mixpanelValues[response.order.slType]
+                : null,
+            [mixapanelProps.TP_TYPE]:
+              response.order.tpType !== null
+                ? mixpanelValues[response.order.tpType]
+                : null,
+            [mixapanelProps.SL_VALUE]:
+              response.order.sl !== null ? Math.abs(response.order.sl) : null,
+            [mixapanelProps.TP_VALUE]: response.order.tp,
+            [mixapanelProps.AVAILABLE_BALANCE]: balanceBeforeOrder,
+            [mixapanelProps.ACCOUNT_ID]: mainAppStore.activeAccount?.id || '',
+            [mixapanelProps.ACCOUNT_TYPE]: mainAppStore.activeAccount?.isLive
+              ? 'real'
+              : 'demo',
+            [mixapanelProps.EVENT_REF]: mixpanelValues.PORTFOLIO,
+            [mixapanelProps.POSITION_ID]: response.order.id,
+          });
+          resetForm();
+          push(Page.DASHBOARD);
+        } else {
+          mixpanel.track(mixpanelEvents.LIMIT_ORDER_FAILED, {
+            [mixapanelProps.AMOUNT]: modelToSubmit.investmentAmount,
+            [mixapanelProps.ACCOUNT_CURRENCY]:
+            mainAppStore.activeAccount?.currency || '',
+            [mixapanelProps.INSTRUMENT_ID]: modelToSubmit.instrumentId,
+            [mixapanelProps.MULTIPLIER]: modelToSubmit.multiplier,
+            [mixapanelProps.TREND]:
+              modelToSubmit.operation === AskBidEnum.Buy ? 'buy' : 'sell',
+            [mixapanelProps.SL_TYPE]:
+              modelToSubmit.slType !== null
+                ? mixpanelValues[modelToSubmit.slType]
+                : null,
+            [mixapanelProps.TP_TYPE]:
+              modelToSubmit.tpType !== null
+                ? mixpanelValues[modelToSubmit.tpType]
+                : null,
+            [mixapanelProps.SL_VALUE]:
+              modelToSubmit.sl !== null ? Math.abs(modelToSubmit.sl) : null,
+            [mixapanelProps.TP_VALUE]: modelToSubmit.tp,
+            [mixapanelProps.AVAILABLE_BALANCE]: balanceBeforeOrder,
+            [mixapanelProps.ACCOUNT_ID]: mainAppStore.activeAccount?.id || '',
+            [mixapanelProps.ACCOUNT_TYPE]: mainAppStore.activeAccount?.isLive
+              ? 'real'
+              : 'demo',
+            [mixapanelProps.ERROR_TEXT]:
+              apiResponseCodeMessages[response.result],
+            [mixapanelProps.EVENT_REF]: mixpanelValues.PORTFOLIO,
+          });
+          resetForm();
+        }
+      } catch (error) {}
+    } else {
+      try {
+        const balanceBeforeOrder = getActiveAccountBalance();
+        const response = await API.openPosition(modelToSubmit);
+        if (response.result === OperationApiResponseCodes.Ok) {
+          markersOnChartStore.addNewMarker(response.position);
+
+          if (instrumentsStore.activeInstrument) {
+            activePositionNotificationStore.notificationMessageData = {
+              equity: 0,
+              instrumentName:
+              instrumentsStore.activeInstrument.instrumentItem.name,
+              instrumentGroup:
+                instrumentsStore.instrumentGroups.find(
+                  (item) =>
+                    item.id ===
+                    instrumentsStore.activeInstrument?.instrumentItem.id
+                )?.name || '',
+              instrumentId: instrumentsStore.activeInstrument.instrumentItem.id,
+              type: 'open',
+            };
+            activePositionNotificationStore.isSuccessfull = true;
+            activePositionNotificationStore.openNotification();
+          }
+          mixpanel.track(mixpanelEvents.MARKET_ORDER, {
+            [mixapanelProps.AMOUNT]: response.position.investmentAmount,
+            [mixapanelProps.ACCOUNT_CURRENCY]:
+            mainAppStore.activeAccount?.currency || '',
+            [mixapanelProps.INSTRUMENT_ID]: response.position.instrument,
+            [mixapanelProps.MULTIPLIER]: values.multiplier,
+            [mixapanelProps.TREND]:
+              response.position.operation === AskBidEnum.Buy ? 'buy' : 'sell',
+            [mixapanelProps.SL_TYPE]:
+              response.position.slType !== null
+                ? mixpanelValues[response.position.slType]
+                : null,
+            [mixapanelProps.TP_TYPE]:
+              response.position.tpType !== null
+                ? mixpanelValues[response.position.tpType]
+                : null,
+            [mixapanelProps.SL_VALUE]:
+              response.position.sl !== null
+                ? Math.abs(response.position.sl)
+                : null,
+            [mixapanelProps.TP_VALUE]: response.position.tp,
+            [mixapanelProps.AVAILABLE_BALANCE]: balanceBeforeOrder,
+            [mixapanelProps.ACCOUNT_ID]: mainAppStore.activeAccount?.id || '',
+            [mixapanelProps.ACCOUNT_TYPE]: mainAppStore.activeAccount?.isLive
+              ? 'real'
+              : 'demo',
+            [mixapanelProps.EVENT_REF]: mixpanelValues.PORTFOLIO,
+            [mixapanelProps.POSITION_ID]: response.position.id,
+          });
+          resetForm();
+          push(Page.DASHBOARD);
+        } else {
+          mixpanel.track(mixpanelEvents.MARKET_ORDER_FAILED, {
+            [mixapanelProps.AMOUNT]: modelToSubmit.investmentAmount,
+            [mixapanelProps.ACCOUNT_CURRENCY]:
+            mainAppStore.activeAccount?.currency || '',
+            [mixapanelProps.INSTRUMENT_ID]: modelToSubmit.instrumentId,
+            [mixapanelProps.MULTIPLIER]: modelToSubmit.multiplier,
+            [mixapanelProps.TREND]:
+              modelToSubmit.operation === AskBidEnum.Buy ? 'buy' : 'sell',
+            [mixapanelProps.SL_TYPE]:
+              modelToSubmit.slType !== null
+                ? mixpanelValues[modelToSubmit.slType]
+                : null,
+            [mixapanelProps.TP_TYPE]:
+              modelToSubmit.tpType !== null
+                ? mixpanelValues[modelToSubmit.tpType]
+                : null,
+            [mixapanelProps.SL_VALUE]:
+              modelToSubmit.sl !== null ? Math.abs(modelToSubmit.sl) : null,
+            [mixapanelProps.TP_VALUE]: modelToSubmit.tp,
+            [mixapanelProps.AVAILABLE_BALANCE]: balanceBeforeOrder,
+            [mixapanelProps.ACCOUNT_ID]: mainAppStore.activeAccount?.id || '',
+            [mixapanelProps.ACCOUNT_TYPE]: mainAppStore.activeAccount?.isLive
+              ? 'real'
+              : 'demo',
+            [mixapanelProps.ERROR_TEXT]: apiResponseCodeMessages[response.result],
+            [mixapanelProps.EVENT_REF]: mixpanelValues.PORTFOLIO,
+          });
+
+          notificationStore.notificationMessage = t(
+            apiResponseCodeMessages[response.result]
+          );
+          notificationStore.isSuccessfull = false;
+          notificationStore.openNotification();
+          resetForm();
+        }
+      } catch (error) {}
+    }
   };
 
   // TODO: make one helper for all inputs (autoclose, price at)
@@ -379,10 +463,58 @@ const OrderPage = observer(() => {
     }
   };
 
+  const openPriceOnBeforeInputHandler = (e: any) => {
+    const currTargetValue = e.currentTarget.value;
+
+    if (!e.data.match(/^[0-9.,]*$/g)) {
+      e.preventDefault();
+      return;
+    }
+
+    if (!currTargetValue && [',', '.'].includes(e.data)) {
+      e.preventDefault();
+      return;
+    }
+
+    if ([',', '.'].includes(e.data)) {
+      if (
+        !currTargetValue ||
+        (currTargetValue && currTargetValue.includes('.'))
+      ) {
+        e.preventDefault();
+        return;
+      }
+    }
+    // see another regex
+    const regex = `^[0-9]{1,7}([,.][0-9]{1,${instrumentsStore.activeInstrument!.instrumentItem.digits}})?$`;
+    const splittedValue =
+      currTargetValue.substring(0, e.currentTarget.selectionStart) +
+      e.data +
+      currTargetValue.substring(e.currentTarget.selectionStart);
+    if (
+      currTargetValue &&
+      ![',', '.'].includes(e.data) &&
+      !splittedValue.match(regex)
+    ) {
+      e.preventDefault();
+      return;
+    }
+    if (e.data.length > 1 && !splittedValue.match(regex)) {
+      e.preventDefault();
+      return;
+    }
+  };
+
   const investOnChangeHandler = (e: ChangeEvent<HTMLInputElement>) => {
     let filteredValue: any = e.target.value.replace(',', '.');
     setFieldValue(Fields.AMOUNT, filteredValue);
     setFieldError(Fields.AMOUNT, '');
+  };
+
+  const openPriceOnChangeHandler = (e: ChangeEvent<HTMLInputElement>) => {
+    let filteredValue: any = e.target.value.replace(',', '.');
+    setFieldValue(Fields.PURCHASE_AT, filteredValue);
+    setFieldError(Fields.PURCHASE_AT, '');
   };
 
   const checkEmpty = (e: FocusEvent<HTMLInputElement>) => {
@@ -493,7 +625,7 @@ const OrderPage = observer(() => {
             padding="14px 16px"
             position="relative"
             alignItems="flex-end"
-            marginBottom="12px"
+            marginBottom="2px"
           >
             <FlexContainer
               position="absolute"
@@ -520,6 +652,67 @@ const OrderPage = observer(() => {
             </MultiplierSelect>
           </FlexContainer>
 
+          <InputWrap
+            flexDirection="column"
+            width="100%"
+            backgroundColor="rgba(42, 45, 56, 0.5)"
+            padding="14px 16px"
+            position="relative"
+            marginBottom="12px"
+            hasError={!!(touched.openPrice && errors.openPrice)}
+          >
+            <FlexContainer
+              position="absolute"
+              top="0"
+              bottom="0"
+              left="16px"
+              margin="auto"
+              alignItems="center"
+            >
+              <PrimaryTextSpan color="#ffffff" fontSize="16px" lineHeight="1">
+                {t('Purchase at')}
+              </PrimaryTextSpan>
+            </FlexContainer>
+            <Observer>
+              {() => <Input
+                {...getFieldProps(Fields.PURCHASE_AT)}
+                type="text"
+                inputMode="decimal"
+                placeholder={`${getPlaceholderOpenPrice()}`}
+                onBeforeInput={openPriceOnBeforeInputHandler}
+                onChange={openPriceOnChangeHandler}
+              />}
+            </Observer>
+          </InputWrap>
+
+          <FlexContainer
+            width="100%"
+            padding="14px 16px 0"
+            justifyContent="space-between"
+            alignItems="center"
+            marginBottom="4px"
+          >
+            <PrimaryTextSpan color="#ffffff" fontSize="16px" lineHeight="1">
+              {t('Spread')}
+            </PrimaryTextSpan>
+            <PrimaryTextSpan color="#FFFCCC" fontSize="16px" lineHeight="1">
+              {(currentPriceAsk() - currentPriceBid()).toFixed(instrumentsStore.activeInstrument!.instrumentItem.digits)}
+            </PrimaryTextSpan>
+          </FlexContainer>
+          <FlexContainer
+            width="100%"
+            padding="14px 16px"
+            justifyContent="space-between"
+            alignItems="center"
+            marginBottom="4px"
+          >
+            <PrimaryTextSpan color="#ffffff" fontSize="16px" lineHeight="1">
+              {t('Commision')}
+            </PrimaryTextSpan>
+            <PrimaryTextSpan color="#FFFCCC" fontSize="16px" lineHeight="1">
+              $0.00
+            </PrimaryTextSpan>
+          </FlexContainer>
           <ConfirmButton
             type="submit"
             actionType={type}
