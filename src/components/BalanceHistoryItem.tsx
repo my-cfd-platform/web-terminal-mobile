@@ -26,18 +26,21 @@ const BalanceHistoryItem = ({
   return (
     <FlexContainer
       onClick={onClick}
-      width="100%"
+      width="100vw"
       backgroundColor="rgba(42, 45, 56, 0.5)"
       marginBottom="2px"
-      padding="16px"
-      justifyContent="space-between"
+      padding="16px 16px"
+      justifyContent={isActive ? "center" : "space-between"}
       flexDirection={isActive ? 'column' : 'row'}
+      flex="1"
+      flexWrap="wrap"
+      alignItems="center"
+      minHeight="max-content"
     >
       <FlexContainer
         flexDirection="column"
-        marginRight="16px"
-        width="100%"
-        maxWidth={isActive ? '100%' : '70%'}
+        padding="0 16px 0 0"
+        width={isActive ? '100%' : '70%'}
         overflow="hidden"
         marginBottom={isActive ? '4px' : '0'}
         position="relative"
