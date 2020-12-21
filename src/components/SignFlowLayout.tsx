@@ -33,7 +33,7 @@ const SignFlowLayout: FC<Props> = (props) => {
         padding="30px 0"
         minHeight="100px"
       >
-        <FlexContainer width="230px">
+        <FlexContainer width="230px" justifyContent="center">
           <Observer>
             {() => <Logo src={mainAppStore.initModel.logo || LogoMonfex} />}
           </Observer>
