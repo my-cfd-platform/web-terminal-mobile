@@ -41,6 +41,7 @@ const AuthorizedContainer: FC = ({ children }) => {
     Page.WITHDRAW_SUCCESS,
     Page.SL_EDIT,
     Page.TP_EDIT,
+    Page.ACCOUNT_BALANCE_HISTORY,
   ]);
 
   const { push } = useHistory();
