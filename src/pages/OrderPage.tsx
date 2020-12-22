@@ -579,158 +579,160 @@ const OrderPage = observer(() => {
       >
         <ActiveInstrumentItem type={type} />
         <CustomForm autoComplete="off" onSubmit={handleSubmit}>
-          <InputWrap
-            flexDirection="column"
-            width="100%"
-            backgroundColor="rgba(42, 45, 56, 0.5)"
-            padding="14px 16px"
-            position="relative"
-            marginBottom="4px"
-            hasError={!!(touched.investmentAmount && errors.investmentAmount)}
-          >
-            <FlexContainer
-              position="absolute"
-              top="0"
-              bottom="0"
-              left="16px"
-              margin="auto"
-              alignItems="center"
+          <FlexContainer flexDirection="column">
+            <InputWrap
+              flexDirection="column"
+              width="100%"
+              backgroundColor="rgba(42, 45, 56, 0.5)"
+              padding="14px 16px"
+              position="relative"
+              marginBottom="4px"
+              hasError={!!(touched.investmentAmount && errors.investmentAmount)}
             >
-              <PrimaryTextSpan color="#ffffff" fontSize="16px" lineHeight="1">
-                {t('Invest')}
-              </PrimaryTextSpan>
-            </FlexContainer>
+              <FlexContainer
+                position="absolute"
+                top="0"
+                bottom="0"
+                left="16px"
+                margin="auto"
+                alignItems="center"
+              >
+                <PrimaryTextSpan color="#ffffff" fontSize="16px" lineHeight="1">
+                  {t('Invest')}
+                </PrimaryTextSpan>
+              </FlexContainer>
 
-            <Input
-              {...getFieldProps(Fields.AMOUNT)}
-              type="text"
-              inputMode="decimal"
-              onBeforeInput={investOnBeforeInputHandler}
-              onChange={investOnChangeHandler}
-              onBlur={checkEmpty}
-            />
-          </InputWrap>
-
-          <FlexContainer marginBottom="12px" padding="0 16px">
-            {touched.investmentAmount && errors.investmentAmount ? (
-              <PrimaryTextSpan fontSize="11px" color={Colors.RED}>
-                {errors.investmentAmount}
-              </PrimaryTextSpan>
-            ) : (
-              <Observer>
-                {() => (
-                  <PrimaryTextSpan
-                    fontSize="11px"
-                    color="rgba(196, 196, 196, 0.5)"
-                  >
-                    {t('Available')}&nbsp;
-                    {mainAppStore.activeAccount?.symbol}
-                    {mainAppStore.activeAccount?.balance.toFixed(2)}
-                  </PrimaryTextSpan>
-                )}
-              </Observer>
-            )}
-          </FlexContainer>
-
-          <FlexContainer
-            flexDirection="column"
-            width="100%"
-            backgroundColor="rgba(42, 45, 56, 0.5)"
-            padding="14px 16px"
-            position="relative"
-            alignItems="flex-end"
-            marginBottom="2px"
-          >
-            <FlexContainer
-              position="absolute"
-              top="0"
-              bottom="0"
-              left="16px"
-              margin="auto"
-              alignItems="center"
-            >
-              <PrimaryTextSpan color="#ffffff" fontSize="16px" lineHeight="1">
-                {t('Leverage')}
-              </PrimaryTextSpan>
-            </FlexContainer>
-
-            <MultiplierSelect dir="rtl" {...getFieldProps(Fields.MULTIPLIER)}>
-              {instrumentsStore
-                .activeInstrument!.instrumentItem.multiplier.slice()
-                .sort((a, b) => b - a)
-                .map((multiplier) => (
-                  <MultiplierSelectValue value={multiplier} key={multiplier}>
-                    x{multiplier}
-                  </MultiplierSelectValue>
-                ))}
-            </MultiplierSelect>
-          </FlexContainer>
-
-          <InputWrap
-            flexDirection="column"
-            width="100%"
-            backgroundColor="rgba(42, 45, 56, 0.5)"
-            padding="14px 16px"
-            position="relative"
-            marginBottom={(touched.openPrice && errors.openPrice) ? '4px' : '12px'}
-            hasError={!!(touched.openPrice && errors.openPrice)}
-          >
-            <FlexContainer
-              position="absolute"
-              top="0"
-              bottom="0"
-              left="16px"
-              margin="auto"
-              alignItems="center"
-            >
-              <PrimaryTextSpan color="#ffffff" fontSize="16px" lineHeight="1">
-                {t('Purchase at')}
-              </PrimaryTextSpan>
-            </FlexContainer>
-            <Observer>
-              {() => <Input
-                {...getFieldProps(Fields.PURCHASE_AT)}
+              <Input
+                {...getFieldProps(Fields.AMOUNT)}
                 type="text"
                 inputMode="decimal"
-                placeholder={`${getPlaceholderOpenPrice()}`}
-                onBeforeInput={openPriceOnBeforeInputHandler}
-                onChange={openPriceOnChangeHandler}
-              />}
-            </Observer>
-          </InputWrap>
-          {touched.openPrice && errors.openPrice && <FlexContainer marginBottom="12px" padding="0 16px">
-              <PrimaryTextSpan fontSize="11px" color={Colors.RED}>
-                {errors.openPrice}
-              </PrimaryTextSpan>
-          </FlexContainer>}
+                onBeforeInput={investOnBeforeInputHandler}
+                onChange={investOnChangeHandler}
+                onBlur={checkEmpty}
+              />
+            </InputWrap>
 
-          <FlexContainer
-            width="100%"
-            padding="14px 16px 0"
-            justifyContent="space-between"
-            alignItems="center"
-            marginBottom="4px"
-          >
-            <PrimaryTextSpan color="#ffffff" fontSize="16px" lineHeight="1">
-              {t('Spread')}
-            </PrimaryTextSpan>
-            <PrimaryTextSpan color="#FFFCCC" fontSize="16px" lineHeight="1">
-              {(currentPriceAsk() - currentPriceBid()).toFixed(instrumentsStore.activeInstrument!.instrumentItem.digits)}
-            </PrimaryTextSpan>
-          </FlexContainer>
-          <FlexContainer
-            width="100%"
-            padding="14px 16px"
-            justifyContent="space-between"
-            alignItems="center"
-            marginBottom="4px"
-          >
-            <PrimaryTextSpan color="#ffffff" fontSize="16px" lineHeight="1">
-              {t('Commision')}
-            </PrimaryTextSpan>
-            <PrimaryTextSpan color="#FFFCCC" fontSize="16px" lineHeight="1">
-              $0.00
-            </PrimaryTextSpan>
+            <FlexContainer marginBottom="12px" padding="0 16px">
+              {touched.investmentAmount && errors.investmentAmount ? (
+                <PrimaryTextSpan fontSize="11px" color={Colors.RED}>
+                  {errors.investmentAmount}
+                </PrimaryTextSpan>
+              ) : (
+                <Observer>
+                  {() => (
+                    <PrimaryTextSpan
+                      fontSize="11px"
+                      color="rgba(196, 196, 196, 0.5)"
+                    >
+                      {t('Available')}&nbsp;
+                      {mainAppStore.activeAccount?.symbol}
+                      {mainAppStore.activeAccount?.balance.toFixed(2)}
+                    </PrimaryTextSpan>
+                  )}
+                </Observer>
+              )}
+            </FlexContainer>
+
+            <FlexContainer
+              flexDirection="column"
+              width="100%"
+              backgroundColor="rgba(42, 45, 56, 0.5)"
+              padding="14px 16px"
+              position="relative"
+              alignItems="flex-end"
+              marginBottom="2px"
+            >
+              <FlexContainer
+                position="absolute"
+                top="0"
+                bottom="0"
+                left="16px"
+                margin="auto"
+                alignItems="center"
+              >
+                <PrimaryTextSpan color="#ffffff" fontSize="16px" lineHeight="1">
+                  {t('Leverage')}
+                </PrimaryTextSpan>
+              </FlexContainer>
+
+              <MultiplierSelect dir="rtl" {...getFieldProps(Fields.MULTIPLIER)}>
+                {instrumentsStore
+                  .activeInstrument!.instrumentItem.multiplier.slice()
+                  .sort((a, b) => b - a)
+                  .map((multiplier) => (
+                    <MultiplierSelectValue value={multiplier} key={multiplier}>
+                      x{multiplier}
+                    </MultiplierSelectValue>
+                  ))}
+              </MultiplierSelect>
+            </FlexContainer>
+
+            <InputWrap
+              flexDirection="column"
+              width="100%"
+              backgroundColor="rgba(42, 45, 56, 0.5)"
+              padding="14px 16px"
+              position="relative"
+              marginBottom={(touched.openPrice && errors.openPrice) ? '4px' : '12px'}
+              hasError={!!(touched.openPrice && errors.openPrice)}
+            >
+              <FlexContainer
+                position="absolute"
+                top="0"
+                bottom="0"
+                left="16px"
+                margin="auto"
+                alignItems="center"
+              >
+                <PrimaryTextSpan color="#ffffff" fontSize="16px" lineHeight="1">
+                  {t('Purchase at')}
+                </PrimaryTextSpan>
+              </FlexContainer>
+              <Observer>
+                {() => <Input
+                  {...getFieldProps(Fields.PURCHASE_AT)}
+                  type="text"
+                  inputMode="decimal"
+                  placeholder={`${getPlaceholderOpenPrice()}`}
+                  onBeforeInput={openPriceOnBeforeInputHandler}
+                  onChange={openPriceOnChangeHandler}
+                />}
+              </Observer>
+            </InputWrap>
+            {touched.openPrice && errors.openPrice && <FlexContainer marginBottom="12px" padding="0 16px">
+                <PrimaryTextSpan fontSize="11px" color={Colors.RED}>
+                  {errors.openPrice}
+                </PrimaryTextSpan>
+            </FlexContainer>}
+
+            <FlexContainer
+              width="100%"
+              padding="14px 16px 0"
+              justifyContent="space-between"
+              alignItems="center"
+              marginBottom="4px"
+            >
+              <PrimaryTextSpan color="#ffffff" fontSize="16px" lineHeight="1">
+                {t('Spread')}
+              </PrimaryTextSpan>
+              <PrimaryTextSpan color="#FFFCCC" fontSize="16px" lineHeight="1">
+                {(currentPriceAsk() - currentPriceBid()).toFixed(instrumentsStore.activeInstrument!.instrumentItem.digits)}
+              </PrimaryTextSpan>
+            </FlexContainer>
+            <FlexContainer
+              width="100%"
+              padding="14px 16px"
+              justifyContent="space-between"
+              alignItems="center"
+              marginBottom="4px"
+            >
+              <PrimaryTextSpan color="#ffffff" fontSize="16px" lineHeight="1">
+                {t('Commision')}
+              </PrimaryTextSpan>
+              <PrimaryTextSpan color="#FFFCCC" fontSize="16px" lineHeight="1">
+                $0.00
+              </PrimaryTextSpan>
+            </FlexContainer>
           </FlexContainer>
           <ConfirmButton
             type="submit"
@@ -768,7 +770,7 @@ const ConfirmButton = styled(ButtonWithoutStyles)<{ actionType?: string }>`
   background-color: ${(props) =>
     props.actionType === 'buy' ? Colors.ACCENT_BLUE : Colors.RED};
   color: ${(props) => (props.actionType === 'buy' ? '#252636' : '#ffffff')};
-  height: 56px;
+  min-height: 56px;
   border-radius: 8px;
   font-size: 16px;
   line-height: 1;
@@ -787,6 +789,10 @@ const ConfirmButton = styled(ButtonWithoutStyles)<{ actionType?: string }>`
 `;
 
 const CustomForm = styled.form`
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
   margin: 0;
 `;
 
