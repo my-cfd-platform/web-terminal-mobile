@@ -40,8 +40,8 @@ const AccountBalanceHistory = () => {
       try {
         const response = await API.getBalanceHistory({
           accountId: mainAppStore.accounts.find((acc) => acc.isLive)!.id,
-          endDate: dateRangeAccountBalanceStore.endDate.valueOf(),
-          startDate: moment().subtract(1, 'y').valueOf(),
+          // endDate: dateRangeAccountBalanceStore.endDate.valueOf(),
+          // startDate: moment().subtract(1, 'y').valueOf(),
           page: isScrolling ? balanceHistoryReport.page + 1 : 1,
           pageSize: 20,
         });
