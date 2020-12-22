@@ -42,7 +42,7 @@ const BalanceHistoryItem = ({
         padding="0 16px 0 0"
         width={isActive ? '100%' : '70%'}
         overflow="hidden"
-        marginBottom={isActive ? '4px' : '0'}
+        marginBottom={isActive ? '16px' : '0'}
         position="relative"
       >
         {!isActive && <GradientFilter />}
@@ -74,7 +74,7 @@ const BalanceHistoryItem = ({
           fontWeight={500}
           marginBottom="4px"
         >
-          {item.amount < 0 && '-'}
+          {item.amount < 0 ? '-' : '+'}
           {mainAppStore.accounts.find((acc) => acc.isLive)?.symbol}
           {Math.abs(item.amount).toFixed(2)}
         </PrimaryTextSpan>
