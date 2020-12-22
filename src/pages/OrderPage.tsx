@@ -89,7 +89,9 @@ const OrderPage = observer(() => {
     ]
   );
 
-  const getPlaceholderOpenPrice = () => type.toLowerCase() === 'buy' ? currentPriceAsk() : currentPriceBid();
+  const getPlaceholderOpenPrice = () => type.toLowerCase() === 'buy'
+    ? currentPriceAsk().toFixed(instrumentsStore.activeInstrument!.instrumentItem.digits)
+    : currentPriceBid().toFixed(instrumentsStore.activeInstrument!.instrumentItem.digits);
 
   const validationSchema: any = useCallback(
     () =>
@@ -221,7 +223,16 @@ const OrderPage = observer(() => {
                 }
               ),
           }),
-        openPrice: yup.number().nullable(),
+        openPrice: yup
+          .number()
+          .test(
+            Fields.PURCHASE_AT,
+            t('Open price can not be zero'),
+            (value) => {
+              console.log(value);
+              return value !== 0;
+            }
+          ),
         tpType: yup.number().nullable(),
         slType: yup.number().nullable(),
       }),
@@ -322,7 +333,6 @@ const OrderPage = observer(() => {
               apiResponseCodeMessages[response.result],
             [mixapanelProps.EVENT_REF]: mixpanelValues.PORTFOLIO,
           });
-          resetForm();
         }
       } catch (error) {}
     } else {
@@ -562,7 +572,11 @@ const OrderPage = observer(() => {
 
   return (
     <BackFlowLayout pageTitle={t(type)}>
-      <FlexContainer flexDirection="column" width="100%" position="relative">
+      <OrderWrapper
+        flexDirection="column"
+        width="100%"
+        position="relative"
+      >
         <ActiveInstrumentItem type={type} />
         <CustomForm autoComplete="off" onSubmit={handleSubmit}>
           <InputWrap
@@ -658,7 +672,7 @@ const OrderPage = observer(() => {
             backgroundColor="rgba(42, 45, 56, 0.5)"
             padding="14px 16px"
             position="relative"
-            marginBottom="12px"
+            marginBottom={(touched.openPrice && errors.openPrice) ? '4px' : '12px'}
             hasError={!!(touched.openPrice && errors.openPrice)}
           >
             <FlexContainer
@@ -684,6 +698,11 @@ const OrderPage = observer(() => {
               />}
             </Observer>
           </InputWrap>
+          {touched.openPrice && errors.openPrice && <FlexContainer marginBottom="12px" padding="0 16px">
+              <PrimaryTextSpan fontSize="11px" color={Colors.RED}>
+                {errors.openPrice}
+              </PrimaryTextSpan>
+          </FlexContainer>}
 
           <FlexContainer
             width="100%"
@@ -722,7 +741,7 @@ const OrderPage = observer(() => {
             {values.investmentAmount}
           </ConfirmButton>
         </CustomForm>
-      </FlexContainer>
+      </OrderWrapper>
     </BackFlowLayout>
   );
 });
@@ -741,6 +760,10 @@ const InputWrap = styled(FlexContainer)`
     `};
 `;
 
+const OrderWrapper = styled(FlexContainer)`
+  overflow-y: auto;
+`;
+
 const ConfirmButton = styled(ButtonWithoutStyles)<{ actionType?: string }>`
   background-color: ${(props) =>
     props.actionType === 'buy' ? Colors.ACCENT_BLUE : Colors.RED};
@@ -753,7 +776,8 @@ const ConfirmButton = styled(ButtonWithoutStyles)<{ actionType?: string }>`
   justify-content: center;
   align-items: center;
   font-weight: 600;
-  position: fixed;
+  position: sticky;
+  margin-top: 16px;
   bottom: 16px;
   left: 16px;
   right: 16px;
