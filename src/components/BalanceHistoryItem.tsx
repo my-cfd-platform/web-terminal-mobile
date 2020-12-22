@@ -32,7 +32,7 @@ const BalanceHistoryItem = ({
       padding="16px 16px"
       justifyContent={isActive ? "center" : "space-between"}
       flexDirection={isActive ? 'column' : 'row'}
-      flex="1"
+      
       flexWrap="wrap"
       alignItems="center"
       minHeight="max-content"
