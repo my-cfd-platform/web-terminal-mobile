@@ -31,18 +31,16 @@ const BalanceHistoryItem = ({
       marginBottom="2px"
       padding="16px 16px"
       justifyContent={isActive ? "center" : "space-between"}
-      flexDirection={isActive ? 'column' : 'row'}
-      
+      flexDirection="row"
       flexWrap="wrap"
-      alignItems="center"
+      alignItems={isActive ? "flex-start" : "center"}
       minHeight="max-content"
     >
       <FlexContainer
         flexDirection="column"
         padding="0 16px 0 0"
-        width={isActive ? '100%' : '70%'}
+        width="70%"
         overflow="hidden"
-        marginBottom={isActive ? '16px' : '0'}
         position="relative"
       >
         {!isActive && <GradientFilter />}
@@ -63,8 +61,8 @@ const BalanceHistoryItem = ({
       <FlexContainer
         flexDirection="column"
         justifyContent="flex-end"
-        alignItems={isActive ? 'flex-start' : 'flex-end'}
-        width={isActive ? '100%' : '30%'}
+        alignItems="flex-end"
+        width="30%"
         position="relative"
         zIndex="3"
       >
