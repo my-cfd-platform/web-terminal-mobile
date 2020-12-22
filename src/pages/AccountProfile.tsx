@@ -207,7 +207,7 @@ const AccountProfile = observer(() => {
               fontSize="16px"
               fontWeight="normal"
             >
-              {t('Balance History')}
+              {t('Balance history')}
             </PrimaryTextSpan>
           </FlexContainer>
           <SvgIcon {...IconArrowLink} fillColor="rgba(196, 196, 196, 0.5)" />

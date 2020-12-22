@@ -78,7 +78,7 @@ const AccountBalanceHistory = () => {
   }, [mainAppStore.activeAccount]);
 
   return (
-    <BackFlowLayout pageTitle={t('Balance History')}>
+    <BackFlowLayout pageTitle={t('Balance history')}>
       {isLoading && <LoaderForComponents isLoading={isLoading} />}
       <FlexContainer
         maxHeight={`calc(${FULL_VH} - 72px)`}
