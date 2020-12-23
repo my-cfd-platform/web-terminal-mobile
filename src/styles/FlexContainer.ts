@@ -14,6 +14,7 @@ export interface FlexContainerProps {
   width?: string;
   height?: string;
   minHeight?: string;
+  minWidth?: string;
   maxHeight?: string;
   maxWidth?: string;
   padding?: string;
@@ -50,6 +51,7 @@ export const FlexContainer = styled.div<FlexContainerProps>`
   width: ${(props) => props.width};
   height: ${(props) => props.height};
   min-height: ${(props) => props.minHeight};
+  min-width: ${(props) => props.minWidth};
   max-height: ${(props) => props.maxHeight};
   max-width: ${(props) => props.maxWidth};
   padding: ${(props) => props.padding};

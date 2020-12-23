@@ -88,7 +88,7 @@ const MainApp: FC = () => {
       if (pagesWithoutReload.includes(currentLocation)) {
         return false;
       }
-      window.location.reload();
+      !IS_LOCAL && window.location.reload();
     }
 
     document.addEventListener(
