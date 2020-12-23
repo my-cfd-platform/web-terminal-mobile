@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, ChangeEvent, FocusEvent} from 'react';
+import React, { useCallback, useEffect, ChangeEvent, FocusEvent, useRef } from 'react';
 import * as yup from 'yup';
 import { useFormik, FormikHelpers } from 'formik';
 import BackFlowLayout from '../components/BackFlowLayout';
@@ -33,6 +33,7 @@ const DEFAULT_INVEST_AMOUNT = 50;
 const OrderPage = observer(() => {
   const { type } = useParams<{ type: string }>();
   const { t } = useTranslation();
+  const purchaseField = useRef<HTMLInputElement | null>(null);
   const {
     mainAppStore,
     instrumentsStore,
@@ -535,6 +536,13 @@ const OrderPage = observer(() => {
     }
   }
 
+  const handleFocusAtPurchase = () => {
+    if (purchaseField !== null) {
+      // @ts-ignore
+      purchaseField.current.scrollIntoView();
+    }
+  };
+
   const {
     values,
     setFieldError,
@@ -696,6 +704,8 @@ const OrderPage = observer(() => {
                   placeholder={`${getPlaceholderOpenPrice()}`}
                   onBeforeInput={openPriceOnBeforeInputHandler}
                   onChange={openPriceOnChangeHandler}
+                  ref={purchaseField}
+                  onFocus={handleFocusAtPurchase}
                 />}
               </Observer>
             </InputWrap>
