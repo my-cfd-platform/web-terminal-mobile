@@ -540,16 +540,23 @@ const OrderPage = observer(() => {
 
   const handleFocusAtPurchase = () => {
     if (purchaseField !== null) {
-      setTimeout(() => {
+      document.body.addEventListener('resize', () => {
         // @ts-ignore
         purchaseField.current.scrollIntoView();
         orderWrapper.current.scrollTop = 1000;
-      }, 0);
+      });
       setIsKeyboard(true);
     }
   };
 
   const handleBlurAtPurchase = () => {
+    if (purchaseField !== null) {
+      document.body.removeEventListener('resize', () => {
+        // @ts-ignore
+        purchaseField.current.scrollIntoView();
+        orderWrapper.current.scrollTop = 1000;
+      });
+    };
     setIsKeyboard(false);
   };
 
