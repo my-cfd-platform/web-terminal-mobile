@@ -540,9 +540,11 @@ const OrderPage = observer(() => {
 
   const handleFocusAtPurchase = () => {
     if (purchaseField !== null) {
-      // @ts-ignore
-      purchaseField.current.scrollIntoView();
-      orderWrapper.current.scrollTop = 1000;
+      setTimeout(() => {
+        // @ts-ignore
+        purchaseField.current.scrollIntoView();
+        orderWrapper.current.scrollTop = 1000;
+      }, 0);
       setIsKeyboard(true);
     }
   };
