@@ -544,7 +544,7 @@ const OrderPage = observer(() => {
         orderWrapper.current.scrollTop = 1000;
         // @ts-ignore
         purchaseField.current.scrollIntoView();
-      }, 1000);
+      }, 100);
       setIsKeyboard(true);
     }
   };
