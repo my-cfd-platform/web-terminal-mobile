@@ -34,6 +34,7 @@ const OrderPage = observer(() => {
   const { type } = useParams<{ type: string }>();
   const { t } = useTranslation();
   const purchaseField = useRef<HTMLInputElement | null>(null);
+  const orderWrapper = useRef<HTMLDivElement>(document.createElement('div'));
   const [isKeyboard, setIsKeyboard] = useState<boolean>(false);
   const {
     mainAppStore,
@@ -541,6 +542,7 @@ const OrderPage = observer(() => {
     if (purchaseField !== null) {
       // @ts-ignore
       purchaseField.current.scrollIntoView();
+      orderWrapper.current.scrollTop = 1000;
       setIsKeyboard(true);
     }
   };
@@ -590,6 +592,7 @@ const OrderPage = observer(() => {
         flexDirection="column"
         width="100%"
         position="relative"
+        ref={orderWrapper}
       >
         <ActiveInstrumentItem type={type} />
         <CustomForm autoComplete="off" onSubmit={handleSubmit}>
