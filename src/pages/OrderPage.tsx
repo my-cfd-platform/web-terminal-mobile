@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, ChangeEvent, FocusEvent, useRef } from 'react';
+import React, { useCallback, useEffect, ChangeEvent, FocusEvent, useRef, useState } from 'react';
 import * as yup from 'yup';
 import { useFormik, FormikHelpers } from 'formik';
 import BackFlowLayout from '../components/BackFlowLayout';
@@ -34,6 +34,7 @@ const OrderPage = observer(() => {
   const { type } = useParams<{ type: string }>();
   const { t } = useTranslation();
   const purchaseField = useRef<HTMLInputElement | null>(null);
+  const [isKeyboard, setIsKeyboard] = useState<boolean>(false);
   const {
     mainAppStore,
     instrumentsStore,
@@ -540,7 +541,12 @@ const OrderPage = observer(() => {
     if (purchaseField !== null) {
       // @ts-ignore
       purchaseField.current.scrollIntoView();
+      setIsKeyboard(true);
     }
+  };
+
+  const handleBlurAtPurchase = () => {
+    setIsKeyboard(false);
   };
 
   const {
@@ -706,6 +712,7 @@ const OrderPage = observer(() => {
                   onChange={openPriceOnChangeHandler}
                   ref={purchaseField}
                   onFocus={handleFocusAtPurchase}
+                  onBlur={handleBlurAtPurchase}
                 />}
               </Observer>
             </InputWrap>
@@ -748,6 +755,7 @@ const OrderPage = observer(() => {
             type="submit"
             actionType={type}
             disabled={isSubmitting}
+            hide={isKeyboard}
           >
             {t('Confirm')} {mainAppStore.activeAccount?.symbol}
             {values.investmentAmount}
@@ -776,7 +784,7 @@ const OrderWrapper = styled(FlexContainer)`
   overflow-y: auto;
 `;
 
-const ConfirmButton = styled(ButtonWithoutStyles)<{ actionType?: string }>`
+const ConfirmButton = styled(ButtonWithoutStyles)<{ actionType?: string, hide?: boolean }>`
   background-color: ${(props) =>
     props.actionType === 'buy' ? Colors.ACCENT_BLUE : Colors.RED};
   color: ${(props) => (props.actionType === 'buy' ? '#252636' : '#ffffff')};
@@ -788,8 +796,8 @@ const ConfirmButton = styled(ButtonWithoutStyles)<{ actionType?: string }>`
   justify-content: center;
   align-items: center;
   font-weight: 600;
-  position: sticky;
-  margin-top: 16px;
+  position: ${(props) => (props.hide ? 'static' : 'sticky')};;
+  margin: 16px auto;
   bottom: 16px;
   left: 16px;
   right: 16px;
