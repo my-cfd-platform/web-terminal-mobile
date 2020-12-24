@@ -30,7 +30,12 @@ const InstrumentMarkets: FC<Props> = observer((props) => {
 
   return (
     <InstrumentItem onClick={setInstrumentActive}>
-      <FlexContainer minWidth="48px" height="48px" marginRight="16px">
+      <FlexContainer
+        minWidth="48px"
+        width="48px"
+        height="48px"
+        marginRight="16px"
+      >
         <ImageContainer instrumentId={id} />
       </FlexContainer>
       <FlexContainer flexDirection="column" justifyContent="center">
