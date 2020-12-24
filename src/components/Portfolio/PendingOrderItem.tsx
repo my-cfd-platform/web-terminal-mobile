@@ -41,7 +41,7 @@ const PendingOrderItem: FC<Props> = ({ pendingOrder, isInner }) => {
     return groupId.toLowerCase();
   };
 
-  const activeInstrument = useCallback(() => {
+  const positionInstrument = useCallback(() => {
     return instrumentsStore.instruments.find(
       (item) => item.instrumentItem.id === instrument
     )?.instrumentItem;
@@ -54,18 +54,21 @@ const PendingOrderItem: FC<Props> = ({ pendingOrder, isInner }) => {
       </FlexContainer>
 
       <FlexContainer flexDirection="column" justifyContent="center">
-        <PrimaryTextSpan
-          color="#ffffff"
-          fontSize="16px"
-          fontWeight={500}
-          lineHeight="1"
-          marginBottom="6px"
-        >
-          <FlexContainer alignItems="center">
-            {activeInstrument()?.name}{' '}
-            {!isInner && <ItemOperationLabel operation={operation} />}
-          </FlexContainer>
-        </PrimaryTextSpan>
+        <FlexContainer alignItems="center" marginBottom="6px">
+          <PrimaryTextSpan
+            color="#ffffff"
+            fontSize="16px"
+            fontWeight={500}
+            lineHeight="1"
+            whiteSpace="nowrap"
+            overflow="hidden"
+            textOverflow="ellipsis"
+            maxWidth="calc(100vw - 36px - 48px - 8px - 8px - 120px)"
+          >
+            {positionInstrument()?.name}
+          </PrimaryTextSpan>
+          {!isInner && <ItemOperationLabel operation={operation} />}
+        </FlexContainer>
         <PrimaryTextSpan
           color="rgba(255, 255, 255, 0.4)"
           fontSize="16px"
