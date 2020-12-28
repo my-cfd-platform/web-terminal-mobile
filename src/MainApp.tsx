@@ -16,6 +16,7 @@ import API from './helpers/API';
 import apiResponseCodeMessages from './constants/apiResponseCodeMessages';
 import { OperationApiResponseCodes } from './enums/OperationApiResponseCodes';
 import { FULL_VH } from './constants/global';
+import 'react-smartbanner/dist/main.css';
 
 const MainApp: FC = () => {
   const { mainAppStore, instrumentsStore, badRequestPopupStore } = useStores();
@@ -116,6 +117,14 @@ const MainApp: FC = () => {
         <script
           src={`https://www.google.com/recaptcha/api.js?render=${mainAppStore.initModel.recaptchaToken}`}
         ></script>
+        <meta
+          name="apple-itunes-app"
+          content={`app-id=${mainAppStore.initModel.iosAppId}`}
+        />
+        <meta
+          name="google-play-app"
+          content={`app-id=${mainAppStore.initModel.androidAppId}`}
+        />
       </Helmet>
       <Router>
         <RoutingLayout></RoutingLayout>

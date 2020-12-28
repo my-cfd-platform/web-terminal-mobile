@@ -21,6 +21,7 @@ import LoaderFullscreen from '../components/LoaderFullscreen';
 import DemoRealPopup from '../components/DemoRealPopup';
 import NetworkErrorPopup from '../components/NetworkErrorPopup';
 import ServerErrorPopup from '../components/ServerErrorPopup';
+import SmartBanner from 'react-smartbanner';
 
 const AuthorizedContainer: FC = ({ children }) => {
   const match = useRouteMatch([
@@ -98,6 +99,18 @@ const AuthorizedContainer: FC = ({ children }) => {
       flexDirection="column"
       overflow="hidden"
     >
+      <Observer>
+        {() => (
+          <SmartBanner
+            title={mainAppStore.initModel.brandName}
+            daysHidden={30}
+            url={{
+              ios: mainAppStore.initModel.iosAppLink,
+              android: mainAppStore.initModel.androidAppLink,
+            }}
+          />
+        )}
+      </Observer>
       <Observer>
         {() => (
           <>
