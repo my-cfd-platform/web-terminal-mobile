@@ -38,11 +38,27 @@ const InstrumentBadge: FC<Props> = ({
       alignItems="center"
       onClick={handleSwitchInstrument}
     >
-      <FlexContainer width="48px" height="48px" marginBottom="8px" position="relative">
+      <FlexContainer
+        width="48px"
+        height="48px"
+        marginBottom="8px"
+        position="relative"
+      >
         <ImageContainer instrumentId={instrumentId} />
-        {removable && <InstumentCloseButton onClick={handleRemoveInstrument}><SvgIcon {...IconClose}/></InstumentCloseButton>}
+        {removable && (
+          <InstumentCloseButton onClick={handleRemoveInstrument}>
+            <SvgIcon {...IconClose} />
+          </InstumentCloseButton>
+        )}
       </FlexContainer>
-      <PrimaryTextSpan fontSize="8px" color="#FFFFFF">
+      <PrimaryTextSpan
+        fontSize="8px"
+        color="#FFFFFF"
+        whiteSpace="nowrap"
+        overflow="hidden"
+        textOverflow="ellipsis"
+        maxWidth="48px"
+      >
         {instrumentName}
       </PrimaryTextSpan>
     </FlexContainer>
@@ -54,7 +70,7 @@ export default InstrumentBadge;
 const InstumentCloseButton = styled(ButtonWithoutStyles)`
   width: 24px;
   height: 24px;
-  border: 3px solid #1C1F26;
+  border: 3px solid #1c1f26;
   background-color: #979797;
   border-radius: 50%;
   display: flex;

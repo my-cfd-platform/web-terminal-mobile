@@ -7,8 +7,8 @@ interface Props {
   operation: AskBidEnum;
 }
 
-const ItemOperationLabel = ({operation}: Props) => {
-  const {t} = useTranslation();
+const ItemOperationLabel = ({ operation }: Props) => {
+  const { t } = useTranslation();
   return (
     <Label isBuy={operation === AskBidEnum.Buy}>
       {t(operation === AskBidEnum.Buy ? 'buy' : 'sell')}
@@ -18,7 +18,7 @@ const ItemOperationLabel = ({operation}: Props) => {
 
 export default ItemOperationLabel;
 
-const Label = styled.span<{isBuy: boolean}>`
+const Label = styled.span<{ isBuy: boolean }>`
   background-color: ${(props) =>
     props.isBuy ? Colors.ACCENT_BLUE : Colors.RED};
   color: ${(props) => (props.isBuy ? '#000000' : '#ffffff')};

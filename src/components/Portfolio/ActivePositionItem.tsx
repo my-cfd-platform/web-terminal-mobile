@@ -28,11 +28,13 @@ const ActivePositionItem: FC<Props> = ({ position, isInner }) => {
     return groupId.toLowerCase();
   };
 
-  const activeInstrument = useCallback(() => {
-    return instrumentsStore.instruments.find(
-      (item) => item.instrumentItem.id === instrument
-    )?.instrumentItem;
-  }, [position]);
+  const positionInstrument = useCallback(
+    () =>
+      instrumentsStore.instruments.find(
+        (item) => item.instrumentItem.id === instrument
+      )?.instrumentItem,
+    [position]
+  );
 
   return (
     <InstrumentItem to={`${Page.PORTFOLIO_MAIN}/${type}/${id}`}>
@@ -40,20 +42,27 @@ const ActivePositionItem: FC<Props> = ({ position, isInner }) => {
         <ImageContainer instrumentId={instrument} />
       </FlexContainer>
 
-      <FlexContainer flexDirection="column" justifyContent="center">
-        <PrimaryTextSpan
-          color="#ffffff"
-          fontSize="16px"
-          fontWeight={500}
-          lineHeight="1"
-          marginBottom="6px"
-        >
-          <FlexContainer alignItems="center">
-            {activeInstrument()?.name}{' '}
-            {!isInner && <ItemOperationLabel operation={operation} />}
-            
-          </FlexContainer>
-        </PrimaryTextSpan>
+      <FlexContainer
+        flexDirection="column"
+        justifyContent="center"
+        flexWrap="nowrap"
+      >
+        <FlexContainer alignItems="center" marginBottom="6px">
+          <PrimaryTextSpan
+            color="#ffffff"
+            fontSize="16px"
+            fontWeight={500}
+            lineHeight="1"
+            whiteSpace="nowrap"
+            overflow="hidden"
+            textOverflow="ellipsis"
+            maxWidth="calc(100vw - 36px - 48px - 8px - 8px - 120px)"
+          >
+            {positionInstrument()?.name}
+          </PrimaryTextSpan>
+          {!isInner && <ItemOperationLabel operation={operation} />}
+        </FlexContainer>
+
         <PrimaryTextSpan
           color="rgba(255, 255, 255, 0.4)"
           fontSize="16px"
@@ -75,7 +84,7 @@ const ActivePositionItem: FC<Props> = ({ position, isInner }) => {
           {mainAppStore.activeAccount?.symbol}
           {position.investmentAmount.toFixed(2)}
         </PrimaryTextSpan>
-        <ActivePositionPnL position={position} hasBackground={isInner}/>
+        <ActivePositionPnL position={position} hasBackground={isInner} />
       </FlexContainer>
     </InstrumentItem>
   );
