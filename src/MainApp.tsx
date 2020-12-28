@@ -125,6 +125,11 @@ const MainApp: FC = () => {
           name="google-play-app"
           content={`app-id=${mainAppStore.initModel.androidAppId}`}
         />
+        <link rel="apple-touch-icon" href={mainAppStore.initModel.logo}></link>
+        <link
+          rel="android-touch-icon"
+          href={mainAppStore.initModel.logo}
+        ></link>
       </Helmet>
       <Router>
         <RoutingLayout></RoutingLayout>
