@@ -421,6 +421,8 @@ class API {
             authUrl: '',
             mixpanelToken: '582507549d28c813188211a0d15ec940',
             recaptchaToken: '',
+            androidAppId: '',
+            iosAppId: '',
           } as InitModel,
         }
       : await axios.get<InitModel>(`${API_LIST.INIT.GET}`);

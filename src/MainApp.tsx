@@ -16,7 +16,6 @@ import API from './helpers/API';
 import apiResponseCodeMessages from './constants/apiResponseCodeMessages';
 import { OperationApiResponseCodes } from './enums/OperationApiResponseCodes';
 import { FULL_VH } from './constants/global';
-import SmartBanner from 'react-smartbanner';
 import 'react-smartbanner/dist/main.css';
 
 const MainApp: FC = () => {
@@ -118,18 +117,15 @@ const MainApp: FC = () => {
         <script
           src={`https://www.google.com/recaptcha/api.js?render=${mainAppStore.initModel.recaptchaToken}`}
         ></script>
-        <meta name="apple-itunes-app" content="app-id=284882215" />
-        <meta name="google-play-app" content="app-id=com.facebook.katana" />
-        <link
-          rel="apple-touch-icon"
-          href={mainAppStore.initModel.favicon}
-        ></link>
-        <link
-          rel="android-touch-icon"
-          href={mainAppStore.initModel.favicon}
-        ></link>
+        <meta
+          name="apple-itunes-app"
+          content={`app-id=${mainAppStore.initModel.iosAppId}`}
+        />
+        <meta
+          name="google-play-app"
+          content={`app-id=${mainAppStore.initModel.androidAppId}`}
+        />
       </Helmet>
-      <SmartBanner title="asd" author="axzczxc" />
       <Router>
         <RoutingLayout></RoutingLayout>
       </Router>

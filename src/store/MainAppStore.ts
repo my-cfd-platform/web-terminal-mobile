@@ -88,6 +88,8 @@ export class MainAppStore implements MainAppStoreProps {
     authUrl: '',
     mixpanelToken: '582507549d28c813188211a0d15ec940',
     recaptchaToken: '',
+    androidAppId: '',
+    iosAppId: '',
   };
   @observable isLoading = false;
   @observable isInitLoading = true;
