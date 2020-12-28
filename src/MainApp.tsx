@@ -16,8 +16,8 @@ import API from './helpers/API';
 import apiResponseCodeMessages from './constants/apiResponseCodeMessages';
 import { OperationApiResponseCodes } from './enums/OperationApiResponseCodes';
 import { FULL_VH } from './constants/global';
-import SmartBanner from 'smart-app-banner/dist/smart-app-banner';
-import 'smart-app-banner/dist/smart-app-banner.css';
+import SmartBanner from 'react-smartbanner';
+import 'react-smartbanner/dist/main.css';
 
 const MainApp: FC = () => {
   const { mainAppStore, instrumentsStore, badRequestPopupStore } = useStores();
@@ -108,35 +108,6 @@ const MainApp: FC = () => {
     });
   }, []);
 
-  useEffect(() => {
-    //if (mainAppStore.initModel) {
-    let store = {};
-    if (mainAppStore.initModel.iosAppLink) {
-      store = { ...store, ios: mainAppStore.initModel.iosAppLink };
-    }
-    if (mainAppStore.initModel.androidAppLink) {
-      store = { ...store, android: mainAppStore.initModel.androidAppLink };
-    }
-    const asd = new SmartBanner({
-      daysHidden: 30, // days to hide banner after close button is clicked (defaults to 15)
-      daysReminder: 90, // days to hide banner after "VIEW" button is clicked (defaults to 90)
-      appStoreLanguage: 'us', // language code for the App Store (defaults to user's browser language)
-      title: mainAppStore.initModel.brandName,
-      author: 'MyCompany LLC',
-      button: 'VIEW',
-      store: store,
-      price: {
-        ios: 'FREE',
-        android: 'FREE',
-      },
-      // , theme: '' // put platform type ('ios', 'android', etc.) here to force single theme on all device
-      // , icon: '' // full path to icon image if not using website icon image
-      // force: 'ios', // Uncomment for platform emulation
-    });
-
-    //  }
-  }, [mainAppStore.initModel]);
-
   return (
     <>
       <Helmet>
@@ -147,7 +118,18 @@ const MainApp: FC = () => {
         <script
           src={`https://www.google.com/recaptcha/api.js?render=${mainAppStore.initModel.recaptchaToken}`}
         ></script>
+        <meta name="apple-itunes-app" content="app-id=284882215" />
+        <meta name="google-play-app" content="app-id=com.facebook.katana" />
+        <link
+          rel="apple-touch-icon"
+          href={mainAppStore.initModel.favicon}
+        ></link>
+        <link
+          rel="android-touch-icon"
+          href={mainAppStore.initModel.favicon}
+        ></link>
       </Helmet>
+      <SmartBanner title="asd" author="axzczxc" />
       <Router>
         <RoutingLayout></RoutingLayout>
       </Router>
