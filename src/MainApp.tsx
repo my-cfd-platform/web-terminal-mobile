@@ -16,7 +16,8 @@ import API from './helpers/API';
 import apiResponseCodeMessages from './constants/apiResponseCodeMessages';
 import { OperationApiResponseCodes } from './enums/OperationApiResponseCodes';
 import { FULL_VH } from './constants/global';
-import SmartBanner from 'smart-app-banner';
+import SmartBanner from 'smart-app-banner/dist/smart-app-banner';
+import 'smart-app-banner/dist/smart-app-banner.css';
 
 const MainApp: FC = () => {
   const { mainAppStore, instrumentsStore, badRequestPopupStore } = useStores();
@@ -108,31 +109,32 @@ const MainApp: FC = () => {
   }, []);
 
   useEffect(() => {
-    if (mainAppStore.initModel) {
-      let store = {};
-      if (mainAppStore.initModel.iosAppLink) {
-        store = { ...store, ios: mainAppStore.initModel.iosAppLink };
-      }
-      if (mainAppStore.initModel.androidAppLink) {
-        store = { ...store, android: mainAppStore.initModel.androidAppLink };
-      }
-      new SmartBanner({
-        daysHidden: 30, // days to hide banner after close button is clicked (defaults to 15)
-        daysReminder: 90, // days to hide banner after "VIEW" button is clicked (defaults to 90)
-        appStoreLanguage: 'us', // language code for the App Store (defaults to user's browser language)
-        title: mainAppStore.initModel.brandName,
-        author: 'MyCompany LLC',
-        button: 'VIEW',
-        store: store,
-        price: {
-          ios: 'FREE',
-          android: 'FREE',
-        },
-        // , theme: '' // put platform type ('ios', 'android', etc.) here to force single theme on all device
-        // , icon: '' // full path to icon image if not using website icon image
-        // , force: 'ios' // Uncomment for platform emulation
-      });
+    //if (mainAppStore.initModel) {
+    let store = {};
+    if (mainAppStore.initModel.iosAppLink) {
+      store = { ...store, ios: mainAppStore.initModel.iosAppLink };
     }
+    if (mainAppStore.initModel.androidAppLink) {
+      store = { ...store, android: mainAppStore.initModel.androidAppLink };
+    }
+    const asd = new SmartBanner({
+      daysHidden: 30, // days to hide banner after close button is clicked (defaults to 15)
+      daysReminder: 90, // days to hide banner after "VIEW" button is clicked (defaults to 90)
+      appStoreLanguage: 'us', // language code for the App Store (defaults to user's browser language)
+      title: mainAppStore.initModel.brandName,
+      author: 'MyCompany LLC',
+      button: 'VIEW',
+      store: store,
+      price: {
+        ios: 'FREE',
+        android: 'FREE',
+      },
+      // , theme: '' // put platform type ('ios', 'android', etc.) here to force single theme on all device
+      // , icon: '' // full path to icon image if not using website icon image
+      // force: 'ios', // Uncomment for platform emulation
+    });
+
+    //  }
   }, [mainAppStore.initModel]);
 
   return (

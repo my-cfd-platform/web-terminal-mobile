@@ -42,3 +42,4 @@ declare const IS_LOCAL: boolean;
 declare module 'global';
 declare module 'react-qr-code';
 declare module 'smart-app-banner';
+declare module 'smart-app-banner/dist/smart-app-banner';
