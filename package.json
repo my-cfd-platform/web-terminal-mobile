@@ -71,6 +71,7 @@
     "react-qr-code": "^1.0.0",
     "react-router-dom": "^5.1.2",
     "react-swipeable": "^5.5.1",
+    "smart-app-banner": "^2.0.0",
     "uuid": "^3.3.3",
     "yup": "^0.27.0"
   }
