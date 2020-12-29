@@ -21,7 +21,7 @@ const FavouriteInstruments = observer(() => {
       (id) => id === itemId
     );
     const newActiveInstrument =
-      instrumentsStore.activeInstrumentsIds[indexEl + 1];
+      instrumentsStore.activeInstrumentsIds[indexEl - 1];
 
     const newInstruments = instrumentsStore.activeInstrumentsIds.filter(
       (id) => id !== itemId
@@ -32,7 +32,7 @@ const FavouriteInstruments = observer(() => {
         type: mainAppStore.activeAccount!.isLive
           ? AccountTypeEnum.Live
           : AccountTypeEnum.Demo,
-        instruments: newInstruments,
+        instruments: newInstruments.reverse(),
       });
       instrumentsStore.setActiveInstrumentsIds(response);
 

@@ -124,7 +124,7 @@ export class InstrumentsStore implements ContextProps {
 
   @action
   setActiveInstrumentsIds = (activeInstrumentsIds: string[]) => {
-    this.activeInstrumentsIds = activeInstrumentsIds.slice(0, 7);
+    this.activeInstrumentsIds = activeInstrumentsIds.slice(0, 7).reverse();
   };
 
   @action
@@ -134,11 +134,12 @@ export class InstrumentsStore implements ContextProps {
     }
 
     if (this.activeInstrumentsIds.length > 6) {
-      this.activeInstrumentsIds[6] = activeInstrumentId;
+      this.activeInstrumentsIds.pop();
+      this.activeInstrumentsIds.unshift(activeInstrumentId);
     } else {
       this.activeInstrumentsIds = [
-        ...this.activeInstrumentsIds,
         activeInstrumentId,
+        ...this.activeInstrumentsIds,
       ];
     }
     return await API.postFavoriteInstrumets({
