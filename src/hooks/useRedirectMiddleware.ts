@@ -15,8 +15,10 @@ const useRedirectMiddleware = () => {
       console.log(mainAppStore.token);
       let searchParams = new URLSearchParams(params);
       searchParams.set("token", mainAppStore.token);
-      console.log('redirect');
-      const url = `${link}?${searchParams.toString()}`;
+      
+      console.log('link:', link);
+      console.log('params:', searchParams.toString());
+      const url = `${link}/?${searchParams.toString()}`;
       console.log(url)
       // push не открывает ссылку
       push(url)
