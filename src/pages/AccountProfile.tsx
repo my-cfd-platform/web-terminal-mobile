@@ -26,11 +26,12 @@ import { observer, Observer } from 'mobx-react-lite';
 import mixpanel from 'mixpanel-browser';
 import mixpanelEvents from '../constants/mixpanelEvents';
 import mixapanelProps from '../constants/mixpanelProps';
+import useRedirectMiddleware from '../hooks/useRedirectMiddleware';
 
 const AccountProfile = observer(() => {
   const { mainAppStore, userProfileStore } = useStores();
   const { t } = useTranslation();
-
+  const { redirectWithUpdateRefreshToken } = useRedirectMiddleware();
   const handleLogout = () => {
     mixpanel.track(mixpanelEvents.LOGOUT, {
       [mixapanelProps.BRAND_NAME]: mainAppStore.initModel.brandProperty,
@@ -141,7 +142,7 @@ const AccountProfile = observer(() => {
           </PrimaryTextSpan>
         </FlexContainer>
 
-        <ProfileMenuA href={`${API_DEPOSIT_STRING}/?${parsedParams}`}>
+        <ProfileMenuButton onClick={() => redirectWithUpdateRefreshToken(API_DEPOSIT_STRING, parsedParams)}>
           <FlexContainer alignItems="center">
             <FlexContainer
               width="28px"
@@ -163,7 +164,7 @@ const AccountProfile = observer(() => {
             </PrimaryTextSpan>
           </FlexContainer>
           <SvgIcon {...IconArrowLink} fillColor="rgba(196, 196, 196, 0.5)" />
-        </ProfileMenuA>
+        </ProfileMenuButton>
 
         <ProfileMenuLink to={Page.WITHDRAW_LIST}>
           <FlexContainer alignItems="center">
