@@ -17,6 +17,10 @@ import apiResponseCodeMessages from './constants/apiResponseCodeMessages';
 import { OperationApiResponseCodes } from './enums/OperationApiResponseCodes';
 import { FULL_VH } from './constants/global';
 import 'react-smartbanner/dist/main.css';
+import SmartBanner from 'react-smartbanner';
+import { Observer } from 'mobx-react-lite';
+
+const DAYS_HIDDEN = IS_LIVE ? 30 : 1;
 
 const MainApp: FC = () => {
   const { mainAppStore, instrumentsStore, badRequestPopupStore } = useStores();
@@ -119,7 +123,9 @@ const MainApp: FC = () => {
         ></script>
         <meta
           name="apple-itunes-app"
-          content={`app-id=${mainAppStore.initModel.iosAppId}`}
+          content={`app-id=${
+            IS_LOCAL ? '223123123' : mainAppStore.initModel.iosAppId
+          }`}
         />
         <meta
           name="google-play-app"
@@ -127,7 +133,11 @@ const MainApp: FC = () => {
         />
         <link
           rel="apple-touch-icon"
-          href={mainAppStore.initModel.mobileAppLogo}
+          href={
+            IS_LOCAL
+              ? 'https://trading-test.monfex.biz/br/mobile_app_logo.png'
+              : mainAppStore.initModel.mobileAppLogo
+          }
         ></link>
         <link
           rel="android-touch-icon"
@@ -137,6 +147,23 @@ const MainApp: FC = () => {
       <Router>
         <RoutingLayout></RoutingLayout>
       </Router>
+      <Observer>
+        {() => (
+          <>
+            {!mainAppStore.isInitLoading && (
+              <SmartBanner
+                title={mainAppStore.initModel.brandName}
+                force="ios"
+                daysHidden={DAYS_HIDDEN}
+                url={{
+                  ios: IS_LOCAL ? 'asd' : mainAppStore.initModel.iosAppLink,
+                  android: mainAppStore.initModel.androidAppLink,
+                }}
+              />
+            )}
+          </>
+        )}
+      </Observer>
       <Global
         styles={css`
           ${reboot};
@@ -174,6 +201,15 @@ const MainApp: FC = () => {
             border: 1px solid #494b50;
             &.error {
               border-color: #ed145b !important;
+            }
+          }
+          .smartbanner-show .smartbanner {
+            display: flex;
+            align-items: center;
+          }
+          .smartbanner {
+            &-container {
+              width: 100%;
             }
           }
         `}

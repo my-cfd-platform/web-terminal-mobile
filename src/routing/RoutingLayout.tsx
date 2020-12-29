@@ -9,9 +9,6 @@ import { Observer } from 'mobx-react-lite';
 import AuthorizedContainer from '../containers/AuthorizedContainer';
 import SignFlowLayout from '../components/SignFlowLayout';
 import NetworkErrorPopup from '../components/NetworkErrorPopup';
-import SmartBanner from 'react-smartbanner';
-
-const DAYS_HIDDEN = IS_LIVE ? 30 : 1;
 
 const RoutingLayout: FC = () => {
   const location = useLocation();
@@ -35,18 +32,6 @@ const RoutingLayout: FC = () => {
     case RouteLayoutType.Authorized:
       return (
         <AuthorizedContainer>
-          <Observer>
-            {() => (
-              <SmartBanner
-                title={mainAppStore.initModel.brandName}
-                daysHidden={DAYS_HIDDEN}
-                url={{
-                  ios: mainAppStore.initModel.iosAppLink,
-                  android: mainAppStore.initModel.androidAppLink,
-                }}
-              />
-            )}
-          </Observer>
           <Observer>{() => <Switch>{allRoutes}</Switch>}</Observer>
         </AuthorizedContainer>
       );
@@ -62,18 +47,6 @@ const RoutingLayout: FC = () => {
                   isLoading={mainAppStore.isInitLoading}
                 ></LoaderFullscreen>
               </>
-            )}
-          </Observer>
-          <Observer>
-            {() => (
-              <SmartBanner
-                title={mainAppStore.initModel.brandName}
-                daysHidden={DAYS_HIDDEN}
-                url={{
-                  ios: mainAppStore.initModel.iosAppLink,
-                  android: mainAppStore.initModel.androidAppLink,
-                }}
-              />
             )}
           </Observer>
         </SignFlowLayout>
@@ -96,18 +69,6 @@ const RoutingLayout: FC = () => {
                   isLoading={mainAppStore.isInitLoading}
                 ></LoaderFullscreen>
               </>
-            )}
-          </Observer>
-          <Observer>
-            {() => (
-              <SmartBanner
-                title={mainAppStore.initModel.brandName}
-                daysHidden={DAYS_HIDDEN}
-                url={{
-                  ios: mainAppStore.initModel.iosAppLink,
-                  android: mainAppStore.initModel.androidAppLink,
-                }}
-              />
             )}
           </Observer>
         </FlexContainer>
