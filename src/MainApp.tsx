@@ -153,7 +153,6 @@ const MainApp: FC = () => {
             {!mainAppStore.isInitLoading && (
               <SmartBanner
                 title={mainAppStore.initModel.brandName}
-                force="ios"
                 daysHidden={DAYS_HIDDEN}
                 url={{
                   ios: IS_LOCAL ? 'asd' : mainAppStore.initModel.iosAppLink,
