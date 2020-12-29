@@ -134,8 +134,7 @@ export class InstrumentsStore implements ContextProps {
     }
 
     if (this.activeInstrumentsIds.length > 6) {
-      this.activeInstrumentsIds.pop();
-      this.activeInstrumentsIds.unshift(activeInstrumentId);
+      this.activeInstrumentsIds[0] = activeInstrumentId
     } else {
       this.activeInstrumentsIds = [
         activeInstrumentId,
