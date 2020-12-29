@@ -8,8 +8,8 @@ import LoaderFullscreen from '../components/LoaderFullscreen';
 import { Observer } from 'mobx-react-lite';
 import AuthorizedContainer from '../containers/AuthorizedContainer';
 import SignFlowLayout from '../components/SignFlowLayout';
-import { FULL_VH } from '../constants/global';
 import NetworkErrorPopup from '../components/NetworkErrorPopup';
+import SmartBanner from 'react-smartbanner';
 
 const RoutingLayout: FC = () => {
   const location = useLocation();
@@ -33,6 +33,18 @@ const RoutingLayout: FC = () => {
     case RouteLayoutType.Authorized:
       return (
         <AuthorizedContainer>
+          <Observer>
+            {() => (
+              <SmartBanner
+                title={mainAppStore.initModel.brandName}
+                daysHidden={30}
+                url={{
+                  ios: mainAppStore.initModel.iosAppLink,
+                  android: mainAppStore.initModel.androidAppLink,
+                }}
+              />
+            )}
+          </Observer>
           <Observer>{() => <Switch>{allRoutes}</Switch>}</Observer>
         </AuthorizedContainer>
       );
@@ -50,15 +62,24 @@ const RoutingLayout: FC = () => {
               </>
             )}
           </Observer>
+          <Observer>
+            {() => (
+              <SmartBanner
+                title={mainAppStore.initModel.brandName}
+                daysHidden={30}
+                url={{
+                  ios: mainAppStore.initModel.iosAppLink,
+                  android: mainAppStore.initModel.androidAppLink,
+                }}
+              />
+            )}
+          </Observer>
         </SignFlowLayout>
       );
 
     default:
       return (
-        <FlexContainer
-          height="100%"
-          width="100%"
-        >
+        <FlexContainer height="100%" width="100%">
           <Observer>
             {() => (
               <>{serverErrorPopupStore.isActive && <NetworkErrorPopup />}</>
@@ -73,6 +94,18 @@ const RoutingLayout: FC = () => {
                   isLoading={mainAppStore.isInitLoading}
                 ></LoaderFullscreen>
               </>
+            )}
+          </Observer>
+          <Observer>
+            {() => (
+              <SmartBanner
+                title={mainAppStore.initModel.brandName}
+                daysHidden={30}
+                url={{
+                  ios: mainAppStore.initModel.iosAppLink,
+                  android: mainAppStore.initModel.androidAppLink,
+                }}
+              />
             )}
           </Observer>
         </FlexContainer>
