@@ -11,6 +11,8 @@ import SignFlowLayout from '../components/SignFlowLayout';
 import NetworkErrorPopup from '../components/NetworkErrorPopup';
 import SmartBanner from 'react-smartbanner';
 
+const DAYS_HIDDEN = IS_LIVE ? 30 : 1;
+
 const RoutingLayout: FC = () => {
   const location = useLocation();
   const { mainAppStore, serverErrorPopupStore } = useStores();
@@ -37,7 +39,7 @@ const RoutingLayout: FC = () => {
             {() => (
               <SmartBanner
                 title={mainAppStore.initModel.brandName}
-                daysHidden={30}
+                daysHidden={DAYS_HIDDEN}
                 url={{
                   ios: mainAppStore.initModel.iosAppLink,
                   android: mainAppStore.initModel.androidAppLink,
@@ -66,7 +68,7 @@ const RoutingLayout: FC = () => {
             {() => (
               <SmartBanner
                 title={mainAppStore.initModel.brandName}
-                daysHidden={30}
+                daysHidden={DAYS_HIDDEN}
                 url={{
                   ios: mainAppStore.initModel.iosAppLink,
                   android: mainAppStore.initModel.androidAppLink,
@@ -100,7 +102,7 @@ const RoutingLayout: FC = () => {
             {() => (
               <SmartBanner
                 title={mainAppStore.initModel.brandName}
-                daysHidden={30}
+                daysHidden={DAYS_HIDDEN}
                 url={{
                   ios: mainAppStore.initModel.iosAppLink,
                   android: mainAppStore.initModel.androidAppLink,
