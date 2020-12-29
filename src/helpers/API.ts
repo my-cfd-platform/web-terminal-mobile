@@ -423,6 +423,7 @@ class API {
             recaptchaToken: '',
             androidAppId: '',
             iosAppId: '',
+            mobileAppLogo: '',
           } as InitModel,
         }
       : await axios.get<InitModel>(`${API_LIST.INIT.GET}`);

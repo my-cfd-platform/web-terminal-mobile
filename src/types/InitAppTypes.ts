@@ -19,4 +19,5 @@ export interface InitModel {
   recaptchaToken: string;
   iosAppId: string;
   androidAppId: string;
+  mobileAppLogo: string;
 }

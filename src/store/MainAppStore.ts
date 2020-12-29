@@ -90,6 +90,7 @@ export class MainAppStore implements MainAppStoreProps {
     recaptchaToken: '',
     androidAppId: '',
     iosAppId: '',
+    mobileAppLogo: '',
   };
   @observable isLoading = false;
   @observable isInitLoading = true;
