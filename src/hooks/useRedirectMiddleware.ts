@@ -18,10 +18,10 @@ const useRedirectMiddleware = () => {
       
       console.log('link:', link);
       console.log('params:', searchParams.toString());
-      const url = `${link}/?${searchParams.toString()}`;
+      const url = `${window.location.origin}/${link}/?${searchParams.toString()}`;
       console.log(url)
       // push не открывает ссылку
-      push(url)
+      window.location.href = url;
     });
   }
 
