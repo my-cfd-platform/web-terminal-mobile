@@ -18,7 +18,7 @@ const useRedirectMiddleware = () => {
       
       console.log('link:', link);
       console.log('params:', searchParams.toString());
-      const url = `${window.location.origin}/${link}/?${searchParams.toString()}`;
+      const url = `${window.location.origin}${link}/?${searchParams.toString()}`;
       console.log(url)
       // push не открывает ссылку
       window.location.href = url;
