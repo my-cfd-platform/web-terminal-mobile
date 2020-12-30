@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, {FC, useEffect, useRef} from 'react';
 import { FlexContainer } from '../../styles/FlexContainer';
 import { InstrumentModelWSDTO } from '../../types/InstrumentsTypes';
 import ImageContainer from '../ImageContainer';
@@ -25,18 +25,25 @@ const InstrumentBadge: FC<Props> = ({
   onRemove,
 }) => {
   const { instrumentsStore } = useStores();
+  const instrumentRef = useRef<HTMLDivElement>(document.createElement('div'));
   const handleSwitchInstrument = () => {
     instrumentsStore.switchInstrument(instrumentId);
   };
   const handleRemoveInstrument = () => {
     onRemove();
   };
+  useEffect(() => {
+    if (isActive) {
+      instrumentRef.current.scrollIntoView();
+    }
+  }, [isActive]);
   return (
     <FlexContainer
       flexDirection="column"
       opacity={isActive ? '1' : '0.3'}
       alignItems="center"
       onClick={handleSwitchInstrument}
+      ref={instrumentRef}
     >
       <FlexContainer
         width="48px"
