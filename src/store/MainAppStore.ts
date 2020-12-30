@@ -530,7 +530,6 @@ export class MainAppStore implements MainAppStoreProps {
     localStorage.removeItem(LOCAL_STORAGE_TOKEN_KEY);
     localStorage.removeItem(LOCAL_STORAGE_REFRESH_TOKEN_KEY);
     localStorage.removeItem(LAST_PAGE_VISITED);
-    localStorage.removeItem(LOCAL_IS_NEW_USER);
     this.activeSession?.stop();
     this.activeSession = undefined;
     this.token = '';
