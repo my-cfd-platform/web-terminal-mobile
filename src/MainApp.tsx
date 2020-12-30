@@ -156,6 +156,7 @@ const MainApp: FC = () => {
                 title={mainAppStore.initModel.brandName}
                 daysHidden={DAYS_HIDDEN}
                 daysReminder={DAYS_VIEW_HIDDEN}
+                ignoreIosVersion={true}
                 url={{
                   ios: IS_LOCAL ? 'asd' : mainAppStore.initModel.iosAppLink,
                   android: mainAppStore.initModel.androidAppLink,
