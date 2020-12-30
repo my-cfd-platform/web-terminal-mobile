@@ -21,6 +21,7 @@ import SmartBanner from 'react-smartbanner';
 import { Observer } from 'mobx-react-lite';
 
 const DAYS_HIDDEN = IS_LIVE ? 30 : 1;
+const DAYS_VIEW_HIDDEN = IS_LIVE ? 90 : 1;
 
 const MainApp: FC = () => {
   const { mainAppStore, instrumentsStore, badRequestPopupStore } = useStores();
@@ -154,6 +155,7 @@ const MainApp: FC = () => {
               <SmartBanner
                 title={mainAppStore.initModel.brandName}
                 daysHidden={DAYS_HIDDEN}
+                daysReminder={DAYS_VIEW_HIDDEN}
                 url={{
                   ios: IS_LOCAL ? 'asd' : mainAppStore.initModel.iosAppLink,
                   android: mainAppStore.initModel.androidAppLink,

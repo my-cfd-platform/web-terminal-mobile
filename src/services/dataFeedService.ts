@@ -166,7 +166,6 @@ class DataFeedService implements IBasicDataFeed {
   };
   unsubscribeBars = (subscriberUID: string) => {
     const uid = subscriberUID.split(' ')[1];
-
     this.stream.unsubscribeBars(uid);
   };
   calculateHistoryDepth = (
