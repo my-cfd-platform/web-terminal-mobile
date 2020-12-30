@@ -16,7 +16,7 @@ type Props = IProps;
 const RouteWrapper: FC<Props> = observer((props) => {
   const { component: Component, layoutType, ...otherProps } = props;
   const { mainAppStore } = useStores();
-  const isNewUser = localStorage.getItem(LOCAL_IS_NEW_USER);
+  const isOldUser = localStorage.getItem(LOCAL_IS_NEW_USER);
 
   if (layoutType !== RouteLayoutType.Public) {
     if (mainAppStore.isAuthorized && layoutType === RouteLayoutType.SignFlow) {
@@ -26,7 +26,7 @@ const RouteWrapper: FC<Props> = observer((props) => {
       !mainAppStore.isAuthorized &&
       [RouteLayoutType.Authorized, RouteLayoutType.KYC].includes(layoutType)
     ) {
-      return <Redirect to={isNewUser ? Page.SIGN_UP : Page.SIGN_IN} />;
+      return <Redirect to={isOldUser ? Page.SIGN_IN : Page.SIGN_UP} />;
     }
   }
   return (
