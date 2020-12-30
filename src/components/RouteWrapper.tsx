@@ -4,7 +4,7 @@ import Page from '../constants/Pages';
 import { RouteLayoutType } from '../constants/routesList';
 import { observer } from 'mobx-react-lite';
 import { useStores } from '../hooks/useStores';
-import { LAST_PAGE_VISITED } from '../constants/global';
+import { LAST_PAGE_VISITED, LOCAL_IS_NEW_USER } from '../constants/global';
 
 interface IProps {
   component: FunctionComponent<any>;
@@ -16,6 +16,7 @@ type Props = IProps;
 const RouteWrapper: FC<Props> = observer((props) => {
   const { component: Component, layoutType, ...otherProps } = props;
   const { mainAppStore } = useStores();
+  const isNewUser = localStorage.getItem(LOCAL_IS_NEW_USER);
 
   if (layoutType !== RouteLayoutType.Public) {
     if (mainAppStore.isAuthorized && layoutType === RouteLayoutType.SignFlow) {
@@ -25,7 +26,7 @@ const RouteWrapper: FC<Props> = observer((props) => {
       !mainAppStore.isAuthorized &&
       [RouteLayoutType.Authorized, RouteLayoutType.KYC].includes(layoutType)
     ) {
-      return <Redirect to={Page.SIGN_IN} />;
+      return <Redirect to={isNewUser ? Page.SIGN_UP : Page.SIGN_IN} />;
     }
   }
   return (
