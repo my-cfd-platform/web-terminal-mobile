@@ -315,7 +315,11 @@ const ActivePositionsDetails: FC<Props> = observer((props) => {
 
               <Link to={`${Page.SL_EDIT_MAIN}/${positionId}`}>
                 <PrimaryTextSpan
-                  color="rgba(196, 196, 196, 0.5)"
+                  color={
+                    position.sl !== null
+                      ? '#fffccc'
+                      : 'rgba(196, 196, 196, 0.5)'
+                  }
                   fontSize="16px"
                 >
                   {position.sl !== null ? (
@@ -351,7 +355,11 @@ const ActivePositionsDetails: FC<Props> = observer((props) => {
               </PrimaryTextSpan>
               <Link to={`${Page.TP_EDIT_MAIN}/${positionId}`}>
                 <PrimaryTextSpan
-                  color="rgba(196, 196, 196, 0.5)"
+                  color={
+                    position.tp !== null
+                      ? '#fffccc'
+                      : 'rgba(196, 196, 196, 0.5)'
+                  }
                   fontSize="16px"
                 >
                   {position.tp !== null ? (
