@@ -38,8 +38,6 @@ import AutosizeInput from 'react-input-autosize';
 const PRECISION_USD = 2;
 const DEFAULT_INVEST_AMOUNT = 50;
 
-const InputAutosizeStyles = {};
-
 const OrderPage = observer(() => {
   const { type } = useParams<{ type: string }>();
   const { t } = useTranslation();
