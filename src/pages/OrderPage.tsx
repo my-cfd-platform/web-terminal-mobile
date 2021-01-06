@@ -64,7 +64,10 @@ const OrderPage = observer(() => {
       operation: null,
       multiplier: instrumentsStore.activeInstrument!.instrumentItem
         .multiplier[0],
-      investmentAmount: DEFAULT_INVEST_AMOUNT,
+      investmentAmount: (mainAppStore.activeAccount?.isLive
+        ? mainAppStore.activeAccount?.dia_d
+        : mainAppStore.activeAccount?.dia_l)
+        || DEFAULT_INVEST_AMOUNT,
       tp: null,
       sl: null,
       slType: null,
