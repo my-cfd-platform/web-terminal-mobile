@@ -1,4 +1,11 @@
-import React, { useCallback, useEffect, ChangeEvent, FocusEvent, useRef, useState } from 'react';
+import React, {
+  useCallback,
+  useEffect,
+  ChangeEvent,
+  FocusEvent,
+  useRef,
+  useState,
+} from 'react';
 import * as yup from 'yup';
 import { useFormik, FormikHelpers } from 'formik';
 import BackFlowLayout from '../components/BackFlowLayout';
@@ -26,6 +33,7 @@ import mixpanelEvents from '../constants/mixpanelEvents';
 import mixapanelProps from '../constants/mixpanelProps';
 import Page from '../constants/Pages';
 import mixpanelValues from '../constants/mixpanelValues';
+import AutosizeInput from 'react-input-autosize';
 
 const PRECISION_USD = 2;
 const DEFAULT_INVEST_AMOUNT = 50;
@@ -92,9 +100,14 @@ const OrderPage = observer(() => {
     ]
   );
 
-  const getPlaceholderOpenPrice = () => type.toLowerCase() === 'buy'
-    ? currentPriceAsk().toFixed(instrumentsStore.activeInstrument!.instrumentItem.digits)
-    : currentPriceBid().toFixed(instrumentsStore.activeInstrument!.instrumentItem.digits);
+  const getPlaceholderOpenPrice = () =>
+    type.toLowerCase() === 'buy'
+      ? currentPriceAsk().toFixed(
+          instrumentsStore.activeInstrument!.instrumentItem.digits
+        )
+      : currentPriceBid().toFixed(
+          instrumentsStore.activeInstrument!.instrumentItem.digits
+        );
 
   const validationSchema: any = useCallback(
     () =>
@@ -115,6 +128,19 @@ const OrderPage = observer(() => {
                     .minOperationVolume /
                     +this.parent[Fields.MULTIPLIER]
                 );
+              }
+              return true;
+            }
+          )
+          .test(
+            Fields.AMOUNT,
+            `${t('Minimum trade volume')} $${
+              instrumentsStore.activeInstrument?.instrumentItem
+                .minOperationVolume
+            }. ${t('Please increase your trade amount or multiplier')}.`,
+            function (value) {
+              if (value !== null) {
+                return value !== 0;
               }
               return true;
             }
@@ -267,7 +293,7 @@ const OrderPage = observer(() => {
           instrumentId: otherValues.instrumentId,
           operation: type === 'buy' ? AskBidEnum.Buy : AskBidEnum.Sell,
           multiplier: otherValues.multiplier,
-          openPrice: +otherValues.openPrice
+          openPrice: +otherValues.openPrice,
         };
         const balanceBeforeOrder = getActiveAccountBalance();
         const response = await API.openPendingOrder(modelToPendingOrder);
@@ -281,9 +307,10 @@ const OrderPage = observer(() => {
           mixpanel.track(mixpanelEvents.LIMIT_ORDER, {
             [mixapanelProps.AMOUNT]: response.order.investmentAmount,
             [mixapanelProps.ACCOUNT_CURRENCY]:
-            mainAppStore.activeAccount?.currency || '',
+              mainAppStore.activeAccount?.currency || '',
             [mixapanelProps.INSTRUMENT_ID]: response.order.instrument,
-            [mixapanelProps.MULTIPLIER]: response.order?.multiplier || modelToPendingOrder.multiplier,
+            [mixapanelProps.MULTIPLIER]:
+              response.order?.multiplier || modelToPendingOrder.multiplier,
             [mixapanelProps.TREND]:
               response.order.operation === AskBidEnum.Buy ? 'buy' : 'sell',
             [mixapanelProps.SL_TYPE]:
@@ -311,7 +338,7 @@ const OrderPage = observer(() => {
           mixpanel.track(mixpanelEvents.LIMIT_ORDER_FAILED, {
             [mixapanelProps.AMOUNT]: modelToSubmit.investmentAmount,
             [mixapanelProps.ACCOUNT_CURRENCY]:
-            mainAppStore.activeAccount?.currency || '',
+              mainAppStore.activeAccount?.currency || '',
             [mixapanelProps.INSTRUMENT_ID]: modelToSubmit.instrumentId,
             [mixapanelProps.MULTIPLIER]: modelToSubmit.multiplier,
             [mixapanelProps.TREND]:
@@ -349,7 +376,7 @@ const OrderPage = observer(() => {
             activePositionNotificationStore.notificationMessageData = {
               equity: 0,
               instrumentName:
-              instrumentsStore.activeInstrument.instrumentItem.name,
+                instrumentsStore.activeInstrument.instrumentItem.name,
               instrumentGroup:
                 instrumentsStore.instrumentGroups.find(
                   (item) =>
@@ -365,7 +392,7 @@ const OrderPage = observer(() => {
           mixpanel.track(mixpanelEvents.MARKET_ORDER, {
             [mixapanelProps.AMOUNT]: response.position.investmentAmount,
             [mixapanelProps.ACCOUNT_CURRENCY]:
-            mainAppStore.activeAccount?.currency || '',
+              mainAppStore.activeAccount?.currency || '',
             [mixapanelProps.INSTRUMENT_ID]: response.position.instrument,
             [mixapanelProps.MULTIPLIER]: values.multiplier,
             [mixapanelProps.TREND]:
@@ -397,7 +424,7 @@ const OrderPage = observer(() => {
           mixpanel.track(mixpanelEvents.MARKET_ORDER_FAILED, {
             [mixapanelProps.AMOUNT]: modelToSubmit.investmentAmount,
             [mixapanelProps.ACCOUNT_CURRENCY]:
-            mainAppStore.activeAccount?.currency || '',
+              mainAppStore.activeAccount?.currency || '',
             [mixapanelProps.INSTRUMENT_ID]: modelToSubmit.instrumentId,
             [mixapanelProps.MULTIPLIER]: modelToSubmit.multiplier,
             [mixapanelProps.TREND]:
@@ -418,7 +445,8 @@ const OrderPage = observer(() => {
             [mixapanelProps.ACCOUNT_TYPE]: mainAppStore.activeAccount?.isLive
               ? 'real'
               : 'demo',
-            [mixapanelProps.ERROR_TEXT]: apiResponseCodeMessages[response.result],
+            [mixapanelProps.ERROR_TEXT]:
+              apiResponseCodeMessages[response.result],
             [mixapanelProps.EVENT_REF]: mixpanelValues.PORTFOLIO,
           });
 
@@ -499,7 +527,9 @@ const OrderPage = observer(() => {
       }
     }
     // see another regex
-    const regex = `^[0-9]{1,7}([,.][0-9]{1,${instrumentsStore.activeInstrument!.instrumentItem.digits}})?$`;
+    const regex = `^[0-9]{1,7}([,.][0-9]{1,${
+      instrumentsStore.activeInstrument!.instrumentItem.digits
+    }})?$`;
     const splittedValue =
       currTargetValue.substring(0, e.currentTarget.selectionStart) +
       e.data +
@@ -536,7 +566,7 @@ const OrderPage = observer(() => {
       setFieldValue(Fields.AMOUNT, DEFAULT_INVEST_AMOUNT);
       setFieldError(Fields.AMOUNT, '');
     }
-  }
+  };
 
   const handleFocusAtPurchase = () => {
     if (purchaseField !== null) {
@@ -620,15 +650,42 @@ const OrderPage = observer(() => {
                   {t('Invest')}
                 </PrimaryTextSpan>
               </FlexContainer>
+              <FlexContainer justifyContent="flex-end" alignItems="center">
+                {values.investmentAmount && (
+                  <PrimaryTextSpan
+                    marginRight="-4px"
+                    color="#fffccc"
+                    fontSize="16px"
+                    lineHeight="1"
+                  >
+                    $
+                  </PrimaryTextSpan>
+                )}
 
-              <Input
-                {...getFieldProps(Fields.AMOUNT)}
-                type="text"
-                inputMode="decimal"
-                onBeforeInput={investOnBeforeInputHandler}
-                onChange={investOnChangeHandler}
-                onBlur={checkEmpty}
-              />
+                <InputAutosize
+                  // size={
+                  //   values.investmentAmount.toString().length +
+                  //   values.investmentAmount.toString().length * 0.2
+                  // }
+                  inputStyle={{
+                    backgroundColor: 'transparent',
+                    outline: 'none',
+                    border: 'none',
+                    fontSize: '16px',
+                    color: '#fffccc',
+                    fontWeight: 500,
+                    lineHeight: '22px',
+                    textAlign: 'right',
+                    appearance: 'none',
+                  }}
+                  {...getFieldProps(Fields.AMOUNT)}
+                  type="text"
+                  inputMode="decimal"
+                  onBeforeInput={investOnBeforeInputHandler}
+                  onChange={investOnChangeHandler}
+                  onBlur={checkEmpty}
+                />
+              </FlexContainer>
             </InputWrap>
 
             <FlexContainer marginBottom="12px" padding="0 16px">
@@ -692,7 +749,9 @@ const OrderPage = observer(() => {
               backgroundColor="rgba(42, 45, 56, 0.5)"
               padding="14px 16px"
               position="relative"
-              marginBottom={(touched.openPrice && errors.openPrice) ? '4px' : '12px'}
+              marginBottom={
+                touched.openPrice && errors.openPrice ? '4px' : '12px'
+              }
               hasError={!!(touched.openPrice && errors.openPrice)}
             >
               <FlexContainer
@@ -708,24 +767,28 @@ const OrderPage = observer(() => {
                 </PrimaryTextSpan>
               </FlexContainer>
               <Observer>
-                {() => <Input
-                  {...getFieldProps(Fields.PURCHASE_AT)}
-                  type="text"
-                  inputMode="decimal"
-                  placeholder={`${getPlaceholderOpenPrice()}`}
-                  onBeforeInput={openPriceOnBeforeInputHandler}
-                  onChange={openPriceOnChangeHandler}
-                  ref={purchaseField}
-                  onFocus={handleFocusAtPurchase}
-                  onBlur={handleBlurAtPurchase}
-                />}
+                {() => (
+                  <Input
+                    {...getFieldProps(Fields.PURCHASE_AT)}
+                    type="text"
+                    inputMode="decimal"
+                    placeholder={`${getPlaceholderOpenPrice()}`}
+                    onBeforeInput={openPriceOnBeforeInputHandler}
+                    onChange={openPriceOnChangeHandler}
+                    ref={purchaseField}
+                    onFocus={handleFocusAtPurchase}
+                    onBlur={handleBlurAtPurchase}
+                  />
+                )}
               </Observer>
             </InputWrap>
-            {touched.openPrice && errors.openPrice && <FlexContainer marginBottom="12px" padding="0 16px">
+            {touched.openPrice && errors.openPrice && (
+              <FlexContainer marginBottom="12px" padding="0 16px">
                 <PrimaryTextSpan fontSize="11px" color={Colors.RED}>
                   {errors.openPrice}
                 </PrimaryTextSpan>
-            </FlexContainer>}
+              </FlexContainer>
+            )}
 
             <FlexContainer
               width="100%"
@@ -738,7 +801,9 @@ const OrderPage = observer(() => {
                 {t('Spread')}
               </PrimaryTextSpan>
               <PrimaryTextSpan color="#FFFCCC" fontSize="16px" lineHeight="1">
-                {(currentPriceAsk() - currentPriceBid()).toFixed(instrumentsStore.activeInstrument!.instrumentItem.digits)}
+                {(currentPriceAsk() - currentPriceBid()).toFixed(
+                  instrumentsStore.activeInstrument!.instrumentItem.digits
+                )}
               </PrimaryTextSpan>
             </FlexContainer>
             <FlexContainer
@@ -789,7 +854,10 @@ const OrderWrapper = styled(FlexContainer)`
   overflow-y: auto;
 `;
 
-const ConfirmButton = styled(ButtonWithoutStyles)<{ actionType?: string, hide?: boolean }>`
+const ConfirmButton = styled(ButtonWithoutStyles)<{
+  actionType?: string;
+  hide?: boolean;
+}>`
   background-color: ${(props) =>
     props.actionType === 'buy' ? Colors.ACCENT_BLUE : Colors.RED};
   color: ${(props) => (props.actionType === 'buy' ? '#252636' : '#ffffff')};
@@ -801,7 +869,7 @@ const ConfirmButton = styled(ButtonWithoutStyles)<{ actionType?: string, hide?: 
   justify-content: center;
   align-items: center;
   font-weight: 600;
-  position: ${(props) => (props.hide ? 'static' : 'sticky')};;
+  position: ${(props) => (props.hide ? 'static' : 'sticky')};
   margin: 16px auto;
   bottom: 16px;
   left: 16px;
@@ -865,3 +933,5 @@ const Input = styled.input<{ autocomplete?: string }>`
     font-size: 16px;
   }
 `;
+
+const InputAutosize = styled(AutosizeInput)``;
