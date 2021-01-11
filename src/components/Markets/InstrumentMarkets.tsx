@@ -65,9 +65,9 @@ const InstrumentMarkets: FC<Props> = observer((props) => {
         justifyContent="center"
       >
         <PrimaryTextSpan fontSize="16px" color="#fffccc" marginBottom="4px">
-          <Observer>
+          {quotesStore.quotes[id] && <Observer>
             {() => <>{quotesStore.quotes[id].bid.c.toFixed(digits)}</>}
-          </Observer>
+          </Observer>}
         </PrimaryTextSpan>
         {!!instrumentsStore.pricesChange[id] && (
           <QuoteTextLabel isGrowth={instrumentsStore.pricesChange[id] >= 0}>

@@ -83,14 +83,14 @@ const PositionEditSL = observer(() => {
   }, [position, instrument]);
 
   const currentPriceAsk = useCallback(() => {
-    if (instrument) {
+    if (instrument && quotesStore.quotes[instrument.id]) {
       return quotesStore.quotes[instrument.id].ask.c;
     }
     return 0;
   }, [instrument, quotesStore.quotes]);
 
   const currentPriceBid = useCallback(() => {
-    if (instrument) {
+    if (instrument && quotesStore.quotes[instrument.id]) {
       return quotesStore.quotes[instrument.id].bid.c;
     }
     return 0;
