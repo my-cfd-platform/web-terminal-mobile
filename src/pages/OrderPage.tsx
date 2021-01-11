@@ -653,7 +653,6 @@ const OrderPage = observer(() => {
               <FlexContainer justifyContent="flex-end" alignItems="center">
                 {values.investmentAmount && (
                   <PrimaryTextSpan
-                    marginRight="-4px"
                     color="#fffccc"
                     fontSize="16px"
                     lineHeight="1"
