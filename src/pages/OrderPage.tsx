@@ -681,6 +681,7 @@ const OrderPage = observer(() => {
                     lineHeight: '22px',
                     textAlign: 'right',
                     appearance: 'none',
+                    padding: 0,
                   }}
                   {...getFieldProps(Fields.AMOUNT)}
                   type="text"
