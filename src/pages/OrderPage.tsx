@@ -662,10 +662,6 @@ const OrderPage = observer(() => {
                 )}
 
                 <InputAutosize
-                  // size={
-                  //   values.investmentAmount.toString().length +
-                  //   values.investmentAmount.toString().length * 0.2
-                  // }
                   inputStyle={{
                     backgroundColor: 'transparent',
                     outline: 'none',
