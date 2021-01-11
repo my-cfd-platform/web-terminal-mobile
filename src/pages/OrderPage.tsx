@@ -182,7 +182,9 @@ const OrderPage = observer(() => {
           .nullable()
           .when([Fields.OPERATION, Fields.TAKE_PROFIT_TYPE], {
             is: (operation, tpType) =>
-              operation === AskBidEnum.Buy && tpType === TpSlTypeEnum.Price,
+              operation === AskBidEnum.Buy &&
+              tpType === TpSlTypeEnum.Price &&
+              quotesStore.quotes[instrumentsStore.activeInstrument!.instrumentItem.id],
             then: yup
               .number()
               .nullable()
@@ -196,7 +198,9 @@ const OrderPage = observer(() => {
           })
           .when([Fields.OPERATION, Fields.TAKE_PROFIT_TYPE], {
             is: (operation, tpType) =>
-              operation === AskBidEnum.Sell && tpType === TpSlTypeEnum.Price,
+              operation === AskBidEnum.Sell &&
+              tpType === TpSlTypeEnum.Price &&
+              quotesStore.quotes[instrumentsStore.activeInstrument!.instrumentItem.id],
             then: yup
               .number()
               .nullable()
@@ -213,7 +217,9 @@ const OrderPage = observer(() => {
           .nullable()
           .when([Fields.OPERATION, Fields.STOP_LOSS_TYPE], {
             is: (operation, slType) =>
-              operation === AskBidEnum.Buy && slType === TpSlTypeEnum.Price,
+              operation === AskBidEnum.Buy &&
+              slType === TpSlTypeEnum.Price &&
+              quotesStore.quotes[instrumentsStore.activeInstrument!.instrumentItem.id],
             then: yup
               .number()
               .nullable()
@@ -227,7 +233,9 @@ const OrderPage = observer(() => {
           })
           .when([Fields.OPERATION, Fields.STOP_LOSS_TYPE], {
             is: (operation, slType) =>
-              operation === AskBidEnum.Sell && slType === TpSlTypeEnum.Price,
+              operation === AskBidEnum.Sell &&
+              slType === TpSlTypeEnum.Price &&
+              quotesStore.quotes[instrumentsStore.activeInstrument!.instrumentItem.id],
             then: yup
               .number()
               .nullable()
@@ -270,6 +278,7 @@ const OrderPage = observer(() => {
       currentPriceBid,
       currentPriceAsk,
       initialValues,
+      quotesStore.quotes[instrumentsStore.activeInstrument!.instrumentItem.id],
     ]
   );
 
@@ -767,7 +776,9 @@ const OrderPage = observer(() => {
                     {...getFieldProps(Fields.PURCHASE_AT)}
                     type="text"
                     inputMode="decimal"
-                    placeholder={`${getPlaceholderOpenPrice()}`}
+                    placeholder={`${quotesStore.quotes[instrumentsStore.activeInstrument!.instrumentItem.id]
+                      ? getPlaceholderOpenPrice()
+                      : ''}`}
                     onBeforeInput={openPriceOnBeforeInputHandler}
                     onChange={openPriceOnChangeHandler}
                     ref={purchaseField}
@@ -796,9 +807,11 @@ const OrderPage = observer(() => {
                 {t('Spread')}
               </PrimaryTextSpan>
               <PrimaryTextSpan color="#FFFCCC" fontSize="16px" lineHeight="1">
-                {(currentPriceAsk() - currentPriceBid()).toFixed(
-                  instrumentsStore.activeInstrument!.instrumentItem.digits
-                )}
+                {quotesStore.quotes[instrumentsStore.activeInstrument!.instrumentItem.id] &&
+                  (currentPriceAsk() - currentPriceBid()).toFixed(
+                    instrumentsStore.activeInstrument!.instrumentItem.digits
+                  )
+                }
               </PrimaryTextSpan>
             </FlexContainer>
             <FlexContainer

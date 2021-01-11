@@ -181,7 +181,7 @@ const PendingPositionsDetails: FC<Props> = observer((props) => {
                 {t('Current Price')}
               </PrimaryTextSpan>
               <PrimaryTextSpan fontSize="16px">
-                <Observer>
+                {quotesStore.quotes[position.instrument] && <Observer>
                   {() => (
                     <>
                       {position.operation === AskBidEnum.Buy
@@ -193,7 +193,7 @@ const PendingPositionsDetails: FC<Props> = observer((props) => {
                           )}
                     </>
                   )}
-                </Observer>
+                </Observer>}
               </PrimaryTextSpan>
             </FlexContainer>
 
