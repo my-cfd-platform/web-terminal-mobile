@@ -416,5 +416,6 @@
     "Withdrawal request has been created successfully": "Withdrawal request has been created successfully",
     "You have to sign in to the platform to create a withdrawal request": "You have to sign in to the platform to create a withdrawal request",
     "You already have one active withdrawal request": "You already have one active withdrawal request",
-    "Technical Error": "Technical Error"
+    "Technical Error": "Technical Error",
+    "Position Closed": "Position Closed"
 }
