@@ -34,7 +34,9 @@ const SellButton: FC<Props> = observer(({ handleClick }) => {
         >
           {t('Sell')}
         </PrimaryTextSpan>
-        {instrumentsStore.activeInstrument && (
+        {(instrumentsStore.activeInstrument &&
+          quotesStore.quotes[instrumentsStore.activeInstrument.instrumentItem.id])
+        && (
           <PrimaryTextSpan fontSize="13px" color="#fff">
             {
               quotesStore.quotes[

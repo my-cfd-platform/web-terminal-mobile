@@ -56,7 +56,7 @@ const ActivePositionsDetails: FC<Props> = observer((props) => {
 
     try {
       const isBuy = position.operation === AskBidEnum.Buy;
-      const equity = calculateFloatingProfitAndLoss({
+      const equity: number | null = quotesStore.quotes[position.instrument] ? calculateFloatingProfitAndLoss({
         investment: position.investmentAmount,
         multiplier: position.multiplier,
         costs: position.swap + position.commission,
@@ -65,72 +65,74 @@ const ActivePositionsDetails: FC<Props> = observer((props) => {
           ? quotesStore.quotes[position.instrument].bid.c
           : quotesStore.quotes[position.instrument].ask.c,
         openPrice: position.openPrice,
-      });
-      const percentPL = calculateInPercent(position.investmentAmount, equity);
-      const response = await API.closePosition({
-        accountId: mainAppStore.activeAccount!.id,
-        positionId: position.id,
-        processId: getProcessId(),
-      });
+      }) : null;
+      const percentPL: string | null = equity ? calculateInPercent(position.investmentAmount, equity) : null;
+      if (equity && percentPL) {
+        const response = await API.closePosition({
+          accountId: mainAppStore.activeAccount!.id,
+          positionId: position.id,
+          processId: getProcessId(),
+        });
 
-      if (response.result === OperationApiResponseCodes.Ok) {
-        markersOnChartStore.removeMarkerByPositionId(position.id);
+        if (response.result === OperationApiResponseCodes.Ok) {
+          markersOnChartStore.removeMarkerByPositionId(position.id);
 
-        const instrumentItem = instrumentsStore.instruments.find(
-          (item) => item.instrumentItem.id === position.instrument
-        )?.instrumentItem;
+          const instrumentItem = instrumentsStore.instruments.find(
+            (item) => item.instrumentItem.id === position.instrument
+          )?.instrumentItem;
 
-        if (instrumentItem) {
-          activePositionNotificationStore.notificationMessageData = {
-            equity: equity,
-            percentPL: +percentPL,
-            instrumentName: instrumentItem.name,
-            instrumentGroup:
-              instrumentsStore.instrumentGroups.find(
-                (item) => item.id === instrumentItem.id
-              )?.name || '',
-            instrumentId: instrumentItem.id,
-            type: 'close',
-          };
-          activePositionNotificationStore.isSuccessfull = true;
-          activePositionNotificationStore.openNotification();
+          if (instrumentItem) {
+            activePositionNotificationStore.notificationMessageData = {
+              equity: equity,
+              percentPL: +percentPL,
+              instrumentName: instrumentItem.name,
+              instrumentGroup:
+                instrumentsStore.instrumentGroups.find(
+                  (item) => item.id === instrumentItem.id
+                )?.name || '',
+              instrumentId: instrumentItem.id,
+              type: 'close',
+            };
+            activePositionNotificationStore.isSuccessfull = true;
+            activePositionNotificationStore.openNotification();
+          }
+          mixpanel.track(mixpanelEvents.CLOSE_ORDER, {
+            [mixapanelProps.AMOUNT]: position.investmentAmount,
+            [mixapanelProps.ACCOUNT_CURRENCY]:
+            mainAppStore.activeAccount?.currency || '',
+            [mixapanelProps.INSTRUMENT_ID]: position.instrument,
+            [mixapanelProps.MULTIPLIER]: position.multiplier,
+            [mixapanelProps.TREND]:
+              position.operation === AskBidEnum.Buy ? 'buy' : 'sell',
+            [mixapanelProps.SLTP]: !!(position.sl || position.tp),
+            [mixapanelProps.ACCOUNT_ID]: mainAppStore.activeAccount?.id || '',
+            [mixapanelProps.ACCOUNT_TYPE]: mainAppStore.activeAccount?.isLive
+              ? 'real'
+              : 'demo',
+          });
+          push(`${Page.PORTFOLIO_MAIN}/${PortfolioTabEnum.ACTIVE}`);
+        } else {
+          mixpanel.track(mixpanelEvents.CLOSE_ORDER_FAILED, {
+            [mixapanelProps.AMOUNT]: position.investmentAmount,
+            [mixapanelProps.ACCOUNT_CURRENCY]:
+            mainAppStore.activeAccount?.currency || '',
+            [mixapanelProps.INSTRUMENT_ID]: position.instrument,
+            [mixapanelProps.MULTIPLIER]: position.multiplier,
+            [mixapanelProps.TREND]:
+              position.operation === AskBidEnum.Buy ? 'buy' : 'sell',
+            [mixapanelProps.SLTP]: !!(position.sl || position.tp),
+            [mixapanelProps.ACCOUNT_ID]: mainAppStore.activeAccount?.id || '',
+            [mixapanelProps.ACCOUNT_TYPE]: mainAppStore.activeAccount?.isLive
+              ? 'real'
+              : 'demo',
+            [mixapanelProps.ERROR_TEXT]: apiResponseCodeMessages[response.result],
+          });
+          notificationStore.notificationMessage = t(
+            apiResponseCodeMessages[response.result]
+          );
+          notificationStore.isSuccessfull = false;
+          notificationStore.openNotification();
         }
-        mixpanel.track(mixpanelEvents.CLOSE_ORDER, {
-          [mixapanelProps.AMOUNT]: position.investmentAmount,
-          [mixapanelProps.ACCOUNT_CURRENCY]:
-            mainAppStore.activeAccount?.currency || '',
-          [mixapanelProps.INSTRUMENT_ID]: position.instrument,
-          [mixapanelProps.MULTIPLIER]: position.multiplier,
-          [mixapanelProps.TREND]:
-            position.operation === AskBidEnum.Buy ? 'buy' : 'sell',
-          [mixapanelProps.SLTP]: !!(position.sl || position.tp),
-          [mixapanelProps.ACCOUNT_ID]: mainAppStore.activeAccount?.id || '',
-          [mixapanelProps.ACCOUNT_TYPE]: mainAppStore.activeAccount?.isLive
-            ? 'real'
-            : 'demo',
-        });
-        push(`${Page.PORTFOLIO_MAIN}/${PortfolioTabEnum.ACTIVE}`);
-      } else {
-        mixpanel.track(mixpanelEvents.CLOSE_ORDER_FAILED, {
-          [mixapanelProps.AMOUNT]: position.investmentAmount,
-          [mixapanelProps.ACCOUNT_CURRENCY]:
-            mainAppStore.activeAccount?.currency || '',
-          [mixapanelProps.INSTRUMENT_ID]: position.instrument,
-          [mixapanelProps.MULTIPLIER]: position.multiplier,
-          [mixapanelProps.TREND]:
-            position.operation === AskBidEnum.Buy ? 'buy' : 'sell',
-          [mixapanelProps.SLTP]: !!(position.sl || position.tp),
-          [mixapanelProps.ACCOUNT_ID]: mainAppStore.activeAccount?.id || '',
-          [mixapanelProps.ACCOUNT_TYPE]: mainAppStore.activeAccount?.isLive
-            ? 'real'
-            : 'demo',
-          [mixapanelProps.ERROR_TEXT]: apiResponseCodeMessages[response.result],
-        });
-        notificationStore.notificationMessage = t(
-          apiResponseCodeMessages[response.result]
-        );
-        notificationStore.isSuccessfull = false;
-        notificationStore.openNotification();
       }
     } catch (error) {}
   };
@@ -234,7 +236,7 @@ const ActivePositionsDetails: FC<Props> = observer((props) => {
                 {t('Current Price')}
               </PrimaryTextSpan>
               <PrimaryTextSpan fontSize="16px">
-                <Observer>
+                {quotesStore.quotes[position.instrument] && <Observer>
                   {() => (
                     <>
                       {position.operation === AskBidEnum.Buy
@@ -246,7 +248,7 @@ const ActivePositionsDetails: FC<Props> = observer((props) => {
                           )}
                     </>
                   )}
-                </Observer>
+                </Observer>}
               </PrimaryTextSpan>
             </FlexContainer>
 
@@ -315,7 +317,11 @@ const ActivePositionsDetails: FC<Props> = observer((props) => {
 
               <Link to={`${Page.SL_EDIT_MAIN}/${positionId}`}>
                 <PrimaryTextSpan
-                  color="rgba(196, 196, 196, 0.5)"
+                  color={
+                    position.sl !== null
+                      ? '#fffccc'
+                      : 'rgba(196, 196, 196, 0.5)'
+                  }
                   fontSize="16px"
                 >
                   {position.sl !== null ? (
@@ -351,7 +357,11 @@ const ActivePositionsDetails: FC<Props> = observer((props) => {
               </PrimaryTextSpan>
               <Link to={`${Page.TP_EDIT_MAIN}/${positionId}`}>
                 <PrimaryTextSpan
-                  color="rgba(196, 196, 196, 0.5)"
+                  color={
+                    position.tp !== null
+                      ? '#fffccc'
+                      : 'rgba(196, 196, 196, 0.5)'
+                  }
                   fontSize="16px"
                 >
                   {position.tp !== null ? (
@@ -382,11 +392,11 @@ const ActivePositionsDetails: FC<Props> = observer((props) => {
             right="16px"
           >
             <ClosePositionButton applyHandler={closePosition}>
-              Confirm closing of&nbsp;
+              {t('Confirm closing of')}&nbsp;
               <PrimaryTextSpan color="#ffffff">
                 {position.instrument}
               </PrimaryTextSpan>
-              &nbsp; position for&nbsp;
+              &nbsp; {t('position for')}&nbsp;
               <PrimaryTextSpan color="#ffffff">
                 <EquityPnL position={position} />
               </PrimaryTextSpan>
