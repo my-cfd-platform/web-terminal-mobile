@@ -34,6 +34,7 @@ import mixapanelProps from '../constants/mixpanelProps';
 import Page from '../constants/Pages';
 import mixpanelValues from '../constants/mixpanelValues';
 import AutosizeInput from 'react-input-autosize';
+import KeysInApi from "../constants/keysInApi";
 
 const PRECISION_USD = 2;
 const DEFAULT_INVEST_AMOUNT = 50;
@@ -313,6 +314,18 @@ const OrderPage = observer(() => {
           response.result === OperationApiResponseCodes.Ok;
         notificationStore.openNotification();
         if (response.result === OperationApiResponseCodes.Ok) {
+          API.setKeyValue( {
+            key: mainAppStore.activeAccount?.isLive
+              ? KeysInApi.DEFAULT_INVEST_AMOUNT_REAL
+              : KeysInApi.DEFAULT_INVEST_AMOUNT_DEMO,
+            value: `${response.order.investmentAmount}`
+          }, mainAppStore.initModel.tradingUrl);
+          if (instrumentsStore.activeInstrument) {
+            API.setKeyValue( {
+              key: `Multiplier_${instrumentsStore.activeInstrument.instrumentItem.id}`,
+              value: `${response.order?.multiplier || modelToSubmit.multiplier}`
+            }, mainAppStore.initModel.tradingUrl);
+          }
           mixpanel.track(mixpanelEvents.LIMIT_ORDER, {
             [mixapanelProps.AMOUNT]: response.order.investmentAmount,
             [mixapanelProps.ACCOUNT_CURRENCY]:
@@ -341,7 +354,6 @@ const OrderPage = observer(() => {
             [mixapanelProps.EVENT_REF]: mixpanelValues.PORTFOLIO,
             [mixapanelProps.POSITION_ID]: response.order.id,
           });
-          resetForm();
           push(Page.DASHBOARD);
         } else {
           mixpanel.track(mixpanelEvents.LIMIT_ORDER_FAILED, {
@@ -380,7 +392,18 @@ const OrderPage = observer(() => {
         const response = await API.openPosition(modelToSubmit);
         if (response.result === OperationApiResponseCodes.Ok) {
           markersOnChartStore.addNewMarker(response.position);
-
+          API.setKeyValue( {
+            key: mainAppStore.activeAccount?.isLive
+              ? KeysInApi.DEFAULT_INVEST_AMOUNT_REAL
+              : KeysInApi.DEFAULT_INVEST_AMOUNT_DEMO,
+            value: `${response.position.investmentAmount}`
+          }, mainAppStore.initModel.tradingUrl);
+          if (instrumentsStore.activeInstrument) {
+            API.setKeyValue( {
+              key: `Multiplier_${instrumentsStore.activeInstrument.instrumentItem.id}`,
+              value: `${response.position?.multiplier || modelToSubmit.multiplier}`
+            }, mainAppStore.initModel.tradingUrl);
+          }
           if (instrumentsStore.activeInstrument) {
             activePositionNotificationStore.notificationMessageData = {
               equity: 0,
@@ -427,7 +450,6 @@ const OrderPage = observer(() => {
             [mixapanelProps.EVENT_REF]: mixpanelValues.PORTFOLIO,
             [mixapanelProps.POSITION_ID]: response.position.id,
           });
-          resetForm();
           push(Page.DASHBOARD);
         } else {
           mixpanel.track(mixpanelEvents.MARKET_ORDER_FAILED, {
@@ -591,6 +613,31 @@ const OrderPage = observer(() => {
   const handleBlurAtPurchase = () => {
     setIsKeyboard(false);
   };
+
+  useEffect(() => {
+    async function fetchDefaultInvestAmount() {
+      try {
+        const response: string = await API.getKeyValue(mainAppStore.activeAccount?.isLive
+          ? KeysInApi.DEFAULT_INVEST_AMOUNT_REAL
+          : KeysInApi.DEFAULT_INVEST_AMOUNT_DEMO, mainAppStore.initModel.tradingUrl);
+        if (response.length > 0) {
+          setFieldValue(Fields.AMOUNT, parseInt(response));
+        }
+      } catch (error) {}
+    }
+    async function fetchMultiplier() {
+      if (instrumentsStore.activeInstrument) {
+        try {
+          const response = await API.getKeyValue(`Multiplier_${instrumentsStore.activeInstrument.instrumentItem.id}`, mainAppStore.initModel.tradingUrl);
+          if (response.length > 0) {
+            setFieldValue(Fields.MULTIPLIER, parseInt(response));
+          }
+        } catch (error) {}
+      }
+    }
+    fetchDefaultInvestAmount();
+    fetchMultiplier();
+  }, [mainAppStore.activeAccount, instrumentsStore.activeInstrument])
 
   const {
     values,
