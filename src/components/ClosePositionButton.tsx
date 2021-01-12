@@ -4,14 +4,16 @@ import { ButtonWithoutStyles } from '../styles/ButtonWithoutStyles';
 import Colors from '../constants/Colors';
 import { useTranslation } from 'react-i18next';
 import ConfirmationPopup from './ConfirmationPopup';
+import LoaderForComponents from './LoaderForComponents';
 
 interface Props {
   applyHandler: () => void;
   buttonLabel?: string;
+  isLoadingConfirmation?: boolean;
 }
 
 const ClosePositionButton: FC<Props> = (props) => {
-  const { applyHandler, buttonLabel, children } = props;
+  const { applyHandler, buttonLabel, children, isLoadingConfirmation = false } = props;
   const { t } = useTranslation();
   const [on, toggle] = useState(false);
 
@@ -28,10 +30,11 @@ const ClosePositionButton: FC<Props> = (props) => {
   return (
     <>
       <ClosePositionBtn onClick={handleClickClose}>
+        {isLoadingConfirmation}
         {buttonLabel || t('Close')}
       </ClosePositionBtn>
       {on && (
-        <ConfirmationPopup confirmAction={handleConfirmAction}>
+        <ConfirmationPopup isLoading={isLoadingConfirmation} confirmAction={handleConfirmAction}>
           {children}
         </ConfirmationPopup>
       )}

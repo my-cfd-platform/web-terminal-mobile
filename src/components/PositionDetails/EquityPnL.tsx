@@ -5,11 +5,14 @@ import { AskBidEnum } from '../../enums/AskBid';
 import { PositionModelWSDTO } from '../../types/Positions';
 import { autorun } from 'mobx';
 
+const noop = (value: null | number) => {};
+
 interface Props {
   position: PositionModelWSDTO;
+  handlePnL?: (value: null | number) => void;
 }
 
-const EquityPnL: FC<Props> = ({ position }) => {
+const EquityPnL: FC<Props> = ({ position, handlePnL = noop }) => {
   const { quotesStore, mainAppStore } = useStores();
   const isBuy = position.operation === AskBidEnum.Buy;
 
@@ -44,6 +47,10 @@ const EquityPnL: FC<Props> = ({ position }) => {
       disposer();
     };
   }, []);
+
+  useEffect(() => {
+    handlePnL(statePnL);
+  }, [statePnL]);
 
   return statePnL !== null ? (
     <>
