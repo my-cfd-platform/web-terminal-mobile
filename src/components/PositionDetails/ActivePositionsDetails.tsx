@@ -49,6 +49,13 @@ const ActivePositionsDetails: FC<Props> = observer((props) => {
 
   const [position, setPosition] = useState<PositionModelWSDTO>();
 
+  const [closeLoading, setCloseLoading] = useState(false);
+
+  const handleToggleLoadingClosePopup = (value: number | null) => {
+    console.log('value pNl', value);
+    setCloseLoading(value === null);
+  };
+
   const closePosition = async () => {
     if (!position) {
       return;
@@ -56,17 +63,21 @@ const ActivePositionsDetails: FC<Props> = observer((props) => {
 
     try {
       const isBuy = position.operation === AskBidEnum.Buy;
-      const equity: number | null = quotesStore.quotes[position.instrument] ? calculateFloatingProfitAndLoss({
-        investment: position.investmentAmount,
-        multiplier: position.multiplier,
-        costs: position.swap + position.commission,
-        side: isBuy ? 1 : -1,
-        currentPrice: isBuy
-          ? quotesStore.quotes[position.instrument].bid.c
-          : quotesStore.quotes[position.instrument].ask.c,
-        openPrice: position.openPrice,
-      }) : null;
-      const percentPL: string | null = equity ? calculateInPercent(position.investmentAmount, equity) : null;
+      const equity: number | null = quotesStore.quotes[position.instrument]
+        ? calculateFloatingProfitAndLoss({
+            investment: position.investmentAmount,
+            multiplier: position.multiplier,
+            costs: position.swap + position.commission,
+            side: isBuy ? 1 : -1,
+            currentPrice: isBuy
+              ? quotesStore.quotes[position.instrument].bid.c
+              : quotesStore.quotes[position.instrument].ask.c,
+            openPrice: position.openPrice,
+          })
+        : null;
+      const percentPL: string | null = equity
+        ? calculateInPercent(position.investmentAmount, equity)
+        : null;
       if (equity && percentPL) {
         const response = await API.closePosition({
           accountId: mainAppStore.activeAccount!.id,
@@ -99,7 +110,7 @@ const ActivePositionsDetails: FC<Props> = observer((props) => {
           mixpanel.track(mixpanelEvents.CLOSE_ORDER, {
             [mixapanelProps.AMOUNT]: position.investmentAmount,
             [mixapanelProps.ACCOUNT_CURRENCY]:
-            mainAppStore.activeAccount?.currency || '',
+              mainAppStore.activeAccount?.currency || '',
             [mixapanelProps.INSTRUMENT_ID]: position.instrument,
             [mixapanelProps.MULTIPLIER]: position.multiplier,
             [mixapanelProps.TREND]:
@@ -115,7 +126,7 @@ const ActivePositionsDetails: FC<Props> = observer((props) => {
           mixpanel.track(mixpanelEvents.CLOSE_ORDER_FAILED, {
             [mixapanelProps.AMOUNT]: position.investmentAmount,
             [mixapanelProps.ACCOUNT_CURRENCY]:
-            mainAppStore.activeAccount?.currency || '',
+              mainAppStore.activeAccount?.currency || '',
             [mixapanelProps.INSTRUMENT_ID]: position.instrument,
             [mixapanelProps.MULTIPLIER]: position.multiplier,
             [mixapanelProps.TREND]:
@@ -125,7 +136,8 @@ const ActivePositionsDetails: FC<Props> = observer((props) => {
             [mixapanelProps.ACCOUNT_TYPE]: mainAppStore.activeAccount?.isLive
               ? 'real'
               : 'demo',
-            [mixapanelProps.ERROR_TEXT]: apiResponseCodeMessages[response.result],
+            [mixapanelProps.ERROR_TEXT]:
+              apiResponseCodeMessages[response.result],
           });
           notificationStore.notificationMessage = t(
             apiResponseCodeMessages[response.result]
@@ -236,19 +248,21 @@ const ActivePositionsDetails: FC<Props> = observer((props) => {
                 {t('Current Price')}
               </PrimaryTextSpan>
               <PrimaryTextSpan fontSize="16px">
-                {quotesStore.quotes[position.instrument] && <Observer>
-                  {() => (
-                    <>
-                      {position.operation === AskBidEnum.Buy
-                        ? quotesStore.quotes[position.instrument].bid.c.toFixed(
-                            positionInstrumentDigits()
-                          )
-                        : quotesStore.quotes[position.instrument].ask.c.toFixed(
-                            positionInstrumentDigits()
-                          )}
-                    </>
-                  )}
-                </Observer>}
+                {quotesStore.quotes[position.instrument] && (
+                  <Observer>
+                    {() => (
+                      <>
+                        {position.operation === AskBidEnum.Buy
+                          ? quotesStore.quotes[
+                              position.instrument
+                            ].bid.c.toFixed(positionInstrumentDigits())
+                          : quotesStore.quotes[
+                              position.instrument
+                            ].ask.c.toFixed(positionInstrumentDigits())}
+                      </>
+                    )}
+                  </Observer>
+                )}
               </PrimaryTextSpan>
             </FlexContainer>
 
@@ -391,14 +405,20 @@ const ActivePositionsDetails: FC<Props> = observer((props) => {
             left="16px"
             right="16px"
           >
-            <ClosePositionButton applyHandler={closePosition}>
+            <ClosePositionButton
+              applyHandler={closePosition}
+              isLoadingConfirmation={closeLoading}
+            >
               {t('Confirm closing of')}&nbsp;
               <PrimaryTextSpan color="#ffffff">
                 {position.instrument}
               </PrimaryTextSpan>
               &nbsp; {t('position for')}&nbsp;
               <PrimaryTextSpan color="#ffffff">
-                <EquityPnL position={position} />
+                <EquityPnL
+                  position={position}
+                  handlePnL={handleToggleLoadingClosePopup}
+                />
               </PrimaryTextSpan>
             </ClosePositionButton>
           </FlexContainer>
