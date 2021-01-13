@@ -1,5 +1,6 @@
 const mixapanelProps = {
   EMAIL: '$email',
+  EMAIL_FAILED: 'Email',
   FIRST_NAME: '$first_name',
   LAST_NAME: '$last_name',
   PHONE: '$phone',
