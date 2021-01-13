@@ -162,7 +162,7 @@ export class QuotesStore implements IQuotesStore {
     a: PositionModelWSDTO,
     b: PositionModelWSDTO
   ) => {
-    const aProfitNLoss = calculateFloatingProfitAndLoss({
+    const aProfitNLoss = this.quotes[b.instrument] ? calculateFloatingProfitAndLoss({
       investment: b.investmentAmount,
       multiplier: b.multiplier,
       costs: b.swap + b.commission,
@@ -172,9 +172,9 @@ export class QuotesStore implements IQuotesStore {
           ? this.quotes[b.instrument].bid.c
           : this.quotes[b.instrument].ask.c,
       openPrice: b.openPrice,
-    });
+    }) : 0;
 
-    const bProfitNLoss = calculateFloatingProfitAndLoss({
+    const bProfitNLoss = this.quotes[a.instrument] ? calculateFloatingProfitAndLoss({
       investment: a.investmentAmount,
       multiplier: a.multiplier,
       costs: a.swap + a.commission,
@@ -184,7 +184,7 @@ export class QuotesStore implements IQuotesStore {
           ? this.quotes[a.instrument].bid.c
           : this.quotes[a.instrument].ask.c,
       openPrice: a.openPrice,
-    });
+    }) : 0;
     return ascending
       ? bProfitNLoss - aProfitNLoss
       : aProfitNLoss - bProfitNLoss;

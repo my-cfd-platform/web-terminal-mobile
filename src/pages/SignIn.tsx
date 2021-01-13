@@ -65,7 +65,7 @@ const SignIn = () => {
         mixpanel.track(mixpanelEvents.LOGIN_FAILED, {
           [mixapanelProps.BRAND_NAME]: mainAppStore.initModel.brandName.toLowerCase(),
           [mixapanelProps.ERROR_TEXT]: apiResponseCodeMessages[result],
-          [mixapanelProps.EMAIL]: credentials.email,
+          [mixapanelProps.EMAIL_FAILED]: credentials.email,
         });
       }
       if (result === OperationApiResponseCodes.Ok) {

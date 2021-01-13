@@ -107,7 +107,7 @@ const NotificationPendingPositionPopup: FC<Props> = observer(() => {
         <FlexContainer alignItems="center">
           <>
             <PrimaryTextSpan color="#ffffff" fontSize="13px">
-              {t('Position Close')}:&nbsp;
+              {t('Position Closed')}:&nbsp;
             </PrimaryTextSpan>
             <PrimaryTextSpan
               fontSize="13px"

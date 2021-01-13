@@ -19,18 +19,7 @@ const ActivePositionPnL: FC<Props> = ({ position, hasBackground }) => {
   const { quotesStore, mainAppStore } = useStores();
   const isBuy = position.operation === AskBidEnum.Buy;
 
-  const [statePnL, setStatePnL] = useState(
-    calculateFloatingProfitAndLoss({
-      investment: position.investmentAmount,
-      multiplier: position.multiplier,
-      costs: position.swap + position.commission,
-      side: isBuy ? 1 : -1,
-      currentPrice: isBuy
-        ? quotesStore.quotes[position.instrument].bid.c
-        : quotesStore.quotes[position.instrument].ask.c,
-      openPrice: position.openPrice,
-    })
-  );
+  const [statePnL, setStatePnL] = useState<number | null>(null);
 
   const workCallback = useCallback(
     (quote) => {
@@ -51,7 +40,9 @@ const ActivePositionPnL: FC<Props> = ({ position, hasBackground }) => {
   useEffect(() => {
     const disposer = autorun(
       () => {
-        workCallback(quotesStore.quotes[position.instrument]);
+        if (quotesStore.quotes[position.instrument]) {
+          workCallback(quotesStore.quotes[position.instrument]);
+        }
       },
       { delay: 2000 }
     );
@@ -60,13 +51,13 @@ const ActivePositionPnL: FC<Props> = ({ position, hasBackground }) => {
     };
   }, []);
 
-  return (
+  return statePnL !== null ? (
     <QuoteTextLabel isGrowth={statePnL >= 0} hasBackground={hasBackground}>
       {getNumberSign(statePnL)}
       {mainAppStore.activeAccount?.symbol}
       {Math.abs(statePnL).toFixed(2)}
     </QuoteTextLabel>
-  );
+  ) : null;
 };
 export default ActivePositionPnL;
 

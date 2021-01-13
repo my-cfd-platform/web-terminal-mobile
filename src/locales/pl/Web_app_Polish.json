@@ -410,11 +410,12 @@
     "Canceled": "Anulowano",
     "Approved": "Zatwierdzono",
     "Declined": "Odrzucono",
-    "Withdrawal": "Wypłata",
-    "New Request": "Nowa prośba",
     "A withdrawal request has been cancelled": "Prośba o wypłatę została anulowana",
     "Withdrawal request has been created successfully": "Prośba o wypłatę został pomyślnie utworzony",
     "You have to sign in to the platform to create a withdrawal request": "Musisz zalogować się na platformie, aby utworzyć prośbę o wypłatę.",
     "You already have one active withdrawal request": "Masz już jedno aktywne żądanie wypłaty",
-    "Technical Error": "Błąd techniczny"
+    "Technical Error": "Błąd techniczny",
+    "position for": "pozycja dla",
+    "New Request": "Nowe żądanie",
+    "Position Closed": "Pozycja zamknięta"
 }

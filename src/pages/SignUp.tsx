@@ -90,7 +90,7 @@ const SignUp = () => {
                     [mixapanelProps.BRAND_NAME]: mainAppStore.initModel.brandName.toLowerCase(),
                     [mixapanelProps.ERROR_TEXT]:
                       apiResponseCodeMessages[result],
-                    [mixapanelProps.EMAIL]: values.email,
+                    [mixapanelProps.EMAIL_FAILED]: values.email,
                   });
                 } else {
                   mainAppStore.setSignUpFlag(true);
