@@ -37,7 +37,8 @@ import AutosizeInput from 'react-input-autosize';
 import KeysInApi from "../constants/keysInApi";
 
 const PRECISION_USD = 2;
-const DEFAULT_INVEST_AMOUNT = 50;
+const DEFAULT_INVEST_AMOUNT_LIVE = 50;
+const DEFAULT_INVEST_AMOUNT_DEMO = 1000;
 
 const OrderPage = observer(() => {
   const { type } = useParams<{ type: string }>();
@@ -73,7 +74,9 @@ const OrderPage = observer(() => {
       operation: null,
       multiplier: instrumentsStore.activeInstrument!.instrumentItem
         .multiplier[0],
-      investmentAmount: DEFAULT_INVEST_AMOUNT,
+      investmentAmount: mainAppStore.activeAccount?.isLive
+        ? DEFAULT_INVEST_AMOUNT_LIVE
+        : DEFAULT_INVEST_AMOUNT_DEMO,
       tp: null,
       sl: null,
       slType: null,
@@ -322,7 +325,7 @@ const OrderPage = observer(() => {
           }, mainAppStore.initModel.tradingUrl);
           if (instrumentsStore.activeInstrument) {
             API.setKeyValue( {
-              key: `Multiplier_${instrumentsStore.activeInstrument.instrumentItem.id}`,
+              key: `mult_${instrumentsStore.activeInstrument.instrumentItem.id.trim().toLowerCase()}`,
               value: `${response.order?.multiplier || modelToSubmit.multiplier}`
             }, mainAppStore.initModel.tradingUrl);
           }
@@ -400,7 +403,7 @@ const OrderPage = observer(() => {
           }, mainAppStore.initModel.tradingUrl);
           if (instrumentsStore.activeInstrument) {
             API.setKeyValue( {
-              key: `Multiplier_${instrumentsStore.activeInstrument.instrumentItem.id}`,
+              key: `mult_${instrumentsStore.activeInstrument.instrumentItem.id.trim().toLowerCase()}`,
               value: `${response.position?.multiplier || modelToSubmit.multiplier}`
             }, mainAppStore.initModel.tradingUrl);
           }
@@ -594,7 +597,9 @@ const OrderPage = observer(() => {
   const checkEmpty = (e: FocusEvent<HTMLInputElement>) => {
     const checkedValue: any = e.target.value;
     if (!checkedValue.length) {
-      setFieldValue(Fields.AMOUNT, DEFAULT_INVEST_AMOUNT);
+      setFieldValue(Fields.AMOUNT, mainAppStore.activeAccount?.isLive
+        ? DEFAULT_INVEST_AMOUNT_LIVE
+        : DEFAULT_INVEST_AMOUNT_DEMO);
       setFieldError(Fields.AMOUNT, '');
     }
   };
@@ -628,7 +633,7 @@ const OrderPage = observer(() => {
     async function fetchMultiplier() {
       if (instrumentsStore.activeInstrument) {
         try {
-          const response = await API.getKeyValue(`Multiplier_${instrumentsStore.activeInstrument.instrumentItem.id}`, mainAppStore.initModel.tradingUrl);
+          const response = await API.getKeyValue(`mult_${instrumentsStore.activeInstrument.instrumentItem.id.trim().toLowerCase()}`, mainAppStore.initModel.tradingUrl);
           if (response.length > 0) {
             setFieldValue(Fields.MULTIPLIER, parseInt(response));
           }

@@ -4,8 +4,8 @@ const KeysInApi = {
   ACTIVE_ACCOUNT_ID: 'aaid',
   PERSONAL_DATA: 'pd',
   PHONE_VERIFICATION: 'pv',
-  DEFAULT_INVEST_AMOUNT_REAL: 'InvestAmountLive',
-  DEFAULT_INVEST_AMOUNT_DEMO: 'InvestAmountDemo',
+  DEFAULT_INVEST_AMOUNT_REAL: 'dia_l',
+  DEFAULT_INVEST_AMOUNT_DEMO: 'dia_d',
 };
 
 Object.freeze(KeysInApi);
