@@ -489,7 +489,6 @@ const OrderPage = observer(() => {
           );
           notificationStore.isSuccessfull = false;
           notificationStore.openNotification();
-          resetForm();
         }
       } catch (error) {}
     }
