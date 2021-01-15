@@ -35,6 +35,7 @@ import Page from '../constants/Pages';
 import mixpanelValues from '../constants/mixpanelValues';
 import AutosizeInput from 'react-input-autosize';
 import KeysInApi from "../constants/keysInApi";
+import LoaderForComponents from "../components/LoaderForComponents";
 
 const PRECISION_USD = 2;
 const DEFAULT_INVEST_AMOUNT_LIVE = 50;
@@ -46,6 +47,7 @@ const OrderPage = observer(() => {
   const purchaseField = useRef<HTMLInputElement | null>(null);
   const orderWrapper = useRef<HTMLDivElement>(document.createElement('div'));
   const [isKeyboard, setIsKeyboard] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
   const {
     mainAppStore,
     instrumentsStore,
@@ -619,6 +621,7 @@ const OrderPage = observer(() => {
   };
 
   useEffect(() => {
+    setIsLoading(true);
     async function fetchDefaultInvestAmount() {
       try {
         const response: string = await API.getKeyValue(mainAppStore.activeAccount?.isLive
@@ -627,6 +630,9 @@ const OrderPage = observer(() => {
         if (response.length > 0) {
           setFieldValue(Fields.AMOUNT, parseInt(response));
         }
+        setTimeout(() => {
+          setIsLoading(false);
+        }, 0);
       } catch (error) {}
     }
     async function fetchMultiplier() {
@@ -636,10 +642,10 @@ const OrderPage = observer(() => {
           if (response.length > 0) {
             setFieldValue(Fields.MULTIPLIER, parseInt(response));
           }
+          fetchDefaultInvestAmount();
         } catch (error) {}
       }
     }
-    fetchDefaultInvestAmount();
     fetchMultiplier();
   }, [mainAppStore.activeAccount, instrumentsStore.activeInstrument])
 
@@ -680,218 +686,221 @@ const OrderPage = observer(() => {
 
   return (
     <BackFlowLayout pageTitle={t(type)}>
-      <OrderWrapper
-        flexDirection="column"
-        width="100%"
-        position="relative"
-        ref={orderWrapper}
-      >
-        <ActiveInstrumentItem type={type} />
-        <CustomForm autoComplete="off" onSubmit={handleSubmit}>
-          <FlexContainer flexDirection="column">
-            <InputWrap
-              flexDirection="column"
-              width="100%"
-              backgroundColor="rgba(42, 45, 56, 0.5)"
-              padding="14px 16px"
-              position="relative"
-              marginBottom="4px"
-              hasError={!!(touched.investmentAmount && errors.investmentAmount)}
-            >
-              <FlexContainer
-                position="absolute"
-                top="0"
-                bottom="0"
-                left="16px"
-                margin="auto"
-                alignItems="center"
+      { isLoading
+        ? <LoaderForComponents isLoading={isLoading} />
+        : <OrderWrapper
+          flexDirection="column"
+          width="100%"
+          position="relative"
+          ref={orderWrapper}
+        >
+          <ActiveInstrumentItem type={type} />
+          <CustomForm autoComplete="off" onSubmit={handleSubmit}>
+            <FlexContainer flexDirection="column">
+              <InputWrap
+                flexDirection="column"
+                width="100%"
+                backgroundColor="rgba(42, 45, 56, 0.5)"
+                padding="14px 16px"
+                position="relative"
+                marginBottom="4px"
+                hasError={!!(touched.investmentAmount && errors.investmentAmount)}
               >
-                <PrimaryTextSpan color="#ffffff" fontSize="16px" lineHeight="1">
-                  {t('Invest')}
-                </PrimaryTextSpan>
-              </FlexContainer>
-              <FlexContainer justifyContent="flex-end" alignItems="center">
-                {values.investmentAmount && (
-                  <PrimaryTextSpan
-                    color="#fffccc"
-                    fontSize="16px"
-                    lineHeight="1"
-                  >
-                    $
+                <FlexContainer
+                  position="absolute"
+                  top="0"
+                  bottom="0"
+                  left="16px"
+                  margin="auto"
+                  alignItems="center"
+                >
+                  <PrimaryTextSpan color="#ffffff" fontSize="16px" lineHeight="1">
+                    {t('Invest')}
                   </PrimaryTextSpan>
-                )}
-
-                <InputAutosize
-                  inputStyle={{
-                    backgroundColor: 'transparent',
-                    outline: 'none',
-                    border: 'none',
-                    fontSize: '16px',
-                    color: '#fffccc',
-                    fontWeight: 500,
-                    lineHeight: '22px',
-                    textAlign: 'right',
-                    appearance: 'none',
-                    padding: 0,
-                  }}
-                  {...getFieldProps(Fields.AMOUNT)}
-                  type="text"
-                  inputMode="decimal"
-                  onBeforeInput={investOnBeforeInputHandler}
-                  onChange={investOnChangeHandler}
-                  onBlur={checkEmpty}
-                />
-              </FlexContainer>
-            </InputWrap>
-
-            <FlexContainer marginBottom="12px" padding="0 16px">
-              {touched.investmentAmount && errors.investmentAmount ? (
-                <PrimaryTextSpan fontSize="11px" color={Colors.RED}>
-                  {errors.investmentAmount}
-                </PrimaryTextSpan>
-              ) : (
-                <Observer>
-                  {() => (
+                </FlexContainer>
+                <FlexContainer justifyContent="flex-end" alignItems="center">
+                  {values.investmentAmount && (
                     <PrimaryTextSpan
-                      fontSize="11px"
-                      color="rgba(196, 196, 196, 0.5)"
+                      color="#fffccc"
+                      fontSize="16px"
+                      lineHeight="1"
                     >
-                      {t('Available')}&nbsp;
-                      {mainAppStore.activeAccount?.symbol}
-                      {mainAppStore.activeAccount?.balance.toFixed(2)}
+                      $
                     </PrimaryTextSpan>
                   )}
-                </Observer>
-              )}
-            </FlexContainer>
 
-            <FlexContainer
-              flexDirection="column"
-              width="100%"
-              backgroundColor="rgba(42, 45, 56, 0.5)"
-              padding="14px 16px"
-              position="relative"
-              alignItems="flex-end"
-              marginBottom="2px"
-            >
-              <FlexContainer
-                position="absolute"
-                top="0"
-                bottom="0"
-                left="16px"
-                margin="auto"
-                alignItems="center"
-              >
-                <PrimaryTextSpan color="#ffffff" fontSize="16px" lineHeight="1">
-                  {t('Leverage')}
-                </PrimaryTextSpan>
-              </FlexContainer>
-
-              <MultiplierSelect dir="rtl" {...getFieldProps(Fields.MULTIPLIER)}>
-                {instrumentsStore
-                  .activeInstrument!.instrumentItem.multiplier.slice()
-                  .sort((a, b) => b - a)
-                  .map((multiplier) => (
-                    <MultiplierSelectValue value={multiplier} key={multiplier}>
-                      x{multiplier}
-                    </MultiplierSelectValue>
-                  ))}
-              </MultiplierSelect>
-            </FlexContainer>
-
-            <InputWrap
-              flexDirection="column"
-              width="100%"
-              backgroundColor="rgba(42, 45, 56, 0.5)"
-              padding="14px 16px"
-              position="relative"
-              marginBottom={
-                touched.openPrice && errors.openPrice ? '4px' : '12px'
-              }
-              hasError={!!(touched.openPrice && errors.openPrice)}
-            >
-              <FlexContainer
-                position="absolute"
-                top="0"
-                bottom="0"
-                left="16px"
-                margin="auto"
-                alignItems="center"
-              >
-                <PrimaryTextSpan color="#ffffff" fontSize="16px" lineHeight="1">
-                  {t('Purchase at')}
-                </PrimaryTextSpan>
-              </FlexContainer>
-              <Observer>
-                {() => (
-                  <Input
-                    {...getFieldProps(Fields.PURCHASE_AT)}
+                  <InputAutosize
+                    inputStyle={{
+                      backgroundColor: 'transparent',
+                      outline: 'none',
+                      border: 'none',
+                      fontSize: '16px',
+                      color: '#fffccc',
+                      fontWeight: 500,
+                      lineHeight: '22px',
+                      textAlign: 'right',
+                      appearance: 'none',
+                      padding: 0,
+                    }}
+                    {...getFieldProps(Fields.AMOUNT)}
                     type="text"
                     inputMode="decimal"
-                    placeholder={`${quotesStore.quotes[instrumentsStore.activeInstrument!.instrumentItem.id]
-                      ? getPlaceholderOpenPrice()
-                      : ''}`}
-                    onBeforeInput={openPriceOnBeforeInputHandler}
-                    onChange={openPriceOnChangeHandler}
-                    ref={purchaseField}
-                    onFocus={handleFocusAtPurchase}
-                    onBlur={handleBlurAtPurchase}
+                    onBeforeInput={investOnBeforeInputHandler}
+                    onChange={investOnChangeHandler}
+                    onBlur={checkEmpty}
                   />
-                )}
-              </Observer>
-            </InputWrap>
-            {touched.openPrice && errors.openPrice && (
-              <FlexContainer marginBottom="12px" padding="0 16px">
-                <PrimaryTextSpan fontSize="11px" color={Colors.RED}>
-                  {errors.openPrice}
-                </PrimaryTextSpan>
-              </FlexContainer>
-            )}
+                </FlexContainer>
+              </InputWrap>
 
-            <FlexContainer
-              width="100%"
-              padding="14px 16px 0"
-              justifyContent="space-between"
-              alignItems="center"
-              marginBottom="4px"
-            >
-              <PrimaryTextSpan color="#ffffff" fontSize="16px" lineHeight="1">
-                {t('Spread')}
-              </PrimaryTextSpan>
-              <PrimaryTextSpan color="#FFFCCC" fontSize="16px" lineHeight="1">
-                {quotesStore.quotes[instrumentsStore.activeInstrument!.instrumentItem.id] &&
+              <FlexContainer marginBottom="12px" padding="0 16px">
+                {touched.investmentAmount && errors.investmentAmount ? (
+                  <PrimaryTextSpan fontSize="11px" color={Colors.RED}>
+                    {errors.investmentAmount}
+                  </PrimaryTextSpan>
+                ) : (
+                  <Observer>
+                    {() => (
+                      <PrimaryTextSpan
+                        fontSize="11px"
+                        color="rgba(196, 196, 196, 0.5)"
+                      >
+                        {t('Available')}&nbsp;
+                        {mainAppStore.activeAccount?.symbol}
+                        {mainAppStore.activeAccount?.balance.toFixed(2)}
+                      </PrimaryTextSpan>
+                    )}
+                  </Observer>
+                )}
+              </FlexContainer>
+
+              <FlexContainer
+                flexDirection="column"
+                width="100%"
+                backgroundColor="rgba(42, 45, 56, 0.5)"
+                padding="14px 16px"
+                position="relative"
+                alignItems="flex-end"
+                marginBottom="2px"
+              >
+                <FlexContainer
+                  position="absolute"
+                  top="0"
+                  bottom="0"
+                  left="16px"
+                  margin="auto"
+                  alignItems="center"
+                >
+                  <PrimaryTextSpan color="#ffffff" fontSize="16px" lineHeight="1">
+                    {t('Leverage')}
+                  </PrimaryTextSpan>
+                </FlexContainer>
+
+                <MultiplierSelect dir="rtl" {...getFieldProps(Fields.MULTIPLIER)}>
+                  {instrumentsStore
+                    .activeInstrument!.instrumentItem.multiplier.slice()
+                    .sort((a, b) => b - a)
+                    .map((multiplier) => (
+                      <MultiplierSelectValue value={multiplier} key={multiplier}>
+                        x{multiplier}
+                      </MultiplierSelectValue>
+                    ))}
+                </MultiplierSelect>
+              </FlexContainer>
+
+              <InputWrap
+                flexDirection="column"
+                width="100%"
+                backgroundColor="rgba(42, 45, 56, 0.5)"
+                padding="14px 16px"
+                position="relative"
+                marginBottom={
+                  touched.openPrice && errors.openPrice ? '4px' : '12px'
+                }
+                hasError={!!(touched.openPrice && errors.openPrice)}
+              >
+                <FlexContainer
+                  position="absolute"
+                  top="0"
+                  bottom="0"
+                  left="16px"
+                  margin="auto"
+                  alignItems="center"
+                >
+                  <PrimaryTextSpan color="#ffffff" fontSize="16px" lineHeight="1">
+                    {t('Purchase at')}
+                  </PrimaryTextSpan>
+                </FlexContainer>
+                <Observer>
+                  {() => (
+                    <Input
+                      {...getFieldProps(Fields.PURCHASE_AT)}
+                      type="text"
+                      inputMode="decimal"
+                      placeholder={`${quotesStore.quotes[instrumentsStore.activeInstrument!.instrumentItem.id]
+                        ? getPlaceholderOpenPrice()
+                        : ''}`}
+                      onBeforeInput={openPriceOnBeforeInputHandler}
+                      onChange={openPriceOnChangeHandler}
+                      ref={purchaseField}
+                      onFocus={handleFocusAtPurchase}
+                      onBlur={handleBlurAtPurchase}
+                    />
+                  )}
+                </Observer>
+              </InputWrap>
+              {touched.openPrice && errors.openPrice && (
+                <FlexContainer marginBottom="12px" padding="0 16px">
+                  <PrimaryTextSpan fontSize="11px" color={Colors.RED}>
+                    {errors.openPrice}
+                  </PrimaryTextSpan>
+                </FlexContainer>
+              )}
+
+              <FlexContainer
+                width="100%"
+                padding="14px 16px 0"
+                justifyContent="space-between"
+                alignItems="center"
+                marginBottom="4px"
+              >
+                <PrimaryTextSpan color="#ffffff" fontSize="16px" lineHeight="1">
+                  {t('Spread')}
+                </PrimaryTextSpan>
+                <PrimaryTextSpan color="#FFFCCC" fontSize="16px" lineHeight="1">
+                  {quotesStore.quotes[instrumentsStore.activeInstrument!.instrumentItem.id] &&
                   (currentPriceAsk() - currentPriceBid()).toFixed(
                     instrumentsStore.activeInstrument!.instrumentItem.digits
                   )
-                }
-              </PrimaryTextSpan>
+                  }
+                </PrimaryTextSpan>
+              </FlexContainer>
+              <FlexContainer
+                width="100%"
+                padding="14px 16px"
+                justifyContent="space-between"
+                alignItems="center"
+                marginBottom="4px"
+              >
+                <PrimaryTextSpan color="#ffffff" fontSize="16px" lineHeight="1">
+                  {t('Commision')}
+                </PrimaryTextSpan>
+                <PrimaryTextSpan color="#FFFCCC" fontSize="16px" lineHeight="1">
+                  $0.00
+                </PrimaryTextSpan>
+              </FlexContainer>
             </FlexContainer>
-            <FlexContainer
-              width="100%"
-              padding="14px 16px"
-              justifyContent="space-between"
-              alignItems="center"
-              marginBottom="4px"
+            <ConfirmButton
+              type="submit"
+              actionType={type}
+              disabled={isSubmitting}
+              hide={isKeyboard}
             >
-              <PrimaryTextSpan color="#ffffff" fontSize="16px" lineHeight="1">
-                {t('Commision')}
-              </PrimaryTextSpan>
-              <PrimaryTextSpan color="#FFFCCC" fontSize="16px" lineHeight="1">
-                $0.00
-              </PrimaryTextSpan>
-            </FlexContainer>
-          </FlexContainer>
-          <ConfirmButton
-            type="submit"
-            actionType={type}
-            disabled={isSubmitting}
-            hide={isKeyboard}
-          >
-            {t('Confirm')} {mainAppStore.activeAccount?.symbol}
-            {values.investmentAmount}
-          </ConfirmButton>
-        </CustomForm>
-      </OrderWrapper>
+              {t('Confirm')} {mainAppStore.activeAccount?.symbol}
+              {values.investmentAmount}
+            </ConfirmButton>
+          </CustomForm>
+        </OrderWrapper>
+      }
     </BackFlowLayout>
   );
 });
