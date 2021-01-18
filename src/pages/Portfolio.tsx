@@ -69,8 +69,16 @@ const Portfolio = observer(() => {
         marginBottom="32px"
         width="100%"
       >
-        <FlexContainer justifyContent="space-between" alignItems="center">
-          <PrimaryTextSpan color="#ffffff" fontWeight={600} fontSize="24px">
+        <FlexContainer
+          justifyContent="space-between"
+          alignItems="center"
+          marginBottom="12px"
+        >
+          <PrimaryTextSpan
+            color="#ffffff"
+            fontWeight={600}
+            fontSize="24px"
+          >
             {t('Portfolio')}
           </PrimaryTextSpan>
 
