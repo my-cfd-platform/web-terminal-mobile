@@ -42,6 +42,7 @@ import { PositionModelWSDTO } from '../types/Positions';
 import { PendingOrderWSDTO } from '../types/PendingOrdersTypes';
 import { BidAskModelWSDTO } from '../types/BidAsk';
 import accountVerifySteps from '../constants/accountVerifySteps';
+import { polandLocalsList } from '../constants/polandLocalsList';
 
 interface MainAppStoreProps {
   token: string;
@@ -124,7 +125,11 @@ export class MainAppStore implements MainAppStoreProps {
 
     // @ts-ignore
     this.lang =
-      localStorage.getItem(LOCAL_STORAGE_LANGUAGE) || CountriesEnum.EN;
+      localStorage.getItem(LOCAL_STORAGE_LANGUAGE) ||
+      ((navigator.language &&
+        polandLocalsList.includes(navigator.language))
+        ? CountriesEnum.PL
+        : CountriesEnum.EN);
     injectInerceptors(this);
   }
 
