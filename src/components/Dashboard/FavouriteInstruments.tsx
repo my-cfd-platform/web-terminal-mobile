@@ -32,9 +32,9 @@ const FavouriteInstruments = observer(() => {
         type: mainAppStore.activeAccount!.isLive
           ? AccountTypeEnum.Live
           : AccountTypeEnum.Demo,
-        instruments: newInstruments.reverse(),
+        instruments: newInstruments,
       });
-      instrumentsStore.setActiveInstrumentsIds(response);
+      instrumentsStore.setActiveInstrumentsIds(response, true);
 
       instrumentsStore.switchInstrument(
         newActiveInstrument || response[response.length - 1]
