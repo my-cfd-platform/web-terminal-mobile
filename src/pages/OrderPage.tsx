@@ -643,7 +643,9 @@ const OrderPage = observer(() => {
             setFieldValue(Fields.MULTIPLIER, parseInt(response));
           }
           fetchDefaultInvestAmount();
-        } catch (error) {}
+        } catch (error) {
+          fetchDefaultInvestAmount();
+        }
       }
     }
     fetchMultiplier();
@@ -794,17 +796,18 @@ const OrderPage = observer(() => {
                     {t('Leverage')}
                   </PrimaryTextSpan>
                 </FlexContainer>
-
-                <MultiplierSelect dir="rtl" {...getFieldProps(Fields.MULTIPLIER)}>
-                  {instrumentsStore
-                    .activeInstrument!.instrumentItem.multiplier.slice()
-                    .sort((a, b) => b - a)
-                    .map((multiplier) => (
-                      <MultiplierSelectValue value={multiplier} key={multiplier}>
-                        x{multiplier}
-                      </MultiplierSelectValue>
-                    ))}
-                </MultiplierSelect>
+                <Observer>
+                  {() => <MultiplierSelect dir="rtl" {...getFieldProps(Fields.MULTIPLIER)}>
+                    {instrumentsStore
+                      .activeInstrument!.instrumentItem.multiplier.slice()
+                      .sort((a, b) => b - a)
+                      .map((multiplier) => (
+                        <MultiplierSelectValue value={multiplier} key={multiplier}>
+                          x{multiplier}
+                        </MultiplierSelectValue>
+                      ))}
+                  </MultiplierSelect>}
+                </Observer>
               </FlexContainer>
 
               <InputWrap
