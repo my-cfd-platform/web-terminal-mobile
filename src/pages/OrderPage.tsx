@@ -629,7 +629,7 @@ const OrderPage = observer(() => {
           ? KeysInApi.DEFAULT_INVEST_AMOUNT_REAL
           : KeysInApi.DEFAULT_INVEST_AMOUNT_DEMO, mainAppStore.initModel.tradingUrl);
         if (response.length > 0) {
-          setFieldValue(Fields.AMOUNT, parseInt(response));
+          setFieldValue(Fields.AMOUNT, parseFloat(response));
         }
         setTimeout(() => {
           setIsLoading(false);
