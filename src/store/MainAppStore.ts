@@ -122,9 +122,7 @@ export class MainAppStore implements MainAppStoreProps {
     this.refreshToken =
       localStorage.getItem(LOCAL_STORAGE_REFRESH_TOKEN_KEY) || '';
     Axios.defaults.headers[RequestHeaders.AUTHORIZATION] = this.token;
-    console.log('window.navigator.language', window.navigator.language);
-    console.log('window.navigator.languages[0]', window.navigator.languages[0]);
-    console.log('navigator.language', navigator.language);
+
     // @ts-ignore
     this.lang =
       localStorage.getItem(LOCAL_STORAGE_LANGUAGE) ||
