@@ -129,7 +129,7 @@ export class MainAppStore implements MainAppStoreProps {
       (((window.navigator.language &&
         polandLocalsList.includes(window.navigator.language.slice(0, 2).toLowerCase())) ||
         (window.navigator.languages &&
-        polandLocalsList.includes(window.navigator.language.slice(0, 2).toLowerCase()))
+        polandLocalsList.includes(window.navigator.languages[0].slice(0, 2).toLowerCase()))
       )
         ? CountriesEnum.PL
         : CountriesEnum.EN);
