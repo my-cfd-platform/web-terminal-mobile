@@ -127,6 +127,8 @@ class DataFeedService implements IBasicDataFeed {
         switch (resolution) {
           case supportedResolutions['1m']:
           case supportedResolutions['5m']:
+          case supportedResolutions['1h']:
+          case supportedResolutions['4h']:
             this.nextTimeTries = this.nextTimeTries + 1;
             console.log(this.nextTimeTries);
             onResult(bars, {
@@ -174,29 +176,21 @@ class DataFeedService implements IBasicDataFeed {
     intervalBack: number
   ) => {
     switch (resolution) {
-      // case supportedResolutions['5 minutes']:
-      //   return {
-      //     resolutionBack: 'D' as ResolutionBackValues,
-      //     intervalBack: 5,
-      //   };
+      case supportedResolutions['1m']:
+      case supportedResolutions['5m']:
+      case supportedResolutions['15m']:
+      case supportedResolutions['1h']:
+      case supportedResolutions['4h']:
+        return {
+          resolutionBack: 'D' as ResolutionBackValues,
+          intervalBack: 2,
+        };
 
-      // case supportedResolutions['1 hour']:
-      //   return {
-      //     resolutionBack: 'D' as ResolutionBackValues,
-      //     intervalBack: 2,
-      //   };
-
-      // case supportedResolutions['1 day']:
-      //   return {
-      //     resolutionBack: 'D' as ResolutionBackValues,
-      //     intervalBack: 2,
-      //   };
-      // case supportedResolutions['1 minute']:
-      //   debugger
-      //   return {
-      //     resolutionBack: 'D' as ResolutionBackValues,
-      //     intervalBack: 1,
-      //   };
+      case supportedResolutions['1d']:
+        return {
+          resolutionBack: 'D' as ResolutionBackValues,
+          intervalBack: 4,
+        };
 
       case supportedResolutions['1M']:
         return {
