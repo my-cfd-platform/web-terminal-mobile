@@ -52,7 +52,6 @@ const ActivePositionsDetails: FC<Props> = observer((props) => {
   const [closeLoading, setCloseLoading] = useState(false);
 
   const handleToggleLoadingClosePopup = (value: number | null) => {
-    console.log('value pNl', value);
     setCloseLoading(value === null);
   };
 
