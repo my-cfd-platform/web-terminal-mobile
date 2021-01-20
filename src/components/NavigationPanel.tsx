@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useCallback, useEffect} from 'react';
 import styled from '@emotion/styled';
 import { FlexContainer } from '../styles/FlexContainer';
 import { NavLink } from 'react-router-dom';
@@ -13,9 +13,46 @@ import IconUser from '../assets/svg/navigation/user.svg';
 import Colors from '../constants/Colors';
 import { useStores } from '../hooks/useStores';
 import { Observer } from 'mobx-react-lite';
+import Topics from '../constants/websocketTopics';
+import { ResponseFromWebsocket } from '../types/ResponseFromWebsocket';
+import { PositionModelWSDTO } from '../types/Positions';
+import { PendingOrderWSDTO } from '../types/PendingOrdersTypes';
 
 const NavigationPanel = () => {
-  const { portfolioNavLinksStore } = useStores();
+  const { portfolioNavLinksStore, mainAppStore, quotesStore } = useStores();
+
+  const activeOrdersCount = useCallback(() => {
+      if (quotesStore.activePositions.length > 10) {
+        return '9+';
+      } else if (quotesStore.activePositions.length === 10) {
+        return '10';
+      }
+      return `${quotesStore.activePositions.length}`;
+    },
+    [quotesStore.activePositions]
+  );
+
+  useEffect(() => {
+    if (mainAppStore.activeAccount) {
+      mainAppStore.activeSession?.on(
+        Topics.ACTIVE_POSITIONS,
+        (response: ResponseFromWebsocket<PositionModelWSDTO[]>) => {
+          if (response.accountId === mainAppStore.activeAccount?.id) {
+            quotesStore.setActivePositions(response.data);
+          }
+        }
+      );
+
+      mainAppStore.activeSession?.on(
+        Topics.PENDING_ORDERS,
+        (response: ResponseFromWebsocket<PendingOrderWSDTO[]>) => {
+          if (mainAppStore.activeAccount?.id === response.accountId) {
+            quotesStore.pendingOrders = response.data;
+          }
+        }
+      );
+    }
+  }, [mainAppStore.activeAccount]);
   return (
     <NavigationPanelWrap>
       <FlexContainer
@@ -42,6 +79,9 @@ const NavigationPanel = () => {
                 fillColor="#979797"
                 hoverFillColor={Colors.ACCENT}
               />
+              <CustomBadge count={activeOrdersCount()}>
+                {activeOrdersCount()}
+              </CustomBadge>
             </CustomNavLink>
           )}
         </Observer>
@@ -87,9 +127,30 @@ const NavigationPanelWrap = styled(FlexContainer)`
 `;
 
 const CustomNavLink = styled(NavLink)`
+  position: relative;
   &.selected {
     svg {
       fill: ${Colors.ACCENT};
     }
   }
+`;
+
+const CustomBadge = styled(FlexContainer)<{ count: string }>`
+  display: ${(props) => props.count === '0' ? 'none' : 'flex'};
+  background-color: #00ffdd;
+  width: 20px;
+  height: 20px;
+  border-radius: 10px;
+  box-sizing: border-box;
+  border: 3px solid #1C1F26;
+  flex-direction: column;
+  overflow: hidden;
+  font-size: ${(props) => props.count.length > 1 ? '8px' : '11px'};
+  font-weight: 700;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  color: #1C1F26;
+  top: -8px;
+  right: -8px;
 `;

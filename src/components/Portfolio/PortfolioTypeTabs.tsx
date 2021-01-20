@@ -1,11 +1,12 @@
-import React from 'react';
+import React, {useCallback} from 'react';
 import styled from '@emotion/styled';
-import { NavLink } from 'react-router-dom';
-import { useTranslation } from 'react-i18next';
-import { PortfolioTabEnum } from '../../enums/PortfolioTabEnum';
+import {NavLink} from 'react-router-dom';
+import {useTranslation} from 'react-i18next';
+import {PortfolioTabEnum} from '../../enums/PortfolioTabEnum';
 import Page from '../../constants/Pages';
-import { FlexContainer } from '../../styles/FlexContainer';
+import {FlexContainer} from '../../styles/FlexContainer';
 import Colors from '../../constants/Colors';
+import {useStores} from "../../hooks/useStores";
 
 const PortfolioTab = [
   {
@@ -24,6 +25,30 @@ const PortfolioTab = [
 
 function PortfolioTypeTabs() {
   const { t } = useTranslation();
+  const { quotesStore } = useStores();
+
+  const activeOrdersCount = useCallback(() => {
+      if (quotesStore.activePositions.length > 10) {
+        return '9+';
+      } else if (quotesStore.activePositions.length === 10) {
+        return '10';
+      }
+      return `${quotesStore.activePositions.length}`;
+    },
+    [quotesStore.activePositions]
+  );
+
+  const pendingOrdersCount = useCallback(() => {
+      if (quotesStore.pendingOrders.length > 10) {
+        return '9+';
+      } else if (quotesStore.pendingOrders.length === 10) {
+        return '10';
+      }
+      return `${quotesStore.pendingOrders.length}`;
+    },
+    [quotesStore.pendingOrders]
+  );
+
   return (
     <NavWrap>
       {PortfolioTab.map((tab) => (
@@ -32,6 +57,16 @@ function PortfolioTypeTabs() {
           to={`${Page.PORTFOLIO_MAIN}/${tab.type}`}
           activeClassName="selected"
         >
+          {tab.type !== PortfolioTabEnum.CLOSED &&
+            <CustomBadge count={tab.type === PortfolioTabEnum.ACTIVE
+              ? activeOrdersCount()
+              : pendingOrdersCount()
+            }>
+              {tab.type === PortfolioTabEnum.ACTIVE
+                ? activeOrdersCount()
+                : pendingOrdersCount()}
+            </CustomBadge>
+          }
           {t(tab.name)}
         </CustomNavLink>
       ))}
@@ -74,4 +109,21 @@ const CustomNavLink = styled(NavLink)`
     background-color: #494c53;
     border-radius: 8px;
   }
+`;
+
+const CustomBadge = styled(FlexContainer)<{ count: string }>`
+  display: ${(props) => props.count === '0' ? 'none' : 'flex'};
+  background-color: #00ffdd;
+  padding: 0 5px;
+  min-width: 18px;
+  height: 16px;
+  box-sizing: border-box;
+  border-radius: 8px;
+  flex-direction: column;
+  margin-right: 4px;
+  overflow: hidden;
+  font-size: 11px;
+  justify-content: center;
+  align-items: center;
+  color: #1C1F26;
 `;

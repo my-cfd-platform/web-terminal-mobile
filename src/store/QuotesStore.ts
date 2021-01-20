@@ -33,6 +33,11 @@ export class QuotesStore implements IQuotesStore {
     this.quotes[quote.id] = quote;
   };
 
+  @action
+  setActivePositions = (activePositions: PositionModelWSDTO[]) => {
+    this.activePositions = activePositions;
+  };
+
   @computed
   get profit() {
     return this.activePositions.reduce(
