@@ -108,12 +108,18 @@ const CustomNavLink = styled(NavLink)`
     color: ${Colors.ACCENT};
     background-color: #494c53;
     border-radius: 8px;
+    & > div {
+      background-color: #00ffdd;
+      color: #494C53;
+    }
   }
 `;
 
 const CustomBadge = styled(FlexContainer)<{ count: string }>`
   display: ${(props) => props.count === '0' ? 'none' : 'flex'};
-  background-color: #00ffdd;
+  background: rgba(73, 76, 83, 0.5);
+  transition: 0.4s;
+  color: #737579;
   padding: 0 5px;
   min-width: 18px;
   height: 16px;
@@ -125,5 +131,4 @@ const CustomBadge = styled(FlexContainer)<{ count: string }>`
   font-size: 11px;
   justify-content: center;
   align-items: center;
-  color: #1C1F26;
 `;
