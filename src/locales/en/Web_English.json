@@ -417,5 +417,6 @@
     "You have to sign in to the platform to create a withdrawal request": "You have to sign in to the platform to create a withdrawal request",
     "You already have one active withdrawal request": "You already have one active withdrawal request",
     "Technical Error": "Technical Error",
-    "Position Closed": "Position Closed"
+    "Position Closed": "Position Closed",
+    "Open price can not be zero": "Open price can not be zero"
 }

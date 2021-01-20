@@ -123,8 +123,10 @@ export class InstrumentsStore implements ContextProps {
   };
 
   @action
-  setActiveInstrumentsIds = (activeInstrumentsIds: string[]) => {
-    this.activeInstrumentsIds = activeInstrumentsIds.slice(0, 7).reverse();
+  setActiveInstrumentsIds = (activeInstrumentsIds: string[], unReverse?: boolean) => {
+    this.activeInstrumentsIds = unReverse
+      ? activeInstrumentsIds.slice(0, 7)
+      : activeInstrumentsIds.slice(0, 7).reverse();
   };
 
   @action
