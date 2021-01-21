@@ -126,8 +126,11 @@ export class MainAppStore implements MainAppStoreProps {
     // @ts-ignore
     this.lang =
       localStorage.getItem(LOCAL_STORAGE_LANGUAGE) ||
-      ((navigator.language &&
-        polandLocalsList.includes(navigator.language))
+      (((window.navigator.languages &&
+          polandLocalsList.includes(window.navigator.languages[0].slice(0, 2).toLowerCase())) ||
+        (window.navigator.language &&
+        polandLocalsList.includes(window.navigator.language.slice(0, 2).toLowerCase()))
+      )
         ? CountriesEnum.PL
         : CountriesEnum.EN);
     injectInerceptors(this);
