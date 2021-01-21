@@ -26,13 +26,19 @@ const NavigationPanel = () => {
 
   const activeOrdersCount = useCallback(() => {
       if (quotesStore.activePositions.length > 10) {
-        setOldValue('9+');
+        setTimeout(() => {
+          setOldValue('9+');
+        }, 500);
         return '9+';
       } else if (quotesStore.activePositions.length === 10) {
-        setOldValue('10');
+        setTimeout(() => {
+          setOldValue('10');
+        }, 500);
         return '10';
       }
-      setOldValue(`${quotesStore.activePositions.length}`);
+      setTimeout(() => {
+        setOldValue(`${quotesStore.activePositions.length}`);
+      }, 500);
       return `${quotesStore.activePositions.length}`;
     },
     [quotesStore.activePositions]
@@ -55,6 +61,7 @@ const NavigationPanel = () => {
         Topics.PENDING_ORDERS,
         (response: ResponseFromWebsocket<PendingOrderWSDTO[]>) => {
           if (mainAppStore.activeAccount?.id === response.accountId) {
+            setSpin(false);
             quotesStore.pendingOrders = response.data;
           }
         }
@@ -87,9 +94,9 @@ const NavigationPanel = () => {
                 fillColor="#979797"
                 hoverFillColor={Colors.ACCENT}
               />
-              <CustomBadge count={activeOrdersCount()} spin={spin}>
-                {spin && <FlexContainer>{oldValue}</FlexContainer>}
-                <FlexContainer>{activeOrdersCount()}</FlexContainer>
+              <CustomBadge count={activeOrdersCount()}>
+                <CounterOld spin={spin}>{oldValue}</CounterOld>
+                <CounterNew spin={spin}>{activeOrdersCount()}</CounterNew>
               </CustomBadge>
               <OutDots spin={spin}></OutDots>
             </CustomNavLink>
@@ -145,7 +152,7 @@ const CustomNavLink = styled(NavLink)`
   }
 `;
 
-const CustomBadge = styled(FlexContainer)<{ count: string, spin: boolean }>`
+const CustomBadge = styled(FlexContainer)<{ count: string }>`
   opacity: ${(props) => props.count === '0' ? 0 : 1};
   flex-direction: column;
   background-color: #00ffdd;
@@ -164,7 +171,6 @@ const CustomBadge = styled(FlexContainer)<{ count: string, spin: boolean }>`
   color: #1C1F26;
   top: -8px;
   right: -8px;
-  transition: 0.5s;
 `;
 
 const OutDots = styled(FlexContainer)<{ spin: boolean }>`
@@ -177,4 +183,17 @@ const OutDots = styled(FlexContainer)<{ spin: boolean }>`
   border: ${(props) => props.spin ? '1px dotted #00ffdd' : 'none'};
   top: ${(props) => props.spin ? '-13px' : '-6px'};
   right: ${(props) => props.spin ? '-13px' : '-6px'};
+  transition: none;
+`;
+
+const CounterOld = styled(FlexContainer)<{ spin: boolean }>`
+  position: relative;
+  transition: ${(props) => props.spin ? '0.5s' : 'none'};
+  top: ${(props) => props.spin ? '8px' : '-4px'};
+`;
+
+const CounterNew = styled(FlexContainer)<{ spin: boolean }>`
+  position: relative;
+  transition: ${(props) => props.spin ? '0.5s' : 'none'};
+  top: ${(props) => props.spin ? '4px' : '-8px'};
 `;
