@@ -197,7 +197,7 @@ const SignUp = () => {
     <FlexContainer
       flexDirection="column"
       width="100%"
-      height="100%"
+      height="calc(100vh - 100px)"
       alignItems="center"
       justifyContent="space-between"
     >
