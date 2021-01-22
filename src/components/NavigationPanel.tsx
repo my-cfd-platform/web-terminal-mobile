@@ -25,17 +25,6 @@ const NavigationPanel = () => {
   const [spin, setSpin] = useState<boolean>(false);
 
   const activeOrdersCount = useCallback(() => {
-      if (quotesStore.activePositions.length > 10) {
-        setTimeout(() => {
-          setOldValue('9+');
-        }, 500);
-        return '9+';
-      } else if (quotesStore.activePositions.length === 10) {
-        setTimeout(() => {
-          setOldValue('10');
-        }, 500);
-        return '10';
-      }
       setTimeout(() => {
         setOldValue(`${quotesStore.activePositions.length}`);
       }, 500);
@@ -95,8 +84,8 @@ const NavigationPanel = () => {
                 hoverFillColor={Colors.ACCENT}
               />
               <CustomBadge count={activeOrdersCount()}>
-                <CounterOld spin={spin}>{oldValue}</CounterOld>
-                <CounterNew spin={spin}>{activeOrdersCount()}</CounterNew>
+                <CounterOld count={activeOrdersCount()} spin={spin}>{oldValue}</CounterOld>
+                <CounterNew count={activeOrdersCount()} spin={spin}>{activeOrdersCount()}</CounterNew>
               </CustomBadge>
               <OutDots spin={spin}></OutDots>
             </CustomNavLink>
@@ -154,6 +143,7 @@ const CustomNavLink = styled(NavLink)`
 
 const CustomBadge = styled(FlexContainer)<{ count: string }>`
   opacity: ${(props) => props.count === '0' ? 0 : 1};
+  position: relative;
   flex-direction: column;
   background-color: #00ffdd;
   width: 20px;
@@ -186,14 +176,24 @@ const OutDots = styled(FlexContainer)<{ spin: boolean }>`
   transition: none;
 `;
 
-const CounterOld = styled(FlexContainer)<{ spin: boolean }>`
-  position: relative;
+const CounterOld = styled(FlexContainer)<{ spin: boolean, count: string }>`
+  position: absolute;
   transition: ${(props) => props.spin ? '0.5s' : 'none'};
-  top: ${(props) => props.spin ? '8px' : '-4px'};
+  top: ${(props) => props.spin
+    ? (props) => props.count.length === 1 ? '12px' : '10px'
+    : (props) => props.count.length === 1 ? '-1px' :'1px'
+  };
+  left: 50%;
+  transform: translateX(-50%);
 `;
 
-const CounterNew = styled(FlexContainer)<{ spin: boolean }>`
-  position: relative;
+const CounterNew = styled(FlexContainer)<{ spin: boolean, count: string }>`
+  position: absolute;
   transition: ${(props) => props.spin ? '0.5s' : 'none'};
-  top: ${(props) => props.spin ? '4px' : '-8px'};
+  top: ${(props) => props.spin
+    ? (props) => props.count.length === 1 ? '-1px' : '1px'
+    : (props) => props.count.length === 1 ? '-12px' :'-10px'
+  };
+  left: 50%;
+  transform: translateX(-50%);
 `;
