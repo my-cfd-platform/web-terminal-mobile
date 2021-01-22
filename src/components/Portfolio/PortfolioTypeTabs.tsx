@@ -28,22 +28,12 @@ function PortfolioTypeTabs() {
   const { quotesStore } = useStores();
 
   const activeOrdersCount = useCallback(() => {
-      if (quotesStore.activePositions.length > 10) {
-        return '9+';
-      } else if (quotesStore.activePositions.length === 10) {
-        return '10';
-      }
       return `${quotesStore.activePositions.length}`;
     },
     [quotesStore.activePositions]
   );
 
   const pendingOrdersCount = useCallback(() => {
-      if (quotesStore.pendingOrders.length > 10) {
-        return '9+';
-      } else if (quotesStore.pendingOrders.length === 10) {
-        return '10';
-      }
       return `${quotesStore.pendingOrders.length}`;
     },
     [quotesStore.pendingOrders]
