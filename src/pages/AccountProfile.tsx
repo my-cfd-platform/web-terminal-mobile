@@ -53,6 +53,7 @@ const AccountProfile = observer(() => {
     urlParams.set('trader_id', userProfileStore.userProfileId || '');
     urlParams.set('lang', mainAppStore.lang);
     urlParams.set('api', mainAppStore.initModel.tradingUrl);
+    urlParams.set('rt', mainAppStore.refreshToken);
     setParsedParams(urlParams.toString());
   }, [mainAppStore.token, mainAppStore.lang, mainAppStore.accounts]);
 
