@@ -418,5 +418,7 @@
     "You already have one active withdrawal request": "You already have one active withdrawal request",
     "Technical Error": "Technical Error",
     "Position Closed": "Position Closed",
-    "Open price can not be zero": "Open price can not be zero"
+    "Open price can not be zero": "Open price can not be zero",
+    "Auto-Increase trade amount": "Auto-Increase trade amount",
+    "If the loss for a position reaches 95%, an additional 20% of the original investment amount is reserved from your balance to keep your position open.": "If the loss for a position reaches 95%, an additional 20% of the original investment amount is reserved from your balance to keep your position open."
 }

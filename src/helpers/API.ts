@@ -8,6 +8,7 @@ import {
   UpdateSLTP,
   OpenPositionModel,
   OpenPendingOrder,
+  PositionUpdtateToppingUp,
 } from '../types/Positions';
 import API_LIST from './apiList';
 import { AccountModelDTO } from '../types/AccountsTypes';
@@ -187,6 +188,17 @@ class API {
       `${API_STRING}${API_LIST.PENDING_ORDERS.REMOVE}`,
       formData
     );
+    return response.data;
+  };
+
+  updateToppingUp = async (position: PositionUpdtateToppingUp) => {
+    const formData = this.convertParamsToFormData(position);
+    const response = await axios.post<OpenPositionResponseDTO>(
+      `${API_STRING}${API_LIST.POSITIONS.UPDATE_TOPING_UP}`,
+      formData
+    );
+
+    console.log(response);
     return response.data;
   };
 

@@ -22,6 +22,7 @@ export interface InstrumentModelWSDTO {
   groupId: string;
   weight: number;
   avatar: string;
+  stopOutPercent: number;
 }
 
 interface DayOff {

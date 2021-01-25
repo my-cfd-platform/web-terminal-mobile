@@ -39,10 +39,9 @@ import mixpanelValues from '../constants/mixpanelValues';
 const PositionEditSL = observer(() => {
   const { id } = useParams<{ id: string }>();
   const { t } = useTranslation();
-
   const valueInput = useRef<HTMLInputElement>(null);
-
   const { goBack, push } = useHistory();
+
   const {
     mainAppStore,
     quotesStore,
@@ -59,15 +58,20 @@ const PositionEditSL = observer(() => {
     let value: UpdateSLTP['sl'] = null;
     let price: UpdateSLTP['sl'] = null;
 
-    if (position?.slType === TpSlTypeEnum.Currency) {
-      value = position.sl !== null ? +Math.abs(position.sl).toFixed(2) : null;
-    }
+    switch (position?.slType) {
+      case TpSlTypeEnum.Currency:
+        value = position.sl !== null ? +Math.abs(position.sl).toFixed(2) : null;
+        break;
 
-    if (position?.slType === TpSlTypeEnum.Price) {
-      price =
-        position.sl !== null
-          ? +position.sl.toFixed(instrument?.digits || 2)
-          : null;
+      case TpSlTypeEnum.Price:
+        price =
+          position.sl !== null
+            ? +position.sl.toFixed(instrument?.digits || 2)
+            : null;
+        break;
+
+      default:
+        break;
     }
 
     const valueTp = position?.tp || null;
@@ -79,6 +83,7 @@ const PositionEditSL = observer(() => {
       valueTp,
       slType: position?.slType,
       operation: position?.operation,
+      isToppingUpActive: position?.isToppingUpActive || false,
     };
   }, [position, instrument]);
 
@@ -113,6 +118,41 @@ const PositionEditSL = observer(() => {
     return 0;
   }, [currentPriceBid, currentPriceAsk, position]);
 
+  /**
+   *
+   */
+  const postitionStopOut = useCallback(() => {
+    const invest = position?.investmentAmount || 0;
+    const instrumentPercentSL = (instrument?.stopOutPercent || 95) / 100;
+    return invest * instrumentPercentSL;
+  }, [position, instrument]);
+
+  /**
+   * SL from price = (Price / Current Price - 1) * Investment * Multiplier * Direction + Commissions
+   */
+  const positionStopOutByPrice = useCallback(
+    (slPrice: number) => {
+      if (position) {
+        let currentPrice, so_level, so_percent, direction, isBuy;
+        isBuy = position.operation === AskBidEnum.Buy;
+        currentPrice = isBuy ? currentPriceBid() : currentPriceAsk();
+        so_level = -1 * postitionStopOut();
+        so_percent = (instrument?.stopOutPercent || 0) / 100;
+        direction = position.operation === AskBidEnum.Buy ? 1 : -1;
+
+        return (
+          (slPrice / currentPrice - 1) *
+            position.investmentAmount *
+            position.multiplier *
+            direction +
+          Math.abs(position.swap)
+        );
+      }
+      return 0;
+    },
+    [currentPriceAsk, currentPriceBid, position]
+  );
+
   const validationSchema = useCallback(
     () =>
       yup.object().shape({
@@ -126,21 +166,7 @@ const PositionEditSL = observer(() => {
             'value',
             t('Stop loss level should be lower than the current P/L'),
             (value) => value === null || -1 * Math.abs(value) < PnL()
-          )
-          .test(
-            'value',
-            t('Stop loss level can not be higher than the Invest amount'),
-            (value) => {
-              if (position) {
-                return (
-                  value === null ||
-                  Math.abs(value) <= +position.investmentAmount
-                );
-              }
-              return false;
-            }
           ),
-
         price: yup
           .number()
           .nullable()
@@ -176,7 +202,7 @@ const PositionEditSL = observer(() => {
               ),
           }),
       }),
-    [position]
+    [position, mainAppStore.activeAccount]
   );
 
   const handleSubmitForm = async () => {
@@ -199,6 +225,30 @@ const PositionEditSL = observer(() => {
 
     setLoading(true);
     try {
+      if (values.isToppingUpActive !== position?.isToppingUpActive) {
+        const updateSavePosition = await API.updateToppingUp({
+          processId: getProcessId(),
+          accountId: mainAppStore.activeAccount?.id || '',
+          positionId: +id || 0,
+          isToppingUpActive: values.isToppingUpActive,
+        });
+
+        console.log(updateSavePosition.position.isToppingUpActive);
+
+        if (
+          values.isToppingUpActive !==
+          updateSavePosition.position.isToppingUpActive
+        ) {
+          setLoading(false);
+          notificationStore.notificationMessage = t(
+            apiResponseCodeMessages[OperationApiResponseCodes.TechnicalError]
+          );
+          notificationStore.isSuccessfull = false;
+          notificationStore.openNotification();
+          return;
+        }
+      }
+
       const response = await API.updateSLTP(valuesToSubmit);
       if (response.result === OperationApiResponseCodes.Ok) {
         mixpanel.track(mixpanelEvents.EDIT_SLTP, {
@@ -293,10 +343,37 @@ const PositionEditSL = observer(() => {
     if (!on) {
       setFieldValue('value', null);
       setFieldValue('price', null);
+      setFieldValue('isToppingUpActive', false);
     } else {
       valueInput.current?.focus();
     }
     setTouched({ toggle: true });
+  };
+
+  const handleToggleToppingUp = (on: boolean) => {
+    if (!activeSL) {
+      return;
+    }
+    // when off usebalance
+    if (!on) {
+      // check price
+      if (values.price !== null) {
+        const soValue = positionStopOutByPrice(values.price);
+        if (soValue <= 0 && Math.abs(soValue) >= postitionStopOut()) {
+          setFieldValue('price', null);
+        }
+      }
+      // check value
+      if (values.value !== null) {
+        if (values.value >= postitionStopOut()) {
+          setFieldValue('value', null);
+        }
+      }
+    }
+    setFieldValue('isToppingUpActive', on);
+    setTouched({
+      isToppingUpActive: true,
+    });
   };
 
   const handleBeforeInput = (fieldType: TpSlTypeEnum | null) => (e: any) => {
@@ -360,13 +437,28 @@ const PositionEditSL = observer(() => {
         : e.target.value.replace('- ', '').replace(',', '.') || null;
     setFieldValue(e.target.name, newValue);
 
+    console.log('Amount', position?.investmentAmount);
+    console.log('Stop out', instrument?.stopOutPercent);
     switch (e.target.name) {
       case 'value':
+        if (newValue && +newValue >= postitionStopOut()) {
+          setFieldValue('isToppingUpActive', true);
+        } else {
+          setFieldValue('isToppingUpActive', false);
+        }
         setFieldValue('price', null);
         break;
 
       case 'price':
         setFieldValue('value', null);
+        const soValue = positionStopOutByPrice(
+          newValue !== null ? +newValue : 0
+        );
+        if (soValue <= 0 && Math.abs(soValue) >= postitionStopOut()) {
+          setFieldValue('isToppingUpActive', true);
+        } else {
+          setFieldValue('isToppingUpActive', false);
+        }
         break;
 
       default:
@@ -430,7 +522,8 @@ const PositionEditSL = observer(() => {
       <CustomForm noValidate onSubmit={handleSubmit}>
         {((touched.toggle && !activeSL) ||
           (dirty && values.value !== null && values.price !== null) ||
-          (dirty && (values.value !== null || values.price !== null))) && (
+          (dirty && (values.value !== null || values.price !== null)) ||
+          (dirty && touched.isToppingUpActive)) && (
           <FlexContainer
             position="absolute"
             right="16px"
@@ -478,17 +571,6 @@ const PositionEditSL = observer(() => {
                 {t('Value')}, $
               </PrimaryTextSpan>
               <FlexContainer justifyContent="flex-end" alignItems="center">
-                {/* {values.value !== null && (
-                  <ExtraMinus
-                    color={
-                      touched.value && errors.value ? Colors.RED : '#ffffff'
-                    }
-                    fontSize="16px"
-                    lineHeight="1"
-                  >
-                    -
-                  </ExtraMinus>
-                )} */}
                 <Input
                   ref={valueInput}
                   customWidth={'auto'}
@@ -517,7 +599,7 @@ const PositionEditSL = observer(() => {
           <FlexContainer
             flexDirection="column"
             width="100%"
-            marginBottom="12px"
+            marginBottom="40px"
           >
             <InputWrap
               flexDirection="column"
@@ -575,6 +657,35 @@ const PositionEditSL = observer(() => {
                 </PrimaryTextSpan>
               )}
             </FlexContainer>
+          </FlexContainer>
+
+          <FlexContainer
+            backgroundColor="rgba(42, 45, 56, 0.5)"
+            height="50px"
+            justifyContent="space-between"
+            alignItems="center"
+            padding="0 16px"
+            marginBottom="1px"
+          >
+            <PrimaryTextSpan color="#ffffff" fontSize="16px">
+              {t('Auto-Increase trade amount')}
+            </PrimaryTextSpan>
+
+            <SlideCheckbox
+              isActive={values.isToppingUpActive}
+              handleClick={handleToggleToppingUp}
+            />
+          </FlexContainer>
+          <FlexContainer padding="12px 16px">
+            <PrimaryTextSpan
+              fontSize="11px"
+              color="rgba(196, 196, 196, 0.5)"
+              lineHeight="1.4"
+            >
+              {t(
+                'If the loss for a position reaches 95%, an additional 20% of the original investment amount is reserved from your balance to keep your position open.'
+              )}
+            </PrimaryTextSpan>
           </FlexContainer>
         </FlexContainer>
       </CustomForm>
