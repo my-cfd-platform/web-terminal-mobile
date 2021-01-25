@@ -25,9 +25,7 @@ const NavigationPanel = () => {
   const [spin, setSpin] = useState<boolean>(false);
 
   const activeOrdersCount = useCallback(() => {
-      setTimeout(() => {
-        setOldValue(`${quotesStore.activePositions.length}`);
-      }, 500);
+      setOldValue(`${quotesStore.activePositions.length}`);
       return `${quotesStore.activePositions.length}`;
     },
     [quotesStore.activePositions]
