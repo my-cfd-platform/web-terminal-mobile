@@ -1,4 +1,4 @@
-import React, { FC, useEffect } from 'react';
+import React, {FC, useEffect, useState} from 'react';
 import { FlexContainer } from '../styles/FlexContainer';
 import { Observer } from 'mobx-react-lite';
 import NotificationPopup from '../components/NotificationPopup';
@@ -46,11 +46,13 @@ const AuthorizedContainer: FC = ({ children }) => {
 
   const { push } = useHistory();
   const { mainAppStore, userProfileStore, serverErrorPopupStore } = useStores();
+  const [ waitingData, setWaitingData ] = useState<boolean>(true);
   const showNavbarAndNav = !match?.isExact;
 
   useEffect(() => {
     async function fetchPersonalData() {
       try {
+        setWaitingData(true);
         const response = await API.getPersonalData(
           getProcessId(),
           mainAppStore.initModel.authUrl
@@ -81,7 +83,10 @@ const AuthorizedContainer: FC = ({ children }) => {
             push(Page.PHONE_VERIFICATION);
           }
         }
-      } catch (error) {}
+        setWaitingData(false);
+      } catch (error) {
+        setWaitingData(false);
+      }
     }
     fetchPersonalData();
   }, []);
@@ -115,7 +120,7 @@ const AuthorizedContainer: FC = ({ children }) => {
       <Observer>
         {() => (
           <LoaderFullscreen
-            isLoading={mainAppStore.isLoading}
+            isLoading={mainAppStore.isLoading || waitingData}
           ></LoaderFullscreen>
         )}
       </Observer>
