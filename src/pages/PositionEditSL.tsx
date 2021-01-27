@@ -356,7 +356,7 @@ const PositionEditSL = observer(() => {
       // check price
       if (values.price !== null) {
         const soValue = positionStopOutByPrice(values.price);
-        if (soValue <= 0 && Math.abs(soValue) >= postitionStopOut()) {
+        if (soValue <= 0 && Math.abs(soValue) > postitionStopOut()) {
           setFieldValue('price', null);
         }
       }
