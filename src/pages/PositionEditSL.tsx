@@ -351,7 +351,6 @@ const PositionEditSL = observer(() => {
   };
 
   const handleToggleToppingUp = (on: boolean) => {
-
     // when off usebalance
     if (!on) {
       // check price
@@ -439,7 +438,7 @@ const PositionEditSL = observer(() => {
     console.log('Stop out', instrument?.stopOutPercent);
     switch (e.target.name) {
       case 'value':
-        if (newValue && +newValue >= postitionStopOut()) {
+        if (newValue && +newValue > postitionStopOut()) {
           setFieldValue('isToppingUpActive', true);
         } else {
           setFieldValue('isToppingUpActive', false);
@@ -452,7 +451,7 @@ const PositionEditSL = observer(() => {
         const soValue = positionStopOutByPrice(
           newValue !== null ? +newValue : 0
         );
-        if (soValue <= 0 && Math.abs(soValue) >= postitionStopOut()) {
+        if (soValue <= 0 && Math.abs(soValue) > postitionStopOut()) {
           setFieldValue('isToppingUpActive', true);
         } else {
           setFieldValue('isToppingUpActive', false);
@@ -680,8 +679,11 @@ const PositionEditSL = observer(() => {
               color="rgba(196, 196, 196, 0.5)"
               lineHeight="1.4"
             >
-              {`${t('If the loss for a position reaches')} ${instrument?.stopOutPercent}% ${t('an additional 20% of the original investment amount is reserved from your balance to keep your position open.')}`}
-              
+              {`${t('If the loss for a position reaches')} ${
+                instrument?.stopOutPercent
+              }% ${t(
+                'an additional 20% of the original investment amount is reserved from your balance to keep your position open.'
+              )}`}
             </PrimaryTextSpan>
           </FlexContainer>
         </FlexContainer>
