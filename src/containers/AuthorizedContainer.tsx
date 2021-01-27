@@ -42,6 +42,7 @@ const AuthorizedContainer: FC = ({ children }) => {
     Page.SL_EDIT,
     Page.TP_EDIT,
     Page.ACCOUNT_BALANCE_HISTORY,
+    Page.PHONE_VERIFICATION
   ]);
 
   const { push } = useHistory();
@@ -52,7 +53,6 @@ const AuthorizedContainer: FC = ({ children }) => {
   useEffect(() => {
     async function fetchPersonalData() {
       try {
-        setWaitingData(true);
         const response = await API.getPersonalData(
           getProcessId(),
           mainAppStore.initModel.authUrl
@@ -80,6 +80,7 @@ const AuthorizedContainer: FC = ({ children }) => {
             mainAppStore.initModel.authUrl
           );
           if (additionalResponse.includes('phone')) {
+            mainAppStore.isVerification = true;
             push(Page.PHONE_VERIFICATION);
           }
         }
@@ -130,7 +131,7 @@ const AuthorizedContainer: FC = ({ children }) => {
       <Observer>{() => <NetworkErrorPopup></NetworkErrorPopup>}</Observer>
       <Observer>
         {() => (
-          <>{mainAppStore.isDemoRealPopup && <DemoRealPopup></DemoRealPopup>}</>
+          <>{(mainAppStore.isDemoRealPopup && !mainAppStore.isVerification) && <DemoRealPopup></DemoRealPopup>}</>
         )}
       </Observer>
       {showNavbarAndNav && <NavBar />}

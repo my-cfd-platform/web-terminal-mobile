@@ -114,6 +114,7 @@ export class MainAppStore implements MainAppStoreProps {
   @observable activeAccountId: string = '';
   @observable connectionSignalRTimer: NodeJS.Timeout | null = null;
   @observable signUpFlag: boolean = false;
+  @observable isVerification: boolean = false;
   websocketConnectionTries = 0;
 
   constructor(rootStore: RootStore) {

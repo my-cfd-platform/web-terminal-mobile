@@ -88,6 +88,7 @@ const PhoneVerification: FC = () => {
           [mixapanelProps.BRAND_NAME]: mainAppStore.initModel.brandName.toLowerCase(),
         });
       }
+      mainAppStore.isVerification = false;
       push(Page.DASHBOARD);
     } catch (error) {}
   };
