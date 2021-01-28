@@ -140,13 +140,14 @@ const PositionEditSL = observer(() => {
         so_percent = (instrument?.stopOutPercent || 0) / 100;
         direction = position.operation === AskBidEnum.Buy ? 1 : -1;
 
-        return (
+        const result = (
           (slPrice / currentPrice - 1) *
             position.investmentAmount *
             position.multiplier *
             direction +
           Math.abs(position.swap)
-        );
+        )
+        return +Number(result).toFixed(2);
       }
       return 0;
     },
@@ -355,7 +356,7 @@ const PositionEditSL = observer(() => {
     if (!on) {
       // check price
       if (values.price !== null) {
-        const soValue = positionStopOutByPrice(values.price);
+        const soValue: number = positionStopOutByPrice(values.price);
         if (soValue <= 0 && Math.abs(soValue) > postitionStopOut()) {
           setFieldValue('price', null);
         }
@@ -433,9 +434,7 @@ const PositionEditSL = observer(() => {
         ? e.target.value
         : e.target.value.replace('- ', '').replace(',', '.') || null;
     setFieldValue(e.target.name, newValue);
-
-    console.log('Amount', position?.investmentAmount);
-    console.log('Stop out', instrument?.stopOutPercent);
+    
     switch (e.target.name) {
       case 'value':
         if (newValue && +newValue > postitionStopOut()) {
@@ -451,6 +450,7 @@ const PositionEditSL = observer(() => {
         const soValue = positionStopOutByPrice(
           newValue !== null ? +newValue : 0
         );
+        console.log(soValue)
         if (soValue <= 0 && Math.abs(soValue) > postitionStopOut()) {
           setFieldValue('isToppingUpActive', true);
         } else {
