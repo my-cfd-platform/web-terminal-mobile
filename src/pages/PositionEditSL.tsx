@@ -124,7 +124,7 @@ const PositionEditSL = observer(() => {
   const postitionStopOut = useCallback(() => {
     const invest = position?.investmentAmount || 0;
     const instrumentPercentSL = (instrument?.stopOutPercent || 95) / 100;
-    return invest * instrumentPercentSL;
+    return +Number(invest * instrumentPercentSL).toFixed(2);
   }, [position, instrument]);
 
   /**
