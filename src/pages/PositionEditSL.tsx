@@ -367,7 +367,11 @@ const PositionEditSL = observer(() => {
       }
 
       setFieldValue('value', postitionStopOut());
+    } else {
+      setFieldValue('value', null);
+      setFieldValue('price', null);
     }
+
     setFieldValue('isToppingUpActive', on);
     setTouched({
       isToppingUpActive: true,
