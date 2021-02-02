@@ -140,13 +140,12 @@ const PositionEditSL = observer(() => {
         so_percent = (instrument?.stopOutPercent || 0) / 100;
         direction = position.operation === AskBidEnum.Buy ? 1 : -1;
 
-        const result = (
+        const result =
           (slPrice / currentPrice - 1) *
             position.investmentAmount *
             position.multiplier *
             direction +
-          Math.abs(position.swap)
-        )
+          Math.abs(position.swap);
         return +Number(result).toFixed(2);
       }
       return 0;
@@ -233,8 +232,6 @@ const PositionEditSL = observer(() => {
           positionId: +id || 0,
           isToppingUpActive: values.isToppingUpActive,
         });
-
-        console.log(updateSavePosition.position.isToppingUpActive);
 
         if (
           values.isToppingUpActive !==
@@ -368,6 +365,8 @@ const PositionEditSL = observer(() => {
           setFieldValue('value', null);
         }
       }
+
+      setFieldValue('value', postitionStopOut());
     }
     setFieldValue('isToppingUpActive', on);
     setTouched({
@@ -409,6 +408,7 @@ const PositionEditSL = observer(() => {
         return;
       }
     }
+
     // see another regex
     const regex = `^[0-9]{1,7}([,.][0-9]{1,${PRECISION}})?$`;
     const splittedValue =
@@ -435,7 +435,7 @@ const PositionEditSL = observer(() => {
         ? e.target.value
         : e.target.value.replace('- ', '').replace(',', '.') || null;
     setFieldValue(e.target.name, newValue);
-    
+
     switch (e.target.name) {
       case 'value':
         if (newValue && +newValue > postitionStopOut()) {
@@ -452,7 +452,7 @@ const PositionEditSL = observer(() => {
         const soValue = positionStopOutByPrice(
           newValue !== null ? +newValue : 0
         );
-        console.log(soValue)
+        console.log(soValue);
         if (soValue <= 0 && Math.abs(soValue) > postitionStopOut()) {
           setFieldValue('isToppingUpActive', true);
         } else {
@@ -641,12 +641,12 @@ const PositionEditSL = observer(() => {
 
             <FlexContainer padding="12px 16px">
               {touched.price && errors.price ? (
-                <PrimaryTextSpan fontSize="11px" color={Colors.RED}>
+                <PrimaryTextSpan fontSize="13px" color={Colors.RED}>
                   {errors.price}
                 </PrimaryTextSpan>
               ) : (
                 <PrimaryTextSpan
-                  fontSize="11px"
+                  fontSize="13px"
                   color="rgba(196, 196, 196, 0.5)"
                 >
                   {t('Current price')}&nbsp;
@@ -666,9 +666,11 @@ const PositionEditSL = observer(() => {
             padding="0 16px"
             marginBottom="1px"
           >
-            <PrimaryTextSpan color="#ffffff" fontSize="16px">
-              {t('Auto-Increase trade amount')}
-            </PrimaryTextSpan>
+            <FlexContainer padding="0 12px 0 0">
+              <PrimaryTextSpan color="#ffffff" fontSize="16px">
+                {t('Save your position from market noise')}
+              </PrimaryTextSpan>
+            </FlexContainer>
 
             <SlideCheckbox
               isActive={values.isToppingUpActive}
@@ -677,15 +679,29 @@ const PositionEditSL = observer(() => {
           </FlexContainer>
           <FlexContainer padding="12px 16px">
             <PrimaryTextSpan
-              fontSize="11px"
+              fontSize="13px"
               color="rgba(196, 196, 196, 0.5)"
               lineHeight="1.4"
             >
               {`${t('If the loss for a position reaches')} ${
                 instrument?.stopOutPercent
-              }% ${t(
-                'an additional 20% of the original investment amount is reserved from your balance to keep your position open.'
+              }%, ${t(
+                'an additional 20% of the original investment amount will be reserved from your balance to save your position from closing. If the position takes a further loss, your available balance is reduced by 20% again and again. Once the position rises to at least'
+              )} ${instrument?.stopOutPercent}% + 1% , ${t(
+                'all previously reserved funds are returned to your balance.'
               )}`}
+            </PrimaryTextSpan>
+          </FlexContainer>
+
+          <FlexContainer padding="0 16px 12px">
+            <PrimaryTextSpan
+              fontSize="13px"
+              color="rgba(196, 196, 196, 0.5)"
+              lineHeight="1.4"
+            >
+              {t(
+                'You can limit the additional funds reserved on your balance by specifying a level of loss that is acceptable to you for this position.'
+              )}
             </PrimaryTextSpan>
           </FlexContainer>
         </FlexContainer>
