@@ -326,6 +326,7 @@ const PositionEditSL = observer(() => {
     setFieldValue,
     handleSubmit,
     touched,
+    setFieldError,
     getFieldProps,
     errors,
     dirty,
@@ -335,8 +336,8 @@ const PositionEditSL = observer(() => {
     enableReinitialize: true,
     onSubmit: handleSubmitForm,
     validationSchema,
-    validateOnBlur: true,
-    validateOnChange: true,
+    validateOnBlur: false,
+    validateOnChange: false,
   });
 
   const handleToggleSlideSLTP = (on: boolean) => {
@@ -446,6 +447,7 @@ const PositionEditSL = observer(() => {
         break;
 
       case 'price':
+        setFieldError('price', '');
         setFieldValue('value', null);
         const soValue = positionStopOutByPrice(
           newValue !== null ? +newValue : 0
