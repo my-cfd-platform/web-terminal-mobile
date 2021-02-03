@@ -434,10 +434,13 @@ const PositionEditSL = observer(() => {
   };
 
   const handleChangeInput = (e: ChangeEvent<HTMLInputElement>) => {
-    const newValue = e.target.value === '' ? null : +e.target.value === 0
-    ? e.target.value
-    : e.target.value.replace('- ', '').replace(',', '.') || null;
-      
+    const newValue =
+      e.target.value === ''
+        ? null
+        : +e.target.value === 0
+        ? e.target.value
+        : e.target.value.replace('- ', '').replace(',', '.') || null;
+
     setFieldValue(e.target.name, newValue);
 
     switch (e.target.name) {
@@ -472,13 +475,10 @@ const PositionEditSL = observer(() => {
   const handleBlurInput = (e: ChangeEvent<HTMLInputElement>) => {
     const int_value = parseInt(e.target.value.replace('- ', ''));
     const value = isNaN(int_value) ? null : int_value;
-    
+
     switch (e.target.name) {
       case 'value':
-        setFieldValue(
-          'value',
-          value !== null ? value.toFixed(2) : value
-        );
+        setFieldValue('value', value !== null ? value.toFixed(2) : value);
         break;
 
       case 'price':
@@ -523,10 +523,14 @@ const PositionEditSL = observer(() => {
     <BackFlowLayout pageTitle={'Stop Loss'}>
       <LoaderForComponents isLoading={loading} />
       <CustomForm noValidate onSubmit={handleSubmit}>
-        {((touched.toggle && !activeSL) ||
+        {((dirty && touched.toggle && !activeSL) ||
           (dirty && values.value !== null && values.price !== null) ||
           (dirty && (values.value !== null || values.price !== null)) ||
-          (dirty && touched.isToppingUpActive)) && (
+          (dirty && touched.isToppingUpActive) ||
+          (dirty &&
+            values.value !== null &&
+            values.price !== null &&
+            values.isToppingUpActive !== position.isToppingUpActive)) && (
           <FlexContainer
             position="absolute"
             right="16px"
