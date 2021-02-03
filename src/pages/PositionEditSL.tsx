@@ -4,7 +4,6 @@ import { useFormik } from 'formik';
 import { observer } from 'mobx-react-lite';
 import React, {
   ChangeEvent,
-  createRef,
   useCallback,
   useEffect,
   useRef,
@@ -26,7 +25,6 @@ import { TpSlTypeEnum } from '../enums/TpSlTypeEnum';
 import { ButtonWithoutStyles } from '../styles/ButtonWithoutStyles';
 import { getProcessId } from '../helpers/getProcessId';
 import API from '../helpers/API';
-import InputMaskedField from '../components/InputMaskedField';
 import { OperationApiResponseCodes } from '../enums/OperationApiResponseCodes';
 import apiResponseCodeMessages from '../constants/apiResponseCodeMessages';
 import calculateFloatingProfitAndLoss from '../helpers/calculateFloatingProfitAndLoss';
@@ -279,6 +277,7 @@ const PositionEditSL = observer(() => {
           [mixapanelProps.EVENT_REF]: mixpanelValues.PORTFOLIO,
           [mixapanelProps.POSITION_ID]: response.position.id,
         });
+        goBack();
       } else {
         mixpanel.track(mixpanelEvents.EDIT_SLTP_FAILED, {
           [mixapanelProps.AMOUNT]: position?.investmentAmount,
@@ -307,14 +306,14 @@ const PositionEditSL = observer(() => {
             : 'demo',
           [mixapanelProps.EVENT_REF]: mixpanelValues.PORTFOLIO,
         });
+        setLoading(false);
         notificationStore.notificationMessage = t(
           apiResponseCodeMessages[response.result]
         );
         notificationStore.isSuccessfull = false;
         notificationStore.openNotification();
       }
-      goBack();
-      setLoading(false);
+      
     } catch (error) {}
   };
 
@@ -324,7 +323,6 @@ const PositionEditSL = observer(() => {
     handleSubmit,
     touched,
     setFieldError,
-    getFieldProps,
     errors,
     dirty,
     setTouched,
@@ -515,7 +513,7 @@ const PositionEditSL = observer(() => {
     }
   }, [quotesStore.activePositions]);
 
-  if (!mainAppStore.activeAccount || !position) {
+  if (!mainAppStore.activeAccount || !position || loading) {
     return <LoaderForComponents isLoading={true} />;
   }
 
@@ -759,4 +757,4 @@ const Input = styled.input<{ autocomplete?: string; customWidth?: string }>`
   width: ${(props) => props.customWidth};
 `;
 
-const ExtraMinus = styled(PrimaryTextSpan)``;
+
