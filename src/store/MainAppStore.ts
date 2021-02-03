@@ -115,6 +115,7 @@ export class MainAppStore implements MainAppStoreProps {
   @observable connectionSignalRTimer: NodeJS.Timeout | null = null;
   @observable signUpFlag: boolean = false;
   @observable isVerification: boolean = false;
+  @observable balanceWas: number = 0;
   websocketConnectionTries = 0;
 
   constructor(rootStore: RootStore) {
@@ -551,6 +552,7 @@ export class MainAppStore implements MainAppStoreProps {
     this.activeAccount = undefined;
     this.activeAccountId = '';
     this.rootStore.withdrawalStore.clearStore();
+    this.balanceWas = 0;
   };
 
   setTokenHandler = (token: string) => {

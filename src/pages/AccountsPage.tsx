@@ -36,6 +36,7 @@ const AccountsPage = () => {
       return;
     }
 
+    mainAppStore.balanceWas = 0;
     mainAppStore.activeSession?.send(Topics.SET_ACTIVE_ACCOUNT, {
       [Fields.ACCOUNT_ID]: accId,
     });
