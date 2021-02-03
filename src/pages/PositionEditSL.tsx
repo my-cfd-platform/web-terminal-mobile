@@ -472,7 +472,7 @@ const PositionEditSL = observer(() => {
   };
 
   const handleBlurInput = (e: ChangeEvent<HTMLInputElement>) => {
-    const int_value = parseInt(e.target.value.replace('- ', ''));
+    const int_value = parseFloat(e.target.value.replace('- ', ''));
     const value = isNaN(int_value) ? null : int_value;
 
     switch (e.target.name) {
