@@ -501,7 +501,9 @@ const PositionEditSL = observer(() => {
   }, [values.value]);
 
   useEffect(() => {
+    setLoading(true)
     const pos = quotesStore.activePositions.find((pos) => pos.id === +id);
+    
     if (pos) {
       setPosition(pos);
       const instr = instrumentsStore.instruments.find(
@@ -509,8 +511,16 @@ const PositionEditSL = observer(() => {
       )?.instrumentItem;
       setInstrument(instr);
     }
+
     if (quotesStore.activePositions && !pos) {
       push(Page.PORTFOLIO_MAIN);
+    }
+    
+    const offloaderAfterInitAnim = setTimeout(() => {
+      setLoading(false);
+    }, 600);
+    return () => {
+      clearTimeout(offloaderAfterInitAnim);
     }
   }, [quotesStore.activePositions]);
 
