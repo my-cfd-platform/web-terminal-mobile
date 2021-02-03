@@ -434,10 +434,10 @@ const PositionEditSL = observer(() => {
   };
 
   const handleChangeInput = (e: ChangeEvent<HTMLInputElement>) => {
-    const newValue =
-      +e.target.value === 0
-        ? e.target.value
-        : e.target.value.replace('- ', '').replace(',', '.') || null;
+    const newValue = e.target.value === '' ? null : +e.target.value === 0
+    ? e.target.value
+    : e.target.value.replace('- ', '').replace(',', '.') || null;
+      
     setFieldValue(e.target.name, newValue);
 
     switch (e.target.name) {
@@ -470,21 +470,21 @@ const PositionEditSL = observer(() => {
   };
 
   const handleBlurInput = (e: ChangeEvent<HTMLInputElement>) => {
-    const value = +e.target.value.replace('- ', '');
+    const int_value = parseInt(e.target.value.replace('- ', ''));
+    const value = isNaN(int_value) ? null : int_value;
+    
     switch (e.target.name) {
       case 'value':
         setFieldValue(
           'value',
-          +value === 0 ? value : value ? value.toFixed(2) : null
+          value !== null ? value.toFixed(2) : value
         );
         break;
 
       case 'price':
         setFieldValue(
           'price',
-          e.target.value
-            ? Number(e.target.value).toFixed(instrument?.digits || 2)
-            : null
+          value !== null ? value.toFixed(instrument?.digits || 2) : value
         );
         break;
     }

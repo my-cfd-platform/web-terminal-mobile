@@ -256,6 +256,7 @@ const PositionEditTP = observer(() => {
   const {
     values,
     setFieldValue,
+    setFieldError,
     handleSubmit,
     touched,
     errors,
@@ -266,8 +267,8 @@ const PositionEditTP = observer(() => {
     enableReinitialize: true,
     onSubmit: handleSubmitForm,
     validationSchema,
-    validateOnBlur: true,
-    validateOnChange: true,
+    validateOnBlur: false,
+    validateOnChange: false,
   });
 
   const handleToggleSlideSLTP = (on: boolean) => {
@@ -346,6 +347,7 @@ const PositionEditTP = observer(() => {
         break;
 
       case 'price':
+        setFieldError('price', '');
         setFieldValue('value', null);
         break;
 
