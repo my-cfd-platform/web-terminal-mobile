@@ -341,6 +341,8 @@ const PositionEditTP = observer(() => {
   };
 
   const handleChangeInput = (e: ChangeEvent<HTMLInputElement>) => {
+    setFieldError('value', '');
+    setFieldError('price', '');
     setFieldValue(e.target.name, e.target.value.replace(',', '.') || null);
 
     switch (e.target.name) {
@@ -349,7 +351,6 @@ const PositionEditTP = observer(() => {
         break;
 
       case 'price':
-        setFieldError('price', '');
         setFieldValue('value', null);
         break;
 

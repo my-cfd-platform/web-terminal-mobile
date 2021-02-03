@@ -432,6 +432,8 @@ const PositionEditSL = observer(() => {
   };
 
   const handleChangeInput = (e: ChangeEvent<HTMLInputElement>) => {
+    setFieldError('value', '');
+    setFieldError('price', '');
     const newValue =
       e.target.value === ''
         ? null
@@ -452,7 +454,6 @@ const PositionEditSL = observer(() => {
         break;
 
       case 'price':
-        setFieldError('price', '');
         setFieldValue('value', null);
         const soValue = positionStopOutByPrice(
           newValue !== null ? +newValue : 0
