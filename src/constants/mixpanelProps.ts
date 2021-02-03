@@ -29,6 +29,7 @@ const mixapanelProps = {
   SERVER_ERROR: 'Server error',
   POSITION_ID: 'Position ID',
   WITHDRAWAL_METHOD: 'Withdraw method',
+  NUMBER_OF_POSITIONS: 'Number of positions',
 };
 
 Object.freeze(mixapanelProps);

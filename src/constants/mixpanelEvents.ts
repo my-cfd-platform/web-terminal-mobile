@@ -46,6 +46,7 @@ const mixpanelEvents = {
   LOGOUT: 'logout',
   EDIT_SLTP: 'edit sltp',
   EDIT_SLTP_FAILED: 'edit sltp failed',
+  MOBILE_CHART_POSITION_VIEW: 'mobile chart position view',
 };
 
 Object.freeze(mixpanelEvents);
