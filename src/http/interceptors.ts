@@ -1,10 +1,26 @@
-import axios, { AxiosError, AxiosResponse, AxiosRequestConfig } from 'axios';
+import axios, { AxiosResponse } from 'axios';
 import { OperationApiResponseCodes } from '../enums/OperationApiResponseCodes';
 import apiResponseCodeMessages from '../constants/apiResponseCodeMessages';
 import { MainAppStore } from '../store/MainAppStore';
 import RequestHeaders from '../constants/headers';
 
 const injectInerceptors = (mainAppStore: MainAppStore) => {
+  // for multiple requests
+  let isRefreshing = false;
+  let failedQueue: any[] = [];
+
+  const processQueue = (error: any, token: string | null = null) => {
+    failedQueue.forEach((prom) => {
+      if (error) {
+        prom.reject(error);
+      } else {
+        prom.resolve(token);
+      }
+    });
+
+    failedQueue = [];
+  };
+
   // TODO: research init flow
   axios.interceptors.response.use(
     function (config: AxiosResponse) {
@@ -38,7 +54,7 @@ const injectInerceptors = (mainAppStore: MainAppStore) => {
       return config;
     },
 
-    async function (error: AxiosError) {
+    async function (error) {
       if (!error.response?.status) {
         mainAppStore.rootStore.badRequestPopupStore.setRecconect();
         setTimeout(() => {
@@ -46,6 +62,8 @@ const injectInerceptors = (mainAppStore: MainAppStore) => {
           mainAppStore.rootStore.badRequestPopupStore.stopRecconect();
         }, +mainAppStore.connectTimeOut);
       }
+
+      const originalRequest = error.config;
 
       switch (error.response?.status) {
         case 400:
@@ -61,25 +79,55 @@ const injectInerceptors = (mainAppStore: MainAppStore) => {
           break;
 
         case 401:
-          if (mainAppStore.refreshToken) {
-            return mainAppStore
-              .postRefreshToken()
-              .then(() => {
-                axios.defaults.headers[RequestHeaders.AUTHORIZATION] =
-                  mainAppStore.token;
+          if (mainAppStore.refreshToken && !originalRequest._retry) {
+            if (isRefreshing) {
+              try {
+                const token = await new Promise(function (resolve, reject) {
+                  failedQueue.push({ resolve, reject });
+                });
+                originalRequest.headers[RequestHeaders.AUTHORIZATION] = token;
+                return await axios(originalRequest);
+              } catch (err) {
+                return await Promise.reject(err);
+              }
+            }
 
-                error.config.headers[RequestHeaders.AUTHORIZATION] =
-                  mainAppStore.token;
+            originalRequest._retry = true;
+            isRefreshing = true;
 
-                return axios.request(error.config);
-              })
-              .catch(() => {
-                mainAppStore.refreshToken = '';
-              });
+            return new Promise(function (resolve, reject) {
+              mainAppStore
+                .postRefreshToken()
+                .then(() => {
+                  axios.defaults.headers[RequestHeaders.AUTHORIZATION] =
+                    mainAppStore.token;
+
+                  error.config.headers[RequestHeaders.AUTHORIZATION] =
+                    mainAppStore.token;
+
+                  processQueue(null, mainAppStore.token);
+                  resolve(axios(originalRequest));
+                })
+                .catch((err) => {
+                  mainAppStore.refreshToken = '';
+                  processQueue(err, null);
+                  reject(err);
+                })
+                .finally(() => {
+                  mainAppStore.isLoading = false;
+                  isRefreshing = false;
+                });
+            });
           } else {
             mainAppStore.signOut();
           }
           break;
+
+        case 403: {
+          failedQueue = [];
+          mainAppStore.signOut();
+          break;
+        }
 
         default:
           break;

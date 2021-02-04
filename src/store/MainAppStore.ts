@@ -42,6 +42,7 @@ import { PositionModelWSDTO } from '../types/Positions';
 import { PendingOrderWSDTO } from '../types/PendingOrdersTypes';
 import { BidAskModelWSDTO } from '../types/BidAsk';
 import accountVerifySteps from '../constants/accountVerifySteps';
+import { polandLocalsList } from '../constants/polandLocalsList';
 
 interface MainAppStoreProps {
   token: string;
@@ -113,6 +114,7 @@ export class MainAppStore implements MainAppStoreProps {
   @observable activeAccountId: string = '';
   @observable connectionSignalRTimer: NodeJS.Timeout | null = null;
   @observable signUpFlag: boolean = false;
+  @observable isVerification: boolean = false;
   websocketConnectionTries = 0;
 
   constructor(rootStore: RootStore) {
@@ -124,7 +126,14 @@ export class MainAppStore implements MainAppStoreProps {
 
     // @ts-ignore
     this.lang =
-      localStorage.getItem(LOCAL_STORAGE_LANGUAGE) || CountriesEnum.EN;
+      localStorage.getItem(LOCAL_STORAGE_LANGUAGE) ||
+      (((window.navigator.languages &&
+          polandLocalsList.includes(window.navigator.languages[0].slice(0, 2).toLowerCase())) ||
+        (window.navigator.language &&
+        polandLocalsList.includes(window.navigator.language.slice(0, 2).toLowerCase()))
+      )
+        ? CountriesEnum.PL
+        : CountriesEnum.EN);
     injectInerceptors(this);
   }
 

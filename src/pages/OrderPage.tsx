@@ -122,6 +122,18 @@ const OrderPage = observer(() => {
           .number()
           .test(
             Fields.AMOUNT,
+            `${t('Insufficient funds to open a position. You have only')} $${
+              mainAppStore.activeAccount?.balance
+            }`,
+            (value) => {
+              if (value) {
+                return value <= (mainAppStore.activeAccount?.balance || 0);
+              }
+              return true;
+            }
+          )
+          .test(
+            Fields.AMOUNT,
             `${t('Minimum trade volume')} $${
               instrumentsStore.activeInstrument?.instrumentItem
                 .minOperationVolume
@@ -169,18 +181,7 @@ const OrderPage = observer(() => {
               return true;
             }
           )
-          .test(
-            Fields.AMOUNT,
-            `${t('Insufficient funds to open a position. You have only')} $${
-              mainAppStore.activeAccount?.balance
-            }`,
-            (value) => {
-              if (value) {
-                return value <= (mainAppStore.activeAccount?.balance || 0);
-              }
-              return true;
-            }
-          )
+          
           .required(t('Please fill Invest amount')),
         multiplier: yup.number().required(t('Required amount')),
         tp: yup
@@ -628,7 +629,7 @@ const OrderPage = observer(() => {
           ? KeysInApi.DEFAULT_INVEST_AMOUNT_REAL
           : KeysInApi.DEFAULT_INVEST_AMOUNT_DEMO, mainAppStore.initModel.tradingUrl);
         if (response.length > 0) {
-          setFieldValue(Fields.AMOUNT, parseInt(response));
+          setFieldValue(Fields.AMOUNT, parseFloat(response));
         }
         setTimeout(() => {
           setIsLoading(false);
@@ -643,7 +644,9 @@ const OrderPage = observer(() => {
             setFieldValue(Fields.MULTIPLIER, parseInt(response));
           }
           fetchDefaultInvestAmount();
-        } catch (error) {}
+        } catch (error) {
+          fetchDefaultInvestAmount();
+        }
       }
     }
     fetchMultiplier();
@@ -794,17 +797,18 @@ const OrderPage = observer(() => {
                     {t('Leverage')}
                   </PrimaryTextSpan>
                 </FlexContainer>
-
-                <MultiplierSelect dir="rtl" {...getFieldProps(Fields.MULTIPLIER)}>
-                  {instrumentsStore
-                    .activeInstrument!.instrumentItem.multiplier.slice()
-                    .sort((a, b) => b - a)
-                    .map((multiplier) => (
-                      <MultiplierSelectValue value={multiplier} key={multiplier}>
-                        x{multiplier}
-                      </MultiplierSelectValue>
-                    ))}
-                </MultiplierSelect>
+                <Observer>
+                  {() => <MultiplierSelect dir="rtl" {...getFieldProps(Fields.MULTIPLIER)}>
+                    {instrumentsStore
+                      .activeInstrument!.instrumentItem.multiplier.slice()
+                      .sort((a, b) => b - a)
+                      .map((multiplier) => (
+                        <MultiplierSelectValue value={multiplier} key={multiplier}>
+                          x{multiplier}
+                        </MultiplierSelectValue>
+                      ))}
+                  </MultiplierSelect>}
+                </Observer>
               </FlexContainer>
 
               <InputWrap

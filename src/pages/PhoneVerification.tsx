@@ -88,6 +88,7 @@ const PhoneVerification: FC = () => {
           [mixapanelProps.BRAND_NAME]: mainAppStore.initModel.brandName.toLowerCase(),
         });
       }
+      mainAppStore.isVerification = false;
       push(Page.DASHBOARD);
     } catch (error) {}
   };
@@ -254,6 +255,7 @@ export default PhoneVerification;
 const CustomForm = styled.form`
   margin: 0;
   height: 100%;
+  min-height: calc(100vh - 200px);
   display: flex;
   flex-direction: column;
   justify-content: space-between;

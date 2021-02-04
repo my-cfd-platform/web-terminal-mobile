@@ -38,7 +38,6 @@ const PositionEditTP = observer(() => {
   const { id } = useParams<{ id: string }>();
   const positionId = +id;
   const { t } = useTranslation();
-  const valueInput = useRef<HTMLInputElement>(null);
   const { goBack, push } = useHistory();
 
   const {
@@ -214,6 +213,7 @@ const PositionEditTP = observer(() => {
           [mixapanelProps.EVENT_REF]: mixpanelValues.PORTFOLIO,
           [mixapanelProps.POSITION_ID]: response.position.id,
         });
+        goBack();
       } else {
         mixpanel.track(mixpanelEvents.EDIT_SLTP_FAILED, {
           [mixapanelProps.AMOUNT]: position?.investmentAmount,
@@ -242,20 +242,22 @@ const PositionEditTP = observer(() => {
             : 'demo',
           [mixapanelProps.EVENT_REF]: mixpanelValues.PORTFOLIO,
         });
+        setLoading(false);
         notificationStore.notificationMessage = t(
           apiResponseCodeMessages[response.result]
         );
         notificationStore.isSuccessfull = false;
         notificationStore.openNotification();
       }
-      goBack();
-      setLoading(false);
+      
+      
     } catch (error) {}
   };
 
   const {
     values,
     setFieldValue,
+    setFieldError,
     handleSubmit,
     touched,
     errors,
@@ -266,8 +268,8 @@ const PositionEditTP = observer(() => {
     enableReinitialize: true,
     onSubmit: handleSubmitForm,
     validationSchema,
-    validateOnBlur: true,
-    validateOnChange: true,
+    validateOnBlur: false,
+    validateOnChange: false,
   });
 
   const handleToggleSlideSLTP = (on: boolean) => {
@@ -275,9 +277,6 @@ const PositionEditTP = observer(() => {
     if (!on) {
       setFieldValue('value', null);
       setFieldValue('price', null);
-    }
-    if (!activeSL) {
-      valueInput.current?.focus();
     }
     setTouched({ toggle: true });
   };
@@ -338,6 +337,8 @@ const PositionEditTP = observer(() => {
   };
 
   const handleChangeInput = (e: ChangeEvent<HTMLInputElement>) => {
+    setFieldError('value', '');
+    setFieldError('price', '');
     setFieldValue(e.target.name, e.target.value.replace(',', '.') || null);
 
     switch (e.target.name) {
@@ -390,7 +391,7 @@ const PositionEditTP = observer(() => {
     }
   }, [quotesStore.activePositions]);
 
-  if (!mainAppStore.activeAccount || !position) {
+  if (!mainAppStore.activeAccount || !position || loading) {
     return <LoaderForComponents isLoading={true} />;
   }
 
@@ -456,7 +457,6 @@ const PositionEditTP = observer(() => {
                 </PrimaryTextSpan>
               </FlexContainer>
               <Input
-                ref={valueInput}
                 autoFocus
                 name="value"
                 id="value"

@@ -28,6 +28,7 @@ const NavBar = observer(() => {
     urlParams.set('env', 'web_mob');
     urlParams.set('trader_id', userProfileStore.userProfileId || '');
     urlParams.set('api', mainAppStore.initModel.tradingUrl);
+    urlParams.set('rt', mainAppStore.refreshToken);
     setParsedParams(urlParams.toString());
   }, [
     mainAppStore.token,

@@ -4,7 +4,6 @@ import { useFormik } from 'formik';
 import { observer } from 'mobx-react-lite';
 import React, {
   ChangeEvent,
-  createRef,
   useCallback,
   useEffect,
   useRef,
@@ -26,7 +25,6 @@ import { TpSlTypeEnum } from '../enums/TpSlTypeEnum';
 import { ButtonWithoutStyles } from '../styles/ButtonWithoutStyles';
 import { getProcessId } from '../helpers/getProcessId';
 import API from '../helpers/API';
-import InputMaskedField from '../components/InputMaskedField';
 import { OperationApiResponseCodes } from '../enums/OperationApiResponseCodes';
 import apiResponseCodeMessages from '../constants/apiResponseCodeMessages';
 import calculateFloatingProfitAndLoss from '../helpers/calculateFloatingProfitAndLoss';
@@ -39,10 +37,8 @@ import mixpanelValues from '../constants/mixpanelValues';
 const PositionEditSL = observer(() => {
   const { id } = useParams<{ id: string }>();
   const { t } = useTranslation();
-
-  const valueInput = useRef<HTMLInputElement>(null);
-
   const { goBack, push } = useHistory();
+
   const {
     mainAppStore,
     quotesStore,
@@ -59,15 +55,20 @@ const PositionEditSL = observer(() => {
     let value: UpdateSLTP['sl'] = null;
     let price: UpdateSLTP['sl'] = null;
 
-    if (position?.slType === TpSlTypeEnum.Currency) {
-      value = position.sl !== null ? +Math.abs(position.sl).toFixed(2) : null;
-    }
+    switch (position?.slType) {
+      case TpSlTypeEnum.Currency:
+        value = position.sl !== null ? +Math.abs(position.sl).toFixed(2) : null;
+        break;
 
-    if (position?.slType === TpSlTypeEnum.Price) {
-      price =
-        position.sl !== null
-          ? +position.sl.toFixed(instrument?.digits || 2)
-          : null;
+      case TpSlTypeEnum.Price:
+        price =
+          position.sl !== null
+            ? +position.sl.toFixed(instrument?.digits || 2)
+            : null;
+        break;
+
+      default:
+        break;
     }
 
     const valueTp = position?.tp || null;
@@ -79,6 +80,7 @@ const PositionEditSL = observer(() => {
       valueTp,
       slType: position?.slType,
       operation: position?.operation,
+      isToppingUpActive: position?.isToppingUpActive || false,
     };
   }, [position, instrument]);
 
@@ -113,6 +115,41 @@ const PositionEditSL = observer(() => {
     return 0;
   }, [currentPriceBid, currentPriceAsk, position]);
 
+  /**
+   *
+   */
+  const postitionStopOut = useCallback(() => {
+    const invest = position?.investmentAmount || 0;
+    const instrumentPercentSL = (instrument?.stopOutPercent || 95) / 100;
+    return +Number(invest * instrumentPercentSL).toFixed(2);
+  }, [position, instrument]);
+
+  /**
+   * SL from price = (Price / Current Price - 1) * Investment * Multiplier * Direction + Commissions
+   */
+  const positionStopOutByPrice = useCallback(
+    (slPrice: number) => {
+      if (position) {
+        let currentPrice, so_level, so_percent, direction, isBuy;
+        isBuy = position.operation === AskBidEnum.Buy;
+        currentPrice = isBuy ? currentPriceBid() : currentPriceAsk();
+        so_level = -1 * postitionStopOut();
+        so_percent = (instrument?.stopOutPercent || 0) / 100;
+        direction = position.operation === AskBidEnum.Buy ? 1 : -1;
+
+        const result =
+          (slPrice / currentPrice - 1) *
+            position.investmentAmount *
+            position.multiplier *
+            direction +
+          Math.abs(position.swap);
+        return +Number(result).toFixed(2);
+      }
+      return 0;
+    },
+    [currentPriceAsk, currentPriceBid, position]
+  );
+
   const validationSchema = useCallback(
     () =>
       yup.object().shape({
@@ -126,21 +163,7 @@ const PositionEditSL = observer(() => {
             'value',
             t('Stop loss level should be lower than the current P/L'),
             (value) => value === null || -1 * Math.abs(value) < PnL()
-          )
-          .test(
-            'value',
-            t('Stop loss level can not be higher than the Invest amount'),
-            (value) => {
-              if (position) {
-                return (
-                  value === null ||
-                  Math.abs(value) <= +position.investmentAmount
-                );
-              }
-              return false;
-            }
           ),
-
         price: yup
           .number()
           .nullable()
@@ -176,7 +199,7 @@ const PositionEditSL = observer(() => {
               ),
           }),
       }),
-    [position]
+    [position, mainAppStore.activeAccount]
   );
 
   const handleSubmitForm = async () => {
@@ -199,6 +222,28 @@ const PositionEditSL = observer(() => {
 
     setLoading(true);
     try {
+      if (values.isToppingUpActive !== position?.isToppingUpActive) {
+        const updateSavePosition = await API.updateToppingUp({
+          processId: getProcessId(),
+          accountId: mainAppStore.activeAccount?.id || '',
+          positionId: +id || 0,
+          isToppingUpActive: values.isToppingUpActive,
+        });
+
+        if (
+          values.isToppingUpActive !==
+          updateSavePosition.position.isToppingUpActive
+        ) {
+          setLoading(false);
+          notificationStore.notificationMessage = t(
+            apiResponseCodeMessages[OperationApiResponseCodes.TechnicalError]
+          );
+          notificationStore.isSuccessfull = false;
+          notificationStore.openNotification();
+          return;
+        }
+      }
+
       const response = await API.updateSLTP(valuesToSubmit);
       if (response.result === OperationApiResponseCodes.Ok) {
         mixpanel.track(mixpanelEvents.EDIT_SLTP, {
@@ -231,6 +276,7 @@ const PositionEditSL = observer(() => {
           [mixapanelProps.EVENT_REF]: mixpanelValues.PORTFOLIO,
           [mixapanelProps.POSITION_ID]: response.position.id,
         });
+        goBack();
       } else {
         mixpanel.track(mixpanelEvents.EDIT_SLTP_FAILED, {
           [mixapanelProps.AMOUNT]: position?.investmentAmount,
@@ -259,14 +305,14 @@ const PositionEditSL = observer(() => {
             : 'demo',
           [mixapanelProps.EVENT_REF]: mixpanelValues.PORTFOLIO,
         });
+        setLoading(false);
         notificationStore.notificationMessage = t(
           apiResponseCodeMessages[response.result]
         );
         notificationStore.isSuccessfull = false;
         notificationStore.openNotification();
       }
-      goBack();
-      setLoading(false);
+      
     } catch (error) {}
   };
 
@@ -275,7 +321,7 @@ const PositionEditSL = observer(() => {
     setFieldValue,
     handleSubmit,
     touched,
-    getFieldProps,
+    setFieldError,
     errors,
     dirty,
     setTouched,
@@ -284,8 +330,8 @@ const PositionEditSL = observer(() => {
     enableReinitialize: true,
     onSubmit: handleSubmitForm,
     validationSchema,
-    validateOnBlur: true,
-    validateOnChange: true,
+    validateOnBlur: false,
+    validateOnChange: false,
   });
 
   const handleToggleSlideSLTP = (on: boolean) => {
@@ -293,10 +339,38 @@ const PositionEditSL = observer(() => {
     if (!on) {
       setFieldValue('value', null);
       setFieldValue('price', null);
-    } else {
-      valueInput.current?.focus();
+      setFieldValue('isToppingUpActive', false);
     }
     setTouched({ toggle: true });
+  };
+
+  const handleToggleToppingUp = (on: boolean) => {
+    // when off usebalance
+    if (!on) {
+      // check price
+      if (values.price !== null) {
+        const soValue: number = positionStopOutByPrice(values.price);
+        if (soValue <= 0 && Math.abs(soValue) > postitionStopOut()) {
+          setFieldValue('price', null);
+        }
+      }
+      // check value
+      if (values.value !== null) {
+        if (values.value >= postitionStopOut()) {
+          setFieldValue('value', null);
+        }
+      }
+
+      setFieldValue('value', postitionStopOut());
+    } else {
+      setFieldValue('value', null);
+      setFieldValue('price', null);
+    }
+
+    setFieldValue('isToppingUpActive', on);
+    setTouched({
+      isToppingUpActive: true,
+    });
   };
 
   const handleBeforeInput = (fieldType: TpSlTypeEnum | null) => (e: any) => {
@@ -333,6 +407,7 @@ const PositionEditSL = observer(() => {
         return;
       }
     }
+
     // see another regex
     const regex = `^[0-9]{1,7}([,.][0-9]{1,${PRECISION}})?$`;
     const splittedValue =
@@ -354,19 +429,38 @@ const PositionEditSL = observer(() => {
   };
 
   const handleChangeInput = (e: ChangeEvent<HTMLInputElement>) => {
+    setFieldError('value', '');
+    setFieldError('price', '');
     const newValue =
-      +e.target.value === 0
+      e.target.value === ''
+        ? null
+        : +e.target.value === 0
         ? e.target.value
         : e.target.value.replace('- ', '').replace(',', '.') || null;
+
     setFieldValue(e.target.name, newValue);
 
     switch (e.target.name) {
       case 'value':
+        if (newValue && +newValue > postitionStopOut()) {
+          setFieldValue('isToppingUpActive', true);
+        } else {
+          setFieldValue('isToppingUpActive', false);
+        }
         setFieldValue('price', null);
         break;
 
       case 'price':
         setFieldValue('value', null);
+        const soValue = positionStopOutByPrice(
+          newValue !== null ? +newValue : 0
+        );
+        console.log(soValue);
+        if (soValue <= 0 && Math.abs(soValue) > postitionStopOut()) {
+          setFieldValue('isToppingUpActive', true);
+        } else {
+          setFieldValue('isToppingUpActive', false);
+        }
         break;
 
       default:
@@ -375,21 +469,18 @@ const PositionEditSL = observer(() => {
   };
 
   const handleBlurInput = (e: ChangeEvent<HTMLInputElement>) => {
-    const value = +e.target.value.replace('- ', '');
+    const int_value = parseFloat(e.target.value.replace('- ', ''));
+    const value = isNaN(int_value) ? null : int_value;
+
     switch (e.target.name) {
       case 'value':
-        setFieldValue(
-          'value',
-          +value === 0 ? value : value ? value.toFixed(2) : null
-        );
+        setFieldValue('value', value !== null ? value.toFixed(2) : value);
         break;
 
       case 'price':
         setFieldValue(
           'price',
-          e.target.value
-            ? Number(e.target.value).toFixed(instrument?.digits || 2)
-            : null
+          value !== null ? value.toFixed(instrument?.digits || 2) : value
         );
         break;
     }
@@ -407,7 +498,9 @@ const PositionEditSL = observer(() => {
   }, [values.value]);
 
   useEffect(() => {
+    setLoading(true)
     const pos = quotesStore.activePositions.find((pos) => pos.id === +id);
+    
     if (pos) {
       setPosition(pos);
       const instr = instrumentsStore.instruments.find(
@@ -415,12 +508,20 @@ const PositionEditSL = observer(() => {
       )?.instrumentItem;
       setInstrument(instr);
     }
+
     if (quotesStore.activePositions && !pos) {
       push(Page.PORTFOLIO_MAIN);
     }
+    
+    const offloaderAfterInitAnim = setTimeout(() => {
+      setLoading(false);
+    }, 600);
+    return () => {
+      clearTimeout(offloaderAfterInitAnim);
+    }
   }, [quotesStore.activePositions]);
 
-  if (!mainAppStore.activeAccount || !position) {
+  if (!mainAppStore.activeAccount || !position || loading) {
     return <LoaderForComponents isLoading={true} />;
   }
 
@@ -428,9 +529,14 @@ const PositionEditSL = observer(() => {
     <BackFlowLayout pageTitle={'Stop Loss'}>
       <LoaderForComponents isLoading={loading} />
       <CustomForm noValidate onSubmit={handleSubmit}>
-        {((touched.toggle && !activeSL) ||
+        {((dirty && touched.toggle && !activeSL) ||
           (dirty && values.value !== null && values.price !== null) ||
-          (dirty && (values.value !== null || values.price !== null))) && (
+          (dirty && (values.value !== null || values.price !== null)) ||
+          (dirty && touched.isToppingUpActive) ||
+          (dirty &&
+            values.value !== null &&
+            values.price !== null &&
+            values.isToppingUpActive !== position.isToppingUpActive)) && (
           <FlexContainer
             position="absolute"
             right="16px"
@@ -478,19 +584,7 @@ const PositionEditSL = observer(() => {
                 {t('Value')}, $
               </PrimaryTextSpan>
               <FlexContainer justifyContent="flex-end" alignItems="center">
-                {/* {values.value !== null && (
-                  <ExtraMinus
-                    color={
-                      touched.value && errors.value ? Colors.RED : '#ffffff'
-                    }
-                    fontSize="16px"
-                    lineHeight="1"
-                  >
-                    -
-                  </ExtraMinus>
-                )} */}
                 <Input
-                  ref={valueInput}
                   customWidth={'auto'}
                   name="value"
                   id="value"
@@ -517,7 +611,7 @@ const PositionEditSL = observer(() => {
           <FlexContainer
             flexDirection="column"
             width="100%"
-            marginBottom="12px"
+            marginBottom="40px"
           >
             <InputWrap
               flexDirection="column"
@@ -560,12 +654,12 @@ const PositionEditSL = observer(() => {
 
             <FlexContainer padding="12px 16px">
               {touched.price && errors.price ? (
-                <PrimaryTextSpan fontSize="11px" color={Colors.RED}>
+                <PrimaryTextSpan fontSize="13px" color={Colors.RED}>
                   {errors.price}
                 </PrimaryTextSpan>
               ) : (
                 <PrimaryTextSpan
-                  fontSize="11px"
+                  fontSize="13px"
                   color="rgba(196, 196, 196, 0.5)"
                 >
                   {t('Current price')}&nbsp;
@@ -575,6 +669,53 @@ const PositionEditSL = observer(() => {
                 </PrimaryTextSpan>
               )}
             </FlexContainer>
+          </FlexContainer>
+
+          <FlexContainer
+            backgroundColor="rgba(42, 45, 56, 0.5)"
+            height="50px"
+            justifyContent="space-between"
+            alignItems="center"
+            padding="0 16px"
+            marginBottom="1px"
+          >
+            <FlexContainer padding="0 12px 0 0">
+              <PrimaryTextSpan color="#ffffff" fontSize="16px">
+                {t('Save your position from market noise')}
+              </PrimaryTextSpan>
+            </FlexContainer>
+
+            <SlideCheckbox
+              isActive={values.isToppingUpActive}
+              handleClick={handleToggleToppingUp}
+            />
+          </FlexContainer>
+          <FlexContainer padding="12px 16px">
+            <PrimaryTextSpan
+              fontSize="13px"
+              color="rgba(196, 196, 196, 0.5)"
+              lineHeight="1.4"
+            >
+              {`${t('If the loss for a position reaches')} ${
+                instrument?.stopOutPercent
+              }%, ${t(
+                'an additional 20% of the original investment amount will be reserved from your balance to save your position from closing. If the position takes a further loss, your available balance is reduced by 20% again and again. Once the position rises to at least'
+              )} ${instrument?.stopOutPercent}% + 1% , ${t(
+                'all previously reserved funds are returned to your balance.'
+              )}`}
+            </PrimaryTextSpan>
+          </FlexContainer>
+
+          <FlexContainer padding="0 16px 12px">
+            <PrimaryTextSpan
+              fontSize="13px"
+              color="rgba(196, 196, 196, 0.5)"
+              lineHeight="1.4"
+            >
+              {t(
+                'You can limit the additional funds reserved on your balance by specifying a level of loss that is acceptable to you for this position.'
+              )}
+            </PrimaryTextSpan>
           </FlexContainer>
         </FlexContainer>
       </CustomForm>
@@ -623,4 +764,4 @@ const Input = styled.input<{ autocomplete?: string; customWidth?: string }>`
   width: ${(props) => props.customWidth};
 `;
 
-const ExtraMinus = styled(PrimaryTextSpan)``;
+

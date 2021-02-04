@@ -1,4 +1,4 @@
-import React, { FC, useEffect } from 'react';
+import React, {FC, useEffect, useState} from 'react';
 import { FlexContainer } from '../styles/FlexContainer';
 import { Observer } from 'mobx-react-lite';
 import NotificationPopup from '../components/NotificationPopup';
@@ -42,10 +42,12 @@ const AuthorizedContainer: FC = ({ children }) => {
     Page.SL_EDIT,
     Page.TP_EDIT,
     Page.ACCOUNT_BALANCE_HISTORY,
+    Page.PHONE_VERIFICATION
   ]);
 
   const { push } = useHistory();
   const { mainAppStore, userProfileStore, serverErrorPopupStore } = useStores();
+  const [ waitingData, setWaitingData ] = useState<boolean>(true);
   const showNavbarAndNav = !match?.isExact;
 
   useEffect(() => {
@@ -78,10 +80,14 @@ const AuthorizedContainer: FC = ({ children }) => {
             mainAppStore.initModel.authUrl
           );
           if (additionalResponse.includes('phone')) {
+            mainAppStore.isVerification = true;
             push(Page.PHONE_VERIFICATION);
           }
         }
-      } catch (error) {}
+        setWaitingData(false);
+      } catch (error) {
+        setWaitingData(false);
+      }
     }
     fetchPersonalData();
   }, []);
@@ -115,7 +121,7 @@ const AuthorizedContainer: FC = ({ children }) => {
       <Observer>
         {() => (
           <LoaderFullscreen
-            isLoading={mainAppStore.isLoading}
+            isLoading={mainAppStore.isLoading || waitingData}
           ></LoaderFullscreen>
         )}
       </Observer>
@@ -125,7 +131,7 @@ const AuthorizedContainer: FC = ({ children }) => {
       <Observer>{() => <NetworkErrorPopup></NetworkErrorPopup>}</Observer>
       <Observer>
         {() => (
-          <>{mainAppStore.isDemoRealPopup && <DemoRealPopup></DemoRealPopup>}</>
+          <>{(mainAppStore.isDemoRealPopup && !mainAppStore.isVerification) && <DemoRealPopup></DemoRealPopup>}</>
         )}
       </Observer>
       {showNavbarAndNav && <NavBar />}

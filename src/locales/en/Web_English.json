@@ -417,5 +417,10 @@
     "You have to sign in to the platform to create a withdrawal request": "You have to sign in to the platform to create a withdrawal request",
     "You already have one active withdrawal request": "You already have one active withdrawal request",
     "Technical Error": "Technical Error",
-    "Position Closed": "Position Closed"
+    "Position Closed": "Position Closed",
+    "Open price can not be zero": "Open price can not be zero",
+    "Save your position from market noise": "Save your position from market noise",
+    "If the loss for a position reaches": "If the loss for a position reaches",
+    "an additional 20% of the original investment amount will be reserved from your balance to save your position from closing. If the position takes a further loss, your available balance is reduced by 20% again and again. Once the position rises to at least": "an additional 20% of the original investment amount will be reserved from your balance to save your position from closing. If the position takes a further loss, your available balance is reduced by 20% again and again. Once the position rises to at least",
+    "all previously reserved funds are returned to your balance.": "all previously reserved funds are returned to your balance."
 }
