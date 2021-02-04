@@ -38,7 +38,6 @@ const PositionEditTP = observer(() => {
   const { id } = useParams<{ id: string }>();
   const positionId = +id;
   const { t } = useTranslation();
-  const valueInput = useRef<HTMLInputElement>(null);
   const { goBack, push } = useHistory();
 
   const {
@@ -279,9 +278,6 @@ const PositionEditTP = observer(() => {
       setFieldValue('value', null);
       setFieldValue('price', null);
     }
-    if (!activeSL) {
-      valueInput.current?.focus();
-    }
     setTouched({ toggle: true });
   };
 
@@ -461,7 +457,6 @@ const PositionEditTP = observer(() => {
                 </PrimaryTextSpan>
               </FlexContainer>
               <Input
-                ref={valueInput}
                 autoFocus
                 name="value"
                 id="value"

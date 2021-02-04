@@ -37,7 +37,6 @@ import mixpanelValues from '../constants/mixpanelValues';
 const PositionEditSL = observer(() => {
   const { id } = useParams<{ id: string }>();
   const { t } = useTranslation();
-  const valueInput = useRef<HTMLInputElement>(null);
   const { goBack, push } = useHistory();
 
   const {
@@ -341,8 +340,6 @@ const PositionEditSL = observer(() => {
       setFieldValue('value', null);
       setFieldValue('price', null);
       setFieldValue('isToppingUpActive', false);
-    } else {
-      valueInput.current?.focus();
     }
     setTouched({ toggle: true });
   };
@@ -588,7 +585,6 @@ const PositionEditSL = observer(() => {
               </PrimaryTextSpan>
               <FlexContainer justifyContent="flex-end" alignItems="center">
                 <Input
-                  ref={valueInput}
                   customWidth={'auto'}
                   name="value"
                   id="value"
