@@ -700,7 +700,7 @@ const PositionEditSL = observer(() => {
                 instrument?.stopOutPercent
               }%, ${t(
                 'an additional 20% of the original investment amount will be reserved from your balance to save your position from closing. If the position takes a further loss, your available balance is reduced by 20% again and again. Once the position rises to at least'
-              )} ${instrument?.stopOutPercent}% + 1% , ${t(
+              )} ${instrument?.stopOutPercent}%, ${t(
                 'all previously reserved funds are returned to your balance.'
               )}`}
             </PrimaryTextSpan>
