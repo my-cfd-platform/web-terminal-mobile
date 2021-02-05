@@ -114,6 +114,7 @@ export class MainAppStore implements MainAppStoreProps {
   @observable activeAccountId: string = '';
   @observable connectionSignalRTimer: NodeJS.Timeout | null = null;
   @observable signUpFlag: boolean = false;
+  @observable lpLoginFlag: boolean = false;
   @observable isVerification: boolean = false;
   @observable balanceWas: number = 0;
   websocketConnectionTries = 0;
@@ -383,6 +384,11 @@ export class MainAppStore implements MainAppStoreProps {
   @action
   setSignUpFlag = (value: boolean) => {
     this.signUpFlag = value;
+  };
+
+  @action
+  setLpLoginFlag = (value: boolean) => {
+    this.lpLoginFlag = value;
   };
 
   @action

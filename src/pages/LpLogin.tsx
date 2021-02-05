@@ -27,7 +27,8 @@ const LpLogin = observer(() => {
           token: token || '',
         });
         if (response === OperationApiResponseCodes.Ok) {
-          mainAppStore.signUpFlag = true;
+          mainAppStore.setSignUpFlag(true);
+          mainAppStore.setLpLoginFlag(true);
           switch (page) {
             case 'deposit':
               break;
