@@ -681,7 +681,7 @@ const PositionEditSL = observer(() => {
           >
             <FlexContainer padding="0 12px 0 0">
               <PrimaryTextSpan color="#ffffff" fontSize="16px">
-                {t('Save your position from market noise')}
+                {t('Save position from market noise')}
               </PrimaryTextSpan>
             </FlexContainer>
 
