@@ -235,7 +235,7 @@ const ActiveChartOrders: FC<Props> = observer(({ activePositions }) => {
                 marginRight="7px"
                 color="#ffffff"
               >
-                P/L
+                {t('P/L')}
               </PrimaryTextSpan>
               <PrimaryTextSpan
                 fontSize="16px"
