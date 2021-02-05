@@ -450,6 +450,7 @@ export class MainAppStore implements MainAppStoreProps {
     // TODO: think how remove crutch
     this.rootStore.historyStore.positionsHistoryReport.positionsHistory = [];
     this.rootStore.tradingViewStore.tradingWidget = undefined;
+    this.rootStore.instrumentsStore.activeInstrument = undefined;
     API.setKeyValue(
       {
         key: KeysInApi.ACTIVE_ACCOUNT_ID,
