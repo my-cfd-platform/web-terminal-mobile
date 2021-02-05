@@ -48,6 +48,8 @@ const apiResponseCodeMessages = {
     'You exceed the maximum amount for orders',
   [OperationApiResponseCodes.SystemError]: 'Technical Error.',
   [OperationApiResponseCodes.PersonalDataNotValid]: 'Personal data is not valid.',
+  [OperationApiResponseCodes.TooManyAttempts]:
+    'Your account is blocked. We\'ve detected suspicious activity on your account. This block will expire in 15 min.',
 };
 
 Object.freeze(apiResponseCodeMessages);
