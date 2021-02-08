@@ -352,6 +352,7 @@ const OrderPage = observer(() => {
             [mixapanelProps.SL_VALUE]:
               response.order.sl !== null ? Math.abs(response.order.sl) : null,
             [mixapanelProps.TP_VALUE]: response.order.tp,
+            [mixapanelProps.SAVE_POSITION]: `false`,
             [mixapanelProps.AVAILABLE_BALANCE]: balanceBeforeOrder,
             [mixapanelProps.ACCOUNT_ID]: mainAppStore.activeAccount?.id || '',
             [mixapanelProps.ACCOUNT_TYPE]: mainAppStore.activeAccount?.isLive
@@ -381,6 +382,7 @@ const OrderPage = observer(() => {
             [mixapanelProps.SL_VALUE]:
               modelToSubmit.sl !== null ? Math.abs(modelToSubmit.sl) : null,
             [mixapanelProps.TP_VALUE]: modelToSubmit.tp,
+            [mixapanelProps.SAVE_POSITION]: `false`,
             [mixapanelProps.AVAILABLE_BALANCE]: balanceBeforeOrder,
             [mixapanelProps.ACCOUNT_ID]: mainAppStore.activeAccount?.id || '',
             [mixapanelProps.ACCOUNT_TYPE]: mainAppStore.activeAccount?.isLive
@@ -448,6 +450,7 @@ const OrderPage = observer(() => {
                 ? Math.abs(response.position.sl)
                 : null,
             [mixapanelProps.TP_VALUE]: response.position.tp,
+            [mixapanelProps.SAVE_POSITION]: `false`,
             [mixapanelProps.AVAILABLE_BALANCE]: balanceBeforeOrder,
             [mixapanelProps.ACCOUNT_ID]: mainAppStore.activeAccount?.id || '',
             [mixapanelProps.ACCOUNT_TYPE]: mainAppStore.activeAccount?.isLive
@@ -477,6 +480,7 @@ const OrderPage = observer(() => {
             [mixapanelProps.SL_VALUE]:
               modelToSubmit.sl !== null ? Math.abs(modelToSubmit.sl) : null,
             [mixapanelProps.TP_VALUE]: modelToSubmit.tp,
+            [mixapanelProps.SAVE_POSITION]: `false`,
             [mixapanelProps.AVAILABLE_BALANCE]: balanceBeforeOrder,
             [mixapanelProps.ACCOUNT_ID]: mainAppStore.activeAccount?.id || '',
             [mixapanelProps.ACCOUNT_TYPE]: mainAppStore.activeAccount?.isLive

@@ -22,6 +22,7 @@ const mixapanelProps = {
   TP_TYPE: 'TP type',
   SL_VALUE: 'SL value',
   TP_VALUE: 'TP value',
+  SAVE_POSITION: 'Save position',
   AVAILABLE_BALANCE: 'Available Balance',
   ACCOUNT_TYPE: 'Account Type',
   EVENT_REF: 'Event ref',

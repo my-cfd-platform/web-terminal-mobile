@@ -267,6 +267,7 @@ const PositionEditSL = observer(() => {
               ? Math.abs(response.position.sl)
               : null,
           [mixapanelProps.TP_VALUE]: response.position.tp,
+          [mixapanelProps.SAVE_POSITION]: `${values.isToppingUpActive}`,
           [mixapanelProps.AVAILABLE_BALANCE]:
             mainAppStore.activeAccount?.balance || 0,
           [mixapanelProps.ACCOUNT_ID]: mainAppStore.activeAccount?.id || '',
@@ -297,6 +298,7 @@ const PositionEditSL = observer(() => {
           [mixapanelProps.SL_VALUE]:
             valuesToSubmit.sl !== null ? Math.abs(valuesToSubmit.sl) : null,
           [mixapanelProps.TP_VALUE]: valuesToSubmit.tp,
+          [mixapanelProps.SAVE_POSITION]: `${values.isToppingUpActive}`,
           [mixapanelProps.AVAILABLE_BALANCE]:
             mainAppStore.activeAccount?.balance || 0,
           [mixapanelProps.ACCOUNT_ID]: mainAppStore.activeAccount?.id || '',
