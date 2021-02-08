@@ -442,6 +442,8 @@ const PositionEditSL = observer(() => {
 
     setFieldValue(e.target.name, newValue);
 
+    
+
     switch (e.target.name) {
       case 'value':
         if (newValue && +newValue > postitionStopOut()) {
@@ -457,8 +459,8 @@ const PositionEditSL = observer(() => {
         const soValue = positionStopOutByPrice(
           newValue !== null ? +newValue : 0
         );
-        console.log(soValue);
-        if (soValue <= 0 && Math.abs(soValue) > postitionStopOut()) {
+        
+        if (newValue && soValue <= 0 && Math.abs(soValue) > postitionStopOut()) {
           setFieldValue('isToppingUpActive', true);
         } else {
           setFieldValue('isToppingUpActive', false);
