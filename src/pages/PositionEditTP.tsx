@@ -204,6 +204,7 @@ const PositionEditTP = observer(() => {
               ? Math.abs(response.position.sl)
               : null,
           [mixapanelProps.TP_VALUE]: response.position.tp,
+          [mixapanelProps.SAVE_POSITION]: `${position?.isToppingUpActive || false}`,
           [mixapanelProps.AVAILABLE_BALANCE]:
             mainAppStore.activeAccount?.balance || 0,
           [mixapanelProps.ACCOUNT_ID]: mainAppStore.activeAccount?.id || '',
