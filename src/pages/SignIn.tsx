@@ -64,8 +64,8 @@ const SignIn = () => {
 
         mixpanel.track(mixpanelEvents.LOGIN_FAILED, {
           [mixapanelProps.BRAND_NAME]: mainAppStore.initModel.brandName.toLowerCase(),
-          [mixapanelProps.ERROR_TEXT]: t(apiResponseCodeMessages[result]),
-          [mixapanelProps.EMAIL]: credentials.email,
+          [mixapanelProps.ERROR_TEXT]: apiResponseCodeMessages[result],
+          [mixapanelProps.EMAIL_FAILED]: credentials.email,
         });
       }
       if (result === OperationApiResponseCodes.Ok) {
@@ -116,6 +116,7 @@ const SignIn = () => {
       flexDirection="column"
       width="100%"
       height="100%"
+      minHeight="calc(100vh - 200px)"
       alignItems="center"
       justifyContent="space-between"
     >

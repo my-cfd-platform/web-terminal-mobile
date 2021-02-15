@@ -8,6 +8,7 @@ import Logo from './Logo';
 import { useStores } from '../hooks/useStores';
 import { useTranslation } from 'react-i18next';
 import LogoMonfex from '../assets/images/logo.png';
+import { FULL_VH } from '../constants/global';
 
 interface Props {
   isLoading: boolean;
@@ -24,7 +25,7 @@ const LoaderFullscreen: FC<Props> = ({ isLoading }) => {
           top="0"
           left="0"
           right="0"
-          bottom="0"
+          minHeight={`calc(${FULL_VH})`}
           zIndex="1000"
           backgroundColor="#1C2026"
           justifyContent="center"
@@ -75,6 +76,7 @@ const FixedContainerWrapper = styled.div<{ isLoading: boolean }>`
     css`
       ${fadeOut} 0.5s linear forwards
     `};
+  z-index: 1000;
 `;
 
 const TextLoader = styled.span`

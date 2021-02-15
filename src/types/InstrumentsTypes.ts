@@ -1,4 +1,4 @@
-import { SeriesStyle } from '../vendor/charting_library/charting_library.min';
+import { SeriesStyle } from '../vendor/charting_library/charting_library';
 import {
   SupportedResolutionsType,
   SupportedIntervalsType,
@@ -22,6 +22,7 @@ export interface InstrumentModelWSDTO {
   groupId: string;
   weight: number;
   avatar: string;
+  stopOutPercent: number;
 }
 
 interface DayOff {

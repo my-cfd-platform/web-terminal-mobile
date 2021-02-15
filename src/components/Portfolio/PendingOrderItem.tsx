@@ -10,18 +10,26 @@ import { PrimaryTextSpan } from '../../styles/TextsElements';
 import { useStores } from '../../hooks/useStores';
 import { useTranslation } from 'react-i18next';
 import useInstrument from '../../hooks/useInstrument';
+import ItemOperationLabel from './ItemOperationLabel';
 
 interface Props {
   pendingOrder: PendingOrderWSDTO;
   currencySymbol: string;
+  isInner?: boolean;
 }
 
-const PendingOrderItem: FC<Props> = ({ pendingOrder }) => {
-  const { type } = useParams();
+const PendingOrderItem: FC<Props> = ({ pendingOrder, isInner }) => {
+  const { type } = useParams<{ type: string }>();
   const { t } = useTranslation();
   const { getPressision } = useInstrument();
 
-  const { id, instrument, investmentAmount, openPrice } = pendingOrder;
+  const {
+    id,
+    instrument,
+    investmentAmount,
+    openPrice,
+    operation,
+  } = pendingOrder;
 
   const { mainAppStore, instrumentsStore } = useStores();
 
@@ -33,8 +41,10 @@ const PendingOrderItem: FC<Props> = ({ pendingOrder }) => {
     return groupId.toLowerCase();
   };
 
-  const activeInstrument = useCallback(() => {
-    return instrumentsStore.instruments.find(item => item.instrumentItem.id === instrument)?.instrumentItem;
+  const positionInstrument = useCallback(() => {
+    return instrumentsStore.instruments.find(
+      (item) => item.instrumentItem.id === instrument
+    )?.instrumentItem;
   }, [pendingOrder]);
 
   return (
@@ -44,15 +54,21 @@ const PendingOrderItem: FC<Props> = ({ pendingOrder }) => {
       </FlexContainer>
 
       <FlexContainer flexDirection="column" justifyContent="center">
-        <PrimaryTextSpan
-          color="#ffffff"
-          fontSize="16px"
-          fontWeight={500}
-          lineHeight="1"
-          marginBottom="6px"
-        >
-          {activeInstrument()?.name}
-        </PrimaryTextSpan>
+        <FlexContainer alignItems="center" marginBottom="6px">
+          <PrimaryTextSpan
+            color="#ffffff"
+            fontSize="16px"
+            fontWeight={500}
+            lineHeight="1"
+            whiteSpace="nowrap"
+            overflow="hidden"
+            textOverflow="ellipsis"
+            maxWidth="calc(100vw - 36px - 48px - 8px - 8px - 120px)"
+          >
+            {positionInstrument()?.name}
+          </PrimaryTextSpan>
+          {!isInner && <ItemOperationLabel operation={operation} />}
+        </FlexContainer>
         <PrimaryTextSpan
           color="rgba(255, 255, 255, 0.4)"
           fontSize="16px"

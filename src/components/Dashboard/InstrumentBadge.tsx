@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, {FC, useEffect, useRef} from 'react';
 import { FlexContainer } from '../../styles/FlexContainer';
 import { InstrumentModelWSDTO } from '../../types/InstrumentsTypes';
 import ImageContainer from '../ImageContainer';
@@ -25,24 +25,47 @@ const InstrumentBadge: FC<Props> = ({
   onRemove,
 }) => {
   const { instrumentsStore } = useStores();
+  const instrumentRef = useRef<HTMLDivElement>(document.createElement('div'));
   const handleSwitchInstrument = () => {
     instrumentsStore.switchInstrument(instrumentId);
   };
   const handleRemoveInstrument = () => {
     onRemove();
   };
+  useEffect(() => {
+    if (isActive) {
+      instrumentRef.current.scrollIntoView();
+    }
+  }, [isActive]);
   return (
     <FlexContainer
       flexDirection="column"
       opacity={isActive ? '1' : '0.3'}
       alignItems="center"
       onClick={handleSwitchInstrument}
+      ref={instrumentRef}
     >
-      <FlexContainer width="48px" height="48px" marginBottom="8px" position="relative">
+      <FlexContainer
+        width="48px"
+        height="48px"
+        marginBottom="8px"
+        position="relative"
+      >
         <ImageContainer instrumentId={instrumentId} />
-        {removable && <InstumentCloseButton onClick={handleRemoveInstrument}><SvgIcon {...IconClose}/></InstumentCloseButton>}
+        {removable && (
+          <InstumentCloseButton onClick={handleRemoveInstrument}>
+            <SvgIcon {...IconClose} />
+          </InstumentCloseButton>
+        )}
       </FlexContainer>
-      <PrimaryTextSpan fontSize="8px" color="#FFFFFF">
+      <PrimaryTextSpan
+        fontSize="8px"
+        color="#FFFFFF"
+        whiteSpace="nowrap"
+        overflow="hidden"
+        textOverflow="ellipsis"
+        maxWidth="48px"
+      >
         {instrumentName}
       </PrimaryTextSpan>
     </FlexContainer>
@@ -54,7 +77,7 @@ export default InstrumentBadge;
 const InstumentCloseButton = styled(ButtonWithoutStyles)`
   width: 24px;
   height: 24px;
-  border: 3px solid #1C1F26;
+  border: 3px solid #1c1f26;
   background-color: #979797;
   border-radius: 50%;
   display: flex;

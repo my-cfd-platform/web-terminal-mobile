@@ -13,7 +13,7 @@ import {
   TimescaleMark,
   ServerTimeCallback,
   IBasicDataFeed,
-} from '../vendor/charting_library/charting_library.min';
+} from '../vendor/charting_library/charting_library';
 
 import historyProvider from './historyProvider';
 
@@ -25,7 +25,9 @@ import moment from 'moment';
 
 class DataFeedService implements IBasicDataFeed {
   static config = {
-    supported_resolutions: Object.values(supportedResolutions),
+    supported_resolutions: Object.values(
+      supportedResolutions
+    ) as ResolutionString[],
     supports_search: false,
     supports_group_request: false,
     supports_marks: false,
@@ -87,7 +89,9 @@ class DataFeedService implements IBasicDataFeed {
       has_weekly_and_monthly: true,
       has_no_volume: true,
       has_empty_bars: false,
-      supported_resolutions: Object.values(supportedResolutions),
+      supported_resolutions: Object.values(
+        supportedResolutions
+      ) as ResolutionString[],
       data_status: 'streaming',
       format: 'price',
     };
@@ -123,6 +127,8 @@ class DataFeedService implements IBasicDataFeed {
         switch (resolution) {
           case supportedResolutions['1m']:
           case supportedResolutions['5m']:
+          case supportedResolutions['1h']:
+          case supportedResolutions['4h']:
             this.nextTimeTries = this.nextTimeTries + 1;
             console.log(this.nextTimeTries);
             onResult(bars, {
@@ -162,7 +168,6 @@ class DataFeedService implements IBasicDataFeed {
   };
   unsubscribeBars = (subscriberUID: string) => {
     const uid = subscriberUID.split(' ')[1];
-
     this.stream.unsubscribeBars(uid);
   };
   calculateHistoryDepth = (
@@ -171,29 +176,21 @@ class DataFeedService implements IBasicDataFeed {
     intervalBack: number
   ) => {
     switch (resolution) {
-      // case supportedResolutions['5 minutes']:
-      //   return {
-      //     resolutionBack: 'D' as ResolutionBackValues,
-      //     intervalBack: 5,
-      //   };
+      case supportedResolutions['1m']:
+      case supportedResolutions['5m']:
+      case supportedResolutions['15m']:
+      case supportedResolutions['1h']:
+      case supportedResolutions['4h']:
+        return {
+          resolutionBack: 'D' as ResolutionBackValues,
+          intervalBack: 2,
+        };
 
-      // case supportedResolutions['1 hour']:
-      //   return {
-      //     resolutionBack: 'D' as ResolutionBackValues,
-      //     intervalBack: 2,
-      //   };
-
-      // case supportedResolutions['1 day']:
-      //   return {
-      //     resolutionBack: 'D' as ResolutionBackValues,
-      //     intervalBack: 2,
-      //   };
-      // case supportedResolutions['1 minute']:
-      //   debugger
-      //   return {
-      //     resolutionBack: 'D' as ResolutionBackValues,
-      //     intervalBack: 1,
-      //   };
+      case supportedResolutions['1d']:
+        return {
+          resolutionBack: 'D' as ResolutionBackValues,
+          intervalBack: 4,
+        };
 
       case supportedResolutions['1M']:
         return {

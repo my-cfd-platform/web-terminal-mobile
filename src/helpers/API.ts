@@ -8,6 +8,7 @@ import {
   UpdateSLTP,
   OpenPositionModel,
   OpenPendingOrder,
+  PositionUpdtateToppingUp,
 } from '../types/Positions';
 import API_LIST from './apiList';
 import { AccountModelDTO } from '../types/AccountsTypes';
@@ -55,6 +56,7 @@ import {
   cancelWithdrawalParams,
 } from '../types/WithdrawalTypes';
 import { ListForEN } from '../constants/listOfLanguages';
+import { PendingOrderResponseDTO } from '../types/PendingOrdersTypes';
 
 class API {
   convertParamsToFormData = (params: { [key: string]: any }) => {
@@ -147,9 +149,9 @@ class API {
     return bars;
   };
 
-  getKeyValue = async (key: string) => {
+  getKeyValue = async (key: string, tradingUrl: string) => {
     const response = await axios.get<string>(
-      `${API_STRING}${API_LIST.KEY_VALUE.GET}`,
+      `${API_STRING || tradingUrl}${API_LIST.KEY_VALUE.GET}`,
       {
         params: {
           key,
@@ -159,10 +161,13 @@ class API {
     return response.data;
   };
 
-  setKeyValue = async (params: { key: string; value: string }) => {
+  setKeyValue = async (
+    params: { key: string; value: string },
+    tradingUrl: string
+  ) => {
     const formData = this.convertParamsToFormData(params);
     const response = await axios.post<void>(
-      `${API_STRING}${API_LIST.KEY_VALUE.POST}`,
+      `${API_STRING || tradingUrl}${API_LIST.KEY_VALUE.POST}`,
       formData
     );
     return response.data;
@@ -170,7 +175,7 @@ class API {
 
   openPendingOrder = async (position: OpenPendingOrder) => {
     const formData = this.convertParamsToFormData(position);
-    const response = await axios.post<OpenPositionResponseDTO>(
+    const response = await axios.post<PendingOrderResponseDTO>(
       `${API_STRING}${API_LIST.PENDING_ORDERS.ADD}`,
       formData
     );
@@ -179,10 +184,21 @@ class API {
 
   removePendingOrder = async (position: RemovePendingOrders) => {
     const formData = this.convertParamsToFormData(position);
-    const response = await axios.post<OpenPositionResponseDTO>(
+    const response = await axios.post<PendingOrderResponseDTO>(
       `${API_STRING}${API_LIST.PENDING_ORDERS.REMOVE}`,
       formData
     );
+    return response.data;
+  };
+
+  updateToppingUp = async (position: PositionUpdtateToppingUp) => {
+    const formData = this.convertParamsToFormData(position);
+    const response = await axios.post<OpenPositionResponseDTO>(
+      `${API_STRING}${API_LIST.POSITIONS.UPDATE_TOPING_UP}`,
+      formData
+    );
+
+    console.log(response);
     return response.data;
   };
 
@@ -259,7 +275,7 @@ class API {
       `${API_AUTH_STRING || authUrl}${AUTH_API_LIST.PERSONAL_DATA.GET}`,
       {
         params: {
-          processId,
+          processId: encodeURIComponent(processId),
         },
       }
     );
@@ -413,33 +429,46 @@ class API {
             policyUrl: '',
             supportUrl: '',
             termsUrl: '',
-            tradingUrl: '',
+            tradingUrl: '/',
             authUrl: '',
             mixpanelToken: '582507549d28c813188211a0d15ec940',
             recaptchaToken: '',
+            androidAppId: '',
+            iosAppId: '',
+            mobileAppLogo: '',
           } as InitModel,
         }
       : await axios.get<InitModel>(`${API_LIST.INIT.GET}`);
     return response.data;
   };
-  createWithdrawal = async (params: CreateWithdrawalParams) => {
+
+  createWithdrawal = async (
+    params: CreateWithdrawalParams,
+    tradingUrl: string
+  ) => {
     const response = await axios.post<{
       status: WithdrawalHistoryResponseStatus;
-    }>(`${API_WITHDRAWAL_STRING}${API_LIST.WITHWRAWAL.CREATE}`, params);
-    return response.data;
-  };
-
-  cancelWithdrawal = async (params: cancelWithdrawalParams) => {
-    const response = await axios.post<WithdrawalHistoryDTO>(
-      `${API_WITHDRAWAL_STRING}${API_LIST.WITHWRAWAL.CANCEL}`,
+    }>(
+      `${API_WITHDRAWAL_STRING || tradingUrl}${API_LIST.WITHWRAWAL.CREATE}`,
       params
     );
     return response.data;
   };
 
-  getWithdrawalHistory = async () => {
+  cancelWithdrawal = async (
+    params: cancelWithdrawalParams,
+    tradingUrl: string
+  ) => {
+    const response = await axios.post<WithdrawalHistoryDTO>(
+      `${API_WITHDRAWAL_STRING || tradingUrl}${API_LIST.WITHWRAWAL.CANCEL}`,
+      params
+    );
+    return response.data;
+  };
+
+  getWithdrawalHistory = async (tradingUrl: string) => {
     const response = await axios.get<WithdrawalHistoryDTO>(
-      `${API_WITHDRAWAL_STRING}${API_LIST.WITHWRAWAL.HISTORY}`
+      `${API_WITHDRAWAL_STRING || tradingUrl}${API_LIST.WITHWRAWAL.HISTORY}`
     );
     return response.data;
   };

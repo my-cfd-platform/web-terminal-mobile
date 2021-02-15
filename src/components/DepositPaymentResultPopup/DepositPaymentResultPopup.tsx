@@ -6,12 +6,12 @@ import { FlexContainer } from '../../styles/FlexContainer';
 import { useLocation, useHistory } from 'react-router-dom';
 import DepositPaymentSuccess from './DepositPaymentSuccess';
 import { ButtonWithoutStyles } from '../../styles/ButtonWithoutStyles';
-import SvgIcon from '../SvgIcon';
-import IconClose from '../../assets/svg/icon-close.svg';
 import DepositPaymentFail from './DepositPaymentFail';
 import { useStores } from '../../hooks/useStores';
 import Pages from '../../constants/Pages';
-import {PrimaryTextSpan} from "../../styles/TextsElements";
+import { PrimaryTextSpan } from '../../styles/TextsElements';
+import { useTranslation } from 'react-i18next';
+import { FULL_VH } from '../../constants/global';
 
 interface Params {
   hash: string;
@@ -21,6 +21,7 @@ interface Params {
 
 const DepositPaymentResultPopup: FC = () => {
   const { mainAppStore } = useStores();
+  const { t } = useTranslation();
 
   const { push } = useHistory();
   const location = useLocation();
@@ -62,7 +63,9 @@ const DepositPaymentResultPopup: FC = () => {
   };
 
   if (
-    (queryParams.status === 'success' || queryParams.status === 'fail' || queryParams.status === 'failed')
+    queryParams.status === 'success' ||
+    queryParams.status === 'fail' ||
+    queryParams.status === 'failed'
   ) {
     return (
       <Modal>
@@ -76,34 +79,33 @@ const DepositPaymentResultPopup: FC = () => {
           justifyContent="center"
           zIndex="1001"
         >
-          <PopupWrap flexDirection="column" position="relative">
+          <PopupWrap
+            flexDirection="column"
+            position="relative"
+            height={`calc(${FULL_VH})`}
+            minHeight={`calc(${FULL_VH})`}
+          >
             <FlexContainer
               position="absolute"
               width="100%"
               justifyContent="center"
-              top="9px"
+              top="29px"
               left="0"
               zIndex="299"
             >
-              <PrimaryTextSpan
-                fontSize="18px"
-                color="#ffffff"
-              >
-                Withdrawal
+              <PrimaryTextSpan fontSize="18px" color="#ffffff">
+                {t('Deposit')}
               </PrimaryTextSpan>
             </FlexContainer>
             <FlexContainer
               position="absolute"
               right="12px"
-              top="12px"
+              top="32px"
               zIndex="300"
             >
               <ButtonWithoutStyles onClick={handleClosePopup}>
-                <PrimaryTextSpan
-                    fontSize="13px"
-                    color="#ffffff"
-                >
-                  Done
+                <PrimaryTextSpan fontSize="13px" color="#ffffff">
+                  {t('Done')}
                 </PrimaryTextSpan>
               </ButtonWithoutStyles>
             </FlexContainer>
@@ -122,7 +124,6 @@ export default DepositPaymentResultPopup;
 
 const PopupWrap = styled(FlexContainer)`
   width: 100%;
-  height: 100vh;
   border-radius: 8px;
   box-sizing: border-box;
   background-color: #1c1f26;
@@ -131,7 +132,8 @@ const PopupWrap = styled(FlexContainer)`
 `;
 
 const ModalBackground = styled(FlexContainer)`
-  background-color: rgba(37, 38, 54, 0.8);
+  background-color: #23262f;
+
   @supports ((-webkit-backdrop-filter: none) or (backdrop-filter: none)) {
     background-color: rgba(37, 38, 54, 0.6);
     backdrop-filter: blur(12px);

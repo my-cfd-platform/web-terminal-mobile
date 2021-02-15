@@ -10,10 +10,15 @@ import IconArea from '../assets/svg/chart-types/icon-area.svg';
 import IconLine from '../assets/svg_no_compress/icon-line.svg';
 import IconCandle from '../assets/svg/chart-types/icon-candle.svg';
 import Colors from '../constants/Colors';
+import { LOCAL_CHART_TYPE } from '../constants/global';
+import { getChartLabelByType } from '../constants/chartValues';
 import { useTranslation } from 'react-i18next';
 import { observer } from 'mobx-react-lite';
 import { useStores } from '../hooks/useStores';
-import { SeriesStyle } from '../vendor/charting_library/charting_library.min';
+import {
+  ResolutionString,
+  SeriesStyle,
+} from '../vendor/charting_library/charting_library';
 import {
   SupportedResolutionsType,
   supportedResolutions,
@@ -32,16 +37,19 @@ const ChartSetting = observer(() => {
   ) => () => {
     tradingViewStore.tradingWidget
       ?.chart()
-      .setResolution(supportedResolutions[resolutionKey], () => {
-        if (instrumentsStore.activeInstrument) {
-          instrumentsStore.editActiveInstrument({
-            ...instrumentsStore.activeInstrument,
-            resolution: resolutionKey,
-            interval: null,
-          });
+      .setResolution(
+        supportedResolutions[resolutionKey] as ResolutionString,
+        () => {
+          if (instrumentsStore.activeInstrument) {
+            instrumentsStore.editActiveInstrument({
+              ...instrumentsStore.activeInstrument,
+              resolution: resolutionKey,
+              interval: null,
+            });
+          }
+          goBack();
         }
-        goBack();
-      });
+      );
   };
   const handleChangeChartType = (chartType: SeriesStyle) => () => {
     if (instrumentsStore.activeInstrument) {
@@ -50,6 +58,8 @@ const ChartSetting = observer(() => {
         ...instrumentsStore.activeInstrument,
         chartType: chartType,
       };
+      localStorage.setItem(LOCAL_CHART_TYPE, getChartLabelByType(chartType));
+      instrumentsStore.changeInstruments(chartType);
       instrumentsStore.editActiveInstrument(newActiveInstrument);
       goBack();
     }

@@ -8,7 +8,7 @@ import TimeScalePanel from './TimeScalePanel';
 import { Link } from 'react-router-dom';
 import Page from '../../constants/Pages';
 import { useStores } from '../../hooks/useStores';
-import { SeriesStyle } from '../../vendor/charting_library/charting_library.min';
+import { SeriesStyle } from '../../vendor/charting_library/charting_library';
 import { observer } from 'mobx-react-lite';
 
 const TimeScaleWrapper = observer(() => {
@@ -50,8 +50,8 @@ const TimeScaleWrapper = observer(() => {
         return (
           <SvgIcon
             {...IconArea}
-            width={16}
-            height={16}
+            width={18}
+            height={18}
             fillColor="rgba(196, 196, 196, 0.5)"
           />
         );

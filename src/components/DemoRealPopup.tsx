@@ -28,6 +28,8 @@ const DemoRealPopup = () => {
     urlParams.set('env', 'web_mob');
     urlParams.set('lang', mainAppStore.lang);
     urlParams.set('trader_id', userProfileStore.userProfileId || '');
+    urlParams.set('api', mainAppStore.initModel.tradingUrl);
+    urlParams.set('rt', mainAppStore.refreshToken);
     setParsedParams(urlParams.toString());
   }, [mainAppStore.token, mainAppStore.lang, mainAppStore.accounts]);
 
@@ -35,10 +37,13 @@ const DemoRealPopup = () => {
     const acc = mainAppStore.accounts.find((item) => !item.isLive);
     if (acc) {
       try {
-        await API.setKeyValue({
-          key: KeysInApi.ACTIVE_ACCOUNT_ID,
-          value: acc.id,
-        });
+        await API.setKeyValue(
+          {
+            key: KeysInApi.ACTIVE_ACCOUNT_ID,
+            value: acc.id,
+          },
+          mainAppStore.initModel.tradingUrl
+        );
         mainAppStore.activeSession?.send(Topics.SET_ACTIVE_ACCOUNT, {
           [Fields.ACCOUNT_ID]: acc.id,
         });
@@ -55,10 +60,13 @@ const DemoRealPopup = () => {
     const acc = mainAppStore.accounts.find((item) => item.isLive);
     if (acc) {
       try {
-        await API.setKeyValue({
-          key: KeysInApi.ACTIVE_ACCOUNT_ID,
-          value: acc.id,
-        });
+        await API.setKeyValue(
+          {
+            key: KeysInApi.ACTIVE_ACCOUNT_ID,
+            value: acc.id,
+          },
+          mainAppStore.initModel.tradingUrl
+        );
         mainAppStore.activeSession?.send(Topics.SET_ACTIVE_ACCOUNT, {
           [Fields.ACCOUNT_ID]: acc.id,
         });

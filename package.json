@@ -4,7 +4,8 @@
   "scripts": {
     "dev": "webpack-dev-server --config webpack.config.js --mode=development --is_local=true",
     "devLocal": "webpack --config webpack.config.js --mode=development",
-    "build": "webpack --config webpack.config.js --mode=production --display-error-details"
+    "buildProd": "webpack --config webpack.config.js --mode=production --display-error-details",
+    "buildTest": "webpack --config webpack.config.js --mode=none --display-error-details"
   },
   "devDependencies": {
     "@babel/core": "^7.7.0",
@@ -19,6 +20,7 @@
     "@types/react-dom": "^16.9.4",
     "@types/react-helmet": "^5.0.14",
     "@types/react-i18next": "^8.1.0",
+    "@types/react-input-autosize": "^2.2.0",
     "@types/react-router-dom": "^5.1.2",
     "@types/signalr": "^2.2.35",
     "@types/uuid": "^3.4.6",
@@ -55,7 +57,7 @@
     "history": "^4.10.1",
     "i18next": "^19.5.4",
     "i18next-browser-languagedetector": "^5.0.0",
-    "libphonenumber-js": "^1.8.1",
+    "libphonenumber-js": "^1.9.7",
     "mixpanel-browser": "^2.35.0",
     "mobx": "^5.15.1",
     "mobx-react-lite": "^1.5.2",
@@ -66,9 +68,11 @@
     "react-dropzone": "^10.2.1",
     "react-helmet": "^5.2.1",
     "react-i18next": "^11.7.0",
+    "react-input-autosize": "^3.0.0",
     "react-input-mask": "^3.0.0-alpha.2",
     "react-qr-code": "^1.0.0",
     "react-router-dom": "^5.1.2",
+    "react-smartbanner": "^5.1.4",
     "react-swipeable": "^5.5.1",
     "uuid": "^3.3.3",
     "yup": "^0.27.0"

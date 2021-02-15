@@ -46,6 +46,8 @@ const apiResponseCodeMessages = {
     'Trading is not available for this asset now. Please try again later.',
   [OperationApiResponseCodes.MaxOpenPositionsAmount]:
     'You exceed the maximum amount for orders',
+  [OperationApiResponseCodes.SystemError]: 'Technical Error.',
+  [OperationApiResponseCodes.PersonalDataNotValid]: 'Personal data is not valid.',
 };
 
 Object.freeze(apiResponseCodeMessages);

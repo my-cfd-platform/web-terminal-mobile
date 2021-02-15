@@ -32,7 +32,7 @@ const LpLogin = observer(() => {
               break;
 
             case 'withdrawal':
-              push(Page.ACCOUNT_WITHDRAW);
+              push(Page.WITHDRAW_LIST);
               break;
 
             default:
@@ -68,6 +68,8 @@ const LpLogin = observer(() => {
       urlParams.set('lang', mainAppStore.lang);
       urlParams.set('env', 'web_mob');
       urlParams.set('trader_id', userProfileStore.userProfileId);
+      urlParams.set('api', mainAppStore.initModel.tradingUrl);
+      urlParams.set('rt', mainAppStore.refreshToken);
       window.location.href = `${API_DEPOSIT_STRING}/?${urlParams.toString()}`;
     }
   }, [

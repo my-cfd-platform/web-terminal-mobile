@@ -14,6 +14,7 @@ export interface FlexContainerProps {
   width?: string;
   height?: string;
   minHeight?: string;
+  minWidth?: string;
   maxHeight?: string;
   maxWidth?: string;
   padding?: string;
@@ -36,9 +37,12 @@ export interface FlexContainerProps {
   flex?: string;
   opacity?: string;
   order?: string;
+  backgroundImage?: string;
+  transition?: string;
 }
 
 export const FlexContainer = styled.div<FlexContainerProps>`
+
   display: flex;
   flex: ${(props) => props.flex};
   position: ${(props) => props.position};
@@ -47,6 +51,7 @@ export const FlexContainer = styled.div<FlexContainerProps>`
   width: ${(props) => props.width};
   height: ${(props) => props.height};
   min-height: ${(props) => props.minHeight};
+  min-width: ${(props) => props.minWidth};
   max-height: ${(props) => props.maxHeight};
   max-width: ${(props) => props.maxWidth};
   padding: ${(props) => props.padding};
@@ -56,6 +61,7 @@ export const FlexContainer = styled.div<FlexContainerProps>`
   flex-wrap: ${(props) => props.flexWrap};
   flex-direction: ${(props) => props.flexDirection};
   background-color: ${(props) => props.backgroundColor};
+  background-image: ${(props) => props.backgroundImage};
   color: ${(props) => props.textColor};
   top: ${(props) => props.top};
   right: ${(props) => props.right};
@@ -68,4 +74,5 @@ export const FlexContainer = styled.div<FlexContainerProps>`
   box-shadow: ${(props) => props.boxShadow};
   opacity: ${(props) => props.opacity};
   order: ${(props) => props.order};
+  transition: ${(props) => props.transition};
 `;

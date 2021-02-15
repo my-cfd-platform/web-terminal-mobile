@@ -52,6 +52,10 @@ const TradeButton = styled(ButtonWithoutStyles)`
   font-size: 16px;
   font-weight: bold;
   color: #252636;
+  &:hover, &:active:, &:focus {
+    text-decoration: none;
+    color: #252636;
+  }
 `;
 
 const SuccessText = styled.span`

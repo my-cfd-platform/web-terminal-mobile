@@ -108,6 +108,7 @@ const PendingPositionsDetails: FC<Props> = observer((props) => {
         >
           {position && (
             <PendingOrderItem
+              isInner={true}
               pendingOrder={position}
               currencySymbol={mainAppStore.activeAccount?.symbol || ''}
             />
@@ -180,7 +181,7 @@ const PendingPositionsDetails: FC<Props> = observer((props) => {
                 {t('Current Price')}
               </PrimaryTextSpan>
               <PrimaryTextSpan fontSize="16px">
-                <Observer>
+                {quotesStore.quotes[position.instrument] && <Observer>
                   {() => (
                     <>
                       {position.operation === AskBidEnum.Buy
@@ -192,7 +193,7 @@ const PendingPositionsDetails: FC<Props> = observer((props) => {
                           )}
                     </>
                   )}
-                </Observer>
+                </Observer>}
               </PrimaryTextSpan>
             </FlexContainer>
 
@@ -304,11 +305,11 @@ const PendingPositionsDetails: FC<Props> = observer((props) => {
             right="16px"
           >
             <ClosePositionButton applyHandler={handleCloseOrder}>
-              Confirm closing of&nbsp;
+              {t('Confirm closing of')}&nbsp;
               <PrimaryTextSpan color="#ffffff">
                 {position.instrument}
               </PrimaryTextSpan>
-              &nbsp; position for&nbsp;
+              &nbsp; {t('position for')}&nbsp;
               <PrimaryTextSpan color="#ffffff">
                 {mainAppStore.activeAccount?.symbol}
                 {position.investmentAmount.toFixed(2)}

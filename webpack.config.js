@@ -95,35 +95,29 @@ module.exports = (env, argv) => {
         title: 'Hello world - Shadi',
         captcha: JSON.stringify(
           'https://www.google.com/recaptcha/api.js?render=' +
-            (argv.mode === 'production' ? process.env.RECAPTCHA_KEY : '')
+            (['production', 'none'].includes(argv.mode)
+              ? process.env.RECAPTCHA_KEY
+              : '')
         ),
       }),
       new webpack.DefinePlugin({
-        WS_HOST:
-          argv.mode === 'production'
-            ? JSON.stringify('/signalr')
-            : JSON.stringify('http://localhost:5678/signalr'),
-        API_STRING:
-          argv.mode === 'production'
-            ? JSON.stringify('')
-            : JSON.stringify('http://localhost:5678'),
-        API_AUTH_STRING:
-          argv.mode === 'production'
-            ? JSON.stringify('')
-            : JSON.stringify('http://localhost:5679'),
-        API_DEPOSIT_STRING:
-          argv.mode === 'production'
-            ? JSON.stringify('/mobile-deposit')
-            : JSON.stringify('http://localhost:8081'),
-        API_WITHDRAWAL_STRING:
-          argv.mode === 'production'
-            ? JSON.stringify('/withdrawal')
-            : JSON.stringify('http://localhost:5681/withdrawal'),
-        CHARTING_LIBRARY_PATH:
-          argv.mode === 'production'
-            ? JSON.stringify('/charting_library/')
-            : JSON.stringify('/src/vendor/charting_library/'),
-        IS_LIVE: argv.mode === 'production',
+        WS_HOST: JSON.stringify('http://localhost:5678/signalr'),
+        API_STRING: ['production', 'none'].includes(argv.mode)
+          ? JSON.stringify('')
+          : JSON.stringify('http://localhost:5678'),
+        API_AUTH_STRING: ['production', 'none'].includes(argv.mode)
+          ? JSON.stringify('')
+          : JSON.stringify('http://localhost:5679'),
+        API_DEPOSIT_STRING: ['production', 'none'].includes(argv.mode)
+          ? JSON.stringify('/mobile-deposit')
+          : JSON.stringify('http://localhost:8081'),
+        API_WITHDRAWAL_STRING: ['production', 'none'].includes(argv.mode)
+          ? JSON.stringify('')
+          : JSON.stringify('http://localhost:5681'),
+        CHARTING_LIBRARY_PATH: ['production', 'none'].includes(argv.mode)
+          ? JSON.stringify('/charting_library/')
+          : JSON.stringify('/src/vendor/charting_library/'),
+        IS_LIVE: ['production', 'none'].includes(argv.mode),
         IS_LOCAL: argv.is_local === 'true',
         BUILD_VERSION: JSON.stringify(process.env.BUILD_VERSION),
       }),

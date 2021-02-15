@@ -8,7 +8,6 @@ import LoaderFullscreen from '../components/LoaderFullscreen';
 import { Observer } from 'mobx-react-lite';
 import AuthorizedContainer from '../containers/AuthorizedContainer';
 import SignFlowLayout from '../components/SignFlowLayout';
-import { FULL_VH } from '../constants/global';
 import NetworkErrorPopup from '../components/NetworkErrorPopup';
 
 const RoutingLayout: FC = () => {
@@ -55,11 +54,7 @@ const RoutingLayout: FC = () => {
 
     default:
       return (
-        <FlexContainer
-          maxHeight={`calc(${FULL_VH})`}
-          height={`calc(${FULL_VH})`}
-          width="100%"
-        >
+        <FlexContainer height="100%" width="100%">
           <Observer>
             {() => (
               <>{serverErrorPopupStore.isActive && <NetworkErrorPopup />}</>

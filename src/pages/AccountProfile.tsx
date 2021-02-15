@@ -6,8 +6,6 @@ import UserIcon from '../assets/svg/profile/icon-user.svg';
 import SvgIcon from '../components/SvgIcon';
 import { PrimaryTextSpan } from '../styles/TextsElements';
 import { useStores } from '../hooks/useStores';
-import API from '../helpers/API';
-import { getProcessId } from '../helpers/getProcessId';
 import { Link } from 'react-router-dom';
 import { ButtonWithoutStyles } from '../styles/ButtonWithoutStyles';
 import Colors from '../constants/Colors';
@@ -20,31 +18,26 @@ import IconWithdraw from '../assets/svg/profile/icon-withdrawal.svg';
 import IconBalanceHistory from '../assets/svg/profile/icon-balance-history.svg';
 import IconLogout from '../assets/svg/profile/icon-logout.svg';
 import IconAboutUs from '../assets/svg/profile/icon-about.svg';
+import IconVerify from '../assets/svg/profile/icon-verify.svg';
+import IconPassword from '../assets/svg/profile/icon-account-password.svg';
+import { PersonalDataKYCEnum } from '../enums/PersonalDataKYCEnum';
+import AchievementStatusLabel from '../components/AchievementStatusLabel';
+import { observer, Observer } from 'mobx-react-lite';
+import mixpanel from 'mixpanel-browser';
+import mixpanelEvents from '../constants/mixpanelEvents';
+import mixapanelProps from '../constants/mixpanelProps';
+import useRedirectMiddleware from '../hooks/useRedirectMiddleware';
 
-const AccountProfile = () => {
+const AccountProfile = observer(() => {
   const { mainAppStore, userProfileStore } = useStores();
   const { t } = useTranslation();
-
-  const [email, setEmail] = useState('');
-  const [name, setName] = useState('');
-
-  const handleLogout = () => mainAppStore.signOut();
-
-  useEffect(() => {
-    async function fetchPersonalData() {
-      try {
-        const response = await API.getPersonalData(
-          getProcessId(),
-          mainAppStore.initModel.authUrl
-        );
-        setEmail(response.data.email || '');
-        setName(
-          `${response.data.firstName || ''} ${response.data.lastName || ''}`
-        );
-      } catch (error) {}
-    }
-    fetchPersonalData();
-  }, []);
+  const { redirectWithUpdateRefreshToken } = useRedirectMiddleware();
+  const handleLogout = () => {
+    mixpanel.track(mixpanelEvents.LOGOUT, {
+      [mixapanelProps.BRAND_NAME]: mainAppStore.initModel.brandProperty,
+    });
+    mainAppStore.signOut();
+  };
 
   const urlParams = new URLSearchParams();
 
@@ -59,11 +52,15 @@ const AccountProfile = () => {
     urlParams.set('env', 'web_mob');
     urlParams.set('trader_id', userProfileStore.userProfileId || '');
     urlParams.set('lang', mainAppStore.lang);
+    urlParams.set('api', mainAppStore.initModel.tradingUrl);
+    urlParams.set('rt', mainAppStore.refreshToken);
     setParsedParams(urlParams.toString());
   }, [mainAppStore.token, mainAppStore.lang, mainAppStore.accounts]);
 
   return (
-    <FlexContainer flexDirection="column">
+    // TODO: Refactor Safari 
+    <FlexContainer flexDirection="column" minHeight="600px">
+      <AchievementStatusLabel />
       <FlexContainer padding="16px" marginBottom="24px">
         <UserPhoto
           alignItems="center"
@@ -91,15 +88,48 @@ const AccountProfile = () => {
           >
             {name}
           </PrimaryTextSpan>
-          <PrimaryTextSpan
-            color="rgba(255, 255, 255, 0.4)"
-            fontSize="13px"
-            fontWeight={500}
-          >
-            {email}
-          </PrimaryTextSpan>
+          <Observer>
+            {() => (
+              <PrimaryTextSpan
+                color="rgba(255, 255, 255, 0.4)"
+                fontSize="13px"
+                fontWeight={500}
+              >
+                {userProfileStore.userProfile?.email}
+              </PrimaryTextSpan>
+            )}
+          </Observer>
         </FlexContainer>
       </FlexContainer>
+
+      {userProfileStore.userProfile?.kyc ===
+        PersonalDataKYCEnum.NotVerified && (
+        <FlexContainer flexDirection="column" marginBottom="24px">
+          <ProfileMenuLink to={Page.ACCOUNT_VERIFICATION}>
+            <FlexContainer alignItems="center">
+              <FlexContainer
+                width="28px"
+                height="28px"
+                backgroundColor="#00000000"
+                borderRadius="50%"
+                justifyContent="center"
+                alignItems="center"
+                marginRight="14px"
+              >
+                <SvgIcon {...IconVerify} fillColor="#ED145B" />
+              </FlexContainer>
+              <PrimaryTextSpan
+                color="#ffffff"
+                fontSize="16px"
+                fontWeight="normal"
+              >
+                {t('Fill in personal details')}
+              </PrimaryTextSpan>
+            </FlexContainer>
+            <SvgIcon {...IconArrowLink} fillColor="rgba(196, 196, 196, 0.5)" />
+          </ProfileMenuLink>
+        </FlexContainer>
+      )}
 
       <FlexContainer flexDirection="column" marginBottom="24px">
         <FlexContainer padding="0 16px" marginBottom="8px">
@@ -113,7 +143,7 @@ const AccountProfile = () => {
           </PrimaryTextSpan>
         </FlexContainer>
 
-        <ProfileMenuA href={`${API_DEPOSIT_STRING}/?${parsedParams}`}>
+        <ProfileMenuButton onClick={() => redirectWithUpdateRefreshToken(API_DEPOSIT_STRING, parsedParams)}>
           <FlexContainer alignItems="center">
             <FlexContainer
               width="28px"
@@ -135,9 +165,9 @@ const AccountProfile = () => {
             </PrimaryTextSpan>
           </FlexContainer>
           <SvgIcon {...IconArrowLink} fillColor="rgba(196, 196, 196, 0.5)" />
-        </ProfileMenuA>
+        </ProfileMenuButton>
 
-        <ProfileMenuLink to={Page.ACCOUNT_WITHDRAW}>
+        <ProfileMenuLink to={Page.WITHDRAW_LIST}>
           <FlexContainer alignItems="center">
             <FlexContainer
               width="28px"
@@ -179,7 +209,7 @@ const AccountProfile = () => {
               fontSize="16px"
               fontWeight="normal"
             >
-              {t('Balance History')}
+              {t('Balance history')}
             </PrimaryTextSpan>
           </FlexContainer>
           <SvgIcon {...IconArrowLink} fillColor="rgba(196, 196, 196, 0.5)" />
@@ -198,6 +228,30 @@ const AccountProfile = () => {
           </PrimaryTextSpan>
         </FlexContainer>
 
+        <ProfileMenuLink to={Page.ACCOUNT_CHANGE_PASSWORD}>
+          <FlexContainer alignItems="center">
+            <FlexContainer
+              width="28px"
+              height="28px"
+              backgroundColor="#77787E"
+              borderRadius="50%"
+              justifyContent="center"
+              alignItems="center"
+              marginRight="14px"
+            >
+              <SvgIcon {...IconPassword} fillColor="#ffffff" />
+            </FlexContainer>
+            <PrimaryTextSpan
+              color="#ffffff"
+              fontSize="16px"
+              fontWeight="normal"
+            >
+              {t('Change password')}
+            </PrimaryTextSpan>
+          </FlexContainer>
+          <SvgIcon {...IconArrowLink} fillColor="rgba(196, 196, 196, 0.5)" />
+        </ProfileMenuLink>
+
         <ProfileMenuLink to={Page.ACCOUNT_CHANGE_LANGUAGE}>
           <FlexContainer alignItems="center">
             <FlexContainer
@@ -210,9 +264,9 @@ const AccountProfile = () => {
               marginRight="14px"
             >
               <PrimaryTextSpan
-                  color="#ffffff"
-                  fontSize="9px"
-                  fontWeight="normal"
+                color="#ffffff"
+                fontSize="9px"
+                fontWeight="normal"
               >
                 {mainAppStore.lang.substr(0, 2).toUpperCase()}
               </PrimaryTextSpan>
@@ -278,7 +332,7 @@ const AccountProfile = () => {
       </FlexContainer>
     </FlexContainer>
   );
-};
+});
 
 export default AccountProfile;
 

@@ -21,6 +21,8 @@ const DepositPaymentFail: FC = () => {
     urlParams.set('lang', mainAppStore.lang);
     urlParams.set('env', 'web_mob');
     urlParams.set('trader_id', userProfileStore.userProfileId || '');
+    urlParams.set('api', mainAppStore.initModel.tradingUrl);
+    urlParams.set('rt', mainAppStore.refreshToken);
     setParsedParams(urlParams.toString());
   }, [
     mainAppStore.token,
@@ -79,6 +81,10 @@ const OtherMethodsButton = styled.a`
   font-weight: bold;
   color: #252636;
   text-align: center;
+  &:hover {
+    color: #252636;
+    text-decoration: none;
+  }
 `;
 
 const FailText = styled.span`

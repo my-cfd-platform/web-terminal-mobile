@@ -34,12 +34,14 @@ const BuyButton: FC<Props> = observer(({ handleClick }) => {
         >
           {t('Buy')}
         </PrimaryTextSpan>
-        {instrumentsStore.activeInstrument && (
+        {(instrumentsStore.activeInstrument &&
+          quotesStore.quotes[instrumentsStore.activeInstrument.instrumentItem.id])
+        && (
           <PrimaryTextSpan fontSize="13px" color="#232830">
             {
               quotesStore.quotes[
                 instrumentsStore.activeInstrument.instrumentItem.id
-              ].ask.c
+              ].ask.c.toFixed(instrumentsStore.activeInstrument.instrumentItem.digits)
             }
           </PrimaryTextSpan>
         )}

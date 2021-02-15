@@ -16,6 +16,7 @@ export interface AccountModelWebSocketDTO {
   symbol: string;
   isLive: boolean;
   timestamp: number;
+  achievementStatus: 'basic' | 'silver' | 'gold' | 'platinum';
   investAmount: [
     {
       amount: number;

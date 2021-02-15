@@ -13,6 +13,7 @@ import styled from '@emotion/styled';
 import moment from 'moment';
 import { IActiveInstrument } from '../../types/InstrumentsTypes';
 import { observer } from 'mobx-react-lite';
+import { ResolutionString } from '../../vendor/charting_library/charting_library';
 
 const TimeScalePanel = observer(() => {
   const { instrumentsStore, tradingViewStore } = useStores();
@@ -65,20 +66,23 @@ const TimeScalePanel = observer(() => {
     };
 
     if (newResolutionKey === instrumentsStore.activeInstrument.resolution) {
-      tradingViewStore.tradingWidget?.chart().setVisibleRange({
-        from: from.valueOf(),
-        to: moment().valueOf(),
+      tradingViewStore.tradingWidget?.activeChart().setVisibleRange({
+        from: from.valueOf() / 1000,
+        to: moment.utc().valueOf() / 1000,
       });
     } else {
       newActiveInstrument.resolution = newResolutionKey;
       tradingViewStore.tradingWidget
-        ?.chart()
-        .setResolution(supportedResolutions[newResolutionKey], () => {
-          tradingViewStore.tradingWidget?.chart().setVisibleRange({
-            from: from.valueOf(),
-            to: moment().valueOf(),
-          });
-        });
+        ?.activeChart()
+        .setResolution(
+          supportedResolutions[newResolutionKey] as ResolutionString,
+          () => {
+            tradingViewStore.tradingWidget?.activeChart().setVisibleRange({
+              from: from.valueOf() / 1000,
+              to: moment.utc().valueOf() / 1000,
+            });
+          }
+        );
     }
     instrumentsStore.editActiveInstrument(newActiveInstrument);
   };

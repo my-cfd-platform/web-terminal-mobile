@@ -1,6 +1,8 @@
 export enum OperationApiResponseCodes {
   Expired = -9,
-  FileNotFound = -6,
+  SystemError,
+  PersonalDataNotValid,
+  FileNotFound,
   FileWrongExtension,
   OldPasswordNotMatch,
   UserNotExist,

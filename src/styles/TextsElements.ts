@@ -27,6 +27,7 @@ interface PrimaryTextType {
   textOverflow?: 'ellipsis';
   overflow?: 'hidden';
   width?: string;
+  maxWidth?: string;
 }
 
 export const PrimaryTextSpan = styled.span<PrimaryTextType>`
@@ -43,6 +44,7 @@ export const PrimaryTextSpan = styled.span<PrimaryTextType>`
   text-align: ${(props) => props.textAlign};
   text-overflow: ${(props) => props.textOverflow};
   overflow: ${(props) => props.overflow};
+  max-width: ${(props) => props.maxWidth};
 `;
 
 export const PrimaryTextParagraph = styled.p<PrimaryTextType>`
@@ -60,6 +62,7 @@ export const PrimaryTextParagraph = styled.p<PrimaryTextType>`
   text-overflow: ${(props) => props.textOverflow};
   overflow: ${(props) => props.overflow};
   width: ${(props) => props.width};
+  max-width: ${(props) => props.maxWidth};
 `;
 
 export const QuoteText = styled(PrimaryTextSpan)<
@@ -78,4 +81,5 @@ export const QuoteText = styled(PrimaryTextSpan)<
   text-align: ${(props) => props.textAlign};
   text-overflow: ${(props) => props.textOverflow};
   overflow: ${(props) => props.overflow};
+  max-width: ${(props) => props.maxWidth};
 `;

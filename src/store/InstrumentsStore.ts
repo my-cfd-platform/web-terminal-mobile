@@ -7,7 +7,10 @@ import {
 } from '../types/InstrumentsTypes';
 import { RootStore } from './RootStore';
 import { SortByMarketsEnum } from '../enums/SortByMarketsEnum';
-import { SeriesStyle } from '../vendor/charting_library/charting_library.min';
+import {
+  ResolutionString,
+  SeriesStyle,
+} from '../vendor/charting_library/charting_library';
 import {
   supportedResolutions,
   supportedInterval,
@@ -16,6 +19,8 @@ import { getIntervalByKey } from '../helpers/getIntervalByKey';
 import moment from 'moment';
 import { AccountTypeEnum } from '../enums/AccountTypeEnum';
 import API from '../helpers/API';
+import { LOCAL_CHART_TYPE } from '../constants/global';
+import { getChartTypeByLabel } from '../constants/chartValues';
 
 interface IPriceChange {
   [key: string]: number;
@@ -46,6 +51,7 @@ export class InstrumentsStore implements ContextProps {
   @observable activeInstrumentGroupId?: InstrumentGroupWSDTO['id'];
 
   @observable sortByField: string | null = null;
+  @observable manualChange: boolean = false;
 
   @observable pricesChange: IPriceChange = {};
   @observable searchValue: string = '';
@@ -62,8 +68,8 @@ export class InstrumentsStore implements ContextProps {
       .slice()
       .sort(
         (a, b) =>
-          this.activeInstrumentsIds.indexOf(b.instrumentItem.id) -
-          this.activeInstrumentsIds.indexOf(a.instrumentItem.id)
+          this.activeInstrumentsIds.indexOf(a.instrumentItem.id) -
+          this.activeInstrumentsIds.indexOf(b.instrumentItem.id)
       );
     // .sort((a, b) => {
     //   if (a.instrumentItem.id == this.activeInstrument?.instrumentItem.id) {
@@ -77,11 +83,29 @@ export class InstrumentsStore implements ContextProps {
 
   @action
   setInstruments = (instruments: InstrumentModelWSDTO[]) => {
+    const localType = localStorage.getItem(LOCAL_CHART_TYPE);
+    const currentType = localType
+      ? getChartTypeByLabel(localType)
+      : SeriesStyle.Area;
     this.instruments = instruments.map(
       (item) =>
         <IActiveInstrument>{
-          chartType: SeriesStyle.Area,
+          chartType: currentType,
           instrumentItem: item,
+          interval: supportedInterval['15m'],
+          resolution: '1m',
+        }
+    );
+  };
+
+  @action
+  changeInstruments = (type: SeriesStyle) => {
+    this.manualChange = true;
+    this.instruments = this.instruments.map(
+      (item) =>
+        <IActiveInstrument>{
+          chartType: type,
+          instrumentItem: item.instrumentItem,
           interval: supportedInterval['15m'],
           resolution: '1m',
         }
@@ -99,8 +123,10 @@ export class InstrumentsStore implements ContextProps {
   };
 
   @action
-  setActiveInstrumentsIds = (activeInstrumentsIds: string[]) => {
-    this.activeInstrumentsIds = activeInstrumentsIds.slice(0, 7);
+  setActiveInstrumentsIds = (activeInstrumentsIds: string[], unReverse?: boolean) => {
+    this.activeInstrumentsIds = unReverse
+      ? activeInstrumentsIds.slice(0, 7)
+      : activeInstrumentsIds.slice(0, 7).reverse();
   };
 
   @action
@@ -110,11 +136,11 @@ export class InstrumentsStore implements ContextProps {
     }
 
     if (this.activeInstrumentsIds.length > 6) {
-      this.activeInstrumentsIds[6] = activeInstrumentId;
+      this.activeInstrumentsIds[0] = activeInstrumentId
     } else {
       this.activeInstrumentsIds = [
-        ...this.activeInstrumentsIds,
         activeInstrumentId,
+        ...this.activeInstrumentsIds,
       ];
     }
     return await API.postFavoriteInstrumets({
@@ -181,12 +207,15 @@ export class InstrumentsStore implements ContextProps {
               this.rootStore.tradingViewStore.tradingWidget
                 ?.chart()
                 .setResolution(
-                  supportedResolutions[newActiveInstrument.resolution],
+                  supportedResolutions[
+                    newActiveInstrument.resolution
+                  ] as ResolutionString,
                   () => {
                     if (newActiveInstrument.interval) {
                       const fromTo = {
-                        from: getIntervalByKey(newActiveInstrument.interval),
-                        to: moment().valueOf(),
+                        from:
+                          getIntervalByKey(newActiveInstrument.interval) / 1000,
+                        to: moment.utc().valueOf() / 1000,
                       };
                       this.rootStore.tradingViewStore.tradingWidget
                         ?.chart()
@@ -198,6 +227,8 @@ export class InstrumentsStore implements ContextProps {
                 ?.chart()
                 .setChartType(newActiveInstrument.chartType);
             });
+
+          this.rootStore.markersOnChartStore.renderActivePositionsMarkersOnChart();
         }
       } catch (error) {}
     } else {

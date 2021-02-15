@@ -1,4 +1,5 @@
 import { AskBidEnum } from '../enums/AskBid';
+import { OperationApiResponseCodes } from '../enums/OperationApiResponseCodes';
 import { TpSlTypeEnum } from '../enums/TpSlTypeEnum';
 
 export interface PendingOrderWSDTO {
@@ -14,4 +15,10 @@ export interface PendingOrderWSDTO {
   tpType: TpSlTypeEnum | null;
   slType: TpSlTypeEnum | null;
   timeStamp: number;
+}
+
+
+export interface PendingOrderResponseDTO {
+  result: OperationApiResponseCodes;
+  order: PendingOrderWSDTO;
 }

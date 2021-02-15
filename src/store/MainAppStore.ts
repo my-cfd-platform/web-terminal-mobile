@@ -3,8 +3,9 @@ import {
   LOCAL_STORAGE_REFRESH_TOKEN_KEY,
   LOCAL_STORAGE_LANGUAGE,
   LAST_PAGE_VISITED,
+  LOCAL_IS_NEW_USER,
 } from './../constants/global';
-import axios from 'axios';
+import axios, { AxiosRequestConfig } from 'axios';
 import {
   UserAuthenticate,
   UserRegistration,
@@ -40,11 +41,12 @@ import mixapanelProps from '../constants/mixpanelProps';
 import { PositionModelWSDTO } from '../types/Positions';
 import { PendingOrderWSDTO } from '../types/PendingOrdersTypes';
 import { BidAskModelWSDTO } from '../types/BidAsk';
+import accountVerifySteps from '../constants/accountVerifySteps';
+import { polandLocalsList } from '../constants/polandLocalsList';
 
 interface MainAppStoreProps {
   token: string;
   refreshToken: string;
-  isInterceptorsInjected: boolean;
   isAuthorized: boolean;
   signIn: (credentials: UserAuthenticate) => void;
   signUp: (credentials: UserRegistration) => Promise<unknown>;
@@ -54,7 +56,6 @@ interface MainAppStoreProps {
   activeAccount?: AccountModelWebSocketDTO;
   accounts: AccountModelWebSocketDTO[];
   setActiveAccount: (acc: AccountModelWebSocketDTO) => void;
-  tradingUrl: string;
   profileStatus: PersonalDataKYCEnum;
   isDemoRealPopup: boolean;
   signalRReconnectTimeOut: string;
@@ -85,10 +86,13 @@ export class MainAppStore implements MainAppStoreProps {
     policyUrl: '',
     supportUrl: '',
     termsUrl: '',
-    tradingUrl: '',
+    tradingUrl: '/',
     authUrl: '',
     mixpanelToken: '582507549d28c813188211a0d15ec940',
     recaptchaToken: '',
+    androidAppId: '',
+    iosAppId: '',
+    mobileAppLogo: '',
   };
   @observable isLoading = false;
   @observable isInitLoading = true;
@@ -99,8 +103,6 @@ export class MainAppStore implements MainAppStoreProps {
   @observable accounts: AccountModelWebSocketDTO[] = [];
   @observable profileStatus: PersonalDataKYCEnum =
     PersonalDataKYCEnum.NotVerified;
-  @observable tradingUrl = '';
-  @observable isInterceptorsInjected = false;
   @observable profilePhone = '';
   @observable lang = CountriesEnum.EN;
   @observable token = '';
@@ -112,6 +114,7 @@ export class MainAppStore implements MainAppStoreProps {
   @observable activeAccountId: string = '';
   @observable connectionSignalRTimer: NodeJS.Timeout | null = null;
   @observable signUpFlag: boolean = false;
+  @observable isVerification: boolean = false;
   websocketConnectionTries = 0;
 
   constructor(rootStore: RootStore) {
@@ -120,15 +123,25 @@ export class MainAppStore implements MainAppStoreProps {
     this.refreshToken =
       localStorage.getItem(LOCAL_STORAGE_REFRESH_TOKEN_KEY) || '';
     Axios.defaults.headers[RequestHeaders.AUTHORIZATION] = this.token;
+
     // @ts-ignore
     this.lang =
-      localStorage.getItem(LOCAL_STORAGE_LANGUAGE) || CountriesEnum.EN;
+      localStorage.getItem(LOCAL_STORAGE_LANGUAGE) ||
+      (((window.navigator.languages &&
+          polandLocalsList.includes(window.navigator.languages[0].slice(0, 2).toLowerCase())) ||
+        (window.navigator.language &&
+        polandLocalsList.includes(window.navigator.language.slice(0, 2).toLowerCase()))
+      )
+        ? CountriesEnum.PL
+        : CountriesEnum.EN);
+    injectInerceptors(this);
   }
 
   initApp = async () => {
     try {
       const initModel = await API.getInitModel();
       this.initModel = initModel;
+      this.setInterceptors();
     } catch (error) {
       this.isInitLoading = false;
       this.rootStore.badRequestPopupStore.openModal();
@@ -136,10 +149,33 @@ export class MainAppStore implements MainAppStoreProps {
     }
   };
 
+  setInterceptors = () => {
+    axios.interceptors.request.use((config: AxiosRequestConfig) => {
+      if (
+        IS_LIVE &&
+        this.initModel.tradingUrl &&
+        config.url &&
+        !config.url.includes('auth/')
+      ) {
+        if (config.url.includes('://')) {
+          const arrayOfSubpath = config.url.split('://')[1].split('/');
+          const subPath = arrayOfSubpath.slice(1).join('/');
+          config.url = `${this.initModel.tradingUrl}/${subPath}`;
+        } else {
+          config.url = `${this.initModel.tradingUrl}${config.url}`;
+        }
+      }
+
+      config.headers[RequestHeaders.ACCEPT_LANGUAGE] = `${this.lang}`;
+      return config;
+    });
+  };
+
   handleInitConnection = async (token = this.token) => {
-    const wsConnectSub =
-      this.tradingUrl.slice(-1) === '/' ? 'signalr' : `/signalr`;
-    const connectionString = IS_LIVE ? this.tradingUrl + wsConnectSub : WS_HOST;
+    this.isLoading = true;
+    const connectionString = IS_LOCAL
+      ? WS_HOST
+      : `${this.initModel.tradingUrl}/signalr`;
     const connection = initConnection(connectionString);
 
     const connectToWebocket = async () => {
@@ -168,14 +204,7 @@ export class MainAppStore implements MainAppStoreProps {
       if (this.refreshToken) {
         this.postRefreshToken().then(() => {
           axios.defaults.headers[RequestHeaders.AUTHORIZATION] = this.token;
-
-          if (IS_LIVE) {
-            this.fetchTradingUrl();
-          } else {
-            this.setTradingUrl('/');
-            injectInerceptors('/', this);
-            this.handleInitConnection();
-          }
+          this.handleInitConnection();
         });
       } else {
         this.signOut();
@@ -350,22 +379,6 @@ export class MainAppStore implements MainAppStoreProps {
     );
   };
 
-  fetchTradingUrl = async (token = this.token) => {
-    this.isLoading = true;
-    try {
-      const response = await API.getTradingUrl(this.initModel.authUrl);
-      this.setTradingUrl(response.tradingUrl);
-      if (!this.isInterceptorsInjected) {
-        injectInerceptors(response.tradingUrl, this);
-      }
-      this.handleInitConnection(token);
-    } catch (error) {
-      this.setTradingUrl('/');
-      this.isLoading = false;
-      this.isInitLoading = false;
-    }
-  };
-
   @action
   setSignUpFlag = (value: boolean) => {
     this.signUpFlag = value;
@@ -406,7 +419,8 @@ export class MainAppStore implements MainAppStoreProps {
   getActiveAccount = async () => {
     try {
       const activeAccountId = await API.getKeyValue(
-        KeysInApi.ACTIVE_ACCOUNT_ID
+        KeysInApi.ACTIVE_ACCOUNT_ID,
+        this.initModel.tradingUrl
       );
       const activeAccount = this.accounts.find(
         (item) => item.id === activeAccountId
@@ -436,10 +450,13 @@ export class MainAppStore implements MainAppStoreProps {
     // TODO: think how remove crutch
     this.rootStore.historyStore.positionsHistoryReport.positionsHistory = [];
     this.rootStore.tradingViewStore.tradingWidget = undefined;
-    API.setKeyValue({
-      key: KeysInApi.ACTIVE_ACCOUNT_ID,
-      value: account.id,
-    });
+    API.setKeyValue(
+      {
+        key: KeysInApi.ACTIVE_ACCOUNT_ID,
+        value: account.id,
+      },
+      this.initModel.tradingUrl
+    );
   };
 
   @action
@@ -449,11 +466,12 @@ export class MainAppStore implements MainAppStoreProps {
       this.initModel.authUrl
     );
     if (response.result === OperationApiResponseCodes.Ok) {
+      localStorage.setItem(LOCAL_IS_NEW_USER, 'true');
       this.isAuthorized = true;
       this.signalRReconnectTimeOut = response.data.reconnectTimeOut;
       this.connectTimeOut = response.data.connectionTimeOut;
       this.setTokenHandler(response.data.token);
-      this.fetchTradingUrl(response.data.token);
+      this.handleInitConnection(response.data.token);
       this.setRefreshToken(response.data.refreshToken);
       mixpanel.track(mixpanelEvents.LOGIN, {
         [mixapanelProps.BRAND_NAME]: this.initModel.brandName.toLowerCase(),
@@ -474,10 +492,11 @@ export class MainAppStore implements MainAppStoreProps {
     const response = await API.postLpLoginToken(params, this.initModel.authUrl);
 
     if (response.result === OperationApiResponseCodes.Ok) {
+      localStorage.setItem(LOCAL_IS_NEW_USER, 'true');
       this.isAuthorized = true;
       this.signalRReconnectTimeOut = response.data.reconnectTimeOut;
       this.setTokenHandler(response.data.token);
-      this.fetchTradingUrl(response.data.token);
+      this.handleInitConnection(response.data.token);
       this.setRefreshToken(response.data.refreshToken);
       mixpanel.track(mixpanelEvents.LOGIN);
     }
@@ -498,11 +517,12 @@ export class MainAppStore implements MainAppStoreProps {
       this.initModel.authUrl
     );
     if (response.result === OperationApiResponseCodes.Ok) {
+      localStorage.setItem(LOCAL_IS_NEW_USER, 'true');
       this.signalRReconnectTimeOut = response.data.reconnectTimeOut;
       this.isAuthorized = true;
       this.setTokenHandler(response.data.token);
+      this.handleInitConnection(response.data.token);
       this.setRefreshToken(response.data.refreshToken);
-      this.fetchTradingUrl(response.data.token);
     }
 
     if (
@@ -515,6 +535,7 @@ export class MainAppStore implements MainAppStoreProps {
 
   @action
   signOut = () => {
+    localStorage.removeItem(accountVerifySteps.KYC_STEP);
     localStorage.removeItem(LOCAL_STORAGE_TOKEN_KEY);
     localStorage.removeItem(LOCAL_STORAGE_REFRESH_TOKEN_KEY);
     localStorage.removeItem(LAST_PAGE_VISITED);
@@ -529,12 +550,7 @@ export class MainAppStore implements MainAppStoreProps {
     delete Axios.defaults.headers[RequestHeaders.AUTHORIZATION];
     this.activeAccount = undefined;
     this.activeAccountId = '';
-    mixpanel.reset(); 
-  };
-
-  @action
-  setTradingUrl = (tradingUrl: string) => {
-    this.tradingUrl = tradingUrl;
+    this.rootStore.withdrawalStore.clearStore();
   };
 
   setTokenHandler = (token: string) => {

@@ -13,6 +13,7 @@ export interface OpenPositionModel {
   sl: number | null;
   tpType: TpSlTypeEnum | null;
   slType: TpSlTypeEnum | null;
+  isToppingUpActive?: boolean;
 }
 
 export interface OpenPendingOrder {
@@ -59,6 +60,7 @@ export interface PositionModelWSDTO {
   tpType: TpSlTypeEnum | null;
   slType: TpSlTypeEnum | null;
   timeStamp: number;
+  isToppingUpActive?: boolean;
 }
 
 export interface ClosePositionModel {
@@ -81,4 +83,11 @@ export interface UpdateSLTP {
   sl: number | null;
   tpType: TpSlTypeEnum | null;
   slType: TpSlTypeEnum | null;
+}
+
+export interface PositionUpdtateToppingUp {
+  processId: string;
+  accountId: string;
+  positionId: number;
+  isToppingUpActive: boolean;
 }

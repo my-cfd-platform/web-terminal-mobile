@@ -21,7 +21,7 @@ const FavouriteInstruments = observer(() => {
       (id) => id === itemId
     );
     const newActiveInstrument =
-      instrumentsStore.activeInstrumentsIds[indexEl + 1];
+      instrumentsStore.activeInstrumentsIds[indexEl - 1];
 
     const newInstruments = instrumentsStore.activeInstrumentsIds.filter(
       (id) => id !== itemId
@@ -34,7 +34,7 @@ const FavouriteInstruments = observer(() => {
           : AccountTypeEnum.Demo,
         instruments: newInstruments,
       });
-      instrumentsStore.setActiveInstrumentsIds(response);
+      instrumentsStore.setActiveInstrumentsIds(response, true);
 
       instrumentsStore.switchInstrument(
         newActiveInstrument || response[response.length - 1]
@@ -50,7 +50,7 @@ const FavouriteInstruments = observer(() => {
   };
 
   return (
-    <FlexContainer marginBottom="14px" padding="16px 0">
+    <FlexContainer padding="16px 0 0 0">
       <FlexContainer padding="0 16px" marginRight="8px" alignItems="flex-start">
         <ButtonWithoutStyles onClick={gotoMarkets}>
           <SvgIcon

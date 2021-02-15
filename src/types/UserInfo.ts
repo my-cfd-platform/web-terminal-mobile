@@ -21,6 +21,12 @@ export interface IResetPassword {
   repeatPassword?: string;
 }
 
+export interface ChangePassword {
+  oldPassword: string;
+  newPassword: string;
+  repeatPassword?: string;
+}
+
 export interface RecoveryPasswordParams {
   password: string;
   token: string;

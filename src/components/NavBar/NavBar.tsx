@@ -7,12 +7,16 @@ import AccountLabel from './AccountLabel';
 import { useStores } from '../../hooks/useStores';
 import { observer } from 'mobx-react-lite';
 import { useTranslation } from 'react-i18next';
+import useRedirectMiddleware from '../../hooks/useRedirectMiddleware';
+import { ButtonWithoutStyles } from '../../styles/ButtonWithoutStyles';
 
 const NavBar = observer(() => {
   const { mainAppStore, userProfileStore } = useStores();
   const urlParams = new URLSearchParams();
   const { t } = useTranslation();
   const [parsedParams, setParsedParams] = useState('');
+
+  const { redirectWithUpdateRefreshToken } = useRedirectMiddleware();
 
   useEffect(() => {
     urlParams.set('token', mainAppStore.token);
@@ -23,8 +27,15 @@ const NavBar = observer(() => {
     urlParams.set('lang', mainAppStore.lang);
     urlParams.set('env', 'web_mob');
     urlParams.set('trader_id', userProfileStore.userProfileId || '');
+    urlParams.set('api', mainAppStore.initModel.tradingUrl);
+    urlParams.set('rt', mainAppStore.refreshToken);
     setParsedParams(urlParams.toString());
-  }, [mainAppStore.token, mainAppStore.lang, mainAppStore.accounts, userProfileStore.userProfileId]);
+  }, [
+    mainAppStore.token,
+    mainAppStore.lang,
+    mainAppStore.accounts,
+    userProfileStore.userProfileId,
+  ]);
   return (
     <FlexContainer
       width="100vw"
@@ -35,7 +46,7 @@ const NavBar = observer(() => {
     >
       <AccountLabel />
       <AccountsSwitchLink />
-      <DepositLink href={`${API_DEPOSIT_STRING}/?${parsedParams}`}>
+      <DepositLink onClick={() => redirectWithUpdateRefreshToken(API_DEPOSIT_STRING, parsedParams)}>
         {t('Deposit')}
       </DepositLink>
     </FlexContainer>
@@ -44,7 +55,7 @@ const NavBar = observer(() => {
 
 export default NavBar;
 
-const DepositLink = styled.a`
+const DepositLink = styled(ButtonWithoutStyles)`
   font-size: 16px;
   line-height: 1;
   font-weight: 500;

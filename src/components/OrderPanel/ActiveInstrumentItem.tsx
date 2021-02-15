@@ -58,11 +58,11 @@ const ActiveInstrumentItem: FC<Props> = observer(({ type }) => {
         justifyContent="center"
       >
         <PrimaryTextSpan fontSize="16px" color="#fffccc" marginBottom="4px">
-          <Observer>
+          {quotesStore.quotes[id] && <Observer>
             {() => <>
               {type === 'sell' ? quotesStore.quotes[id].bid.c.toFixed(digits) : quotesStore.quotes[id].ask.c.toFixed(digits)}
             </>}
-          </Observer>
+          </Observer>}
         </PrimaryTextSpan>
         <QuoteTextLabel type={type}>
           <PrimaryTextSpan

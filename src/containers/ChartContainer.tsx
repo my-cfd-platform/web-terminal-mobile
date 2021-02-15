@@ -1,10 +1,10 @@
 import React, { FC, useEffect } from 'react';
 import {
   ChartingLibraryWidgetOptions,
-  LanguageCode,
   widget,
   SeriesStyle,
-} from '../vendor/charting_library/charting_library.min';
+  ResolutionString,
+} from '../vendor/charting_library/charting_library';
 import { FlexContainer } from '../styles/FlexContainer';
 import DataFeedService from '../services/dataFeedService';
 import { LineStyles } from '../enums/TradingViewStyles';
@@ -12,15 +12,21 @@ import { useStores } from '../hooks/useStores';
 import { supportedResolutions } from '../constants/supportedTimeScales';
 import { BASIC_RESOLUTION_KEY } from '../constants/chartValues';
 import { observer } from 'mobx-react-lite';
-import Colors from '../constants/Colors';
 import { useRouteMatch } from 'react-router-dom';
 import Page from '../constants/Pages';
 import styled from '@emotion/styled';
+import { getIntervalByKey } from '../helpers/getIntervalByKey';
+import moment from 'moment';
 
 const containerId = 'tv_chart_container';
 
 const ChartContainer: FC = observer(() => {
-  const { mainAppStore, tradingViewStore, instrumentsStore } = useStores();
+  const {
+    mainAppStore,
+    tradingViewStore,
+    instrumentsStore,
+    markersOnChartStore,
+  } = useStores();
 
   const match = useRouteMatch(Page.DASHBOARD);
   // TODO: think how to improve logic
@@ -40,7 +46,9 @@ const ChartContainer: FC = observer(() => {
           instrumentsStore.activeInstrument.instrumentItem.id,
           instrumentsStore.instruments
         ),
-        interval: supportedResolutions[BASIC_RESOLUTION_KEY],
+        interval: supportedResolutions[
+          BASIC_RESOLUTION_KEY
+        ] as ResolutionString,
         container_id: containerId,
         library_path: CHARTING_LIBRARY_PATH,
         locale: 'en',
@@ -54,24 +62,30 @@ const ChartContainer: FC = observer(() => {
           'symbol_info',
           'context_menus',
           'main_series_scale_menu',
+          'popup_hints',
         ],
         enabled_features: ['remove_library_container_border'],
+        theme: 'Dark',
+        loading_screen: {
+          backgroundColor: 'transparent',
+          foregroundColor: 'transparent',
+        },
         fullscreen: false,
         autosize: true,
         overrides: {
           'symbolWatermarkProperties.transparency': 90,
           'mainSeriesProperties.style': SeriesStyle.Area,
-          'mainSeriesProperties.lineStyle.color': Colors.ACCENT_BLUE,
+          'mainSeriesProperties.lineStyle.color': '#00FFF2',
           'mainSeriesProperties.lineStyle.linestyle':
             LineStyles.LINESTYLE_SOLID,
-          'mainSeriesProperties.lineStyle.linewidth': 3,
+          'mainSeriesProperties.lineStyle.linewidth': 2,
           'mainSeriesProperties.lineStyle.priceSource': 'close',
           'mainSeriesProperties.areaStyle.color1': 'rgba(0, 255, 221, 0.08)',
           'mainSeriesProperties.areaStyle.color2': 'rgba(0, 255, 221, 0.08)',
-          'mainSeriesProperties.areaStyle.linecolor': Colors.ACCENT_BLUE,
+          'mainSeriesProperties.areaStyle.linecolor': '#00FFF2',
           'mainSeriesProperties.areaStyle.linestyle':
             LineStyles.LINESTYLE_SOLID,
-          'mainSeriesProperties.areaStyle.linewidth': 3,
+          'mainSeriesProperties.areaStyle.linewidth': 2,
           'mainSeriesProperties.candleStyle.upColor': '#21B3A4',
           'mainSeriesProperties.candleStyle.downColor': '#ed145b',
           'mainSeriesProperties.candleStyle.drawWick': true,
@@ -99,21 +113,37 @@ const ChartContainer: FC = observer(() => {
           'paneProperties.legendProperties.showSeriesOHLC': true,
           'paneProperties.legendProperties.showLegend': false,
           'paneProperties.legendProperties.showBarChange': false,
-          'paneProperties.legendProperties.showOnlyPriceSource': false,
-          'linetoolnote.backgroundColor': Colors.RED,
+          'linetoolnote.backgroundColor': '#ED145B',
           'scalesProperties.lineColor': 'transparent',
           'scalesProperties.textColor': 'rgba(255, 255, 255, 0.2)',
-          'scalesProperties.backgroundColor': 'transparent',
           'paneProperties.background': 'rgba(0,0,0,0)',
           'mainSeriesProperties.priceLineColor': '#fff',
           'mainSeriesProperties.priceLineWidth': 2,
-          'timeScale.rightOffset': 5,
+          'scalesProperties.showSeriesLastValue': true,
+          'timeScale.rightOffset': 0,
         },
       };
       const tvWidget = new widget(widgetOptions);
       tvWidget.onChartReady(async () => {
         tradingViewStore.tradingWidget = tvWidget;
         mainAppStore.isLoading = false;
+        markersOnChartStore.renderActivePositionsMarkersOnChart();
+
+        const fromTo = {
+          from: getIntervalByKey('15m') / 1000,
+          to: moment.utc().valueOf() / 1000,
+        };
+
+        tvWidget.activeChart().setVisibleRange(fromTo);
+
+        if (
+          instrumentsStore.activeInstrument &&
+          instrumentsStore.activeInstrument.chartType
+        ) {
+          tvWidget
+            .chart()
+            .setChartType(instrumentsStore.activeInstrument?.chartType);
+        }
       });
     }
   }, [
@@ -126,7 +156,7 @@ const ChartContainer: FC = observer(() => {
   return (
     <ChartElement
       width="100%"
-      height="calc(100% - 252px)"
+      height="calc(100% - 228px)"
       id={containerId}
       order="2"
       display={match?.isExact ? 'flex' : 'none'}

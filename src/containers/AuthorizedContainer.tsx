@@ -1,4 +1,4 @@
-import React, { FC, useEffect } from 'react';
+import React, {FC, useEffect, useState} from 'react';
 import { FlexContainer } from '../styles/FlexContainer';
 import { Observer } from 'mobx-react-lite';
 import NotificationPopup from '../components/NotificationPopup';
@@ -9,7 +9,6 @@ import ChartContainer from './ChartContainer';
 import NavigationPanel from '../components/NavigationPanel';
 import { useRouteMatch, useHistory } from 'react-router-dom';
 import Page from '../constants/Pages';
-import styled from '@emotion/styled';
 import { FULL_VH, LAST_PAGE_VISITED } from '../constants/global';
 import API from '../helpers/API';
 import { getProcessId } from '../helpers/getProcessId';
@@ -31,9 +30,24 @@ const AuthorizedContainer: FC = ({ children }) => {
     Page.ACCOUNT_ABOUT_US,
     Page.ACCOUNTS_SWITCH,
     Page.ACCOUNT_CHANGE_LANGUAGE,
+    Page.ACCOUNT_VERIFICATION,
+    Page.ACCOUNT_CHANGE_PASSWORD,
+    Page.WITHDRAW_LIST,
+    Page.WITHDRAW_HISTORY_ID,
+    Page.WITHDRAW_HISTORY,
+    Page.WITHDRAW_VISAMASTER,
+    Page.WITHDRAW_BITCOIN,
+    Page.WITHDRAW_HISTORY_ID,
+    Page.WITHDRAW_SUCCESS,
+    Page.SL_EDIT,
+    Page.TP_EDIT,
+    Page.ACCOUNT_BALANCE_HISTORY,
+    Page.PHONE_VERIFICATION
   ]);
+
   const { push } = useHistory();
   const { mainAppStore, userProfileStore, serverErrorPopupStore } = useStores();
+  const [ waitingData, setWaitingData ] = useState<boolean>(true);
   const showNavbarAndNav = !match?.isExact;
 
   useEffect(() => {
@@ -66,10 +80,14 @@ const AuthorizedContainer: FC = ({ children }) => {
             mainAppStore.initModel.authUrl
           );
           if (additionalResponse.includes('phone')) {
+            mainAppStore.isVerification = true;
             push(Page.PHONE_VERIFICATION);
           }
         }
-      } catch (error) {}
+        setWaitingData(false);
+      } catch (error) {
+        setWaitingData(false);
+      }
     }
     fetchPersonalData();
   }, []);
@@ -79,8 +97,9 @@ const AuthorizedContainer: FC = ({ children }) => {
   }, [location.pathname]);
 
   return (
-    <WrapperLayoutFix
+    <FlexContainer
       position="relative"
+      height={`calc(${FULL_VH})`}
       width="100vw"
       flexDirection="column"
       overflow="hidden"
@@ -102,7 +121,7 @@ const AuthorizedContainer: FC = ({ children }) => {
       <Observer>
         {() => (
           <LoaderFullscreen
-            isLoading={mainAppStore.isLoading}
+            isLoading={mainAppStore.isLoading || waitingData}
           ></LoaderFullscreen>
         )}
       </Observer>
@@ -112,7 +131,7 @@ const AuthorizedContainer: FC = ({ children }) => {
       <Observer>{() => <NetworkErrorPopup></NetworkErrorPopup>}</Observer>
       <Observer>
         {() => (
-          <>{mainAppStore.isDemoRealPopup && <DemoRealPopup></DemoRealPopup>}</>
+          <>{(mainAppStore.isDemoRealPopup && !mainAppStore.isVerification) && <DemoRealPopup></DemoRealPopup>}</>
         )}
       </Observer>
       {showNavbarAndNav && <NavBar />}
@@ -121,18 +140,14 @@ const AuthorizedContainer: FC = ({ children }) => {
           showNavbarAndNav ? `calc(${FULL_VH} - 128px)` : `calc(${FULL_VH})`
         }
         flexDirection="column"
+        overflow="auto"
       >
         {children}
         <Observer>{() => <ChartContainer />}</Observer>
       </FlexContainer>
       {showNavbarAndNav && <NavigationPanel />}
-    </WrapperLayoutFix>
+    </FlexContainer>
   );
 };
 
 export default AuthorizedContainer;
-
-const WrapperLayoutFix = styled(FlexContainer)`
-  height: 100vh;
-  height: calc(${FULL_VH});
-`;

@@ -1,1 +1,0 @@
-export const WS_HOST = '/signalr'

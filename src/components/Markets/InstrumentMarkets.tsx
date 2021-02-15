@@ -30,10 +30,14 @@ const InstrumentMarkets: FC<Props> = observer((props) => {
 
   return (
     <InstrumentItem onClick={setInstrumentActive}>
-      <FlexContainer width="48px" height="48px" marginRight="16px">
+      <FlexContainer
+        minWidth="48px"
+        width="48px"
+        height="48px"
+        marginRight="16px"
+      >
         <ImageContainer instrumentId={id} />
       </FlexContainer>
-
       <FlexContainer flexDirection="column" justifyContent="center">
         <PrimaryTextSpan
           color="#ffffff"
@@ -61,9 +65,9 @@ const InstrumentMarkets: FC<Props> = observer((props) => {
         justifyContent="center"
       >
         <PrimaryTextSpan fontSize="16px" color="#fffccc" marginBottom="4px">
-          <Observer>
+          {quotesStore.quotes[id] && <Observer>
             {() => <>{quotesStore.quotes[id].bid.c.toFixed(digits)}</>}
-          </Observer>
+          </Observer>}
         </PrimaryTextSpan>
         {!!instrumentsStore.pricesChange[id] && (
           <QuoteTextLabel isGrowth={instrumentsStore.pricesChange[id] >= 0}>
@@ -81,7 +85,7 @@ export default InstrumentMarkets;
 const InstrumentItem = styled(FlexContainer)`
   width: 100%;
   padding: 16px;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   transition: all 0.4s ease;
   min-height: 80px;
 

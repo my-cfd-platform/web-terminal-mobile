@@ -75,6 +75,7 @@ const ClosedPositionsDetails: FC<Props> = observer(({ positionId }) => {
           <ClosedPositionItem
             currencySymbol={mainAppStore.activeAccount?.symbol || ''}
             tradingHistoryItem={position}
+            isInner={true}
           />
 
           <FlexContainer padding="12px 16px 0" marginBottom="8px">

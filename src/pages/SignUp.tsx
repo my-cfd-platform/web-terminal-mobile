@@ -80,17 +80,17 @@ const SignUp = () => {
                   captcha,
                 });
                 if (result !== OperationApiResponseCodes.Ok) {
-                  notificationStore.notificationMessage =
-                    apiResponseCodeMessages[result];
+                  notificationStore.notificationMessage = t(
+                    apiResponseCodeMessages[result]
+                  );
                   notificationStore.isSuccessfull = false;
                   notificationStore.openNotification();
                   mainAppStore.isLoading = false;
                   mixpanel.track(mixpanelEvents.SIGN_UP_FAILED, {
                     [mixapanelProps.BRAND_NAME]: mainAppStore.initModel.brandName.toLowerCase(),
-                    [mixapanelProps.ERROR_TEXT]: t(
-                      apiResponseCodeMessages[result]
-                    ),
-                    [mixapanelProps.EMAIL]: values.email,
+                    [mixapanelProps.ERROR_TEXT]:
+                      apiResponseCodeMessages[result],
+                    [mixapanelProps.EMAIL_FAILED]: values.email,
                   });
                 } else {
                   mainAppStore.setSignUpFlag(true);
@@ -198,6 +198,7 @@ const SignUp = () => {
       flexDirection="column"
       width="100%"
       height="100%"
+      minHeight="calc(100vh - 200px)"
       alignItems="center"
       justifyContent="space-between"
     >

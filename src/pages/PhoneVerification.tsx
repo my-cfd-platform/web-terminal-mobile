@@ -65,7 +65,11 @@ const PhoneVerification: FC = () => {
     );
     const mask = phoneNumber?.nationalNumber.replace(/\d/g, '9');
     if (mask) {
-      setDialMask(`+\\${country.dial.split('').join('\\')}${mask}`);
+      setDialMask(
+        `+\\${country.dial.split('').join('\\')}${mask}${
+          country.id === 'BGR' ? '9' : ''
+        }`
+      );
     } else {
       setDialMask(`+\\${country.dial.split('').join('\\')}99999999999999`);
     }
@@ -84,6 +88,7 @@ const PhoneVerification: FC = () => {
           [mixapanelProps.BRAND_NAME]: mainAppStore.initModel.brandName.toLowerCase(),
         });
       }
+      mainAppStore.isVerification = false;
       push(Page.DASHBOARD);
     } catch (error) {}
   };
@@ -217,6 +222,7 @@ const PhoneVerification: FC = () => {
                     id={Fields.PHONE}
                     hasError={!!(touched.phone && errors.phone)}
                     errorText={errors.phone}
+                    inputMode="tel"
                   />
                 </PhoneInputWrapper>
               </FlexContainer>
@@ -249,6 +255,7 @@ export default PhoneVerification;
 const CustomForm = styled.form`
   margin: 0;
   height: 100%;
+  min-height: calc(100vh - 200px);
   display: flex;
   flex-direction: column;
   justify-content: space-between;

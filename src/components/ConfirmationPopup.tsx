@@ -4,21 +4,24 @@ import { FlexContainer } from '../styles/FlexContainer';
 import { ButtonWithoutStyles } from '../styles/ButtonWithoutStyles';
 import { PrimaryTextSpan, PrimaryTextParagraph } from '../styles/TextsElements';
 import { useTranslation } from 'react-i18next';
+import LoaderForComponents from './LoaderForComponents';
 
 interface Props {
   confirmAction: (status: boolean) => void;
+  isLoading?: boolean;
 }
 
 const ConfirmationPopup: FC<Props> = (props) => {
-  const { children, confirmAction } = props;
+  const { children, confirmAction, isLoading = false } = props;
   const { t } = useTranslation();
 
   const handleConfirm = () => confirmAction(true);
   const handleCancel = () => confirmAction(false);
-  
+
   return (
     <PopupWrap>
-      <ModalBody flexDirection="column">
+      {isLoading && <LoaderForComponents isLoading={isLoading} />}
+      <ModalBody flexDirection="column" opacity={isLoading ? '0.35' : '1'}>
         <FlexContainer
           padding="24px 16px"
           justifyContent="center"
@@ -69,8 +72,8 @@ const PopupWrap = styled(FlexContainer)`
 const ModalBody = styled(FlexContainer)`
   width: 270px;
   border-radius: 16px;
-
   background-color: #23262f;
+
   @supports ((-webkit-backdrop-filter: none) or (backdrop-filter: none)) {
     background-color: rgba(35, 38, 47, 0.7);
     backdrop-filter: blur(12px);

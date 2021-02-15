@@ -2,7 +2,7 @@ import {
   supportedInterval,
   SupportedResolutionsType,
 } from './supportedTimeScales';
-import { SeriesStyle } from '../vendor/charting_library/charting_library.min';
+import { SeriesStyle } from '../vendor/charting_library/charting_library';
 import IconAreaChart from '../assets/svg/icon-chart-area.svg';
 import IconLineChart from '../assets/svg/icon-chart-line-style.svg';
 import IconCandleChart from '../assets/svg/icon-chart-candle.svg';
@@ -46,6 +46,25 @@ export const getChartLabelByType = (chartType: SeriesStyle) => {
 
     default:
       return '';
+  }
+};
+
+export const getChartTypeByLabel = (chartLabel: string) => {
+  switch (chartLabel) {
+    case 'Area chart':
+      return SeriesStyle.Area;
+
+    case 'Line chart':
+      return SeriesStyle.Line;
+
+    case 'Candle chart':
+      return SeriesStyle.Candles;
+
+    case 'Bars chart':
+      return SeriesStyle.Bars;
+
+    default:
+      return 'Area chart';
   }
 };
 

@@ -10,6 +10,7 @@ interface Props {
   hoverFillColor?: string;
   strokeColor?: string;
   transformProp?: string;
+  onClick?: () => void
 }
 
 function SvgIcon(props: Props) {
@@ -22,6 +23,7 @@ function SvgIcon(props: Props) {
     hoverFillColor,
     strokeColor,
     transformProp,
+    onClick
   } = props;
   const viewBoxValues = viewBox.split(' ');
   const viewBoxWidth = width || +viewBoxValues[2];
@@ -35,6 +37,7 @@ function SvgIcon(props: Props) {
       strokeColor={strokeColor}
       hoverFillColor={hoverFillColor}
       transformProp={transformProp}
+      onClick={onClick}
     >
       <use xlinkHref={`#${iconId}`}></use>
     </SvgIconElement>
