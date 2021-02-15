@@ -417,5 +417,13 @@
     "Technical Error": "Błąd techniczny",
     "position for": "pozycja dla",
     "New Request": "Nowe żądanie",
-    "Position Closed": "Pozycja zamknięta"
+    "Position Closed": "Pozycja zamknięta",
+    "Open price can not be zero": "Cena otwarcia nie może wynosić zero",
+    "Save position from market noise": "Zachowaj pozycję przed szumem rynkowym",
+    "If the loss for a position reaches": "Jeśli strata dla pozycji osiągnie",
+    "an additional 20% of the original investment amount will be reserved from your balance to save your position from closing. If the position takes a further loss, your available balance is reduced by 20% again and again. Once the position rises to at least": "dodatkowe 20% oryginalnej kwoty inwestycji zostanie zarezerwowane z Twojego salda, aby uchronić Twoją pozycję przed zamknięciem. Jeśli pozycja ponosi dalszą stratę, dostępne saldo jest redukowane o 20% ponownie i ponownie. Kiedy pozycja wzrośnie do poziomu co najmniej",
+    "all previously reserved funds are returned to your balance.": "wszystkie wcześniej zarezerwowane środki zostaną zwrócone na Twoje saldo.",
+    "Your account is blocked. We've detected suspicious activity on your account. This block will expire in 15 min.": "Twoje konto jest zablokowane. Wykryliśmy podejrzaną aktywność na Twoim koncie. Ta blokada wygaśnie za 15 minut.",
+    "View all": "Oglądaj wszystkie ",
+    "P/L": "P/L"
 }
