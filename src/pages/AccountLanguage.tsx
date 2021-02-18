@@ -38,11 +38,17 @@ const AccountLanguage = () => {
         setList(ListForPL);
         break;
       case CountriesEnum.ES:
-        setActiveLanguage(ListForEN[CountriesEnum.ES]);
+        setActiveLanguage({
+          id: CountriesEnum.ES,
+          name: ListForEN[CountriesEnum.ES],
+        });
         setList(ListForES);
         break;
       case CountriesEnum.DE:
-        setActiveLanguage(ListForDE[CountriesEnum.DE]);
+        setActiveLanguage({
+          id: CountriesEnum.DE,
+          name: ListForEN[CountriesEnum.DE],
+        });
         setList(ListForES);
         break;
       default:
@@ -69,7 +75,7 @@ const AccountLanguage = () => {
         height="100%"
       >
         <FlexContainer flexDirection="column" width="100%">
-          {ObjectKeys(list).map((key) => (
+          {ObjectKeys(list).sort().map((key) => (
             <LanguageItem
               key={key}
               onClick={() =>

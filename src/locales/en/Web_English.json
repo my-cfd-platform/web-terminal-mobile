@@ -425,5 +425,8 @@
     "all previously reserved funds are returned to your balance.": "all previously reserved funds are returned to your balance.",
     "Your account is blocked. We've detected suspicious activity on your account. This block will expire in 15 min.": "Your account is blocked. We've detected suspicious activity on your account. This block will expire in 15 min.",
     "View all": "View all",
-    "P/L": "P/L"
+    "P/L": "P/L",
+    "None": "None",
+    "By user": "By user",
+    "Stop Out": "Stop Out"
 }
