@@ -49,7 +49,7 @@ const AccountLanguage = () => {
           id: CountriesEnum.DE,
           name: ListForEN[CountriesEnum.DE],
         });
-        setList(ListForES);
+        setList(ListForDE);
         break;
       default:
         break;
@@ -85,11 +85,12 @@ const AccountLanguage = () => {
                 })
               }
             >
+              
               <PrimaryTextSpan
                 fontSize="16px"
                 color={activeLanguage?.id === key ? '#fffccc' : '#fff'}
               >
-                {list[key].originName} ({list[key].name})
+              {list[key].originName} ({list[key].name})
               </PrimaryTextSpan>
             </LanguageItem>
           ))}
