@@ -433,5 +433,6 @@
     "Take Profit can not be zero": "Take Profit can not be zero",
     "Leverage": "Leverage",
     "Commission": "Commission",
-    "Withdrawal": "Withdrawal"
+    "Withdrawal": "Withdrawal",
+    "Withdrawal request can only be submitted when all of KYC documents have been approved and  the account is Fully Verified": "Withdrawal request can only be submitted when all of KYC documents have been approved and  the account is Fully Verified"    
 }
