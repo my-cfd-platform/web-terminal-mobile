@@ -177,7 +177,7 @@
     "Month": "Month",
     "Year": "Year",
     "Congratulations!": "Congratulations!",
-    "You Have Been Successfully Registered": "You Have Been Successfully Registered",
+    "You Have Been Successfully Registered": "You have been successfully registered",
     "Practice on Demo": "Practice on Demo",
     "Invest Real funds": "Invest Real funds",
     "Loading": "Loading",
@@ -434,5 +434,6 @@
     "Leverage": "Leverage",
     "Commission": "Commission",
     "Withdrawal": "Withdrawal",
-    "Withdrawal request can only be submitted when all of KYC documents have been approved and  the account is Fully Verified": "Withdrawal request can only be submitted when all of KYC documents have been approved and  the account is Fully Verified"    
+    "Withdrawal request can only be submitted when all of KYC documents have been approved and  the account is Fully Verified": "Withdrawal request can only be submitted when all of KYC documents have been approved and  the account is Fully Verified",
+    "Phone number is incorrect": "Phone number is incorrect"
 }

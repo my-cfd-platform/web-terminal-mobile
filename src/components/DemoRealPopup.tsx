@@ -109,7 +109,7 @@ const DemoRealPopup = () => {
             {t('Congratulations!')}
           </PrimaryTextSpan>
           <PrimaryTextSpan color="rgba(196, 196, 196, 0.5)" fontSize="13px">
-            {t('You have been successfully registered')}
+            {t('You Have Been Successfully Registered')}
           </PrimaryTextSpan>
         </FlexContainer>
         <FlexContainer justifyContent="space-between" padding="0 24px">
