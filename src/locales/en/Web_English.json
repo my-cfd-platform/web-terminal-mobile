@@ -432,5 +432,6 @@
     "Stop Loss can not be zero": "Stop Loss can not be zero",
     "Take Profit can not be zero": "Take Profit can not be zero",
     "Leverage": "Leverage",
-    "Commission": "Commission"
+    "Commission": "Commission",
+    "Withdrawal": "Withdrawal"
 }

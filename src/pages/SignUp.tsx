@@ -37,17 +37,17 @@ const SignUp = () => {
   const validationSchema = yup.object().shape<UserRegistration>({
     email: yup
       .string()
-      .required(validationInputTexts.EMAIL)
-      .email(validationInputTexts.EMAIL),
+      .required(t(validationInputTexts.EMAIL))
+      .email(t(validationInputTexts.EMAIL)),
     password: yup
       .string()
-      .required(validationInputTexts.REQUIRED_FIELD)
-      .min(8, validationInputTexts.PASSWORD_MIN_CHARACTERS)
-      .max(31, validationInputTexts.PASSWORD_MAX_CHARACTERS)
-      .matches(/^(?=.*\d)(?=.*[a-zA-Z])/, validationInputTexts.PASSWORD_MATCH),
+      .required(t(validationInputTexts.REQUIRED_FIELD))
+      .min(8, t(validationInputTexts.PASSWORD_MIN_CHARACTERS))
+      .max(31, t(validationInputTexts.PASSWORD_MAX_CHARACTERS))
+      .matches(/^(?=.*\d)(?=.*[a-zA-Z])/, t(validationInputTexts.PASSWORD_MATCH)),
     userAgreement: yup
       .bool()
-      .oneOf([true], validationInputTexts.USER_AGREEMENT),
+      .oneOf([true], t(validationInputTexts.USER_AGREEMENT)),
     captcha: yup.string(),
   });
 
