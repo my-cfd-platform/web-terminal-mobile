@@ -179,7 +179,7 @@ const SignIn = () => {
               fontWeight="bold"
               fontSize="16px"
             >
-              {t('Log In')}
+              {t('Log in')}
             </PrimaryTextSpan>
           </PrimaryButton>
         </FlexContainer>
@@ -193,7 +193,7 @@ const SignIn = () => {
             {t('Don`t have an account yet?')}
           </PrimaryTextSpan>
           &nbsp;
-          <StyledLink to={Page.SIGN_UP}>{t('Sign Up')}</StyledLink>
+          <StyledLink to={Page.SIGN_UP}>{t('Sign up')}</StyledLink>
         </FlexContainer>
       </FlexContainer>
     </FlexContainer>
