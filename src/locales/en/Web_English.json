@@ -428,5 +428,7 @@
     "P/L": "P/L",
     "None": "None",
     "By user": "By user",
-    "Stop Out": "Stop Out"
+    "Stop Out": "Stop Out",
+    "Stop Loss can not be zero": "Stop Loss can not be zero",
+    "Take Profit can not be zero": "Take Profit can not be zero"
 }
