@@ -77,8 +77,8 @@ export const ListForDE = {
     shortName: 'EN',
   },
   [CountriesEnum.PL]: {
-    name: 'Polskie',
-    originName: 'Polieren',
+    name: 'Polieren',
+    originName: 'Polski',
     shortName: 'PL',
   },
   [CountriesEnum.ES]: {

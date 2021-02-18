@@ -43,6 +43,7 @@ import { PendingOrderWSDTO } from '../types/PendingOrdersTypes';
 import { BidAskModelWSDTO } from '../types/BidAsk';
 import accountVerifySteps from '../constants/accountVerifySteps';
 import { polandLocalsList } from '../constants/polandLocalsList';
+import { languagesList } from '../constants/languagesList';
 
 interface MainAppStoreProps {
   token: string;
@@ -127,12 +128,9 @@ export class MainAppStore implements MainAppStoreProps {
     // @ts-ignore
     this.lang =
       localStorage.getItem(LOCAL_STORAGE_LANGUAGE) ||
-      (((window.navigator.languages &&
-          polandLocalsList.includes(window.navigator.languages[0].slice(0, 2).toLowerCase())) ||
-        (window.navigator.language &&
-        polandLocalsList.includes(window.navigator.language.slice(0, 2).toLowerCase()))
-      )
-        ? CountriesEnum.PL
+      ((window.navigator.language &&
+        languagesList.includes(window.navigator.language.slice(0, 2).toLowerCase()))
+        ? window.navigator.language.slice(0, 2).toLowerCase()
         : CountriesEnum.EN);
     injectInerceptors(this);
   }
@@ -299,7 +297,7 @@ export class MainAppStore implements MainAppStoreProps {
       this.rootStore.badRequestPopupStore.openModal();
       this.rootStore.badRequestPopupStore.setMessage(
         error?.message ||
-          apiResponseCodeMessages[OperationApiResponseCodes.TechnicalError]
+        apiResponseCodeMessages[OperationApiResponseCodes.TechnicalError]
       );
 
       console.log('websocket error: ', error);
