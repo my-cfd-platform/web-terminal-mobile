@@ -44,7 +44,10 @@ const SignUp = () => {
       .required(t(validationInputTexts.REQUIRED_FIELD))
       .min(8, t(validationInputTexts.PASSWORD_MIN_CHARACTERS))
       .max(31, t(validationInputTexts.PASSWORD_MAX_CHARACTERS))
-      .matches(/^(?=.*\d)(?=.*[a-zA-Z])/, t(validationInputTexts.PASSWORD_MATCH)),
+      .matches(
+        /^(?=.*\d)(?=.*[a-zA-Z])/,
+        t(validationInputTexts.PASSWORD_MATCH)
+      ),
     userAgreement: yup
       .bool()
       .oneOf([true], t(validationInputTexts.USER_AGREEMENT)),
