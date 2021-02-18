@@ -890,7 +890,7 @@ const OrderPage = observer(() => {
                 marginBottom="4px"
               >
                 <PrimaryTextSpan color="#ffffff" fontSize="16px" lineHeight="1">
-                  {t('Commision')}
+                  {t('Commission')}
                 </PrimaryTextSpan>
                 <PrimaryTextSpan color="#FFFCCC" fontSize="16px" lineHeight="1">
                   $0.00
