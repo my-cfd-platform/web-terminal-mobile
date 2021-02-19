@@ -27,6 +27,7 @@ import mixpanel from 'mixpanel-browser';
 import mixpanelEvents from '../constants/mixpanelEvents';
 import mixapanelProps from '../constants/mixpanelProps';
 import useRedirectMiddleware from '../hooks/useRedirectMiddleware';
+import { CountriesEnum } from '../enums/CountriesEnum';
 
 const AccountProfile = observer(() => {
   const { mainAppStore, userProfileStore } = useStores();
@@ -267,7 +268,7 @@ const AccountProfile = observer(() => {
                 fontSize="9px"
                 fontWeight="normal"
               >
-                {mainAppStore.lang.substr(0, 2).toUpperCase()}
+                {mainAppStore.lang?.substr(0, 2).toUpperCase() || CountriesEnum.EN.substr(0, 2).toUpperCase()}
               </PrimaryTextSpan>
             </FlexContainer>
             <PrimaryTextSpan
