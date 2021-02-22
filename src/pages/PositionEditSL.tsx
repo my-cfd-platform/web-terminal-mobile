@@ -121,7 +121,6 @@ const PositionEditSL = observer(() => {
   const postitionStopOut = useCallback(() => {
     const invest = position?.investmentAmount || 0;
     const instrumentPercentSL = (instrument?.stopOutPercent || 95) / 100;
-    console.log(+Number(invest * instrumentPercentSL).toFixed(2));
     return +Number(invest * instrumentPercentSL).toFixed(2);
   }, [position, instrument]);
 
@@ -144,6 +143,7 @@ const PositionEditSL = observer(() => {
             position.multiplier *
             direction +
           Math.abs(position.swap);
+        console.log(+Number(result).toFixed(2));
         return +Number(result).toFixed(2);
       }
       return 0;
@@ -315,7 +315,6 @@ const PositionEditSL = observer(() => {
         notificationStore.isSuccessfull = false;
         notificationStore.openNotification();
       }
-      
     } catch (error) {}
   };
 
@@ -458,8 +457,12 @@ const PositionEditSL = observer(() => {
         const soValue = positionStopOutByPrice(
           newValue !== null ? +newValue : 0
         );
-        
-        if (newValue && soValue <= 0 && Math.abs(soValue) > postitionStopOut()) {
+
+        if (
+          newValue &&
+          soValue <= 0 &&
+          Math.abs(soValue) > postitionStopOut()
+        ) {
           setFieldValue('isToppingUpActive', true);
         } else {
           setFieldValue('isToppingUpActive', false);
@@ -501,9 +504,9 @@ const PositionEditSL = observer(() => {
   }, [values.value]);
 
   useEffect(() => {
-    setLoading(true)
+    setLoading(true);
     const pos = quotesStore.activePositions.find((pos) => pos.id === +id);
-    
+
     if (pos) {
       setPosition(pos);
       const instr = instrumentsStore.instruments.find(
@@ -515,13 +518,13 @@ const PositionEditSL = observer(() => {
     if (quotesStore.activePositions && !pos) {
       push(Page.PORTFOLIO_MAIN);
     }
-    
+
     const offloaderAfterInitAnim = setTimeout(() => {
       setLoading(false);
     }, 600);
     return () => {
       clearTimeout(offloaderAfterInitAnim);
-    }
+    };
   }, [quotesStore.activePositions]);
 
   if (!mainAppStore.activeAccount || !position || loading) {
@@ -766,5 +769,3 @@ const Input = styled.input<{ autocomplete?: string; customWidth?: string }>`
   }
   width: ${(props) => props.customWidth};
 `;
-
-
