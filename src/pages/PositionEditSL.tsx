@@ -121,6 +121,7 @@ const PositionEditSL = observer(() => {
   const postitionStopOut = useCallback(() => {
     const invest = position?.investmentAmount || 0;
     const instrumentPercentSL = (instrument?.stopOutPercent || 95) / 100;
+    console.log(+Number(invest * instrumentPercentSL).toFixed(2));
     return +Number(invest * instrumentPercentSL).toFixed(2);
   }, [position, instrument]);
 
@@ -441,8 +442,6 @@ const PositionEditSL = observer(() => {
         : e.target.value.replace('- ', '').replace(',', '.') || null;
 
     setFieldValue(e.target.name, newValue);
-
-    
 
     switch (e.target.name) {
       case 'value':
