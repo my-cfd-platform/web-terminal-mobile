@@ -118,6 +118,24 @@ const PositionEditSL = observer(() => {
   /**
    *
    */
+
+  const positionStopOutPriceByValue = (stopLoss: number) => {
+    // SL Rate = Current Price + ($SL - Comission) * Сurrent Price /Invest amount *direction*multiplier
+    if (position) {
+      const isBuy = position.operation === AskBidEnum.Buy;
+      const currentPrice = isBuy ? currentPriceBid() : currentPriceAsk();
+      const direction = isBuy ? 1 : -1;
+      const commission = position.swap + position.commission;
+      
+      // = Current Price + ($SL - Comission) * Сurrent Price /Invest amount *direction*multiplier
+      const posPriceByValue = currentPrice +
+      ((stopLoss - commission) *
+        currentPrice) /
+        (position.investmentAmount * direction * position.multiplier)
+      console.log(posPriceByValue);
+    }
+  };
+
   const postitionStopOut = useCallback(() => {
     const invest = position?.investmentAmount || 0;
     const instrumentPercentSL = (instrument?.stopOutPercent || 95) / 100;
@@ -135,14 +153,14 @@ const PositionEditSL = observer(() => {
         currentPrice = isBuy ? currentPriceBid() : currentPriceAsk();
         so_level = -1 * postitionStopOut();
         so_percent = (instrument?.stopOutPercent || 0) / 100;
-        direction = position.operation === AskBidEnum.Buy ? 1 : -1;
+        direction = isBuy ? 1 : -1;
 
         const result =
           (slPrice / currentPrice - 1) *
             position.investmentAmount *
             position.multiplier *
             direction +
-          Math.abs(position.swap);
+          (position.swap + position.commission);
         console.log(+Number(result).toFixed(2));
         return +Number(result).toFixed(2);
       }
@@ -444,6 +462,7 @@ const PositionEditSL = observer(() => {
 
     switch (e.target.name) {
       case 'value':
+        positionStopOutPriceByValue(newValue === null ? 0 : +newValue);
         if (newValue && +newValue > postitionStopOut()) {
           setFieldValue('isToppingUpActive', true);
         } else {
