@@ -3,14 +3,10 @@ import { FlexContainer } from '../styles/FlexContainer';
 import { PrimaryTextSpan } from '../styles/TextsElements';
 import BackFlowLayout from '../components/BackFlowLayout';
 import Colors from '../constants/Colors';
-import {PrimaryButton} from '../styles/Buttons';
+import { PrimaryButton } from '../styles/Buttons';
 import { ObjectKeys } from '../helpers/objectKeys';
 import { CountriesEnum } from '../enums/CountriesEnum';
-import {
-  ListForEN,
-  ListForPL,
-  ListForES,
-} from '../constants/listOfLanguages';
+import { ListForEN, ListForPL, ListForES, ListForDE } from '../constants/listOfLanguages';
 import { useStores } from '../hooks/useStores';
 import { useTranslation } from 'react-i18next';
 import styled from '@emotion/styled';
@@ -30,21 +26,25 @@ const AccountLanguage = () => {
       case CountriesEnum.EN:
         setActiveLanguage({
           id: CountriesEnum.EN,
-          name: ListForEN[CountriesEnum.EN]
+          name: ListForEN[CountriesEnum.EN],
         });
         setList(ListForEN);
         break;
       case CountriesEnum.PL:
         setActiveLanguage({
           id: CountriesEnum.PL,
-          name: ListForPL[CountriesEnum.PL]
+          name: ListForPL[CountriesEnum.PL],
         });
         setList(ListForPL);
         break;
-      // case CountriesEnum.ES:
-      //   setActiveLanguage(ListForEN[CountriesEnum.ES]);
-      //   setList(ListForES);
-      //   break;
+      case CountriesEnum.ES:
+        setActiveLanguage(ListForEN[CountriesEnum.ES]);
+        setList(ListForES);
+        break;
+      case CountriesEnum.DE:
+        setActiveLanguage(ListForDE[CountriesEnum.DE]);
+        setList(ListForES);
+        break;
       default:
         break;
     }
@@ -68,17 +68,16 @@ const AccountLanguage = () => {
         width="100%"
         height="100%"
       >
-        <FlexContainer
-          flexDirection="column"
-          width="100%"
-        >
-          {ObjectKeys(list).map(key => (
+        <FlexContainer flexDirection="column" width="100%">
+          {ObjectKeys(list).sort().map((key) => (
             <LanguageItem
               key={key}
-              onClick={() => handleChangeActiveLanguage({
-                id: key,
-                name: list[key]
-              })}
+              onClick={() =>
+                handleChangeActiveLanguage({
+                  id: key,
+                  name: list[key],
+                })
+              }
             >
               <PrimaryTextSpan
                 fontSize="16px"
