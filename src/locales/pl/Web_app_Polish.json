@@ -431,9 +431,9 @@
     "Stop Out": "Stop Out",
     "Stop Loss can not be zero": "Poziom Stop Loss nie może wynosić zero",
     "Take Profit can not be zero": "Poziom Take Profit jest zbyt bliski aktualnej cenie.",
-    "Leverage": "",
-    "Commission": "",
-    "Withdrawal": "",
-    "Withdrawal request can only be submitted when all of KYC documents have been approved and  the account is Fully Verified": "",
-    "Phone number is incorrect": ""
+    "Leverage": "Dźwignia",
+    "Commission": "Prowizja",
+    "Withdrawal": "Wypłata",
+    "Withdrawal request can only be submitted when all of KYC documents have been approved and  the account is Fully Verified": "Wniosek o wypłatę można złożyć tylko wtedy, gdy wszystkie dokumenty KYC zostały zatwierdzone, a konto jest w pełni zweryfikowane",
+    "Phone number is incorrect": "Numer telefonu jest nieprawidłowy"
 }
