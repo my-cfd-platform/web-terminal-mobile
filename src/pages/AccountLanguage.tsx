@@ -38,11 +38,17 @@ const AccountLanguage = () => {
         setList(ListForPL);
         break;
       case CountriesEnum.ES:
-        setActiveLanguage(ListForEN[CountriesEnum.ES]);
+        setActiveLanguage({
+          id: CountriesEnum.ES,
+          name: ListForEN[CountriesEnum.ES]
+        });
         setList(ListForES);
         break;
       case CountriesEnum.DE:
-        setActiveLanguage(ListForDE[CountriesEnum.DE]);
+        setActiveLanguage({
+          id: CountriesEnum.DE,
+          name: ListForDE[CountriesEnum.DE]
+        });
         setList(ListForES);
         break;
       default:
