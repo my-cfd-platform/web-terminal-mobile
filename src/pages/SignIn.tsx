@@ -73,9 +73,6 @@ const SignIn = () => {
           [mixapanelProps.BRAND_NAME]: mainAppStore.initModel.brandName.toLowerCase(),
           [mixapanelProps.PLATFORMS_USED]: 'mobile',
         });
-        mixpanel.track(mixpanelEvents.LOGIN_VIEW, {
-          [mixapanelProps.BRAND_NAME]: mainAppStore.initModel.brandName.toLowerCase(),
-        });
       }
     } catch (error) {
       badRequestPopupStore.openModal();
