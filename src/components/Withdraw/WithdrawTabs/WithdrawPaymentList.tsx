@@ -43,7 +43,7 @@ const WithdrawPaymentList = () => {
               justifyContent="center"
             >
               <PrimaryTextSpan color="#ffffff" fontSize="16px">
-                {t('Bank Transfer')}
+                {t('Bank transfer')}
               </PrimaryTextSpan>
             </FlexContainer>
           </FlexContainer>
