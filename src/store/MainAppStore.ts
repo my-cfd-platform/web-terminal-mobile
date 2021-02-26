@@ -43,8 +43,7 @@ import { PositionModelWSDTO } from '../types/Positions';
 import { PendingOrderWSDTO } from '../types/PendingOrdersTypes';
 import { BidAskModelWSDTO } from '../types/BidAsk';
 import accountVerifySteps from '../constants/accountVerifySteps';
-import { polandLocalsList } from '../constants/polandLocalsList';
-import { languagesList } from '../constants/languagesList';
+
 
 interface MainAppStoreProps {
   token: string;
