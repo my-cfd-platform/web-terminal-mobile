@@ -1,3 +1,4 @@
+import { languagesList } from './../constants/languagesList';
 import {
   LOCAL_STORAGE_TOKEN_KEY,
   LOCAL_STORAGE_REFRESH_TOKEN_KEY,
@@ -42,8 +43,7 @@ import { PositionModelWSDTO } from '../types/Positions';
 import { PendingOrderWSDTO } from '../types/PendingOrdersTypes';
 import { BidAskModelWSDTO } from '../types/BidAsk';
 import accountVerifySteps from '../constants/accountVerifySteps';
-import { polandLocalsList } from '../constants/polandLocalsList';
-import { languagesList } from '../constants/languagesList';
+
 
 interface MainAppStoreProps {
   token: string;

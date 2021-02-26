@@ -28,7 +28,7 @@ const WithdrawHistoryItem: FC<Props> = ({ data }) => {
         return Colors.ACCENT_BLUE;
       case WithdrawalStatusesEnum.Declined:
         return '#FF557E';
-      case WithdrawalStatusesEnum.Proccesing:   
+      case WithdrawalStatusesEnum.Proccesing:
         return '#fffccc';
       default:
         return 'rgba(255, 255, 255, 0.4)';
