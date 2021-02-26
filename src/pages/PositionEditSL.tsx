@@ -324,10 +324,10 @@ const PositionEditSL = observer(() => {
     handleSubmit,
     touched,
     setFieldError,
-    getFieldProps,
     errors,
     dirty,
     setTouched,
+    isValid
   } = useFormik({
     initialValues: initialValues(),
     enableReinitialize: true,
@@ -514,6 +514,53 @@ const PositionEditSL = observer(() => {
       push(Page.PORTFOLIO_MAIN);
     }
   }, [quotesStore.activePositions]);
+
+  useEffect(() => {
+    if (!isValid) {
+      const valuesToSubmit: UpdateSLTP = {
+        ...values,
+        processId: getProcessId(),
+        accountId: mainAppStore.activeAccount?.id || '',
+        positionId: +id || 0,
+        sl: values.value !== null ? Math.abs(values.value) : values.price,
+        tp: values.valueTp,
+        slType:
+          values.value === null && values.price === null
+            ? null
+            : values.value !== null
+            ? TpSlTypeEnum.Currency
+            : TpSlTypeEnum.Price,
+        tpType: position?.tp ? position.tpType : null,
+      };
+      mixpanel.track(mixpanelEvents.EDIT_SLTP_FAILED, {
+        [mixapanelProps.AMOUNT]: position?.investmentAmount,
+        [mixapanelProps.ACCOUNT_CURRENCY]:
+        mainAppStore.activeAccount?.currency || '',
+        [mixapanelProps.INSTRUMENT_ID]: position?.instrument,
+        [mixapanelProps.MULTIPLIER]: position?.multiplier,
+        [mixapanelProps.TREND]:
+          position?.operation === AskBidEnum.Buy ? 'buy' : 'sell',
+        [mixapanelProps.SL_TYPE]:
+          valuesToSubmit.slType !== null
+            ? mixpanelValues[valuesToSubmit.slType]
+            : null,
+        [mixapanelProps.TP_TYPE]:
+          valuesToSubmit.tpType !== null
+            ? mixpanelValues[valuesToSubmit.tpType]
+            : null,
+        [mixapanelProps.SL_VALUE]:
+          valuesToSubmit.sl !== null ? Math.abs(valuesToSubmit.sl) : null,
+        [mixapanelProps.TP_VALUE]: valuesToSubmit.tp,
+        [mixapanelProps.AVAILABLE_BALANCE]:
+        mainAppStore.activeAccount?.balance || 0,
+        [mixapanelProps.ACCOUNT_ID]: mainAppStore.activeAccount?.id || '',
+        [mixapanelProps.ACCOUNT_TYPE]: mainAppStore.activeAccount?.isLive
+          ? 'real'
+          : 'demo',
+        [mixapanelProps.EVENT_REF]: mixpanelValues.PORTFOLIO,
+      });
+    }
+  }, [isValid]);
 
   if (!mainAppStore.activeAccount || !position) {
     return <LoaderForComponents isLoading={true} />;
