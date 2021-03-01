@@ -57,7 +57,8 @@ export default NavBar;
 
 const DepositLink = styled(ButtonWithoutStyles)`
   font-size: 16px;
-  line-height: 1;
+  line-height: 1.3;
+  padding: 4px 0;
   font-weight: 500;
   color: ${Colors.ACCENT_BLUE};
   position: absolute;
