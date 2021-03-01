@@ -90,7 +90,7 @@ const PendingOrderItem: FC<Props> = ({ pendingOrder, isInner }) => {
           {mainAppStore.activeAccount?.symbol}
           {investmentAmount.toFixed(2)}
         </PrimaryTextSpan>
-        <PrimaryTextSpan color="#ffffff" fontSize="13px">
+        <PrimaryTextSpan color="#ffffff" fontSize="11px">
           {t('at')} {openPrice.toFixed(getPressision(instrument))}
         </PrimaryTextSpan>
       </FlexContainer>
