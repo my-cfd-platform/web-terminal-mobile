@@ -222,6 +222,6 @@ const QuoteTextLabel = styled(FlexContainer)<{ operation?: number }>`
   background-color: ${(props) =>
     props.operation === AskBidEnum.Buy ? Colors.ACCENT_BLUE : Colors.RED};
   border-radius: 4px;
-  padding: 4px 16px;
+  padding: 4px 4px;
   font-size: 13px;
 `;
