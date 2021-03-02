@@ -54,7 +54,7 @@ const AccountAboutUs = observer(() => {
               <br />
               <PrimaryTextParagraph
                 color="#ffffff"
-                textAlign="left"
+                textAlign="justify"
                 lineHeight="1.6"
                 fontSize="13px"
               >
