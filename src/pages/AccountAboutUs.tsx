@@ -54,7 +54,7 @@ const AccountAboutUs = observer(() => {
               <br />
               <PrimaryTextParagraph
                 color="#ffffff"
-                textAlign="justify"
+                textAlign="left"
                 lineHeight="1.6"
                 fontSize="13px"
               >
@@ -192,17 +192,6 @@ const AccountAboutUs = observer(() => {
               padding="40px 16px"
               flexDirection="column"
             >
-              <PrimaryTextParagraph
-                color="#ffffff"
-                textAlign="justify"
-                lineHeight="1.6"
-                fontSize="13px"
-              >
-                {t(
-                  'Monfex is a multinational brand with profound experience in trading on cryptocurrency markets. Monfex Trading Platform, the core product of Monfex, is a powerful, fast and secure online-trading software, which allows traders to buy and sell leveraged cryptocurrency contracts at any time, using any device, and with ultra-low spreads.'
-                )}
-              </PrimaryTextParagraph>
-              <br />
               <PrimaryTextParagraph
                 color="#ffffff"
                 textAlign="justify"
