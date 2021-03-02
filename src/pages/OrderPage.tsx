@@ -798,7 +798,7 @@ const OrderPage = observer(() => {
                   alignItems="center"
                 >
                   <PrimaryTextSpan color="#ffffff" fontSize="16px" lineHeight="1">
-                    {t('Leverage')}
+                    {t('Multiplier')}
                   </PrimaryTextSpan>
                 </FlexContainer>
                 <Observer>
