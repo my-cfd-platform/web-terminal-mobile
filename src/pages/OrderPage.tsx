@@ -87,6 +87,11 @@ const OrderPage = observer(() => {
     [instrumentsStore.activeInstrument, mainAppStore.activeAccount?.id]
   );
 
+  const ucFirst = (str: string) => {
+    if (!str) return str;
+    return str[0].toUpperCase() + str.slice(1);
+  }
+
   const currentPriceAsk = useCallback(
     () =>
       quotesStore.quotes[instrumentsStore.activeInstrument!.instrumentItem.id]
@@ -692,7 +697,7 @@ const OrderPage = observer(() => {
   }, [mainAppStore.activeAccount]);
 
   return (
-    <BackFlowLayout pageTitle={t(type)}>
+    <BackFlowLayout pageTitle={t(ucFirst(type))}>
       { isLoading
         ? <LoaderForComponents isLoading={isLoading} />
         : <OrderWrapper
