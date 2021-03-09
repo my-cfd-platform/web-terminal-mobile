@@ -44,7 +44,6 @@ import { PendingOrderWSDTO } from '../types/PendingOrdersTypes';
 import { BidAskModelWSDTO } from '../types/BidAsk';
 import accountVerifySteps from '../constants/accountVerifySteps';
 
-
 interface MainAppStoreProps {
   token: string;
   refreshToken: string;
@@ -128,8 +127,10 @@ export class MainAppStore implements MainAppStoreProps {
     // @ts-ignore
     this.lang =
       localStorage.getItem(LOCAL_STORAGE_LANGUAGE) ||
-      ((window.navigator.language &&
-        languagesList.includes(window.navigator.language.slice(0, 2).toLowerCase()))
+      (window.navigator.language &&
+      languagesList.includes(
+        window.navigator.language.slice(0, 2).toLowerCase()
+      )
         ? window.navigator.language.slice(0, 2).toLowerCase()
         : CountriesEnum.EN);
     injectInerceptors(this);
@@ -227,16 +228,9 @@ export class MainAppStore implements MainAppStoreProps {
     connection.on(
       Topics.UPDATE_ACCOUNT,
       (response: ResponseFromWebsocket<AccountModelWebSocketDTO>) => {
-        if (this.activeAccount && this.activeAccount.id === response.data.id) {
-          for (const key in response.data) {
-            if (Object.prototype.hasOwnProperty.call(response.data, key)) {
-              // @ts-ignore
-              this.activeAccount[key] = response.data[key];
-            }
-          }
-        } else {
-          this.activeAccount = response.data;
-        }
+        this.accounts = this.accounts.map((account) =>
+          account.id === response.data.id ? response.data : account
+        );
       }
     );
 
@@ -297,7 +291,7 @@ export class MainAppStore implements MainAppStoreProps {
       this.rootStore.badRequestPopupStore.openModal();
       this.rootStore.badRequestPopupStore.setMessage(
         error?.message ||
-        apiResponseCodeMessages[OperationApiResponseCodes.TechnicalError]
+          apiResponseCodeMessages[OperationApiResponseCodes.TechnicalError]
       );
 
       console.log('websocket error: ', error);
