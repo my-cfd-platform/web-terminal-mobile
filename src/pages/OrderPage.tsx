@@ -648,9 +648,19 @@ const OrderPage = observer(() => {
     async function fetchMultiplier() {
       if (instrumentsStore.activeInstrument) {
         try {
-          const response = await API.getKeyValue(`mult_${instrumentsStore.activeInstrument.instrumentItem.id.trim().toLowerCase()}`, mainAppStore.initModel.tradingUrl);
+          const response = await API.getKeyValue(
+            `mult_${instrumentsStore.activeInstrument.instrumentItem.id.trim().toLowerCase()}`,
+            mainAppStore.initModel.tradingUrl
+          );
           if (response.length > 0) {
-            setFieldValue(Fields.MULTIPLIER, parseInt(response));
+            const newMultiplier = parseInt(response);
+            const multipliers = instrumentsStore
+              .activeInstrument!.instrumentItem.multiplier.slice()
+              .sort((a, b) => b - a);
+            const useMultiplier = multipliers.includes(newMultiplier)
+              ? newMultiplier
+              : multipliers[multipliers.length - 1];
+            setFieldValue(Fields.MULTIPLIER, useMultiplier);
           }
           fetchDefaultInvestAmount();
         } catch (error) {
@@ -659,7 +669,11 @@ const OrderPage = observer(() => {
       }
     }
     fetchMultiplier();
-  }, [mainAppStore.activeAccount, instrumentsStore.activeInstrument])
+  }, [
+    mainAppStore.activeAccount,
+    instrumentsStore.activeInstrument,
+    mainAppStore.initModel
+  ]);
 
   const {
     values,
