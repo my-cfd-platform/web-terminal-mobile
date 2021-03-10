@@ -227,7 +227,7 @@ const ActivePositionsDetails: FC<Props> = observer((props) => {
                     fontSize="13px"
                     textTransform="uppercase"
                   >
-                    {t(position.operation === AskBidEnum.Buy ? 'Buy' : 'Sell')}
+                    {`${position.operation === AskBidEnum.Buy ? 'Buy' : 'Sell'}`}
                   </PrimaryTextSpan>
                 </QuoteTextLabel>
                 <PrimaryTextSpan fontSize="16px">

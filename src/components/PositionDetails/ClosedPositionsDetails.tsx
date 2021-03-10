@@ -134,7 +134,7 @@ const ClosedPositionsDetails: FC<Props> = observer(({ positionId }) => {
                   fontSize="13px"
                   textTransform="uppercase"
                 >
-                  {t(position.operation === AskBidEnum.Buy ? 'Buy' : 'Sell')}
+                  {`${position.operation === AskBidEnum.Buy ? 'Buy' : 'Sell'}`}
                 </PrimaryTextSpan>
               </QuoteTextLabel>
               <PrimaryTextSpan fontSize="16px">
