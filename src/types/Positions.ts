@@ -61,6 +61,7 @@ export interface PositionModelWSDTO {
   slType: TpSlTypeEnum | null;
   timeStamp: number;
   isToppingUpActive?: boolean;
+  reservedFundsForToppingUp: number;
 }
 
 export interface ClosePositionModel {
