@@ -31,6 +31,7 @@ export interface PositionHistoryDTO {
   closeReason: ClosingReasonEnum;
   operation: AskBidEnum;
   swap: number;
+  reservedFundsForToppingUp: number;
 }
 
 export interface BalanceHistoryDTO {

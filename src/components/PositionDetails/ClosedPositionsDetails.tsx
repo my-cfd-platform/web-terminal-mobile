@@ -193,6 +193,20 @@ const ClosedPositionsDetails: FC<Props> = observer(({ positionId }) => {
             justifyContent="space-between"
           >
             <PrimaryTextSpan color="#fff" fontSize="16px">
+              {t('Insurance amount')}
+            </PrimaryTextSpan>
+            <PrimaryTextSpan fontSize="16px">
+              {mainAppStore.activeAccount?.symbol}
+              {Math.abs(position.reservedFundsForToppingUp).toFixed(2)}
+            </PrimaryTextSpan>
+          </FlexContainer>
+
+          <FlexContainer
+            width="100%"
+            padding="8px 16px"
+            justifyContent="space-between"
+          >
+            <PrimaryTextSpan color="#fff" fontSize="16px">
               {t('Closing Reason')}
             </PrimaryTextSpan>
             <PrimaryTextSpan fontSize="16px">
