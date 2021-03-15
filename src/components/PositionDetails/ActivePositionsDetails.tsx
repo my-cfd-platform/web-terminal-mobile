@@ -119,6 +119,7 @@ const ActivePositionsDetails: FC<Props> = observer((props) => {
             [mixapanelProps.ACCOUNT_TYPE]: mainAppStore.activeAccount?.isLive
               ? 'real'
               : 'demo',
+            [mixapanelProps.EVENT_REF]: 'portfolio',
           });
           push(`${Page.PORTFOLIO_MAIN}/${PortfolioTabEnum.ACTIVE}`);
         } else {
@@ -137,6 +138,7 @@ const ActivePositionsDetails: FC<Props> = observer((props) => {
               : 'demo',
             [mixapanelProps.ERROR_TEXT]:
               apiResponseCodeMessages[response.result],
+            [mixapanelProps.EVENT_REF]: 'portfolio',
           });
           notificationStore.notificationMessage = t(
             apiResponseCodeMessages[response.result]
