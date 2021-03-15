@@ -101,7 +101,7 @@ const WithdrawalHistoryDetails = () => {
               {t('Status')}
             </PrimaryTextSpan>
             <PrimaryTextSpan fontSize="16px">
-              {WithdrawHistoryStatusName[item?.status || 0]}
+              {t(WithdrawHistoryStatusName[item?.status || 0])}
             </PrimaryTextSpan>
           </FlexContainer>
         </FlexContainer>

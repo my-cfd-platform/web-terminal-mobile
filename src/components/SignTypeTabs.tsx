@@ -11,10 +11,10 @@ function SignTypeTabs() {
   return (
     <NavWrap>
       <CustomNavLink to={Page.SIGN_UP} activeClassName="selected">
-        {t('Sign Up')}
+        {t('Sign up')}
       </CustomNavLink>
       <CustomNavLink to={Page.SIGN_IN} activeClassName="selected">
-        {t('Log In')}
+        {t('Log in')}
       </CustomNavLink>
     </NavWrap>
   );

@@ -24,9 +24,9 @@ const SellButton: FC<Props> = observer(({ handleClick }) => {
       <FlexContainer marginRight="16px">
         <SvgIcon {...SellIcon} width={24} height={20} fillColor="#fff" />
       </FlexContainer>
-      <FlexContainer flexDirection="column">
+      <FlexContainer flexDirection="column" alignItems="flex-start">
         <PrimaryTextSpan
-          fontSize="16px"
+          fontSize="13px"
           fontWeight="bold"
           color="#fff"
           textAlign="left"

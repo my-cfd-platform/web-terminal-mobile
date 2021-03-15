@@ -21,7 +21,7 @@ const FavouriteInstruments = observer(() => {
       (id) => id === itemId
     );
     const newActiveInstrument =
-      instrumentsStore.activeInstrumentsIds[indexEl - 1];
+      instrumentsStore.activeInstrumentsIds[indexEl === 0 ? indexEl + 1 : indexEl - 1];
 
     const newInstruments = instrumentsStore.activeInstrumentsIds.filter(
       (id) => id !== itemId

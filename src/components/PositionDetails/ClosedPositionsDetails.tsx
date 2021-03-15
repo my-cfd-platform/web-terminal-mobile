@@ -134,7 +134,7 @@ const ClosedPositionsDetails: FC<Props> = observer(({ positionId }) => {
                   fontSize="13px"
                   textTransform="uppercase"
                 >
-                  {t(position.operation === AskBidEnum.Buy ? 'Buy' : 'Sell')}
+                  {`${position.operation === AskBidEnum.Buy ? 'Buy' : 'Sell'}`}
                 </PrimaryTextSpan>
               </QuoteTextLabel>
               <PrimaryTextSpan fontSize="16px">
@@ -193,6 +193,20 @@ const ClosedPositionsDetails: FC<Props> = observer(({ positionId }) => {
             justifyContent="space-between"
           >
             <PrimaryTextSpan color="#fff" fontSize="16px">
+              {t('Insurance amount')}
+            </PrimaryTextSpan>
+            <PrimaryTextSpan fontSize="16px">
+              {mainAppStore.activeAccount?.symbol}
+              {Math.abs(position.reservedFundsForToppingUp).toFixed(2)}
+            </PrimaryTextSpan>
+          </FlexContainer>
+
+          <FlexContainer
+            width="100%"
+            padding="8px 16px"
+            justifyContent="space-between"
+          >
+            <PrimaryTextSpan color="#fff" fontSize="16px">
               {t('Closing Reason')}
             </PrimaryTextSpan>
             <PrimaryTextSpan fontSize="16px">
@@ -222,6 +236,6 @@ const QuoteTextLabel = styled(FlexContainer)<{ operation?: number }>`
   background-color: ${(props) =>
     props.operation === AskBidEnum.Buy ? Colors.ACCENT_BLUE : Colors.RED};
   border-radius: 4px;
-  padding: 4px 16px;
+  padding: 4px 4px;
   font-size: 13px;
 `;

@@ -10,12 +10,14 @@ import { WithdrawalHistoryModel } from '../../../types/WithdrawalTypes';
 import moment from 'moment';
 import { WithdrawHistoryStatusName } from '../../../enums/WithdrawHistoryStatusName';
 import Colors from '../../../constants/Colors';
+import { useTranslation } from 'react-i18next';
 
 interface Props {
   data: WithdrawalHistoryModel;
 }
 
 const WithdrawHistoryItem: FC<Props> = ({ data }) => {
+  const { t } = useTranslation();
   const selectStatusColor = (status: WithdrawalStatusesEnum | null) => {
     switch (status) {
       case WithdrawalStatusesEnum.Pending:
@@ -26,7 +28,7 @@ const WithdrawHistoryItem: FC<Props> = ({ data }) => {
         return Colors.ACCENT_BLUE;
       case WithdrawalStatusesEnum.Declined:
         return '#FF557E';
-      case WithdrawalStatusesEnum.Proccesing:   
+      case WithdrawalStatusesEnum.Proccesing:
         return '#fffccc';
       default:
         return 'rgba(255, 255, 255, 0.4)';
@@ -61,7 +63,7 @@ const WithdrawHistoryItem: FC<Props> = ({ data }) => {
             color={selectStatusColor(data.status || 0)}
             lineHeight="1.8"
           >
-            {WithdrawHistoryStatusName[data.status || 0]}
+            {t(WithdrawHistoryStatusName[data.status || 0])}
           </PrimaryTextSpan>
         </FlexContainer>
       </FlexContainer>

@@ -24,9 +24,9 @@ const BuyButton: FC<Props> = observer(({ handleClick }) => {
       <FlexContainer marginRight="16px">
         <SvgIcon {...BuyIcon} width={24} height={20} fillColor="#232830" />
       </FlexContainer>
-      <FlexContainer flexDirection="column" >
+      <FlexContainer flexDirection="column" alignItems="flex-start">
         <PrimaryTextSpan
-          fontSize="16px"
+          fontSize="13px"
           fontWeight="bold"
           color="#232830"
           marginBottom="2px"

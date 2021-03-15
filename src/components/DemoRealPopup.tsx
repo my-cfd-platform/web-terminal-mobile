@@ -12,6 +12,9 @@ import KeysInApi from '../constants/keysInApi';
 import Topics from '../constants/websocketTopics';
 import Fields from '../constants/fields';
 import Modal from './Modal';
+import mixpanel from 'mixpanel-browser';
+import mixpanelEvents from '../constants/mixpanelEvents';
+import mixapanelProps from '../constants/mixpanelProps';
 
 const DemoRealPopup = () => {
   const { mainAppStore, badRequestPopupStore, userProfileStore } = useStores();
@@ -33,6 +36,12 @@ const DemoRealPopup = () => {
     setParsedParams(urlParams.toString());
   }, [mainAppStore.token, mainAppStore.lang, mainAppStore.accounts]);
 
+  const sendMixpanelEvents = (demoRealFunds: 'real' | 'demo') => {
+    mixpanel.track(mixpanelEvents.DEMO_REAL_WELCOME, {
+      [mixapanelProps.DEMO_REAL_FUNDS]: demoRealFunds,
+    });
+  };
+
   const selectDemoAccount = async () => {
     const acc = mainAppStore.accounts.find((item) => !item.isLive);
     if (acc) {
@@ -48,6 +57,7 @@ const DemoRealPopup = () => {
           [Fields.ACCOUNT_ID]: acc.id,
         });
         mainAppStore.setActiveAccount(acc);
+        sendMixpanelEvents('demo');
         mainAppStore.isDemoRealPopup = false;
       } catch (error) {
         badRequestPopupStore.openModal();
@@ -72,6 +82,7 @@ const DemoRealPopup = () => {
         });
         mainAppStore.setActiveAccount(acc);
         mainAppStore.isLoading = true;
+        sendMixpanelEvents('real');
         window.location.href = `${API_DEPOSIT_STRING}/?${parsedParams}`;
         mainAppStore.isDemoRealPopup = false;
       } catch (error) {
@@ -109,7 +120,7 @@ const DemoRealPopup = () => {
             {t('Congratulations!')}
           </PrimaryTextSpan>
           <PrimaryTextSpan color="rgba(196, 196, 196, 0.5)" fontSize="13px">
-            {t('You have been successfully registered')}
+            {t('You Have Been Successfully Registered')}
           </PrimaryTextSpan>
         </FlexContainer>
         <FlexContainer justifyContent="space-between" padding="0 24px">

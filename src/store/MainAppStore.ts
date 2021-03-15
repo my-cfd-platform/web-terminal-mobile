@@ -1,3 +1,4 @@
+import { languagesList } from './../constants/languagesList';
 import {
   LOCAL_STORAGE_TOKEN_KEY,
   LOCAL_STORAGE_REFRESH_TOKEN_KEY,
@@ -42,7 +43,6 @@ import { PositionModelWSDTO } from '../types/Positions';
 import { PendingOrderWSDTO } from '../types/PendingOrdersTypes';
 import { BidAskModelWSDTO } from '../types/BidAsk';
 import accountVerifySteps from '../constants/accountVerifySteps';
-import { polandLocalsList } from '../constants/polandLocalsList';
 
 interface MainAppStoreProps {
   token: string;
@@ -127,12 +127,11 @@ export class MainAppStore implements MainAppStoreProps {
     // @ts-ignore
     this.lang =
       localStorage.getItem(LOCAL_STORAGE_LANGUAGE) ||
-      (((window.navigator.languages &&
-          polandLocalsList.includes(window.navigator.languages[0].slice(0, 2).toLowerCase())) ||
-        (window.navigator.language &&
-        polandLocalsList.includes(window.navigator.language.slice(0, 2).toLowerCase()))
+      (window.navigator.language &&
+      languagesList.includes(
+        window.navigator.language.slice(0, 2).toLowerCase()
       )
-        ? CountriesEnum.PL
+        ? window.navigator.language.slice(0, 2).toLowerCase()
         : CountriesEnum.EN);
     injectInerceptors(this);
   }
@@ -229,16 +228,9 @@ export class MainAppStore implements MainAppStoreProps {
     connection.on(
       Topics.UPDATE_ACCOUNT,
       (response: ResponseFromWebsocket<AccountModelWebSocketDTO>) => {
-        if (this.activeAccount && this.activeAccount.id === response.data.id) {
-          for (const key in response.data) {
-            if (Object.prototype.hasOwnProperty.call(response.data, key)) {
-              // @ts-ignore
-              this.activeAccount[key] = response.data[key];
-            }
-          }
-        } else {
-          this.activeAccount = response.data;
-        }
+        this.accounts = this.accounts.map((account) =>
+          account.id === response.data.id ? response.data : account
+        );
       }
     );
 
@@ -450,6 +442,7 @@ export class MainAppStore implements MainAppStoreProps {
     // TODO: think how remove crutch
     this.rootStore.historyStore.positionsHistoryReport.positionsHistory = [];
     this.rootStore.tradingViewStore.tradingWidget = undefined;
+    this.rootStore.instrumentsStore.activeInstrument = undefined;
     API.setKeyValue(
       {
         key: KeysInApi.ACTIVE_ACCOUNT_ID,
