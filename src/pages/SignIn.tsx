@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, { useEffect } from 'react';
 import * as yup from 'yup';
 import { useFormik } from 'formik';
 import { FlexContainer } from '../styles/FlexContainer';
@@ -72,9 +72,6 @@ const SignIn = () => {
         mixpanel.people.union({
           [mixapanelProps.BRAND_NAME]: mainAppStore.initModel.brandName.toLowerCase(),
           [mixapanelProps.PLATFORMS_USED]: 'mobile',
-        });
-        mixpanel.track(mixpanelEvents.LOGIN_VIEW, {
-          [mixapanelProps.BRAND_NAME]: mainAppStore.initModel.brandName.toLowerCase(),
         });
       }
     } catch (error) {
@@ -179,7 +176,7 @@ const SignIn = () => {
               fontWeight="bold"
               fontSize="16px"
             >
-              {t('Log In')}
+              {t('Log in')}
             </PrimaryTextSpan>
           </PrimaryButton>
         </FlexContainer>
@@ -193,7 +190,7 @@ const SignIn = () => {
             {t('Don`t have an account yet?')}
           </PrimaryTextSpan>
           &nbsp;
-          <StyledLink to={Page.SIGN_UP}>{t('Sign Up')}</StyledLink>
+          <StyledLink to={Page.SIGN_UP}>{t('Sign up')}</StyledLink>
         </FlexContainer>
       </FlexContainer>
     </FlexContainer>

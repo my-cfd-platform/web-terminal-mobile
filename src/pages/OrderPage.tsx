@@ -87,6 +87,11 @@ const OrderPage = observer(() => {
     [instrumentsStore.activeInstrument, mainAppStore.activeAccount?.id]
   );
 
+  const ucFirst = (str: string) => {
+    if (!str) return str;
+    return str[0].toUpperCase() + str.slice(1);
+  }
+
   const currentPriceAsk = useCallback(
     () =>
       quotesStore.quotes[instrumentsStore.activeInstrument!.instrumentItem.id]
@@ -352,6 +357,7 @@ const OrderPage = observer(() => {
             [mixapanelProps.SL_VALUE]:
               response.order.sl !== null ? Math.abs(response.order.sl) : null,
             [mixapanelProps.TP_VALUE]: response.order.tp,
+            [mixapanelProps.SAVE_POSITION]: `false`,
             [mixapanelProps.AVAILABLE_BALANCE]: balanceBeforeOrder,
             [mixapanelProps.ACCOUNT_ID]: mainAppStore.activeAccount?.id || '',
             [mixapanelProps.ACCOUNT_TYPE]: mainAppStore.activeAccount?.isLive
@@ -381,6 +387,7 @@ const OrderPage = observer(() => {
             [mixapanelProps.SL_VALUE]:
               modelToSubmit.sl !== null ? Math.abs(modelToSubmit.sl) : null,
             [mixapanelProps.TP_VALUE]: modelToSubmit.tp,
+            [mixapanelProps.SAVE_POSITION]: `false`,
             [mixapanelProps.AVAILABLE_BALANCE]: balanceBeforeOrder,
             [mixapanelProps.ACCOUNT_ID]: mainAppStore.activeAccount?.id || '',
             [mixapanelProps.ACCOUNT_TYPE]: mainAppStore.activeAccount?.isLive
@@ -448,6 +455,7 @@ const OrderPage = observer(() => {
                 ? Math.abs(response.position.sl)
                 : null,
             [mixapanelProps.TP_VALUE]: response.position.tp,
+            [mixapanelProps.SAVE_POSITION]: `false`,
             [mixapanelProps.AVAILABLE_BALANCE]: balanceBeforeOrder,
             [mixapanelProps.ACCOUNT_ID]: mainAppStore.activeAccount?.id || '',
             [mixapanelProps.ACCOUNT_TYPE]: mainAppStore.activeAccount?.isLive
@@ -477,6 +485,7 @@ const OrderPage = observer(() => {
             [mixapanelProps.SL_VALUE]:
               modelToSubmit.sl !== null ? Math.abs(modelToSubmit.sl) : null,
             [mixapanelProps.TP_VALUE]: modelToSubmit.tp,
+            [mixapanelProps.SAVE_POSITION]: `false`,
             [mixapanelProps.AVAILABLE_BALANCE]: balanceBeforeOrder,
             [mixapanelProps.ACCOUNT_ID]: mainAppStore.activeAccount?.id || '',
             [mixapanelProps.ACCOUNT_TYPE]: mainAppStore.activeAccount?.isLive
@@ -639,9 +648,19 @@ const OrderPage = observer(() => {
     async function fetchMultiplier() {
       if (instrumentsStore.activeInstrument) {
         try {
-          const response = await API.getKeyValue(`mult_${instrumentsStore.activeInstrument.instrumentItem.id.trim().toLowerCase()}`, mainAppStore.initModel.tradingUrl);
+          const response = await API.getKeyValue(
+            `mult_${instrumentsStore.activeInstrument.instrumentItem.id.trim().toLowerCase()}`,
+            mainAppStore.initModel.tradingUrl
+          );
           if (response.length > 0) {
-            setFieldValue(Fields.MULTIPLIER, parseInt(response));
+            const newMultiplier = parseInt(response);
+            const multipliers = instrumentsStore
+              .activeInstrument!.instrumentItem.multiplier.slice()
+              .sort((a, b) => b - a);
+            const useMultiplier = multipliers.includes(newMultiplier)
+              ? newMultiplier
+              : multipliers[multipliers.length - 1];
+            setFieldValue(Fields.MULTIPLIER, useMultiplier);
           }
           fetchDefaultInvestAmount();
         } catch (error) {
@@ -650,7 +669,11 @@ const OrderPage = observer(() => {
       }
     }
     fetchMultiplier();
-  }, [mainAppStore.activeAccount, instrumentsStore.activeInstrument])
+  }, [
+    mainAppStore.activeAccount,
+    instrumentsStore.activeInstrument,
+    mainAppStore.initModel
+  ]);
 
   const {
     values,
@@ -688,7 +711,7 @@ const OrderPage = observer(() => {
   }, [mainAppStore.activeAccount]);
 
   return (
-    <BackFlowLayout pageTitle={t(type)}>
+    <BackFlowLayout pageTitle={t(ucFirst(type))}>
       { isLoading
         ? <LoaderForComponents isLoading={isLoading} />
         : <OrderWrapper
@@ -794,7 +817,7 @@ const OrderPage = observer(() => {
                   alignItems="center"
                 >
                   <PrimaryTextSpan color="#ffffff" fontSize="16px" lineHeight="1">
-                    {t('Leverage')}
+                    {t('Multiplier')}
                   </PrimaryTextSpan>
                 </FlexContainer>
                 <Observer>
@@ -886,7 +909,7 @@ const OrderPage = observer(() => {
                 marginBottom="4px"
               >
                 <PrimaryTextSpan color="#ffffff" fontSize="16px" lineHeight="1">
-                  {t('Commision')}
+                  {t('Commission')}
                 </PrimaryTextSpan>
                 <PrimaryTextSpan color="#FFFCCC" fontSize="16px" lineHeight="1">
                   $0.00

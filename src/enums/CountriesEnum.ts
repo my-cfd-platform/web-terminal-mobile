@@ -1,4 +1,6 @@
 export enum CountriesEnum {
-  EN = 'en-US',
-  PL = 'pl-PL',
+  EN = 'en',
+  PL = 'pl',
+  ES = 'es',
+  DE = 'de',
 }

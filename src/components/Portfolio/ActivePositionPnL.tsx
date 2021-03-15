@@ -13,9 +13,10 @@ import { css } from '@emotion/core';
 interface Props {
   position: PositionModelWSDTO;
   hasBackground?: boolean;
+  fontSize?: string;
 }
 
-const ActivePositionPnL: FC<Props> = ({ position, hasBackground }) => {
+const ActivePositionPnL: FC<Props> = ({ position, hasBackground, fontSize }) => {
   const { quotesStore, mainAppStore } = useStores();
   const isBuy = position.operation === AskBidEnum.Buy;
 
@@ -64,7 +65,7 @@ const ActivePositionPnL: FC<Props> = ({ position, hasBackground }) => {
   }, []);
 
   return statePnL !== null ? (
-    <QuoteTextLabel isGrowth={statePnL >= 0} hasBackground={hasBackground}>
+    <QuoteTextLabel isGrowth={statePnL >= 0} fontSize={fontSize} hasBackground={hasBackground}>
       {getNumberSign(statePnL)}
       {mainAppStore.activeAccount?.symbol}
       {Math.abs(statePnL).toFixed(2)}
@@ -76,6 +77,7 @@ export default ActivePositionPnL;
 const QuoteTextLabel = styled(FlexContainer)<{
   isGrowth?: boolean;
   hasBackground?: boolean;
+  fontSize?: string;
 }>`
   color: ${(props) => (props.isGrowth ? Colors.ACCENT_BLUE : Colors.RED)};
 
@@ -88,5 +90,5 @@ const QuoteTextLabel = styled(FlexContainer)<{
 
   border-radius: 4px;
   padding: 2px 4px;
-  font-size: 13px;
+  font-size: ${(props) => props.fontSize || '13px'};
 `;

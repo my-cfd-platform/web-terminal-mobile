@@ -47,12 +47,9 @@ const AccountAboutUs = observer(() => {
                 lineHeight="1.6"
                 fontSize="13px"
               >
-                Monfex is a multinational brand with profound experience in
-                trading on cryptocurrency markets. Monfex Trading Platform, the
-                core product of Monfex, is a powerful, fast and secure
-                online-trading software, which allows traders to buy and sell
-                leveraged cryptocurrency contracts at any time, using any
-                device, and with ultra-low spreads.
+                {t(
+                  'Monfex is a multinational brand with profound experience in trading on cryptocurrency markets. Monfex Trading Platform, the core product of Monfex, is a powerful, fast and secure online-trading software, which allows traders to buy and sell leveraged cryptocurrency contracts at any time, using any device, and with ultra-low spreads.'
+                )}
               </PrimaryTextParagraph>
               <br />
               <PrimaryTextParagraph
@@ -61,9 +58,9 @@ const AccountAboutUs = observer(() => {
                 lineHeight="1.6"
                 fontSize="13px"
               >
-                Monfex acts not only as a cryptocurrency trading platform, but
-                also as a community of traders and an educational hub, due in
-                part to the Monfex Trading Academy and Monfex Trade Signals.
+                {t(
+                  'Monfex acts not only as a cryptocurrency trading platform, but also as a community of traders and an educational hub, due in part to the Monfex Trading Academy and Monfex Trade Signals.'
+                )}
               </PrimaryTextParagraph>
             </FlexContainer>
 
@@ -117,11 +114,11 @@ const AccountAboutUs = observer(() => {
             >
               <PrimaryTextParagraph
                 color="#ffffff"
-                textAlign="justify"
+                textAlign="center"
                 lineHeight="1.6"
                 fontSize="13px"
               >
-                A LEADING TRADING PLATFORM IN POLAND
+                {t('A LEADING TRADING PLATFORM IN POLAND')}
               </PrimaryTextParagraph>
               <br />
               <PrimaryTextParagraph
@@ -130,11 +127,9 @@ const AccountAboutUs = observer(() => {
                 lineHeight="1.6"
                 fontSize="13px"
               >
-                Handel Pro is a company that values ​​its customers. Our account
-                managers are doing everything in their power to support you and
-                guide you through the 24/7 trading process, especially if you
-                are a beginner trader. We never abandon our clients and we are
-                always at your disposal.
+                {t(
+                  'Handel Pro is a company that values ​​its customers. Our account managers are doing everything in their power to support you and guide you through the 24/7 trading process, especially if you are a beginner trader. We never abandon our clients and we are always at your disposal.'
+                )}
               </PrimaryTextParagraph>
               <br />
               <PrimaryTextParagraph
@@ -143,10 +138,69 @@ const AccountAboutUs = observer(() => {
                 lineHeight="1.6"
                 fontSize="13px"
               >
-                The Handel Pro platform is easy to use - it can take you 30
-                seconds to register an account. In addition, deposits to and
-                withdrawals are very fast and available for both Visa /
-                Mastercard and cryptocurrencies.
+                {t(
+                  'The Handel Pro platform is easy to use - it can take you 30 seconds to register an account. In addition, deposits to and withdrawals are very fast and available for both Visa / Mastercard and cryptocurrencies.'
+                )}
+              </PrimaryTextParagraph>
+            </FlexContainer>
+
+            <FlexContainer
+              width="100%"
+              justifyContent="space-between"
+              alignItems="center"
+              padding="0 16px"
+            >
+              <FlexContainer alignItems="center" flexDirection="column">
+                <PrimaryTextSpan textAlign="center">200,000+</PrimaryTextSpan>
+                <PrimaryTextSpan
+                  textAlign="center"
+                  color="rgba(255,252,204,0.7)"
+                  fontSize="11px"
+                >
+                  Accounts Worldwide
+                </PrimaryTextSpan>
+              </FlexContainer>
+
+              <FlexContainer alignItems="center" flexDirection="column">
+                <PrimaryTextSpan textAlign="center">Up to 500X</PrimaryTextSpan>
+                <PrimaryTextSpan
+                  textAlign="center"
+                  color="rgba(255,252,204,0.7)"
+                  fontSize="11px"
+                >
+                  leverage
+                </PrimaryTextSpan>
+              </FlexContainer>
+              <FlexContainer alignItems="center" flexDirection="column">
+                <PrimaryTextSpan textAlign="center">0%</PrimaryTextSpan>
+                <PrimaryTextSpan
+                  textAlign="center"
+                  color="rgba(255,252,204,0.7)"
+                  fontSize="11px"
+                >
+                  Commission
+                </PrimaryTextSpan>
+              </FlexContainer>
+            </FlexContainer>
+          </>
+        )}
+
+        {mainAppStore.initModel.brandName.toLowerCase() === 'allianzmarket' && (
+          <>
+            <FlexContainer
+              width="100%"
+              padding="40px 16px"
+              flexDirection="column"
+            >
+              <PrimaryTextParagraph
+                color="#ffffff"
+                textAlign="justify"
+                lineHeight="1.6"
+                fontSize="13px"
+              >
+                {t(
+                  'Allianz Market is a company that values its customers. Our account managers do everything in their power to support you and guide you through the entire trading process 24/7, especially if you are a beginner. The Allianz Market platform is easy to use - account registration it may take you 30 seconds. Besides, account deposits and withdrawals are very fast and available for both Visa / Mastercard and cryptocurrencies.'
+                )}
               </PrimaryTextParagraph>
             </FlexContainer>
 

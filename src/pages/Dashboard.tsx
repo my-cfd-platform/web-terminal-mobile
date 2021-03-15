@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { FC, useEffect, useState } from 'react';
 import { useStores } from '../hooks/useStores';
 import FavouriteInstruments from '../components/Dashboard/FavouriteInstruments';
 import { FlexContainer } from '../styles/FlexContainer';
@@ -8,10 +8,26 @@ import SellButton from '../components/Dashboard/SellButton';
 import TimeScaleWrapper from '../components/Dashboard/TimeScaleWrapper';
 import { useHistory } from 'react-router-dom';
 import Page from '../constants/Pages';
+import { PositionModelWSDTO } from '../types/Positions';
+import ActiveChartOrders from '../components/Dashboard/ActiveChartOrders';
+import { observer } from 'mobx-react-lite';
 
-const Dashboard = () => {
-  const { instrumentsStore } = useStores();
+const Dashboard: FC = observer(() => {
+  const { instrumentsStore, quotesStore } = useStores();
   const { push } = useHistory();
+
+  const [activePositions, setActivePositions] = useState<PositionModelWSDTO[]>(
+    quotesStore.activePositions.filter(
+      (position) => instrumentsStore.activeInstrument?.instrumentItem.id ===
+        position.instrument)
+  );
+
+  useEffect(() => {
+    const newPositions = quotesStore.activePositions.filter(
+      (position) => instrumentsStore.activeInstrument?.instrumentItem.id ===
+        position.instrument);
+    setActivePositions(newPositions);
+  }, [quotesStore.activePositions, instrumentsStore.activeInstrument]);
 
   const handleClickBuy = () => {
     push(
@@ -29,7 +45,9 @@ const Dashboard = () => {
     <>
       <FlexContainer flexDirection="column" width="100%" order="1">
         <FavouriteInstruments />
-        <ActiveInstrument />
+        {activePositions.length > 0
+          ? <ActiveChartOrders activePositions={activePositions} />
+          : <ActiveInstrument />}
       </FlexContainer>
       <FlexContainer flexDirection="column" width="100%" order="3">
         <TimeScaleWrapper></TimeScaleWrapper>
@@ -40,6 +58,6 @@ const Dashboard = () => {
       </FlexContainer>
     </>
   );
-};
+});
 
 export default Dashboard;

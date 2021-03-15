@@ -49,7 +49,7 @@ const AccountVerificationFlow: FC<Props> = (props) => {
             </PrimaryTextSpan>
             <PrimaryTextSpan fontSize="13px" color="#ffffff" textAlign="center">
               {t(
-                'In accordance with the KYC and AML Policy, you are required to pass the verification process.'
+                'In accordance with the KYC and AML Policy, you are required to pass the verification process'
               )}
             </PrimaryTextSpan>
           </FlexContainer>

@@ -119,6 +119,7 @@ const ActivePositionsDetails: FC<Props> = observer((props) => {
             [mixapanelProps.ACCOUNT_TYPE]: mainAppStore.activeAccount?.isLive
               ? 'real'
               : 'demo',
+            [mixapanelProps.EVENT_REF]: 'portfolio',
           });
           push(`${Page.PORTFOLIO_MAIN}/${PortfolioTabEnum.ACTIVE}`);
         } else {
@@ -137,6 +138,7 @@ const ActivePositionsDetails: FC<Props> = observer((props) => {
               : 'demo',
             [mixapanelProps.ERROR_TEXT]:
               apiResponseCodeMessages[response.result],
+            [mixapanelProps.EVENT_REF]: 'portfolio',
           });
           notificationStore.notificationMessage = t(
             apiResponseCodeMessages[response.result]
@@ -227,7 +229,7 @@ const ActivePositionsDetails: FC<Props> = observer((props) => {
                     fontSize="13px"
                     textTransform="uppercase"
                   >
-                    {t(position.operation === AskBidEnum.Buy ? 'Buy' : 'Sell')}
+                    {`${position.operation === AskBidEnum.Buy ? 'Buy' : 'Sell'}`}
                   </PrimaryTextSpan>
                 </QuoteTextLabel>
                 <PrimaryTextSpan fontSize="16px">
@@ -290,6 +292,20 @@ const ActivePositionsDetails: FC<Props> = observer((props) => {
                 {getNumberSign(position.swap)}
                 {mainAppStore.activeAccount?.symbol}
                 {Math.abs(position.swap).toFixed(2)}
+              </PrimaryTextSpan>
+            </FlexContainer>
+
+            <FlexContainer
+              width="100%"
+              padding="8px 16px"
+              justifyContent="space-between"
+            >
+              <PrimaryTextSpan color="#fff" fontSize="16px">
+                {t('Insurance amount')}
+              </PrimaryTextSpan>
+              <PrimaryTextSpan fontSize="16px">
+                {mainAppStore.activeAccount?.symbol}
+                {Math.abs(position.reservedFundsForToppingUp).toFixed(2)}
               </PrimaryTextSpan>
             </FlexContainer>
 

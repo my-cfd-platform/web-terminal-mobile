@@ -4,7 +4,6 @@ import { useFormik } from 'formik';
 import { observer } from 'mobx-react-lite';
 import React, {
   ChangeEvent,
-  createRef,
   useCallback,
   useEffect,
   useRef,
@@ -26,7 +25,6 @@ import { TpSlTypeEnum } from '../enums/TpSlTypeEnum';
 import { ButtonWithoutStyles } from '../styles/ButtonWithoutStyles';
 import { getProcessId } from '../helpers/getProcessId';
 import API from '../helpers/API';
-import InputMaskedField from '../components/InputMaskedField';
 import { OperationApiResponseCodes } from '../enums/OperationApiResponseCodes';
 import apiResponseCodeMessages from '../constants/apiResponseCodeMessages';
 import calculateFloatingProfitAndLoss from '../helpers/calculateFloatingProfitAndLoss';
@@ -39,7 +37,6 @@ import mixpanelValues from '../constants/mixpanelValues';
 const PositionEditSL = observer(() => {
   const { id } = useParams<{ id: string }>();
   const { t } = useTranslation();
-  const valueInput = useRef<HTMLInputElement>(null);
   const { goBack, push } = useHistory();
 
   const {
@@ -121,6 +118,24 @@ const PositionEditSL = observer(() => {
   /**
    *
    */
+
+  const positionStopOutPriceByValue = (stopLoss: number) => {
+    // SL Rate = Current Price + ($SL - Comission) * Сurrent Price /Invest amount *direction*multiplier
+    if (position) {
+      const isBuy = position.operation === AskBidEnum.Buy;
+      const currentPrice = isBuy ? currentPriceBid() : currentPriceAsk();
+      const direction = isBuy ? 1 : -1;
+      const commission = position.swap + position.commission;
+
+      // = Current Price + ($SL - Comission) * Сurrent Price /Invest amount *direction*multiplier
+      const posPriceByValue = currentPrice +
+      ((stopLoss - commission) *
+        currentPrice) /
+        (position.investmentAmount * direction * position.multiplier)
+      console.log(posPriceByValue);
+    }
+  };
+
   const postitionStopOut = useCallback(() => {
     const invest = position?.investmentAmount || 0;
     const instrumentPercentSL = (instrument?.stopOutPercent || 95) / 100;
@@ -138,14 +153,15 @@ const PositionEditSL = observer(() => {
         currentPrice = isBuy ? currentPriceBid() : currentPriceAsk();
         so_level = -1 * postitionStopOut();
         so_percent = (instrument?.stopOutPercent || 0) / 100;
-        direction = position.operation === AskBidEnum.Buy ? 1 : -1;
+        direction = isBuy ? 1 : -1;
 
         const result =
           (slPrice / currentPrice - 1) *
             position.investmentAmount *
             position.multiplier *
             direction +
-          Math.abs(position.swap);
+          (position.swap + position.commission);
+        console.log(+Number(result).toFixed(2));
         return +Number(result).toFixed(2);
       }
       return 0;
@@ -270,6 +286,7 @@ const PositionEditSL = observer(() => {
               ? Math.abs(response.position.sl)
               : null,
           [mixapanelProps.TP_VALUE]: response.position.tp,
+          [mixapanelProps.SAVE_POSITION]: `${values.isToppingUpActive}`,
           [mixapanelProps.AVAILABLE_BALANCE]:
             mainAppStore.activeAccount?.balance || 0,
           [mixapanelProps.ACCOUNT_ID]: mainAppStore.activeAccount?.id || '',
@@ -279,6 +296,7 @@ const PositionEditSL = observer(() => {
           [mixapanelProps.EVENT_REF]: mixpanelValues.PORTFOLIO,
           [mixapanelProps.POSITION_ID]: response.position.id,
         });
+        goBack();
       } else {
         mixpanel.track(mixpanelEvents.EDIT_SLTP_FAILED, {
           [mixapanelProps.AMOUNT]: position?.investmentAmount,
@@ -299,6 +317,7 @@ const PositionEditSL = observer(() => {
           [mixapanelProps.SL_VALUE]:
             valuesToSubmit.sl !== null ? Math.abs(valuesToSubmit.sl) : null,
           [mixapanelProps.TP_VALUE]: valuesToSubmit.tp,
+          [mixapanelProps.SAVE_POSITION]: `${values.isToppingUpActive}`,
           [mixapanelProps.AVAILABLE_BALANCE]:
             mainAppStore.activeAccount?.balance || 0,
           [mixapanelProps.ACCOUNT_ID]: mainAppStore.activeAccount?.id || '',
@@ -307,14 +326,13 @@ const PositionEditSL = observer(() => {
             : 'demo',
           [mixapanelProps.EVENT_REF]: mixpanelValues.PORTFOLIO,
         });
+        setLoading(false);
         notificationStore.notificationMessage = t(
           apiResponseCodeMessages[response.result]
         );
         notificationStore.isSuccessfull = false;
         notificationStore.openNotification();
       }
-      goBack();
-      setLoading(false);
     } catch (error) {}
   };
 
@@ -343,8 +361,6 @@ const PositionEditSL = observer(() => {
       setFieldValue('value', null);
       setFieldValue('price', null);
       setFieldValue('isToppingUpActive', false);
-    } else {
-      valueInput.current?.focus();
     }
     setTouched({ toggle: true });
   };
@@ -434,6 +450,8 @@ const PositionEditSL = observer(() => {
   };
 
   const handleChangeInput = (e: ChangeEvent<HTMLInputElement>) => {
+    setFieldError('value', '');
+    setFieldError('price', '');
     const newValue =
       e.target.value === ''
         ? null
@@ -445,6 +463,7 @@ const PositionEditSL = observer(() => {
 
     switch (e.target.name) {
       case 'value':
+        positionStopOutPriceByValue(newValue === null ? 0 : +newValue);
         if (newValue && +newValue > postitionStopOut()) {
           setFieldValue('isToppingUpActive', true);
         } else {
@@ -454,13 +473,16 @@ const PositionEditSL = observer(() => {
         break;
 
       case 'price':
-        setFieldError('price', '');
         setFieldValue('value', null);
         const soValue = positionStopOutByPrice(
           newValue !== null ? +newValue : 0
         );
-        console.log(soValue);
-        if (soValue <= 0 && Math.abs(soValue) > postitionStopOut()) {
+
+        if (
+          newValue &&
+          soValue <= 0 &&
+          Math.abs(soValue) > postitionStopOut()
+        ) {
           setFieldValue('isToppingUpActive', true);
         } else {
           setFieldValue('isToppingUpActive', false);
@@ -473,7 +495,7 @@ const PositionEditSL = observer(() => {
   };
 
   const handleBlurInput = (e: ChangeEvent<HTMLInputElement>) => {
-    const int_value = parseInt(e.target.value.replace('- ', ''));
+    const int_value = parseFloat(e.target.value.replace('- ', ''));
     const value = isNaN(int_value) ? null : int_value;
 
     switch (e.target.name) {
@@ -502,7 +524,9 @@ const PositionEditSL = observer(() => {
   }, [values.value]);
 
   useEffect(() => {
+    setLoading(true);
     const pos = quotesStore.activePositions.find((pos) => pos.id === +id);
+
     if (pos) {
       setPosition(pos);
       const instr = instrumentsStore.instruments.find(
@@ -510,9 +534,17 @@ const PositionEditSL = observer(() => {
       )?.instrumentItem;
       setInstrument(instr);
     }
+
     if (quotesStore.activePositions && !pos) {
       push(Page.PORTFOLIO_MAIN);
     }
+
+    const offloaderAfterInitAnim = setTimeout(() => {
+      setLoading(false);
+    }, 600);
+    return () => {
+      clearTimeout(offloaderAfterInitAnim);
+    };
   }, [quotesStore.activePositions]);
 
   useEffect(() => {
@@ -562,7 +594,7 @@ const PositionEditSL = observer(() => {
     }
   }, [isValid]);
 
-  if (!mainAppStore.activeAccount || !position) {
+  if (!mainAppStore.activeAccount || !position || loading) {
     return <LoaderForComponents isLoading={true} />;
   }
 
@@ -626,7 +658,6 @@ const PositionEditSL = observer(() => {
               </PrimaryTextSpan>
               <FlexContainer justifyContent="flex-end" alignItems="center">
                 <Input
-                  ref={valueInput}
                   customWidth={'auto'}
                   name="value"
                   id="value"
@@ -723,7 +754,7 @@ const PositionEditSL = observer(() => {
           >
             <FlexContainer padding="0 12px 0 0">
               <PrimaryTextSpan color="#ffffff" fontSize="16px">
-                {t('Save your position from market noise')}
+                {t('Save position from market noise')}
               </PrimaryTextSpan>
             </FlexContainer>
 
@@ -742,7 +773,7 @@ const PositionEditSL = observer(() => {
                 instrument?.stopOutPercent
               }%, ${t(
                 'an additional 20% of the original investment amount will be reserved from your balance to save your position from closing. If the position takes a further loss, your available balance is reduced by 20% again and again. Once the position rises to at least'
-              )} ${instrument?.stopOutPercent}% + 1% , ${t(
+              )} ${instrument?.stopOutPercent}%, ${t(
                 'all previously reserved funds are returned to your balance.'
               )}`}
             </PrimaryTextSpan>
@@ -805,5 +836,3 @@ const Input = styled.input<{ autocomplete?: string; customWidth?: string }>`
   }
   width: ${(props) => props.customWidth};
 `;
-
-const ExtraMinus = styled(PrimaryTextSpan)``;

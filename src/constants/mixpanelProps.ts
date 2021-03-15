@@ -22,6 +22,7 @@ const mixapanelProps = {
   TP_TYPE: 'TP type',
   SL_VALUE: 'SL value',
   TP_VALUE: 'TP value',
+  SAVE_POSITION: 'Save position',
   AVAILABLE_BALANCE: 'Available Balance',
   ACCOUNT_TYPE: 'Account Type',
   EVENT_REF: 'Event ref',
@@ -29,6 +30,8 @@ const mixapanelProps = {
   SERVER_ERROR: 'Server error',
   POSITION_ID: 'Position ID',
   WITHDRAWAL_METHOD: 'Withdraw method',
+  DEMO_REAL_FUNDS: 'DemoRealFunds',
+  NUMBER_OF_POSITIONS: 'Number of positions',
 };
 
 Object.freeze(mixapanelProps);
