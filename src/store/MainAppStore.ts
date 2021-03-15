@@ -114,7 +114,9 @@ export class MainAppStore implements MainAppStoreProps {
   @observable activeAccountId: string = '';
   @observable connectionSignalRTimer: NodeJS.Timeout | null = null;
   @observable signUpFlag: boolean = false;
+  @observable lpLoginFlag: boolean = false;
   @observable isVerification: boolean = false;
+  @observable balanceWas: number = 0;
   websocketConnectionTries = 0;
 
   constructor(rootStore: RootStore) {
@@ -377,6 +379,11 @@ export class MainAppStore implements MainAppStoreProps {
   };
 
   @action
+  setLpLoginFlag = (value: boolean) => {
+    this.lpLoginFlag = value;
+  };
+
+  @action
   startSignalRTimer = () => {
     this.connectionSignalRTimer = setTimeout(() => {
       this.activeSession?.stop();
@@ -544,6 +551,7 @@ export class MainAppStore implements MainAppStoreProps {
     this.activeAccount = undefined;
     this.activeAccountId = '';
     this.rootStore.withdrawalStore.clearStore();
+    this.balanceWas = 0;
   };
 
   setTokenHandler = (token: string) => {

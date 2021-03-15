@@ -1,4 +1,5 @@
 export enum OperationApiResponseCodes {
+  TooManyAttempts = -10,
   Expired = -9,
   SystemError,
   PersonalDataNotValid,

@@ -21,6 +21,7 @@ import LoaderFullscreen from '../components/LoaderFullscreen';
 import DemoRealPopup from '../components/DemoRealPopup';
 import NetworkErrorPopup from '../components/NetworkErrorPopup';
 import ServerErrorPopup from '../components/ServerErrorPopup';
+import mixpanelEvents from '../constants/mixpanelEvents';
 
 const AuthorizedContainer: FC = ({ children }) => {
   const match = useRouteMatch([
@@ -74,7 +75,16 @@ const AuthorizedContainer: FC = ({ children }) => {
           [mixapanelProps.PLATFORMS_USED]: 'mobile',
           [mixapanelProps.BRAND_NAME]: mainAppStore.initModel.brandName.toLowerCase(),
         });
+
+        if (mainAppStore.lpLoginFlag) {
+          mixpanel.track(mixpanelEvents.SIGN_UP, {
+            [mixapanelProps.BRAND_NAME]:
+            mainAppStore.initModel.brandName.toLowerCase(),
+          });
+        }
+
         mainAppStore.setSignUpFlag(false);
+        mainAppStore.setLpLoginFlag(false);
         if (!response.data.phone) {
           const additionalResponse = await API.getAdditionalRegistrationFields(
             mainAppStore.initModel.authUrl
