@@ -803,7 +803,7 @@ const OrderPage = observer(() => {
                 flexDirection="column"
                 width="100%"
                 backgroundColor="rgba(42, 45, 56, 0.5)"
-                padding="14px 16px"
+                padding="14px 14px 14px 16px"
                 position="relative"
                 alignItems="flex-end"
                 marginBottom="2px"
@@ -838,7 +838,7 @@ const OrderPage = observer(() => {
                 flexDirection="column"
                 width="100%"
                 backgroundColor="rgba(42, 45, 56, 0.5)"
-                padding="14px 16px"
+                padding="14px 14px 14px 16px"
                 position="relative"
                 marginBottom={
                   touched.openPrice && errors.openPrice ? '4px' : '12px'
