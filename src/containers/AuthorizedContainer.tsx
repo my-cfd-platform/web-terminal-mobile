@@ -47,7 +47,7 @@ const AuthorizedContainer: FC = ({ children }) => {
   ]);
 
   const { push } = useHistory();
-  const { mainAppStore, userProfileStore, serverErrorPopupStore } = useStores();
+  const { mainAppStore, userProfileStore, instrumentsStore, serverErrorPopupStore } = useStores();
   const [ waitingData, setWaitingData ] = useState<boolean>(true);
   const showNavbarAndNav = !match?.isExact;
 
@@ -131,7 +131,7 @@ const AuthorizedContainer: FC = ({ children }) => {
       <Observer>
         {() => (
           <LoaderFullscreen
-            isLoading={mainAppStore.isLoading || waitingData}
+            isLoading={mainAppStore.isLoading || waitingData || !instrumentsStore.activeInstruments}
           ></LoaderFullscreen>
         )}
       </Observer>
