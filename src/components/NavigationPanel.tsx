@@ -21,15 +21,21 @@ import { PendingOrderWSDTO } from '../types/PendingOrdersTypes';
 const NavigationPanel = () => {
   const { portfolioNavLinksStore, mainAppStore, quotesStore } = useStores();
 
+  const [orderCount, setOrderCount] = useState<string>('');
   const [oldValue, setOldValue] = useState<string>('');
   const [spin, setSpin] = useState<boolean>(false);
+  
+  useEffect(() => {
+    setOldValue(`${quotesStore.activePositions.length}`);
+    setOrderCount(`${quotesStore.activePositions.length}`)
+  }, [quotesStore.activePositions]);
 
-  const activeOrdersCount = useCallback(() => {
-      setOldValue(`${quotesStore.activePositions.length}`);
-      return `${quotesStore.activePositions.length}`;
-    },
-    [quotesStore.activePositions]
-  );
+  // const activeOrdersCount = useCallback(() => {
+  //     setOldValue(`${quotesStore.activePositions.length}`);
+  //     return `${quotesStore.activePositions.length}`;
+  //   },
+  //   [quotesStore.activePositions]
+  // );
 
   useEffect(() => {
     if (mainAppStore.activeAccount) {
@@ -81,9 +87,9 @@ const NavigationPanel = () => {
                 fillColor="#979797"
                 hoverFillColor={Colors.ACCENT}
               />
-              <CustomBadge count={activeOrdersCount()}>
-                <CounterOld count={activeOrdersCount()} spin={spin}>{oldValue}</CounterOld>
-                <CounterNew count={activeOrdersCount()} spin={spin}>{activeOrdersCount()}</CounterNew>
+              <CustomBadge count={orderCount}>
+                <CounterOld count={orderCount} spin={spin}>{oldValue}</CounterOld>
+                <CounterNew count={orderCount} spin={spin}>{orderCount}</CounterNew>
               </CustomBadge>
               <OutDots spin={spin}></OutDots>
             </CustomNavLink>
