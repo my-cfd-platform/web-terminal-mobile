@@ -445,5 +445,14 @@
     "You can limit the additional funds reserved on your balance by specifying a level of loss that is acceptable to you for this position.": "You can limit the additional funds reserved on your balance by specifying a level of loss that is acceptable to you for this position.",
     "Open Mail": "Open Mail",
     "a new password": "a new password",
-    "Insurance amount": "Insurance amount"
+    "Insurance amount": "Insurance amount",
+    "TermsConditions_AM": "",
+    "TermsConditions_HP": "",
+    "TermsConditions_M": "",
+    "PrivacyPolicy_M": "",
+    "PrivacyPolicy_AM": "",
+    "PrivacyPolicy_HP": "",
+    "FAQ_AM": "",
+    "FAQ_HP": "",
+    "FAQ_M": ""
 }
