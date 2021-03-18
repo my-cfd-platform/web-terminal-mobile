@@ -131,7 +131,7 @@ const AuthorizedContainer: FC = ({ children }) => {
       <Observer>
         {() => (
           <LoaderFullscreen
-            isLoading={mainAppStore.isLoading || waitingData || !instrumentsStore.activeInstruments}
+            isLoading={mainAppStore.isLoading || waitingData || !instrumentsStore.activeInstrumentsIds.length}
           ></LoaderFullscreen>
         )}
       </Observer>
