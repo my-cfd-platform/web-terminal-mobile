@@ -199,7 +199,7 @@ const ForgotPassword = () => {
                 fontWeight="bold"
                 fontSize="16px"
               >
-                Open Mail
+                {t('Open Mail')}
               </PrimaryTextSpan>
             </CustomLink>
           )}
