@@ -57,6 +57,7 @@ import {
 } from '../types/WithdrawalTypes';
 import { ListForEN } from '../constants/listOfLanguages';
 import { PendingOrderResponseDTO } from '../types/PendingOrdersTypes';
+import { BrandEnum } from '../constants/brandingLinksTranslate';
 
 class API {
   convertParamsToFormData = (params: { [key: string]: any }) => {
@@ -419,7 +420,7 @@ class API {
             androidAppLink: '',
             brandCopyrights: '',
             brandName: '',
-            brandProperty: '',
+            brandProperty: BrandEnum.Monfex,
             faqUrl: '',
             withdrawFaqUrl: '',
             favicon: '',

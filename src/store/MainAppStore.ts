@@ -43,6 +43,7 @@ import { PositionModelWSDTO } from '../types/Positions';
 import { PendingOrderWSDTO } from '../types/PendingOrdersTypes';
 import { BidAskModelWSDTO } from '../types/BidAsk';
 import accountVerifySteps from '../constants/accountVerifySteps';
+import { BrandEnum } from '../constants/brandingLinksTranslate';
 
 interface MainAppStoreProps {
   token: string;
@@ -76,7 +77,7 @@ export class MainAppStore implements MainAppStoreProps {
     androidAppLink: '',
     brandCopyrights: '',
     brandName: '',
-    brandProperty: '',
+    brandProperty: BrandEnum.Monfex,
     faqUrl: '',
     withdrawFaqUrl: '',
     favicon: '',

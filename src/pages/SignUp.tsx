@@ -27,6 +27,7 @@ import { PrimaryTextSpan } from '../styles/TextsElements';
 import { useTranslation } from 'react-i18next';
 import LoaderForComponents from '../components/LoaderForComponents';
 import { Observer } from 'mobx-react-lite';
+import { brandingLinksTranslate } from '../constants/brandingLinksTranslate';
 
 const SignUp = () => {
   const { push } = useHistory();
@@ -250,17 +251,18 @@ const SignUp = () => {
                 fontSize="11px"
                 lineHeight="1.6"
               >
+                
                 {t('I’m 18 years old, and agree to')} &nbsp;
                 <StyledLinkAnchor
                   fontSize="11px"
-                  href={mainAppStore.initModel.termsUrl}
+                  href={t(`${brandingLinksTranslate[mainAppStore.initModel.brandProperty].termsCondition}`)}
                 >
                   {t('Terms & Conditions')}
                 </StyledLinkAnchor>
                 &nbsp; {t('and')} &nbsp;
                 <StyledLinkAnchor
                   fontSize="11px"
-                  href={mainAppStore.initModel.policyUrl}
+                  href={t(`${brandingLinksTranslate[mainAppStore.initModel.brandProperty].privacyPolicy}`)}
                 >
                   {t('Privacy Policy')}
                 </StyledLinkAnchor>
