@@ -30,13 +30,6 @@ const NavigationPanel = () => {
     setOrderCount(`${quotesStore.activePositions.length}`)
   }, [quotesStore.activePositions]);
 
-  // const activeOrdersCount = useCallback(() => {
-  //     setOldValue(`${quotesStore.activePositions.length}`);
-  //     return `${quotesStore.activePositions.length}`;
-  //   },
-  //   [quotesStore.activePositions]
-  // );
-
   useEffect(() => {
     if (mainAppStore.activeAccount) {
       mainAppStore.activeSession?.on(
