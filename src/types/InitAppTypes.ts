@@ -1,3 +1,4 @@
+import { BrandEnum } from './../constants/brandingLinksTranslate';
 export interface InitModel {
   logo: string;
   tradingUrl: string;
@@ -12,7 +13,7 @@ export interface InitModel {
   iosAppLink: string;
   brandName: string;
   brandCopyrights: string;
-  brandProperty: string;
+  brandProperty: BrandEnum;
   gaAsAccount: string;
   favicon: string;
   mixpanelToken: string;
