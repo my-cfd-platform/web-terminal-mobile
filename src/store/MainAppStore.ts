@@ -572,6 +572,11 @@ export class MainAppStore implements MainAppStoreProps {
     this.lang = newLang;
   };
 
+  @action
+  setLoading = (on: boolean) => {
+    this.isLoading = on;
+  }
+
   @computed
   get sortedAccounts() {
     return this.accounts.reduce(

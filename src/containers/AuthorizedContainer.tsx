@@ -1,4 +1,4 @@
-import React, {FC, useEffect, useState} from 'react';
+import React, { FC, useEffect, useState } from 'react';
 import { FlexContainer } from '../styles/FlexContainer';
 import { Observer } from 'mobx-react-lite';
 import NotificationPopup from '../components/NotificationPopup';
@@ -47,8 +47,8 @@ const AuthorizedContainer: FC = ({ children }) => {
   ]);
 
   const { push } = useHistory();
-  const { mainAppStore, userProfileStore, instrumentsStore, serverErrorPopupStore } = useStores();
-  const [ waitingData, setWaitingData ] = useState<boolean>(true);
+  const { mainAppStore, userProfileStore, serverErrorPopupStore } = useStores();
+  const [waitingData, setWaitingData] = useState<boolean>(true);
   const showNavbarAndNav = !match?.isExact;
 
   useEffect(() => {
@@ -79,7 +79,7 @@ const AuthorizedContainer: FC = ({ children }) => {
         if (mainAppStore.lpLoginFlag) {
           mixpanel.track(mixpanelEvents.SIGN_UP, {
             [mixapanelProps.BRAND_NAME]:
-            mainAppStore.initModel.brandName.toLowerCase(),
+              mainAppStore.initModel.brandName.toLowerCase(),
           });
         }
 

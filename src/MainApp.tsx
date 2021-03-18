@@ -31,6 +31,7 @@ const MainApp: FC = () => {
     const accountType = mainAppStore.activeAccount?.isLive
       ? AccountTypeEnum.Live
       : AccountTypeEnum.Demo;
+    mainAppStore.setLoading(true);
     try {
       const response = await API.getFavoriteInstrumets({
         type: accountType,
@@ -40,9 +41,7 @@ const MainApp: FC = () => {
 
       // https://monfex.atlassian.net/browse/WEBT-475
       // if app is reinitializing, we should wait widget first
-      if (instrumentsStore.activeInstrument) {
-        mainAppStore.isLoading = false;
-      }
+      
 
       if (!response.length) {
         throw new Error(
@@ -50,8 +49,9 @@ const MainApp: FC = () => {
         );
       }
       instrumentsStore.switchInstrument(response[response.length - 1]);
+      mainAppStore.setLoading(false);
     } catch (error) {
-      mainAppStore.isLoading = false;
+      mainAppStore.setLoading(false);
       badRequestPopupStore.openModal();
       badRequestPopupStore.setMessage(error);
     }
