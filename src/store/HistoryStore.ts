@@ -41,8 +41,6 @@ export class HistoryStore implements ContextProps {
     try {
       const response = await API.getPositionsHistory({
         accountId: this.rootStore.mainAppStore.activeAccountId,
-        startDate: 0,
-        endDate: moment().valueOf(),
         page: isScrolling ? this.positionsHistoryReport.page + 1 : 1,
         pageSize: 20,
       });
