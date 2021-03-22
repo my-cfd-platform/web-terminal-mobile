@@ -382,7 +382,9 @@ const PositionEditSL = observer(() => {
         }
       }
 
-      setFieldValue('value', postitionStopOut());
+      if (activeSL) {
+        setFieldValue('value', postitionStopOut());
+      }
     } else {
       setFieldValue('value', null);
       setFieldValue('price', null);
