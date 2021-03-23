@@ -7,6 +7,8 @@ import { useHistory } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useStores } from '../../hooks/useStores';
 import Page from '../../constants/Pages';
+import mixpanel from 'mixpanel-browser';
+import mixpanelEvents from '../../constants/mixpanelEvents';
 
 const DepositPaymentFail: FC = () => {
   const { mainAppStore, userProfileStore } = useStores();
@@ -30,6 +32,12 @@ const DepositPaymentFail: FC = () => {
     mainAppStore.accounts,
     userProfileStore.userProfileId,
   ]);
+
+
+  useEffect(() => {
+    mixpanel.track(mixpanelEvents.DEPOSIT_PAGE_FAILED);
+  }, []);
+  
   const urlParams = new URLSearchParams();
   const { t } = useTranslation();
 
