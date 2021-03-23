@@ -305,7 +305,7 @@ export class MainAppStore implements MainAppStoreProps {
       Topics.ACTIVE_POSITIONS,
       (response: ResponseFromWebsocket<PositionModelWSDTO[]>) => {
         if (response.accountId === this.activeAccountId) {
-          this.rootStore.quotesStore.activePositions = response.data;
+          this.rootStore.quotesStore.setActivePositions(response.data);
         }
       }
     );
@@ -343,9 +343,9 @@ export class MainAppStore implements MainAppStoreProps {
       Topics.UPDATE_ACTIVE_POSITION,
       (response: ResponseFromWebsocket<PositionModelWSDTO>) => {
         if (response.accountId === this.activeAccountId) {
-          this.rootStore.quotesStore.activePositions = this.rootStore.quotesStore.activePositions.map(
+          this.rootStore.quotesStore.setActivePositions(this.rootStore.quotesStore.activePositions.map(
             (item) => (item.id === response.data.id ? response.data : item)
-          );
+          ));
         }
       }
     );
