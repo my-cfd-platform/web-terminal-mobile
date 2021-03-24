@@ -17,7 +17,10 @@ const AccountsSwitchLink = observer(() => {
     let startTimestamp: number = start;
     const step = (timestamp: number) => {
       if (!startTimestamp) startTimestamp = timestamp;
-      const progress = Math.min((timestamp - startTimestamp) / 1000, 1);
+      const usesTimestamp = startTimestamp > timestamp
+        ? startTimestamp + timestamp
+        : timestamp;
+      const progress = Math.min((usesTimestamp - startTimestamp) / 2000, 1);
       setBalance((progress * (end - start) + start));
       if (progress < 1) {
         window.requestAnimationFrame(step);
@@ -28,13 +31,21 @@ const AccountsSwitchLink = observer(() => {
   };
 
   useEffect(() => {
-    if (mainAppStore.activeAccount?.balance) {
-      animateValue(
-        balance,
-        mainAppStore.activeAccount?.balance
-      );
+    if (mainAppStore.accounts) {
+      const newBalance = mainAppStore.accounts.find(
+        (item) => item.id === mainAppStore.activeAccountId
+      )?.balance || balance;
+      if (newBalance !== balance) {
+        animateValue(
+          balance,
+          newBalance
+        );
+      }
     }
-  }, [mainAppStore.activeAccount, mainAppStore.activeAccount?.balance]);
+  }, [
+    mainAppStore.activeAccountId,
+    mainAppStore.accounts
+  ]);
 
   return (
     <AccountSwitch to={Page.ACCOUNTS_SWITCH}>
