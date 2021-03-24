@@ -31,13 +31,16 @@ const NavigationPanel = observer(() => {
   }, [quotesStore.activePositions]);
 
   useEffect(() => {
+    let cleanupFunction = false;
     if (mainAppStore.activeAccount) {
       mainAppStore.activeSession?.on(
         Topics.ACTIVE_POSITIONS,
         (response: ResponseFromWebsocket<PositionModelWSDTO[]>) => {
           if (response.accountId === mainAppStore.activeAccount?.id) {
-            setSpin(true);
-            setTimeout(() => setSpin(false), 500);
+            if(!cleanupFunction) {
+              setSpin(true);
+              setTimeout(() => setSpin(false), 500);
+            }
           }
         }
       );
@@ -52,6 +55,9 @@ const NavigationPanel = observer(() => {
         }
       );
     }
+    return () => {
+      cleanupFunction = true
+    };
   }, [mainAppStore.activeAccount]);
   return (
     <NavigationPanelWrap>
