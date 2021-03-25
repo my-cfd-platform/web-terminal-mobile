@@ -19,8 +19,7 @@ const WithdrawalFaqLink = () => {
       to={{
         pathname: t(
           `${
-            brandingLinksTranslate[mainAppStore.initModel.brandProperty]
-              .privacyPolicy
+            brandingLinksTranslate[mainAppStore.initModel.brandProperty].faq
           }`
         )
       }}
