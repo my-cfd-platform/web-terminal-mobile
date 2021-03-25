@@ -25,6 +25,7 @@ import mixpanelEvents from '../../constants/mixpanelEvents';
 import mixapanelProps from '../../constants/mixpanelProps';
 import apiResponseCodeMessages from '../../constants/apiResponseCodeMessages';
 import ActiveChartPosition from './ActiveChartPosition';
+import mixpanelValues from '../../constants/mixpanelValues';
 
 interface Props {
   activePositions: PositionModelWSDTO[];
@@ -116,7 +117,7 @@ const ActiveChartOrders: FC<Props> = observer(({ activePositions }) => {
             [mixapanelProps.ACCOUNT_TYPE]: mainAppStore.activeAccount?.isLive
               ? 'real'
               : 'demo',
-            [mixapanelProps.EVENT_REF]: 'mobile chart',
+            [mixapanelProps.EVENT_REF]: mixpanelValues.CHART,
           });
         } else {
           mixpanel.track(mixpanelEvents.CLOSE_ORDER_FAILED, {
@@ -134,7 +135,7 @@ const ActiveChartOrders: FC<Props> = observer(({ activePositions }) => {
               : 'demo',
             [mixapanelProps.ERROR_TEXT]:
               apiResponseCodeMessages[response.result],
-            [mixapanelProps.EVENT_REF]: 'mobile chart',
+            [mixapanelProps.EVENT_REF]: mixpanelValues.CHART,
           });
           notificationStore.notificationMessage = t(
             apiResponseCodeMessages[response.result]

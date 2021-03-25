@@ -653,14 +653,7 @@ const OrderPage = observer(() => {
             mainAppStore.initModel.tradingUrl
           );
           if (response.length > 0) {
-            const newMultiplier = parseInt(response);
-            const multipliers = instrumentsStore
-              .activeInstrument!.instrumentItem.multiplier.slice()
-              .sort((a, b) => b - a);
-            const useMultiplier = multipliers.includes(newMultiplier)
-              ? newMultiplier
-              : multipliers[multipliers.length - 1];
-            setFieldValue(Fields.MULTIPLIER, useMultiplier);
+            setFieldValue(Fields.MULTIPLIER, parseInt(response));
           }
           fetchDefaultInvestAmount();
         } catch (error) {
@@ -818,6 +811,19 @@ const OrderPage = observer(() => {
                 >
                   <PrimaryTextSpan color="#ffffff" fontSize="16px" lineHeight="1">
                     {t('Multiplier')}
+                  </PrimaryTextSpan>
+                </FlexContainer>
+                <FlexContainer
+                  position="absolute"
+                  top="0"
+                  bottom="0"
+                  right="16px"
+                  margin="auto"
+                  alignItems="center"
+                >
+                  {/* TODO think about another realization */}
+                  <PrimaryTextSpan color="#fffccc" fontSize="16px" lineHeight="1">
+                    x{values.multiplier}
                   </PrimaryTextSpan>
                 </FlexContainer>
                 <Observer>
@@ -987,7 +993,7 @@ const MultiplierSelect = styled.select`
   background-color: transparent;
   outline: none;
   border: none;
-  font-size: 16px;
+  font-size: 0;
   color: #fffccc;
   font-weight: 500;
   line-height: 22px;

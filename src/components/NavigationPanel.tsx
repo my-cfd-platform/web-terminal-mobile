@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from '@emotion/styled';
 import { FlexContainer } from '../styles/FlexContainer';
 import { NavLink } from 'react-router-dom';
@@ -12,40 +12,35 @@ import IconNews from '../assets/svg/navigation/news.svg';
 import IconUser from '../assets/svg/navigation/user.svg';
 import Colors from '../constants/Colors';
 import { useStores } from '../hooks/useStores';
-import { Observer } from 'mobx-react-lite';
+import { observer } from 'mobx-react-lite';
 import Topics from '../constants/websocketTopics';
 import { ResponseFromWebsocket } from '../types/ResponseFromWebsocket';
 import { PositionModelWSDTO } from '../types/Positions';
 import { PendingOrderWSDTO } from '../types/PendingOrdersTypes';
 
-const NavigationPanel = () => {
+const NavigationPanel = observer(() => {
   const { portfolioNavLinksStore, mainAppStore, quotesStore } = useStores();
 
   const [orderCount, setOrderCount] = useState<string>('');
   const [oldValue, setOldValue] = useState<string>('');
   const [spin, setSpin] = useState<boolean>(false);
-  
+
   useEffect(() => {
     setOldValue(`${quotesStore.activePositions.length}`);
-    setOrderCount(`${quotesStore.activePositions.length}`)
+    setOrderCount(`${quotesStore.activePositions.length}`);
   }, [quotesStore.activePositions]);
 
-  // const activeOrdersCount = useCallback(() => {
-  //     setOldValue(`${quotesStore.activePositions.length}`);
-  //     return `${quotesStore.activePositions.length}`;
-  //   },
-  //   [quotesStore.activePositions]
-  // );
-
   useEffect(() => {
+    let cleanupFunction = false;
     if (mainAppStore.activeAccount) {
       mainAppStore.activeSession?.on(
         Topics.ACTIVE_POSITIONS,
         (response: ResponseFromWebsocket<PositionModelWSDTO[]>) => {
           if (response.accountId === mainAppStore.activeAccount?.id) {
-            setSpin(true);
-            setTimeout(() => setSpin(false), 500);
-            quotesStore.setActivePositions(response.data);
+            if(!cleanupFunction) {
+              setSpin(true);
+              setTimeout(() => setSpin(false), 500);
+            }
           }
         }
       );
@@ -60,6 +55,9 @@ const NavigationPanel = () => {
         }
       );
     }
+    return () => {
+      cleanupFunction = true
+    };
   }, [mainAppStore.activeAccount]);
   return (
     <NavigationPanelWrap>
@@ -76,25 +74,21 @@ const NavigationPanel = () => {
             hoverFillColor={Colors.ACCENT}
           />
         </CustomNavLink>
-        <Observer>
-          {() => (
-            <CustomNavLink
-              to={`${Page.PORTFOLIO_MAIN}/${portfolioNavLinksStore.currentPortfolioNav}`}
-              activeClassName="selected"
-            >
-              <SvgIcon
-                {...IconPortfolio}
-                fillColor="#979797"
-                hoverFillColor={Colors.ACCENT}
-              />
-              <CustomBadge count={orderCount}>
-                <CounterOld count={orderCount} spin={spin}>{oldValue}</CounterOld>
-                <CounterNew count={orderCount} spin={spin}>{orderCount}</CounterNew>
-              </CustomBadge>
-              <OutDots spin={spin}></OutDots>
-            </CustomNavLink>
-          )}
-        </Observer>
+        <CustomNavLink
+          to={`${Page.PORTFOLIO_MAIN}/${portfolioNavLinksStore.currentPortfolioNav}`}
+          activeClassName="selected"
+        >
+          <SvgIcon
+            {...IconPortfolio}
+            fillColor="#979797"
+            hoverFillColor={Colors.ACCENT}
+          />
+          <CustomBadge count={orderCount}>
+            <CounterOld count={orderCount} spin={spin}>{oldValue}</CounterOld>
+            <CounterNew count={orderCount} spin={spin}>{orderCount}</CounterNew>
+          </CustomBadge>
+          <OutDots spin={spin}></OutDots>
+        </CustomNavLink>
         <CustomNavLink to={Page.DASHBOARD} exact activeClassName="selected">
           <SvgIcon
             {...IconChart}
@@ -119,7 +113,7 @@ const NavigationPanel = () => {
       </FlexContainer>
     </NavigationPanelWrap>
   );
-};
+});
 
 export default NavigationPanel;
 
