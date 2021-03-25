@@ -448,7 +448,7 @@ const PositionEditTP = observer(() => {
     <BackFlowLayout pageTitle={t('Take Profit')}>
       <LoaderForComponents isLoading={loading} />
       <CustomForm noValidate onSubmit={handleSubmit}>
-        {((touched.toggle && !activeSL) ||
+        {((dirty && touched.toggle && !activeSL) ||
           (dirty && values.value !== null && values.price !== null) ||
           (dirty && (values.value !== null || values.price !== null))) && (
           <FlexContainer
