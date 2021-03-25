@@ -8,12 +8,24 @@ import FaqIcon from '../../assets/images/icon-faq.png';
 import { PrimaryTextSpan } from '../../styles/TextsElements';
 import { useTranslation } from 'react-i18next';
 import { brandingLinksTranslate } from '../../constants/brandingLinksTranslate';
+import { observer } from 'mobx-react-lite';
 
 const WithdrawalFaqLink = () => {
   const { t } = useTranslation();
   const { mainAppStore } = useStores();
   return (
-    <FaqLink to={brandingLinksTranslate[mainAppStore.initModel.brandProperty].privacyPolicy} target="_blank">
+    <FaqLink
+      
+      to={{
+        pathname: t(
+          `${
+            brandingLinksTranslate[mainAppStore.initModel.brandProperty]
+              .privacyPolicy
+          }`
+        )
+      }}
+      target="_blank"
+    >
       <FlexContainer width="100%" alignItems="center">
         <FaqImg src={FaqIcon} />
         <FlexContainer flexDirection="column" padding="0 0 0 16px">
