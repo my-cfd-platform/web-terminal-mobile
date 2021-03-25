@@ -297,7 +297,7 @@ const ActivePositionsDetails: FC<Props> = observer((props) => {
               </PrimaryTextSpan>
             </FlexContainer>
 
-            {position.reservedFundsForToppingUp !== null && (
+            {position.reservedFundsForToppingUp !== 0 && (
               <FlexContainer
                 width="100%"
                 padding="8px 16px"
