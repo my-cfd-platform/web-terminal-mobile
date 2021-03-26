@@ -128,10 +128,10 @@ const PositionEditSL = observer(() => {
       const commission = position.swap + position.commission;
 
       // = Current Price + ($SL - Comission) * Сurrent Price /Invest amount *direction*multiplier
-      const posPriceByValue = currentPrice +
-      ((stopLoss - commission) *
-        currentPrice) /
-        (position.investmentAmount * direction * position.multiplier)
+      const posPriceByValue =
+        currentPrice +
+        ((stopLoss - commission) * currentPrice) /
+          (position.investmentAmount * direction * position.multiplier);
       console.log(posPriceByValue);
     }
   };
@@ -143,14 +143,14 @@ const PositionEditSL = observer(() => {
   }, [position, instrument]);
 
   /**
-   * SL from price = (Price / Current Price - 1) * Investment * Multiplier * Direction + Commissions
+   * SL from price = (Price / Opened Price - 1) * Investment * Multiplier * Direction + Commissions
    */
   const positionStopOutByPrice = useCallback(
     (slPrice: number) => {
       if (position) {
         let currentPrice, so_level, so_percent, direction, isBuy;
         isBuy = position.operation === AskBidEnum.Buy;
-        currentPrice = isBuy ? currentPriceBid() : currentPriceAsk();
+        currentPrice = position.openPrice;
         so_level = -1 * postitionStopOut();
         so_percent = (instrument?.stopOutPercent || 0) / 100;
         direction = isBuy ? 1 : -1;
@@ -345,7 +345,7 @@ const PositionEditSL = observer(() => {
     errors,
     dirty,
     setTouched,
-    isValid
+    isValid,
   } = useFormik({
     initialValues: initialValues(),
     enableReinitialize: true,
@@ -569,7 +569,7 @@ const PositionEditSL = observer(() => {
       mixpanel.track(mixpanelEvents.EDIT_SLTP_FAILED, {
         [mixapanelProps.AMOUNT]: position?.investmentAmount,
         [mixapanelProps.ACCOUNT_CURRENCY]:
-        mainAppStore.activeAccount?.currency || '',
+          mainAppStore.activeAccount?.currency || '',
         [mixapanelProps.INSTRUMENT_ID]: position?.instrument,
         [mixapanelProps.MULTIPLIER]: position?.multiplier,
         [mixapanelProps.TREND]:
@@ -586,7 +586,7 @@ const PositionEditSL = observer(() => {
           valuesToSubmit.sl !== null ? Math.abs(valuesToSubmit.sl) : null,
         [mixapanelProps.TP_VALUE]: valuesToSubmit.tp,
         [mixapanelProps.AVAILABLE_BALANCE]:
-        mainAppStore.activeAccount?.balance || 0,
+          mainAppStore.activeAccount?.balance || 0,
         [mixapanelProps.ACCOUNT_ID]: mainAppStore.activeAccount?.id || '',
         [mixapanelProps.ACCOUNT_TYPE]: mainAppStore.activeAccount?.isLive
           ? 'real'
