@@ -169,6 +169,51 @@ const PositionEditSL = observer(() => {
     [currentPriceAsk, currentPriceBid, position]
   );
 
+  const mixpanelTrackFailed = () => {
+    const valuesToSubmit: UpdateSLTP = {
+      ...values,
+      processId: getProcessId(),
+      accountId: mainAppStore.activeAccount?.id || '',
+      positionId: +id || 0,
+      sl: values.value !== null ? Math.abs(values.value) : values.price,
+      tp: values.valueTp,
+      slType:
+        values.value === null && values.price === null
+          ? null
+          : values.value !== null
+          ? TpSlTypeEnum.Currency
+          : TpSlTypeEnum.Price,
+      tpType: position?.tp ? position.tpType : null,
+    };
+    mixpanel.track(mixpanelEvents.EDIT_SLTP_FAILED, {
+      [mixapanelProps.AMOUNT]: position?.investmentAmount,
+      [mixapanelProps.ACCOUNT_CURRENCY]:
+        mainAppStore.activeAccount?.currency || '',
+      [mixapanelProps.INSTRUMENT_ID]: position?.instrument,
+      [mixapanelProps.MULTIPLIER]: position?.multiplier,
+      [mixapanelProps.TREND]:
+        position?.operation === AskBidEnum.Buy ? 'buy' : 'sell',
+      [mixapanelProps.SL_TYPE]:
+        valuesToSubmit.slType !== null
+          ? mixpanelValues[valuesToSubmit.slType]
+          : null,
+      [mixapanelProps.TP_TYPE]:
+        valuesToSubmit.tpType !== null
+          ? mixpanelValues[valuesToSubmit.tpType]
+          : null,
+      [mixapanelProps.SL_VALUE]:
+        valuesToSubmit.sl !== null ? Math.abs(valuesToSubmit.sl) : null,
+      [mixapanelProps.TP_VALUE]: valuesToSubmit.tp,
+      [mixapanelProps.AVAILABLE_BALANCE]:
+        mainAppStore.activeAccount?.balance || 0,
+      [mixapanelProps.ACCOUNT_ID]: mainAppStore.activeAccount?.id || '',
+      [mixapanelProps.ACCOUNT_TYPE]: mainAppStore.activeAccount?.isLive
+        ? 'real'
+        : 'demo',
+      [mixapanelProps.EVENT_REF]: mixpanelValues.PORTFOLIO,
+    });
+  };
+
   const validationSchema = useCallback(
     () =>
       yup.object().shape({
@@ -525,6 +570,14 @@ const PositionEditSL = observer(() => {
     }
   }, [values.value]);
 
+  const handleClickSubmit = () => {
+    handleSubmit();
+
+    if (!isValid) {
+      mixpanelTrackFailed();
+    }
+  };
+
   useEffect(() => {
     setLoading(true);
     const pos = quotesStore.activePositions.find((pos) => pos.id === +id);
@@ -549,53 +602,6 @@ const PositionEditSL = observer(() => {
     };
   }, [quotesStore.activePositions]);
 
-  useEffect(() => {
-    if (!isValid) {
-      const valuesToSubmit: UpdateSLTP = {
-        ...values,
-        processId: getProcessId(),
-        accountId: mainAppStore.activeAccount?.id || '',
-        positionId: +id || 0,
-        sl: values.value !== null ? Math.abs(values.value) : values.price,
-        tp: values.valueTp,
-        slType:
-          values.value === null && values.price === null
-            ? null
-            : values.value !== null
-            ? TpSlTypeEnum.Currency
-            : TpSlTypeEnum.Price,
-        tpType: position?.tp ? position.tpType : null,
-      };
-      mixpanel.track(mixpanelEvents.EDIT_SLTP_FAILED, {
-        [mixapanelProps.AMOUNT]: position?.investmentAmount,
-        [mixapanelProps.ACCOUNT_CURRENCY]:
-          mainAppStore.activeAccount?.currency || '',
-        [mixapanelProps.INSTRUMENT_ID]: position?.instrument,
-        [mixapanelProps.MULTIPLIER]: position?.multiplier,
-        [mixapanelProps.TREND]:
-          position?.operation === AskBidEnum.Buy ? 'buy' : 'sell',
-        [mixapanelProps.SL_TYPE]:
-          valuesToSubmit.slType !== null
-            ? mixpanelValues[valuesToSubmit.slType]
-            : null,
-        [mixapanelProps.TP_TYPE]:
-          valuesToSubmit.tpType !== null
-            ? mixpanelValues[valuesToSubmit.tpType]
-            : null,
-        [mixapanelProps.SL_VALUE]:
-          valuesToSubmit.sl !== null ? Math.abs(valuesToSubmit.sl) : null,
-        [mixapanelProps.TP_VALUE]: valuesToSubmit.tp,
-        [mixapanelProps.AVAILABLE_BALANCE]:
-          mainAppStore.activeAccount?.balance || 0,
-        [mixapanelProps.ACCOUNT_ID]: mainAppStore.activeAccount?.id || '',
-        [mixapanelProps.ACCOUNT_TYPE]: mainAppStore.activeAccount?.isLive
-          ? 'real'
-          : 'demo',
-        [mixapanelProps.EVENT_REF]: mixpanelValues.PORTFOLIO,
-      });
-    }
-  }, [isValid]);
-
   if (!mainAppStore.activeAccount || !position || loading) {
     return <LoaderForComponents isLoading={true} />;
   }
@@ -603,7 +609,7 @@ const PositionEditSL = observer(() => {
   return (
     <BackFlowLayout pageTitle={'Stop Loss'}>
       <LoaderForComponents isLoading={loading} />
-      <CustomForm noValidate onSubmit={handleSubmit}>
+      <CustomForm noValidate>
         {((dirty && touched.toggle && !activeSL) ||
           (dirty && values.value !== null && values.price !== null) ||
           (dirty && (values.value !== null || values.price !== null)) ||
@@ -618,7 +624,7 @@ const PositionEditSL = observer(() => {
             top="16px"
             zIndex="300"
           >
-            <ButtonWithoutStyles type="submit">
+            <ButtonWithoutStyles type="button" onClick={handleClickSubmit}>
               <PrimaryTextSpan fontSize="16px" color="#ffffff">
                 {t('Save')}
               </PrimaryTextSpan>
