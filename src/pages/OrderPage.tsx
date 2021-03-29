@@ -1016,6 +1016,8 @@ const MultiplierSelectValue = styled.option``;
 
 const Input = styled.input<{ autocomplete?: string }>`
   background-color: transparent;
+  margin: 0;
+  padding: 0;
   outline: none;
   border: none;
   font-size: 16px;
