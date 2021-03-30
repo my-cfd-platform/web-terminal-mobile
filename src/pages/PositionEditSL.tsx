@@ -573,7 +573,7 @@ const PositionEditSL = observer(() => {
   const handleClickSubmit = () => {
     handleSubmit();
 
-    if (!isValid) {
+    if (!isValid && dirty) {
       mixpanelTrackFailed();
     }
   };
