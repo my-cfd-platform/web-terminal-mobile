@@ -124,7 +124,9 @@ const injectInerceptors = (mainAppStore: MainAppStore) => {
           break;
 
         case 403: {
-          failedQueue = [];
+          failedQueue.forEach((prom) => {
+            prom.reject();
+          });
           mainAppStore.signOut();
           break;
         }
