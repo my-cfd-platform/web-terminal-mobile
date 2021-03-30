@@ -131,7 +131,7 @@ const PositionEditSL = observer(() => {
       const posPriceByValue =
         currentPrice +
         ((stopLoss - commission) * currentPrice) /
-          (position.investmentAmount * direction * position.multiplier);
+        (position.investmentAmount * direction * position.multiplier);
       console.log(posPriceByValue);
     }
   };
@@ -157,9 +157,9 @@ const PositionEditSL = observer(() => {
 
         const result =
           (slPrice / currentPrice - 1) *
-            position.investmentAmount *
-            position.multiplier *
-            direction +
+          position.investmentAmount *
+          position.multiplier *
+          direction +
           (position.swap + position.commission);
         console.log(+Number(result).toFixed(2));
         return +Number(result).toFixed(2);
@@ -169,7 +169,7 @@ const PositionEditSL = observer(() => {
     [currentPriceAsk, currentPriceBid, position]
   );
 
-  const mixpanelTrackFailed = () => {
+  const mixpanelTrackFailed = (errorText: string) => {
     const valuesToSubmit: UpdateSLTP = {
       ...values,
       processId: getProcessId(),
@@ -181,8 +181,8 @@ const PositionEditSL = observer(() => {
         values.value === null && values.price === null
           ? null
           : values.value !== null
-          ? TpSlTypeEnum.Currency
-          : TpSlTypeEnum.Price,
+            ? TpSlTypeEnum.Currency
+            : TpSlTypeEnum.Price,
       tpType: position?.tp ? position.tpType : null,
     };
     mixpanel.track(mixpanelEvents.EDIT_SLTP_FAILED, {
@@ -211,6 +211,8 @@ const PositionEditSL = observer(() => {
         ? 'real'
         : 'demo',
       [mixapanelProps.EVENT_REF]: mixpanelValues.PORTFOLIO,
+      [mixapanelProps.SAVE_POSITION]: activeSL,
+      [mixapanelProps.ERROR_TEXT]: errorText,
     });
   };
 
@@ -278,8 +280,8 @@ const PositionEditSL = observer(() => {
         values.value === null && values.price === null
           ? null
           : values.value !== null
-          ? TpSlTypeEnum.Currency
-          : TpSlTypeEnum.Price,
+            ? TpSlTypeEnum.Currency
+            : TpSlTypeEnum.Price,
 
       tpType: position?.tp ? position.tpType : null,
     };
@@ -378,7 +380,7 @@ const PositionEditSL = observer(() => {
         notificationStore.isSuccessfull = false;
         notificationStore.openNotification();
       }
-    } catch (error) {}
+    } catch (error) { }
   };
 
   const {
@@ -391,6 +393,7 @@ const PositionEditSL = observer(() => {
     dirty,
     setTouched,
     isValid,
+    validateForm,
   } = useFormik({
     initialValues: initialValues(),
     enableReinitialize: true,
@@ -503,8 +506,8 @@ const PositionEditSL = observer(() => {
       e.target.value === ''
         ? null
         : +e.target.value === 0
-        ? e.target.value
-        : e.target.value.replace('- ', '').replace(',', '.') || null;
+          ? e.target.value
+          : e.target.value.replace('- ', '').replace(',', '.') || null;
 
     setFieldValue(e.target.name, newValue);
 
@@ -570,11 +573,16 @@ const PositionEditSL = observer(() => {
     }
   }, [values.value]);
 
-  const handleClickSubmit = () => {
+  const handleClickSubmit = async () => {
     handleSubmit();
 
     if (!isValid && dirty) {
-      mixpanelTrackFailed();
+      const errorsObj = await validateForm();
+      const errorsValues = Object.values(errorsObj);
+      if (errorsValues.length) {
+        mixpanelTrackFailed(`${errorsValues[0]}`);
+      }
+
     }
   };
 
@@ -618,19 +626,19 @@ const PositionEditSL = observer(() => {
             values.value !== null &&
             values.price !== null &&
             values.isToppingUpActive !== position.isToppingUpActive)) && (
-          <FlexContainer
-            position="absolute"
-            right="16px"
-            top="16px"
-            zIndex="300"
-          >
-            <ButtonWithoutStyles type="button" onClick={handleClickSubmit}>
-              <PrimaryTextSpan fontSize="16px" color="#ffffff">
-                {t('Save')}
-              </PrimaryTextSpan>
-            </ButtonWithoutStyles>
-          </FlexContainer>
-        )}
+            <FlexContainer
+              position="absolute"
+              right="16px"
+              top="16px"
+              zIndex="300"
+            >
+              <ButtonWithoutStyles type="button" onClick={handleClickSubmit}>
+                <PrimaryTextSpan fontSize="16px" color="#ffffff">
+                  {t('Save')}
+                </PrimaryTextSpan>
+              </ButtonWithoutStyles>
+            </FlexContainer>
+          )}
         <FlexContainer width="100%" flexDirection="column">
           <FlexContainer
             backgroundColor="rgba(42, 45, 56, 0.5)"
@@ -777,13 +785,12 @@ const PositionEditSL = observer(() => {
               color="rgba(196, 196, 196, 0.5)"
               lineHeight="1.4"
             >
-              {`${t('If the loss for a position reaches')} ${
-                instrument?.stopOutPercent
-              }%, ${t(
-                'an additional 20% of the original investment amount will be reserved from your balance to save your position from closing. If the position takes a further loss, your available balance is reduced by 20% again and again. Once the position rises to at least'
-              )} ${instrument?.stopOutPercent}%, ${t(
-                'all previously reserved funds are returned to your balance.'
-              )}`}
+              {`${t('If the loss for a position reaches')} ${instrument?.stopOutPercent
+                }%, ${t(
+                  'an additional 20% of the original investment amount will be reserved from your balance to save your position from closing. If the position takes a further loss, your available balance is reduced by 20% again and again. Once the position rises to at least'
+                )} ${instrument?.stopOutPercent}%, ${t(
+                  'all previously reserved funds are returned to your balance.'
+                )}`}
             </PrimaryTextSpan>
           </FlexContainer>
 
