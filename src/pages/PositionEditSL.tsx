@@ -580,7 +580,6 @@ const PositionEditSL = observer(() => {
       const errorsObj = await validateForm();
       const errorsValues = Object.values(errorsObj);
       if (errorsValues.length) {
-        console.log(errorsValues[0])
         mixpanelTrackFailed(`${errorsValues[0]}`);
       }
 
