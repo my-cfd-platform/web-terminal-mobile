@@ -211,7 +211,7 @@ const PositionEditSL = observer(() => {
         ? 'real'
         : 'demo',
       [mixapanelProps.EVENT_REF]: mixpanelValues.PORTFOLIO,
-      [mixapanelProps.SAVE_POSITION]: activeSL,
+      [mixapanelProps.SAVE_POSITION]: values.isToppingUpActive,
       [mixapanelProps.ERROR_TEXT]: errorText,
     });
   };
