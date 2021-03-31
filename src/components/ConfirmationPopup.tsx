@@ -67,6 +67,7 @@ const PopupWrap = styled(FlexContainer)`
   background-color: rgba(18, 21, 28, 0.8);
   justify-content: center;
   align-items: center;
+  text-transform: none;
 `;
 
 const ModalBody = styled(FlexContainer)`

@@ -169,7 +169,7 @@ const ActiveChartPosition: FC<Props> = observer(({ position }) => {
             }
             lineHeight="14px"
           >
-            {position.operation === AskBidEnum.Buy ? t('Buy') : t('Sell')}
+            {position.operation === AskBidEnum.Buy ? 'Buy' : 'Sell'}
           </PrimaryTextSpan>
         </PositionBadge>
         <Observer>
@@ -230,6 +230,7 @@ const PositionBadge = styled(FlexContainer)<{ isBuy: boolean }>`
   text-transform: uppercase;
   line-height: 1;
   height: 24px;
+  width: 50px;
   margin-right: 10px;
   justify-content: center;
   align-items: center;

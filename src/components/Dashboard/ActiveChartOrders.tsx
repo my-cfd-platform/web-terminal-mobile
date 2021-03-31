@@ -10,7 +10,7 @@ import styled from '@emotion/styled';
 import calculateFloatingProfitAndLoss from '../../helpers/calculateFloatingProfitAndLoss';
 import { AskBidEnum } from '../../enums/AskBid';
 import { useTranslation } from 'react-i18next';
-import BuyIcon from '../../assets/svg/icon-shevron-logo-up.svg';
+import BuyIcon from '../../assets/svg/icon-buy.svg';
 import SellIcon from '../../assets/svg/icon-shevron-logo-down.svg';
 import CloseIcon from '../../assets/svg/icon-close.svg';
 import SvgIcon from '../SvgIcon';
@@ -192,7 +192,7 @@ const ActiveChartOrders: FC<Props> = observer(({ activePositions }) => {
   return (
     <FlexContainer
       justifyContent="space-between"
-      padding="0 16px"
+      padding="10px 16px"
       marginBottom="8px"
       alignItems="center"
     >
@@ -215,7 +215,7 @@ const ActiveChartOrders: FC<Props> = observer(({ activePositions }) => {
                 }
                 lineHeight="10px"
               >
-                {activePositions[0].operation === AskBidEnum.Buy ? t('Buy') : t('Sell')}
+                {activePositions[0].operation === AskBidEnum.Buy ? 'Buy' : 'Sell'}
               </PrimaryTextSpan>
             </PositionBadge>
           : <PositionsBadge>{activePositions.length}</PositionsBadge>}
