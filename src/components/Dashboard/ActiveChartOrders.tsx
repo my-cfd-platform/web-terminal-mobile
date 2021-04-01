@@ -1,4 +1,4 @@
-import React, {FC, useEffect, useState} from 'react';
+import React, {FC, useCallback, useEffect, useState} from 'react';
 import { FlexContainer } from '../../styles/FlexContainer';
 import { PrimaryTextSpan } from '../../styles/TextsElements';
 import { useStores } from '../../hooks/useStores';
@@ -26,6 +26,7 @@ import mixapanelProps from '../../constants/mixpanelProps';
 import apiResponseCodeMessages from '../../constants/apiResponseCodeMessages';
 import ActiveChartPosition from './ActiveChartPosition';
 import mixpanelValues from '../../constants/mixpanelValues';
+import { autorun } from 'mobx';
 
 interface Props {
   activePositions: PositionModelWSDTO[];
@@ -168,25 +169,44 @@ const ActiveChartOrders: FC<Props> = observer(({ activePositions }) => {
     toggleViewAll(false);
   };
 
-  useEffect(() => {
-    let newInvest = 0;
-    let newProfit = 0;
-    activePositions.forEach((item) => {
-      const isBuy = item.operation === AskBidEnum.Buy;
-      newInvest += item.investmentAmount;
-      newProfit += calculateFloatingProfitAndLoss({
-        investment: item.investmentAmount,
-        multiplier: item.multiplier,
-        costs: item.swap + item.commission,
-        side: isBuy ? 1 : -1,
-        currentPrice: isBuy
-          ? quotesStore.quotes[item.instrument].bid.c
-          : quotesStore.quotes[item.instrument].ask.c,
-        openPrice: item.openPrice,
+  const workCallback = useCallback(
+    () => {
+      let newInvest = 0;
+      let newProfit = 0;
+      activePositions.forEach((item) => {
+        const isBuy = item.operation === AskBidEnum.Buy;
+        newInvest += item.investmentAmount;
+        newProfit += calculateFloatingProfitAndLoss({
+          investment: item.investmentAmount,
+          multiplier: item.multiplier,
+          costs: item.swap + item.commission,
+          side: isBuy ? 1 : -1,
+          currentPrice: isBuy
+            ? quotesStore.quotes[item.instrument].bid.c
+            : quotesStore.quotes[item.instrument].ask.c,
+          openPrice: item.openPrice,
+        });
       });
-    });
-    setInvest(newInvest);
-    setProfit(newProfit);
+      setInvest(newInvest);
+      setProfit(newProfit);
+    },
+    [activePositions]
+  );
+
+  useEffect(() => {
+    const disposer = autorun(
+      () => {
+        workCallback();
+      },
+      { delay: 2000 }
+    );
+    return () => {
+      disposer();
+    };
+  }, [activePositions]);
+
+  useEffect(() => {
+    workCallback();
   }, [activePositions]);
   
   return (
