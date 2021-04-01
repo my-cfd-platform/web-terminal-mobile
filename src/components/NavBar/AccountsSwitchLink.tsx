@@ -14,13 +14,10 @@ const AccountsSwitchLink = observer(() => {
   const [balance, setBalance] = useState<number>(mainAppStore.balanceWas);
 
   const animateValue = (start: number, end: number) => {
-    let startTimestamp: number = start;
+    let startTimestamp: number | null = null;
     const step = (timestamp: number) => {
       if (!startTimestamp) startTimestamp = timestamp;
-      const usesTimestamp = startTimestamp > timestamp
-        ? startTimestamp + timestamp
-        : timestamp;
-      const progress = Math.min((usesTimestamp - startTimestamp) / 2000, 1);
+      const progress = Math.min((timestamp - startTimestamp) / 2000, 1);
       setBalance((progress * (end - start) + start));
       if (progress < 1) {
         window.requestAnimationFrame(step);
@@ -35,11 +32,14 @@ const AccountsSwitchLink = observer(() => {
       const newBalance = mainAppStore.accounts.find(
         (item) => item.id === mainAppStore.activeAccountId
       )?.balance || balance;
-      if (newBalance !== balance) {
+      if (newBalance !== balance && balance !== 0) {
         animateValue(
           balance,
           newBalance
         );
+      } else if (balance === 0) {
+        mainAppStore.balanceWas = newBalance;
+        setBalance(newBalance);
       }
     }
   }, [
