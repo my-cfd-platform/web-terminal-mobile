@@ -17,17 +17,20 @@ const Dashboard: FC = observer(() => {
   const { push } = useHistory();
 
   const [activePositions, setActivePositions] = useState<PositionModelWSDTO[]>(
-    quotesStore.activePositions.filter(
+    quotesStore.sortedActivePositions.filter(
       (position) => instrumentsStore.activeInstrument?.instrumentItem.id ===
         position.instrument)
   );
 
   useEffect(() => {
-    const newPositions = quotesStore.activePositions.filter(
+    const newPositions = quotesStore.sortedActivePositions.filter(
       (position) => instrumentsStore.activeInstrument?.instrumentItem.id ===
         position.instrument);
     setActivePositions(newPositions);
-  }, [quotesStore.activePositions, instrumentsStore.activeInstrument]);
+  }, [
+    instrumentsStore.activeInstrument,
+    quotesStore.sortedActivePositions
+  ]);
 
   const handleClickBuy = () => {
     push(
