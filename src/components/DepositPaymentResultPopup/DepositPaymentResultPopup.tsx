@@ -12,6 +12,8 @@ import Pages from '../../constants/Pages';
 import { PrimaryTextSpan } from '../../styles/TextsElements';
 import { useTranslation } from 'react-i18next';
 import { FULL_VH } from '../../constants/global';
+import DepositPaymentPending from './DepositPaymentPending';
+import { DepositStatusResultEnum } from '../../enums/DepositStatusResultEnum';
 
 interface Params {
   hash: string;
@@ -42,17 +44,21 @@ const DepositPaymentResultPopup: FC = () => {
 
   const switchView = () => {
     switch (queryParams.status) {
-      case 'success':
+      case DepositStatusResultEnum.SUCCESS:
         return (
           <DepositPaymentSuccess
             amount={queryParams.amount || 0}
             currencySymbol={mainAppStore.activeAccount?.symbol}
           />
         );
-      case 'fail':
+      case DepositStatusResultEnum.FAIL:
         return <DepositPaymentFail />;
-      case 'failed':
+
+      case DepositStatusResultEnum.FAILED:
         return <DepositPaymentFail />;
+
+      case DepositStatusResultEnum.PENDING:
+        return <DepositPaymentPending />;
       default:
         break;
     }
@@ -63,9 +69,10 @@ const DepositPaymentResultPopup: FC = () => {
   };
 
   if (
-    queryParams.status === 'success' ||
-    queryParams.status === 'fail' ||
-    queryParams.status === 'failed'
+    queryParams.status === DepositStatusResultEnum.SUCCESS ||
+    queryParams.status === DepositStatusResultEnum.PENDING ||
+    queryParams.status === DepositStatusResultEnum.FAILED ||
+    queryParams.status === DepositStatusResultEnum.FAIL
   ) {
     return (
       <Modal>
