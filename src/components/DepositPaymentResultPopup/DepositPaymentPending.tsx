@@ -51,14 +51,14 @@ const DepositPaymentPending: FC = () => {
       <FlexContainer
         flexDirection="column"
         alignItems="center"
-        marginBottom="112px"
+        marginBottom="40px"
       >
         <FlexContainer
           justifyContent={'center'}
           alignItems={'center'}
-          marginBottom="40px"
+          marginBottom="25px"
         >
-          <SvgIcon {...PendingImage} fillColor="#fffccc" width="100px" />
+          <SvgIcon {...PendingImage} fillColor="#fffccc" width="90px" />
         </FlexContainer>
         <FailText>{t('Pending')}</FailText>
         <PrimaryTextSpan></PrimaryTextSpan>
