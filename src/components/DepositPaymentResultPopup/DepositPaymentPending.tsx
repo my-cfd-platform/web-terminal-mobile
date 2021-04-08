@@ -59,11 +59,11 @@ const DepositPaymentPending: FC = () => {
           alignItems={'center'}
           marginBottom="25px"
         >
-          <img src={PendingImage} width={100} />
+          <img src={PendingImage} width={138} />
         </FlexContainer>
         <FailText>{t('Pending')}</FailText>
         <PrimaryTextSpan></PrimaryTextSpan>
-        <FlexContainer flexDirection="column" padding="4px" >
+        <FlexContainer flexDirection="column" padding="4px">
           <PrimaryTextSpan
             fontSize="13px"
             color="rgba(255, 255, 255, 0.4)"
@@ -92,10 +92,7 @@ const DepositPaymentPending: FC = () => {
         </FlexContainer>
       </FlexContainer>
       <FlexContainer padding="0 16px" width="100%">
-        <OtherMethodsButton
-          href={Page.DASHBOARD}
-          onClick={replaceCurrentState}
-        >
+        <OtherMethodsButton href={Page.DASHBOARD} onClick={replaceCurrentState}>
           {t('Back to Trading')}
         </OtherMethodsButton>
       </FlexContainer>
