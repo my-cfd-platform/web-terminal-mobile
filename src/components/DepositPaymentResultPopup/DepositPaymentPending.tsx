@@ -1,7 +1,7 @@
 import React, { FC, useEffect, useState } from 'react';
 import styled from '@emotion/styled';
 
-import PendingImage from '../../assets/svg/icon-attention.svg';
+import PendingImage from '../../assets/images/icon-attention.png';
 import { FlexContainer } from '../../styles/FlexContainer';
 import { useHistory } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
@@ -52,17 +52,18 @@ const DepositPaymentPending: FC = () => {
         flexDirection="column"
         alignItems="center"
         marginBottom="40px"
+        width="100%"
       >
         <FlexContainer
           justifyContent={'center'}
           alignItems={'center'}
           marginBottom="25px"
         >
-          <SvgIcon {...PendingImage} fillColor="#fffccc" width="90px" />
+          <img src={PendingImage} width={100} />
         </FlexContainer>
         <FailText>{t('Pending')}</FailText>
         <PrimaryTextSpan></PrimaryTextSpan>
-        <FlexContainer flexDirection="column" padding="16px">
+        <FlexContainer flexDirection="column" padding="4px" >
           <PrimaryTextSpan
             fontSize="13px"
             color="rgba(255, 255, 255, 0.4)"
@@ -92,10 +93,10 @@ const DepositPaymentPending: FC = () => {
       </FlexContainer>
       <FlexContainer padding="0 16px" width="100%">
         <OtherMethodsButton
-          href={`${API_DEPOSIT_STRING}/?${parsedParams}`}
+          href={Page.DASHBOARD}
           onClick={replaceCurrentState}
         >
-          {t('Back to Deposit')}
+          {t('Back to Trading')}
         </OtherMethodsButton>
       </FlexContainer>
     </>
