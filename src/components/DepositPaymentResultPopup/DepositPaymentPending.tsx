@@ -58,6 +58,7 @@ const DepositPaymentPending: FC = () => {
           justifyContent={'center'}
           alignItems={'center'}
           marginBottom="25px"
+          height="138px"
         >
           <img src={PendingImage} width={138} />
         </FlexContainer>

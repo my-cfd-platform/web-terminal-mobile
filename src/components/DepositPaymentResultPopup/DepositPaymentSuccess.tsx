@@ -15,7 +15,7 @@ interface Props {
   currencySymbol?: string;
 }
 
-const DepositPaymentSuccess: FC<Props> = props => {
+const DepositPaymentSuccess: FC<Props> = (props) => {
   const { amount, currencySymbol } = props;
   const { push } = useHistory();
   const { t } = useTranslation();
@@ -23,11 +23,16 @@ const DepositPaymentSuccess: FC<Props> = props => {
   useEffect(() => {
     mixpanel.track(mixpanelEvents.DEPOSIT_PAGE_SUCCESS);
   }, []);
-  
+
   return (
     <>
       <FlexContainer flexDirection="column" alignItems="center">
-        <FlexContainer justifyContent={'center'} alignItems={'center'} marginBottom="40px">
+        <FlexContainer
+          justifyContent={'center'}
+          alignItems={'center'}
+          marginBottom="40px"
+          height="138px"
+        >
           <img src={SuccessImage} width={138} />
         </FlexContainer>
         <SuccessText>{t('Success')}</SuccessText>

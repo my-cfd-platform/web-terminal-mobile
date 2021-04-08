@@ -33,11 +33,10 @@ const DepositPaymentFail: FC = () => {
     userProfileStore.userProfileId,
   ]);
 
-
   useEffect(() => {
     mixpanel.track(mixpanelEvents.DEPOSIT_PAGE_FAILED);
   }, []);
-  
+
   const urlParams = new URLSearchParams();
   const { t } = useTranslation();
 
@@ -56,6 +55,7 @@ const DepositPaymentFail: FC = () => {
           justifyContent={'center'}
           alignItems={'center'}
           marginBottom="40px"
+          height="138px"
         >
           <img src={FailImage} width={138} />
         </FlexContainer>
