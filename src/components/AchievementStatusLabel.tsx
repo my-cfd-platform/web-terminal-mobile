@@ -70,7 +70,7 @@ const AchievementStatusLabel = observer(() => {
           lineHeight="1"
           textTransform="uppercase"
         >
-          {mainAppStore.activeAccount?.achievementStatus}
+          {mainAppStore.activeAccount?.achievementStatus === AchievementStatus.PLATINUM ? AchievementStatus.VIP : mainAppStore.activeAccount?.achievementStatus}
         </PrimaryTextSpan>
       </Label>
     </Wrap>
