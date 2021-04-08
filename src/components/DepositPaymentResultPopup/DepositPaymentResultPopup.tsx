@@ -134,7 +134,7 @@ const PopupWrap = styled(FlexContainer)`
   border-radius: 8px;
   box-sizing: border-box;
   background-color: #1c1f26;
-  padding: 72px 32px 44px;
+  padding: 72px 16px 44px;
   justify-content: center;
 `;
 
