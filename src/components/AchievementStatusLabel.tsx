@@ -20,7 +20,7 @@ const AchievementStatusLabel = observer(() => {
   const { mainAppStore } = useStores();
 
   const labelBackground = useCallback(() => {
-    const key = mainAppStore.activeAccount?.achievementStatus;
+    const key = mainAppStore.accounts.find((acc) => acc.isLive)?.achievementStatus;
     switch (key) {
       case AchievementStatus.SILVER:
         return SilverBG;
