@@ -34,7 +34,7 @@ const AchievementStatusLabel = observer(() => {
   }, [mainAppStore.accounts]);
 
   const labelColor = useCallback(() => {
-    const key = mainAppStore.activeAccount?.achievementStatus;
+    const key = mainAppStore.accounts.find((acc) => acc.isLive)?.achievementStatus;
     switch (key) {
       case AchievementStatus.SILVER:
         return '#C5DDF1';
@@ -48,8 +48,8 @@ const AchievementStatusLabel = observer(() => {
   }, [mainAppStore.accounts]);
 
   if (
-    !mainAppStore.activeAccount?.achievementStatus ||
-    !listStatus.includes(mainAppStore.activeAccount?.achievementStatus)
+    !mainAppStore.accounts.find((acc) => acc.isLive)?.achievementStatus ||
+    !listStatus.includes(mainAppStore.accounts.find((acc) => acc.isLive)?.achievementStatus || '')
   ) {
     return null;
   }
@@ -70,7 +70,7 @@ const AchievementStatusLabel = observer(() => {
           lineHeight="1"
           textTransform="uppercase"
         >
-          {mainAppStore.activeAccount?.achievementStatus === AchievementStatus.PLATINUM ? AchievementStatus.VIP : mainAppStore.activeAccount?.achievementStatus}
+          {mainAppStore.accounts.find((acc) => acc.isLive)?.achievementStatus === AchievementStatus.PLATINUM ? AchievementStatus.VIP : mainAppStore.accounts.find((acc) => acc.isLive)?.achievementStatus}
         </PrimaryTextSpan>
       </Label>
     </Wrap>
