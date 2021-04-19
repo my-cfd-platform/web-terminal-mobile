@@ -26,6 +26,7 @@ const Page = {
   ACCOUNT_CHANGE_PASSWORD: '/account-change-password',
   ACCOUNT_VERIFICATION: '/account-verification',
   PAYMENTS: '/payments/:status',
+  ONBOARDING: '/onboarding',
 
   ABOUT_US: 'https://www.monfex.com/why-us',
   FAQ: '#',

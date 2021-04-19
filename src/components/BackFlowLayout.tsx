@@ -15,6 +15,7 @@ interface Props {
   handleGoBack?: any;
   type?: string;
   backLink?: string;
+  onBoarding?: boolean;
 }
 
 const BackFlowLayout: FC<Props> = ({
@@ -23,6 +24,7 @@ const BackFlowLayout: FC<Props> = ({
   backLink,
   handleGoBack,
   type,
+  onBoarding,
 }) => {
   const { goBack, push } = useHistory();
   const useIcon = type === 'close' ? IconClose : IconBack;
@@ -54,13 +56,14 @@ const BackFlowLayout: FC<Props> = ({
             hoverFillColor="#ffffff"
           />
         </BackButton>
-        <PrimaryTextSpan
+        <PageTitle
           fontSize="16px"
           color="#ffffff"
           textTransform="capitalize"
+          className={onBoarding ? 'onboarding_title' : ''}
         >
           {pageTitle}
-        </PrimaryTextSpan>
+        </PageTitle>
       </PageHeaderWrap>
 
       <PageContainerWrap>{children}</PageContainerWrap>
@@ -91,4 +94,13 @@ const PageHeaderWrap = styled(FlexContainer)`
 
 const PageContainerWrap = styled(FlexContainer)`
   height: calc(100% - 72px);
+`;
+
+const PageTitle = styled(PrimaryTextSpan)`
+  &.onboarding_title {
+    text-transform: lowercase;
+    &::first-letter {
+      color: #00ffdd;
+    }
+  }
 `;

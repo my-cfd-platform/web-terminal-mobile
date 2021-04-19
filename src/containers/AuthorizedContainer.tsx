@@ -43,7 +43,8 @@ const AuthorizedContainer: FC = ({ children }) => {
     Page.SL_EDIT,
     Page.TP_EDIT,
     Page.ACCOUNT_BALANCE_HISTORY,
-    Page.PHONE_VERIFICATION
+    Page.PHONE_VERIFICATION,
+    Page.ONBOARDING
   ]);
 
   const { push } = useHistory();
