@@ -68,17 +68,24 @@ export class QuotesStore implements IQuotesStore {
   }
 
   @computed
+  get totalReservedFoundsForToppingUp() {
+    let value: number = 0;
+    this.activePositions.map((pos) => value += pos.reservedFundsForToppingUp);
+    return value;
+  }
+
+  @computed
   get total() {
     return (
       this.profit +
       (this.rootStore.mainAppStore.activeAccount?.balance || 0) +
-      this.invest
+      this.invest + this.totalReservedFoundsForToppingUp
     );
   }
 
   @computed
   get totalEquity() {
-    return this.profit + this.invest;
+    return this.profit + this.invest + this.totalReservedFoundsForToppingUp;
   }
 
   // TODO: move to sorting store?
