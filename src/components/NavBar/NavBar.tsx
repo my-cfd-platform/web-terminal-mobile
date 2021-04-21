@@ -36,6 +36,22 @@ const NavBar = observer(() => {
     mainAppStore.accounts,
     userProfileStore.userProfileId,
   ]);
+
+  useEffect(() => {
+    if (
+      mainAppStore.paramsDeposit &&
+      mainAppStore.refreshToken &&
+      parsedParams
+    ) {
+      mainAppStore.setParamsDeposit(false);
+      redirectWithUpdateRefreshToken(API_DEPOSIT_STRING, parsedParams)
+    }
+  }, [
+    mainAppStore.refreshToken,
+    mainAppStore.paramsDeposit,
+    parsedParams
+  ])
+
   return (
     <FlexContainer
       width="100vw"

@@ -299,4 +299,9 @@ export class InstrumentsStore implements ContextProps {
       .sort((a, b) => a.instrumentItem.weight - b.instrumentItem.weight)
       .map((item) => item.instrumentItem);
   }
+
+  @action
+  setActiveInstrumentGroupId = (groupId: string) => {
+    this.activeInstrumentGroupId = groupId;
+  };
 }
