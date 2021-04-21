@@ -4,6 +4,7 @@ import { useStores } from '../../hooks/useStores';
 import { AskBidEnum } from '../../enums/AskBid';
 import { PositionModelWSDTO } from '../../types/Positions';
 import { autorun } from 'mobx';
+import { logger } from '../../helpers/ConsoleLoggerTool';
 
 const noop = (value: null | number) => {};
 
@@ -67,8 +68,13 @@ const EquityPnL: FC<Props> = ({ position, handlePnL = noop }) => {
 
   return statePnL !== null ? (
     <>
+      {logger(`Equity: ${position.reservedFundsForToppingUp}`)}
       {mainAppStore.activeAccount?.symbol}
-      {Math.abs(statePnL + position.investmentAmount).toFixed(2)}
+      {Math.abs(
+        statePnL +
+          position.investmentAmount +
+          position.reservedFundsForToppingUp
+      ).toFixed(2)}
     </>
   ) : null;
 };
