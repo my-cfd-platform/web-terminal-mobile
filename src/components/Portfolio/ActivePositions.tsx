@@ -6,16 +6,34 @@ import EmptyListText from '../EmptyListText';
 import { FlexContainer } from '../../styles/FlexContainer';
 import { observer } from 'mobx-react-lite';
 import { PortfolioTabEnum } from '../../enums/PortfolioTabEnum';
+import Page from '../../constants/Pages';
+import { useHistory } from 'react-router-dom';
 
 const ActivePositions = observer(() => {
   const { t } = useTranslation();
+  const { push } = useHistory();
 
-  const { quotesStore, historyStore, portfolioNavLinksStore } = useStores();
+  const {
+    quotesStore,
+    historyStore,
+    portfolioNavLinksStore,
+    mainAppStore
+  } = useStores();
 
   useEffect(() => {
     historyStore.clearPositionsHistory();
     portfolioNavLinksStore.setPortfolioNavLink(PortfolioTabEnum.ACTIVE);
   }, []);
+
+  useEffect(() => {
+    if (mainAppStore.paramsPortfolioActive && quotesStore.activePositions.length) {
+      push(`${Page.PORTFOLIO_MAIN}/active/${mainAppStore.paramsPortfolioActive}`);
+      mainAppStore.setParamsPortfolioActive(null);
+    }
+  }, [
+    mainAppStore.paramsPortfolioActive,
+    quotesStore.activePositions
+  ]);
 
   return (
     <>

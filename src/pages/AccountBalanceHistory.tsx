@@ -13,8 +13,9 @@ import BalanceHistoryItem from '../components/BalanceHistoryItem';
 import moment from 'moment';
 import { FULL_VH } from '../constants/global';
 import LoaderForComponents from '../components/LoaderForComponents';
+import { observer } from 'mobx-react-lite';
 
-const AccountBalanceHistory = () => {
+const AccountBalanceHistory = observer(() => {
   const { push } = useHistory();
   const { t } = useTranslation();
   const { mainAppStore, dateRangeAccountBalanceStore } = useStores();
@@ -72,8 +73,6 @@ const AccountBalanceHistory = () => {
       fetchBalanceHistory().finally(() => {
         setIsLoading(false);
       });
-    } else {
-      push(Page.ACCOUNT_PROFILE);
     }
   }, [mainAppStore.activeAccount]);
 
@@ -109,6 +108,6 @@ const AccountBalanceHistory = () => {
       </FlexContainer>
     </BackFlowLayout>
   );
-};
+});
 
 export default AccountBalanceHistory;

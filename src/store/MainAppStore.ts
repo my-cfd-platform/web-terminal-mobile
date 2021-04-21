@@ -120,6 +120,18 @@ export class MainAppStore implements MainAppStoreProps {
   @observable balanceWas: number = 0;
   websocketConnectionTries = 0;
 
+  paramsAsset: string | null = null;
+  paramsMarkets: string | null = null;
+  paramsPortfolioTab: string | null = null;
+  paramsPortfolioActive: string | null = null;
+  paramsPortfolioOrder: string | null = null;
+  paramsPortfolioHistory: string | null | undefined = undefined;
+  paramsDeposit: boolean = false;
+  paramsKYC: boolean = false;
+  paramsWithdraw: boolean = false;
+  paramsSecurity: boolean = false;
+  paramsBalanceHistory: boolean = false;
+
   constructor(rootStore: RootStore) {
     this.rootStore = rootStore;
     this.token = localStorage.getItem(LOCAL_STORAGE_TOKEN_KEY) || '';
@@ -553,6 +565,19 @@ export class MainAppStore implements MainAppStoreProps {
     this.activeAccountId = '';
     this.rootStore.withdrawalStore.clearStore();
     this.balanceWas = 0;
+    if (this.activeAccount) {
+      this.setParamsAsset(null);
+      this.setParamsMarkets(null);
+      this.setParamsPortfolioActive(null);
+      this.setParamsPortfolioOrder(null);
+      this.setParamsPortfolioHistory(null);
+      this.setParamsPortfolioTab(null);
+      this.setParamsDeposit(false);
+      this.setParamsKYC(false);
+      this.setParamsWithdraw(false);
+      this.setParamsBalanceHistory(false);
+      this.setParamsSecurity(false);
+    }
   };
 
   setTokenHandler = (token: string) => {
@@ -576,6 +601,61 @@ export class MainAppStore implements MainAppStoreProps {
   setLoading = (on: boolean) => {
     this.isLoading = on;
   }
+
+  @action
+  setParamsAsset = (params: string | null) => {
+    this.paramsAsset = params;
+  };
+
+  @action
+  setParamsMarkets = (params: string | null) => {
+    this.paramsMarkets = params;
+  };
+
+  @action
+  setParamsPortfolioTab = (params: string | null) => {
+    this.paramsPortfolioTab = params;
+  };
+
+  @action
+  setParamsPortfolioActive = (params: string | null) => {
+    this.paramsPortfolioActive = params;
+  };
+
+  @action
+  setParamsPortfolioOrder = (params: string | null) => {
+    this.paramsPortfolioOrder = params;
+  };
+
+  @action
+  setParamsPortfolioHistory = (params: string | null | undefined) => {
+    this.paramsPortfolioHistory = params;
+  };
+
+  @action
+  setParamsDeposit = (params: boolean) => {
+    this.paramsDeposit = params;
+  };
+
+  @action
+  setParamsKYC = (params: boolean) => {
+    this.paramsKYC = params;
+  };
+
+  @action
+  setParamsWithdraw = (params: boolean) => {
+    this.paramsWithdraw = params;
+  };
+
+  @action
+  setParamsSecurity = (params: boolean) => {
+    this.paramsSecurity = params;
+  };
+
+  @action
+  setParamsBalanceHistory = (params: boolean) => {
+    this.paramsBalanceHistory = params;
+  };
 
   @computed
   get sortedAccounts() {

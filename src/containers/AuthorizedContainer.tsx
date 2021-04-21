@@ -103,6 +103,52 @@ const AuthorizedContainer: FC = ({ children }) => {
   }, []);
 
   useEffect(() => {
+    // TODO Think about realization
+    if (mainAppStore.paramsPortfolioTab) {
+      push(`${Page.PORTFOLIO_MAIN}/${mainAppStore.paramsPortfolioTab}`);
+      mainAppStore.setParamsPortfolioTab(null);
+    }
+    if (mainAppStore.paramsPortfolioActive) {
+      push(`${Page.PORTFOLIO_MAIN}/active`);
+    }
+    if (mainAppStore.paramsPortfolioOrder) {
+      push(`${Page.PORTFOLIO_MAIN}/pending/${mainAppStore.paramsPortfolioOrder}`);
+      mainAppStore.setParamsPortfolioOrder(null);
+    }
+    if (mainAppStore.paramsPortfolioHistory) {
+      push(`${Page.PORTFOLIO_MAIN}/closed/${mainAppStore.paramsPortfolioHistory}`);
+      mainAppStore.setParamsPortfolioHistory(null);
+    }
+    if (mainAppStore.paramsKYC) {
+      push(Page.ACCOUNT_VERIFICATION);
+      mainAppStore.setParamsKYC(false);
+    }
+    if (mainAppStore.paramsWithdraw) {
+      push(Page.WITHDRAW_LIST);
+      mainAppStore.setParamsWithdraw(false);
+    }
+    if (mainAppStore.paramsBalanceHistory) {
+      push(Page.ACCOUNT_BALANCE_HISTORY);
+      mainAppStore.setParamsBalanceHistory(false);
+    }
+    if (mainAppStore.paramsSecurity) {
+      push(Page.ACCOUNT_CHANGE_PASSWORD);
+      mainAppStore.setParamsSecurity(false);
+    }
+    if (mainAppStore.paramsMarkets) {
+      push(Page.MARKETS);
+    }
+  }, [
+    mainAppStore.activeAccount,
+    mainAppStore.paramsMarkets,
+    mainAppStore.paramsPortfolioTab,
+    mainAppStore.paramsDeposit,
+    mainAppStore.paramsPortfolioActive,
+    mainAppStore.paramsPortfolioHistory,
+    mainAppStore.paramsPortfolioOrder
+  ]);
+
+  useEffect(() => {
     localStorage.setItem(LAST_PAGE_VISITED, location.pathname);
   }, [location.pathname]);
 
