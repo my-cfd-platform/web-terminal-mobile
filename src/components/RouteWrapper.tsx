@@ -42,7 +42,9 @@ const RouteWrapper: FC<Props> = observer((props) => {
         push(Page.DASHBOARD);
       }
     } else {
-      mainAppStore.setParamsPortfolioHistory(null);
+      if (mainAppStore.paramsPortfolioHistory === undefined) {
+        mainAppStore.setParamsPortfolioHistory(null);
+      }
     }
   }, []);
 

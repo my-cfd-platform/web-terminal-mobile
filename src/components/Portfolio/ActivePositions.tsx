@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useStores } from '../../hooks/useStores';
 import ActivePositionItem from './ActivePositionItem';
@@ -6,12 +6,12 @@ import EmptyListText from '../EmptyListText';
 import { FlexContainer } from '../../styles/FlexContainer';
 import { observer } from 'mobx-react-lite';
 import { PortfolioTabEnum } from '../../enums/PortfolioTabEnum';
-import Page from '../../constants/Pages';
 import { useHistory } from 'react-router-dom';
 
 const ActivePositions = observer(() => {
   const { t } = useTranslation();
   const { push } = useHistory();
+  const positionRef = useRef<HTMLDivElement>(document.createElement('div'));
 
   const {
     quotesStore,
@@ -27,7 +27,7 @@ const ActivePositions = observer(() => {
 
   useEffect(() => {
     if (mainAppStore.paramsPortfolioActive && quotesStore.activePositions.length) {
-      push(`${Page.PORTFOLIO_MAIN}/active/${mainAppStore.paramsPortfolioActive}`);
+      positionRef.current.scrollIntoView();
       mainAppStore.setParamsPortfolioActive(null);
     }
   }, [
@@ -43,6 +43,12 @@ const ActivePositions = observer(() => {
             key={item.id}
             marginBottom="2px"
             backgroundColor="rgba(42, 45, 56, 0.5)"
+            ref={
+              mainAppStore.paramsPortfolioActive !== null &&
+              item.id === parseInt(mainAppStore.paramsPortfolioActive) ?
+                positionRef :
+                null
+            }
           >
             <ActivePositionItem position={item} />
           </FlexContainer>

@@ -133,7 +133,10 @@ const AccountChangePassword: FC = () => {
   };
 
   return (
-    <BackFlowLayout pageTitle={t('Change password')}>
+    <BackFlowLayout
+      backLink={Page.ACCOUNT_PROFILE}
+      pageTitle={t('Change password')}
+    >
       <FlexContainer
         width="100%"
         height="100%"

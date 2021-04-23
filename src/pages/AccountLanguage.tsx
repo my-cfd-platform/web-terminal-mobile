@@ -67,7 +67,10 @@ const AccountLanguage = () => {
   };
 
   return (
-    <BackFlowLayout pageTitle={t('Choose language')}>
+    <BackFlowLayout
+      backLink={Page.ACCOUNT_PROFILE}
+      pageTitle={t('Choose language')}
+    >
       <FlexContainer
         flexDirection="column"
         justifyContent="space-between"
