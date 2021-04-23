@@ -112,12 +112,10 @@ const AuthorizedContainer: FC = ({ children }) => {
       push(`${Page.PORTFOLIO_MAIN}/active`);
     }
     if (mainAppStore.paramsPortfolioOrder) {
-      push(`${Page.PORTFOLIO_MAIN}/pending/${mainAppStore.paramsPortfolioOrder}`);
-      mainAppStore.setParamsPortfolioOrder(null);
+      push(`${Page.PORTFOLIO_MAIN}/pending`);
     }
     if (mainAppStore.paramsPortfolioHistory) {
-      push(`${Page.PORTFOLIO_MAIN}/closed/${mainAppStore.paramsPortfolioHistory}`);
-      mainAppStore.setParamsPortfolioHistory(null);
+      push(`${Page.PORTFOLIO_MAIN}/closed`);
     }
     if (mainAppStore.paramsKYC) {
       push(Page.ACCOUNT_VERIFICATION);

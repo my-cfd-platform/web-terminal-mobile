@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useStores } from '../../hooks/useStores';
 import { useTranslation } from 'react-i18next';
 import { observer } from 'mobx-react-lite';
@@ -12,8 +12,24 @@ import { PortfolioTabEnum } from '../../enums/PortfolioTabEnum';
 const ClosedPositions = observer(() => {
   const { mainAppStore, historyStore, portfolioNavLinksStore } = useStores();
   const { t } = useTranslation();
+  const positionRef = useRef<HTMLDivElement>(document.createElement('div'));
 
   const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    if (
+      mainAppStore.setParamsPortfolioHistory &&
+      historyStore.positionsHistoryReport.positionsHistory.length &&
+      !isLoading
+    ) {
+      positionRef.current.scrollIntoView();
+      mainAppStore.setParamsPortfolioHistory(null);
+    }
+  }, [
+    mainAppStore.paramsPortfolioActive,
+    historyStore.positionsHistoryReport.positionsHistory,
+    isLoading
+  ]);
 
   useEffect(() => {
     if (mainAppStore.activeAccountId) {
@@ -55,6 +71,13 @@ const ClosedPositions = observer(() => {
                     key={item.id}
                     marginBottom="2px"
                     backgroundColor="rgba(42, 45, 56, 0.5)"
+                    ref={
+                      mainAppStore.paramsPortfolioHistory !== null &&
+                      mainAppStore.paramsPortfolioHistory !== undefined &&
+                      item.id === parseInt(mainAppStore.paramsPortfolioHistory) ?
+                        positionRef :
+                        null
+                    }
                   >
                     <ClosedPositionItem
                       key={item.id}

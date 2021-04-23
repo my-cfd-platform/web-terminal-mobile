@@ -67,7 +67,10 @@ const AccountsPage = () => {
   );
 
   return (
-    <BackFlowLayout pageTitle={t('Select Account')}>
+    <BackFlowLayout
+      backLink={Page.DASHBOARD}
+      pageTitle={t('Select Account')}
+    >
       <FlexContainer flexDirection="column" width="100%">
         {mainAppStore.accounts.map((item) => (
           <Fragment key={item.id}>

@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, {useEffect, useRef} from 'react';
 import styled from '@emotion/styled';
 import { FlexContainer } from '../../styles/FlexContainer';
 import { useStores } from '../../hooks/useStores';
@@ -14,9 +14,15 @@ const MarketsGroupList = observer(() => {
     mainAppStore
   } = useStores();
 
+  const activeAssetRef = useRef<HTMLButtonElement>(document.createElement('button'));
+
   const setActiveInstrumentGroup = (groupId: string) => () => {
     instrumentsStore.activeInstrumentGroupId = groupId;
   };
+
+  useEffect(() => {
+    activeAssetRef.current.scrollIntoView();
+  }, [instrumentsStore.activeInstrumentGroupId]);
 
   useEffect(() => {
     if (
@@ -45,6 +51,10 @@ const MarketsGroupList = observer(() => {
                 key={item.id}
                 isActive={instrumentsStore.activeInstrumentGroupId === item.id}
                 onClick={setActiveInstrumentGroup(item.id)}
+                ref={instrumentsStore.activeInstrumentGroupId === item.id
+                  ? activeAssetRef
+                  : null
+                }
               >
                 <PrimaryTextSpan
                   color={
