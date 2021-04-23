@@ -1,4 +1,4 @@
-import React, {useCallback, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import { FlexContainer } from '../styles/FlexContainer';
 import { PrimaryTextSpan } from '../styles/TextsElements';
 import BackFlowLayout from '../components/BackFlowLayout';
@@ -8,10 +8,15 @@ import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
 import * as firstStep from '../assets/lotties/stepOne.json';
 import Lottie from 'react-lottie';
+import API from '../helpers/API';
+import {useStores} from "../hooks/useStores";
+import {OnBoardingInfo} from "../types/OnBoardingTypes";
+import LoaderForComponents from "../components/LoaderForComponents";
 
 const Onboarding = () => {
   const { t } = useTranslation();
   const { push } = useHistory();
+  const { badRequestPopupStore } = useStores();
 
   const getLottieOptions = (step: any) => {
     return {
@@ -24,6 +29,21 @@ const Onboarding = () => {
     };
   };
   const [actualStep, setActualStep] = useState<number>(1);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [actualStepInfo, setActualStepInfo] = useState<OnBoardingInfo | null>(null);
+
+  const getInfoByStep = async (step: number) => {
+    setLoading(true);
+    try {
+      const response = await API.getOnBoardingInfoByStep(step, 0);
+      setActualStepInfo(response);
+      setLoading(false);
+    } catch (error) {
+      badRequestPopupStore.openModal();
+      badRequestPopupStore.setMessage(error);
+    }
+
+  };
 
   const handleChangeStep = (nextStep: number) => () => {
     setActualStep(nextStep);
@@ -100,6 +120,10 @@ const Onboarding = () => {
     setActualStep(8);
   };
 
+  useEffect(() => {
+    getInfoByStep(1);
+  }, []);
+
   return (
     <BackFlowLayout
       onBoarding={true}
@@ -107,24 +131,27 @@ const Onboarding = () => {
       pageTitle={`${actualStep} / 8 ${t('steps')}`}
       handleGoBack={closeOnBoarding}
     >
-      <FlexContainer
-        flexDirection="column"
-        justifyContent="space-between"
-        width="100%"
-        height="100%"
-      >
-        <FlexContainer flexDirection="column" width="100%">
-          {tabByStep()}
-        </FlexContainer>
-        <FlexContainer
+      {loading
+        ? <LoaderForComponents isLoading={loading} />
+        : <FlexContainer
+          flexDirection="column"
+          justifyContent="space-between"
           width="100%"
-          alignItems="center"
-          justifyContent="center"
-          padding="0 16px 40px"
+          height="100%"
         >
-          {buttonByStep()}
+          <FlexContainer flexDirection="column" width="100%">
+            {tabByStep()}
+          </FlexContainer>
+          <FlexContainer
+            width="100%"
+            alignItems="center"
+            justifyContent="center"
+            padding="0 16px 40px"
+          >
+            {buttonByStep()}
+          </FlexContainer>
         </FlexContainer>
-      </FlexContainer>
+      }
     </BackFlowLayout>
   );
 };
