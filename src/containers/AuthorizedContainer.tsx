@@ -104,6 +104,15 @@ const AuthorizedContainer: FC = ({ children }) => {
   }, []);
 
   useEffect(() => {
+    if (mainAppStore.isDemoRealPopup && !mainAppStore.isVerification) {
+      push(Page.ONBOARDING);
+    }
+  }, [
+    mainAppStore.isDemoRealPopup,
+    mainAppStore.isVerification
+  ]);
+
+  useEffect(() => {
     localStorage.setItem(LAST_PAGE_VISITED, location.pathname);
   }, [location.pathname]);
 
@@ -140,11 +149,11 @@ const AuthorizedContainer: FC = ({ children }) => {
         {() => <>{serverErrorPopupStore.isActive && <ServerErrorPopup />}</>}
       </Observer>
       <Observer>{() => <NetworkErrorPopup></NetworkErrorPopup>}</Observer>
-      <Observer>
-        {() => (
-          <>{(mainAppStore.isDemoRealPopup && !mainAppStore.isVerification) && <DemoRealPopup></DemoRealPopup>}</>
-        )}
-      </Observer>
+      {/*<Observer>*/}
+      {/*  {() => (*/}
+      {/*    <>{(mainAppStore.isDemoRealPopup && !mainAppStore.isVerification) && <DemoRealPopup></DemoRealPopup>}</>*/}
+      {/*  )}*/}
+      {/*</Observer>*/}
       {showNavbarAndNav && <NavBar />}
       <FlexContainer
         height={
