@@ -108,15 +108,6 @@ const AuthorizedContainer: FC = ({ children }) => {
       push(`${Page.PORTFOLIO_MAIN}/${mainAppStore.paramsPortfolioTab}`);
       mainAppStore.setParamsPortfolioTab(null);
     }
-    if (mainAppStore.paramsPortfolioActive) {
-      push(`${Page.PORTFOLIO_MAIN}/active`);
-    }
-    if (mainAppStore.paramsPortfolioOrder) {
-      push(`${Page.PORTFOLIO_MAIN}/pending`);
-    }
-    if (mainAppStore.paramsPortfolioHistory) {
-      push(`${Page.PORTFOLIO_MAIN}/closed`);
-    }
     if (mainAppStore.paramsKYC) {
       push(Page.ACCOUNT_VERIFICATION);
       mainAppStore.setParamsKYC(false);
@@ -140,10 +131,7 @@ const AuthorizedContainer: FC = ({ children }) => {
     mainAppStore.activeAccount,
     mainAppStore.paramsMarkets,
     mainAppStore.paramsPortfolioTab,
-    mainAppStore.paramsDeposit,
-    mainAppStore.paramsPortfolioActive,
-    mainAppStore.paramsPortfolioHistory,
-    mainAppStore.paramsPortfolioOrder
+    mainAppStore.paramsDeposit
   ]);
 
   useEffect(() => {

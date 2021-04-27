@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { FlexContainer } from '../../styles/FlexContainer';
 import SvgIcon from '../SvgIcon';
 import IconLine from '../../assets/svg_no_compress/icon-line-gray.svg';
@@ -12,7 +12,25 @@ import { SeriesStyle } from '../../vendor/charting_library/charting_library';
 import { observer } from 'mobx-react-lite';
 
 const TimeScaleWrapper = observer(() => {
-  const { instrumentsStore } = useStores();
+  const { instrumentsStore, mainAppStore } = useStores();
+
+  useEffect(() => {
+    if (mainAppStore.paramsAsset && instrumentsStore.activeInstruments.length) {
+      const checkAvailable = mainAppStore.paramsAsset;
+      const lastActive = checkAvailable &&
+      instrumentsStore.instruments.find(instrument => instrument.instrumentItem.id === checkAvailable)
+        ? checkAvailable
+        : false;
+      if (lastActive) {
+        instrumentsStore.switchInstrument(lastActive);
+      }
+      mainAppStore.setParamsAsset(null);
+    }
+  }, [
+    mainAppStore.paramsAsset,
+    instrumentsStore.instruments,
+    instrumentsStore.activeInstruments
+  ]);
 
   const renderChartTypeIcon = () => {
     switch (instrumentsStore.activeInstrument?.chartType) {

@@ -48,15 +48,7 @@ const MainApp: FC = () => {
           t(apiResponseCodeMessages[OperationApiResponseCodes.TechnicalError])
         );
       }
-      const checkAvailable = mainAppStore.paramsAsset;
-      const lastActive = checkAvailable &&
-      instrumentsStore.instruments.find(instrument => instrument.instrumentItem.id === checkAvailable)
-        ? checkAvailable
-        : false;
-      await instrumentsStore.switchInstrument(
-        lastActive ||
-        response[response.length - 1]
-      );
+      await instrumentsStore.switchInstrument(response[response.length - 1]);
       mainAppStore.setLoading(false);
     } catch (error) {
       mainAppStore.setLoading(false);

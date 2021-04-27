@@ -123,9 +123,6 @@ export class MainAppStore implements MainAppStoreProps {
   paramsAsset: string | null = null;
   paramsMarkets: string | null = null;
   paramsPortfolioTab: string | null = null;
-  paramsPortfolioActive: string | null = null;
-  paramsPortfolioOrder: string | null = null;
-  paramsPortfolioHistory: string | null | undefined = undefined;
   paramsDeposit: boolean = false;
   paramsKYC: boolean = false;
   paramsWithdraw: boolean = false;
@@ -568,9 +565,6 @@ export class MainAppStore implements MainAppStoreProps {
     if (this.activeAccount) {
       this.setParamsAsset(null);
       this.setParamsMarkets(null);
-      this.setParamsPortfolioActive(null);
-      this.setParamsPortfolioOrder(null);
-      this.setParamsPortfolioHistory(null);
       this.setParamsPortfolioTab(null);
       this.setParamsDeposit(false);
       this.setParamsKYC(false);
@@ -615,21 +609,6 @@ export class MainAppStore implements MainAppStoreProps {
   @action
   setParamsPortfolioTab = (params: string | null) => {
     this.paramsPortfolioTab = params;
-  };
-
-  @action
-  setParamsPortfolioActive = (params: string | null) => {
-    this.paramsPortfolioActive = params;
-  };
-
-  @action
-  setParamsPortfolioOrder = (params: string | null) => {
-    this.paramsPortfolioOrder = params;
-  };
-
-  @action
-  setParamsPortfolioHistory = (params: string | null | undefined) => {
-    this.paramsPortfolioHistory = params;
   };
 
   @action
