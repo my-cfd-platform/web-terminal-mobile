@@ -27,9 +27,6 @@ const RouteWrapper: FC<Props> = observer((props) => {
       const unParsedData = unparsingSearchUrl(params);
       mainAppStore.setParamsAsset(unParsedData.paramsAsset);
       mainAppStore.setParamsMarkets(unParsedData.paramsMarkets);
-      mainAppStore.setParamsPortfolioActive(unParsedData.paramsPortfolioActive);
-      mainAppStore.setParamsPortfolioOrder(unParsedData.paramsPortfolioOrder);
-      mainAppStore.setParamsPortfolioHistory(unParsedData.paramsPortfolioHistory);
       mainAppStore.setParamsPortfolioTab(unParsedData.paramsPortfolioTab);
       mainAppStore.setParamsKYC(unParsedData.paramsKYC);
       mainAppStore.setParamsWithdraw(unParsedData.paramsWithdraw);
@@ -40,10 +37,6 @@ const RouteWrapper: FC<Props> = observer((props) => {
       }
       if (unParsedData.status === null && mainAppStore.isAuthorized) {
         push(Page.DASHBOARD);
-      }
-    } else {
-      if (mainAppStore.paramsPortfolioHistory === undefined) {
-        mainAppStore.setParamsPortfolioHistory(null);
       }
     }
   }, []);
