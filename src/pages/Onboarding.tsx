@@ -35,7 +35,7 @@ const Onboarding = () => {
   const getInfoByStep = async (step: number) => {
     setLoading(true);
     try {
-      const response = await API.getOnBoardingInfoByStep(step, 0);
+      const response = await API.getOnBoardingInfoByStep(step, 1);
       setActualStepInfo(response);
       setLoading(false);
     } catch (error) {
