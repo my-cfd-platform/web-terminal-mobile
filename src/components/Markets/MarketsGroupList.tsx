@@ -31,7 +31,7 @@ const MarketsGroupList = observer(() => {
     ) {
       const instrumentId = instrumentsStore.instrumentGroups
         .find(
-          (item) => item.name === mainAppStore.paramsMarkets
+          (item) => item.id === mainAppStore.paramsMarkets
         )?.id || instrumentsStore.instrumentGroups[0].id;
       instrumentsStore.setActiveInstrumentGroupId(instrumentId);
       mainAppStore.setParamsMarkets(null);
