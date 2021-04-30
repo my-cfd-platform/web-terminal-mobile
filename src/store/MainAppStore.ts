@@ -5,6 +5,7 @@ import {
   LOCAL_STORAGE_LANGUAGE,
   LAST_PAGE_VISITED,
   LOCAL_IS_NEW_USER,
+  LOCAL_TARGET,
 } from './../constants/global';
 import axios, { AxiosRequestConfig } from 'axios';
 import {
@@ -64,6 +65,8 @@ interface MainAppStoreProps {
   lang: CountriesEnum;
   activeAccountId: string;
   connectionSignalRTimer: NodeJS.Timeout | null;
+  isPromoAccount: boolean;
+  promo: string;
 }
 
 // TODO: think about application initialization
@@ -118,6 +121,9 @@ export class MainAppStore implements MainAppStoreProps {
   @observable lpLoginFlag: boolean = false;
   @observable isVerification: boolean = false;
   @observable balanceWas: number = 0;
+  @observable isPromoAccount = false;
+  @observable promo = '';
+
   websocketConnectionTries = 0;
 
   paramsAsset: string | null = null;
@@ -132,6 +138,7 @@ export class MainAppStore implements MainAppStoreProps {
   constructor(rootStore: RootStore) {
     this.rootStore = rootStore;
     this.token = localStorage.getItem(LOCAL_STORAGE_TOKEN_KEY) || '';
+    this.promo = localStorage.getItem(LOCAL_TARGET) || '';
     this.refreshToken =
       localStorage.getItem(LOCAL_STORAGE_REFRESH_TOKEN_KEY) || '';
     Axios.defaults.headers[RequestHeaders.AUTHORIZATION] = this.token;
@@ -431,6 +438,19 @@ export class MainAppStore implements MainAppStoreProps {
         KeysInApi.ACTIVE_ACCOUNT_ID,
         this.initModel.tradingUrl
       );
+
+      const activeAccountTarget = await API.getKeyValue(
+        KeysInApi.ACTIVE_ACCOUNT_TARGET,
+        this.initModel.tradingUrl
+      );
+      if (activeAccountTarget === "facebook") {
+        this.isPromoAccount = true;
+        localStorage.setItem(LOCAL_TARGET, activeAccountTarget);
+      } else {
+        localStorage.setItem(LOCAL_TARGET, '');
+      }
+      
+
       const activeAccount = this.accounts.find(
         (item) => item.id === activeAccountId
       );
