@@ -69,8 +69,8 @@ const NavBar = observer(() => {
     mainAppStore.accounts,
     mainAppStore.lang,
     mainAppStore.token,
-    mainAppStore.initModel.tradingUrl
-  ])
+    mainAppStore.initModel.tradingUrl,
+  ]);
 
   return (
     <FlexContainer
@@ -82,9 +82,17 @@ const NavBar = observer(() => {
     >
       <AccountLabel />
       <AccountsSwitchLink />
-      <DepositLink onClick={() => redirectWithUpdateRefreshToken(API_DEPOSIT_STRING, parsedParams)}>
-        {t('Deposit')}
-      </DepositLink>
+      {mainAppStore.isPromoAccount ? (
+        <></>
+      ) : (
+        <DepositLink
+          onClick={() =>
+            redirectWithUpdateRefreshToken(API_DEPOSIT_STRING, parsedParams)
+          }
+        >
+          {t('Deposit')}
+        </DepositLink>
+      )}
     </FlexContainer>
   );
 });

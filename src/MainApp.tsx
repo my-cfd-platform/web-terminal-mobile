@@ -41,7 +41,6 @@ const MainApp: FC = () => {
 
       // https://monfex.atlassian.net/browse/WEBT-475
       // if app is reinitializing, we should wait widget first
-      
 
       if (!response.length) {
         throw new Error(
@@ -115,31 +114,42 @@ const MainApp: FC = () => {
   return (
     <>
       <Helmet>
-        <title>{`${mainAppStore.initModel.brandName} ${t(
-          'trading platform'
-        )}`}</title>
+        {(!mainAppStore.isPromoAccount || mainAppStore.promo !== "facebook") ? (
+          <title>{`${mainAppStore.initModel.brandName} ${t(
+            'trading platform'
+          )}`}</title>
+        ) : (
+          <title>{`${mainAppStore.initModel.brandName}`}</title>
+        )}
+
         <link rel="shortcut icon" href={mainAppStore.initModel.favicon} />
         <script
           src={`https://www.google.com/recaptcha/api.js?render=${mainAppStore.initModel.recaptchaToken}`}
         ></script>
-        <meta
-          name="apple-itunes-app"
-          content={`app-id=${
-            IS_LOCAL ? '223123123' : mainAppStore.initModel.iosAppId
-          }`}
-        />
-        <meta
-          name="google-play-app"
-          content={`app-id=${mainAppStore.initModel.androidAppId}`}
-        />
-        <link
-          rel="apple-touch-icon"
-          href={
-            IS_LOCAL
-              ? 'https://trading-test.monfex.biz/br/mobile_app_logo.png'
-              : mainAppStore.initModel.mobileAppLogo
-          }
-        ></link>
+        {(mainAppStore.promo !== 'facebook' || !mainAppStore.isDemoRealPopup) &&
+          !mainAppStore.isInitLoading && (
+            <>
+              <meta
+                name="apple-itunes-app"
+                content={`app-id=${
+                  IS_LOCAL ? '223123123' : mainAppStore.initModel.iosAppId
+                }`}
+              />
+              <meta
+                name="google-play-app"
+                content={`app-id=${mainAppStore.initModel.androidAppId}`}
+              />
+              <link
+                rel="apple-touch-icon"
+                href={
+                  IS_LOCAL
+                    ? 'https://trading-test.monfex.biz/br/mobile_app_logo.png'
+                    : mainAppStore.initModel.mobileAppLogo
+                }
+              ></link>
+            </>
+          )}
+
         <link
           rel="android-touch-icon"
           href={mainAppStore.initModel.mobileAppLogo}

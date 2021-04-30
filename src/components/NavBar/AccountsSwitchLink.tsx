@@ -48,7 +48,7 @@ const AccountsSwitchLink = observer(() => {
   ]);
 
   return (
-    <AccountSwitch to={Page.ACCOUNTS_SWITCH}>
+    <AccountSwitch to={!mainAppStore.isPromoAccount ? Page.ACCOUNTS_SWITCH : Page.DASHBOARD}>
       <Observer>
         {() => (
           <PrimaryTextSpan
@@ -63,7 +63,7 @@ const AccountsSwitchLink = observer(() => {
           </PrimaryTextSpan>
         )}
       </Observer>
-      <SvgIcon {...DropDownArrov} fillColor="rgba(255, 255, 255, 0.4)"/>
+      {!mainAppStore.isPromoAccount && <SvgIcon {...DropDownArrov} fillColor="rgba(255, 255, 255, 0.4)"/>}
     </AccountSwitch>
   );
 });
