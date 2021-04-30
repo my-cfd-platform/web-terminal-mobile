@@ -114,7 +114,7 @@ const MainApp: FC = () => {
   return (
     <>
       <Helmet>
-        {(!mainAppStore.isPromoAccount || mainAppStore.promo !== "facebook") ? (
+        {(!mainAppStore.isPromoAccount || mainAppStore.promo !== "facebook") && !mainAppStore.isInitLoading ? (
           <title>{`${mainAppStore.initModel.brandName} ${t(
             'trading platform'
           )}`}</title>
