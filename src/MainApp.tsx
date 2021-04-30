@@ -114,41 +114,50 @@ const MainApp: FC = () => {
   return (
     <>
       <Helmet>
-        {(!mainAppStore.isPromoAccount || mainAppStore.promo !== "facebook") && !mainAppStore.isInitLoading ? (
-          <title>{`${mainAppStore.initModel.brandName} ${t(
-            'trading platform'
-          )}`}</title>
-        ) : (
-          <title>{`${mainAppStore.initModel.brandName}`}</title>
-        )}
-
-        <link rel="shortcut icon" href={mainAppStore.initModel.favicon} />
-        <script
-          src={`https://www.google.com/recaptcha/api.js?render=${mainAppStore.initModel.recaptchaToken}`}
-        ></script>
-        {(mainAppStore.promo !== 'facebook' || !mainAppStore.isDemoRealPopup) &&
-          !mainAppStore.isInitLoading && (
+        <Observer>
+          {() => (
             <>
-              <meta
-                name="apple-itunes-app"
-                content={`app-id=${
-                  IS_LOCAL ? '223123123' : mainAppStore.initModel.iosAppId
-                }`}
-              />
-              <meta
-                name="google-play-app"
-                content={`app-id=${mainAppStore.initModel.androidAppId}`}
-              />
-              <link
-                rel="apple-touch-icon"
-                href={
-                  IS_LOCAL
-                    ? 'https://trading-test.monfex.biz/br/mobile_app_logo.png'
-                    : mainAppStore.initModel.mobileAppLogo
-                }
-              ></link>
+              {(!mainAppStore.isPromoAccount ||
+                mainAppStore.promo !== 'facebook') &&
+              !mainAppStore.isInitLoading ? (
+                <title>{`${mainAppStore.initModel.brandName} ${t(
+                  'trading platform'
+                )}`}</title>
+              ) : (
+                <title>{`${mainAppStore.initModel.brandName}`}</title>
+              )}
+
+              <link rel="shortcut icon" href={mainAppStore.initModel.favicon} />
+              <script
+                src={`https://www.google.com/recaptcha/api.js?render=${mainAppStore.initModel.recaptchaToken}`}
+              ></script>
+              {(mainAppStore.promo !== 'facebook' ||
+                !mainAppStore.isDemoRealPopup) &&
+                !mainAppStore.isInitLoading && (
+                  <>
+                    <meta
+                      name="apple-itunes-app"
+                      content={`app-id=${
+                        IS_LOCAL ? '223123123' : mainAppStore.initModel.iosAppId
+                      }`}
+                    />
+                    <meta
+                      name="google-play-app"
+                      content={`app-id=${mainAppStore.initModel.androidAppId}`}
+                    />
+                    <link
+                      rel="apple-touch-icon"
+                      href={
+                        IS_LOCAL
+                          ? 'https://trading-test.monfex.biz/br/mobile_app_logo.png'
+                          : mainAppStore.initModel.mobileAppLogo
+                      }
+                    ></link>
+                  </>
+                )}
             </>
           )}
+        </Observer>
 
         <link
           rel="android-touch-icon"
