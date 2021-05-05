@@ -45,6 +45,9 @@ const API_LIST = {
     CREATE: '/withdrawal/create',
     HISTORY: '/withdrawal/history',
     CANCEL: '/withdrawal/cancel'
+  },
+  ONBOARDING: {
+    STEPS: '/api/v1/OnboardingSteps'
   }
 };
 

@@ -29,6 +29,7 @@ import WithdrawSuccessRequest from '../components/Withdraw/WithdrawSuccessReques
 import PositionEditSLTP from '../pages/PositionEditSL';
 import PositionEditSL from '../pages/PositionEditSL';
 import PositionEditTP from '../pages/PositionEditTP';
+import Onboarding from '../pages/Onboarding';
 
 export enum RouteLayoutType {
   Authorized,
@@ -248,6 +249,13 @@ const routesList = [
   {
     component: PhoneVerification,
     path: Page.PHONE_VERIFICATION,
+    exact: true,
+    strict: true,
+    layoutType: RouteLayoutType.Authorized,
+  },
+  {
+    component: Onboarding,
+    path: Page.ONBOARDING,
     exact: true,
     strict: true,
     layoutType: RouteLayoutType.Authorized,

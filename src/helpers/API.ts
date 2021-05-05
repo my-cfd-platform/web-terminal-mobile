@@ -58,6 +58,7 @@ import {
 import { ListForEN } from '../constants/listOfLanguages';
 import { PendingOrderResponseDTO } from '../types/PendingOrdersTypes';
 import { BrandEnum } from '../constants/brandingLinksTranslate';
+import { OnBoardingInfo } from '../types/OnBoardingTypes';
 
 class API {
   convertParamsToFormData = (params: { [key: string]: any }) => {
@@ -432,6 +433,7 @@ class API {
             termsUrl: '',
             tradingUrl: '/',
             authUrl: '',
+            miscUrl: '',
             mixpanelToken: '582507549d28c813188211a0d15ec940',
             recaptchaToken: '',
             androidAppId: '',
@@ -479,6 +481,14 @@ class API {
       `${API_AUTH_STRING || authUrl}${AUTH_API_LIST.TRADER.LP_LOGIN}`,
       params
     );
+    return response.data;
+  };
+
+  getOnBoardingInfoByStep = async (stepNumber: number, deviceType: number, miscUrl: string) => {
+    const response = await axios.post<OnBoardingInfo>(
+      `${API_MISC_STRING || miscUrl}${API_LIST.ONBOARDING.STEPS}/${stepNumber}?deviceTypeId=${deviceType}`
+    );
+    console.log(response);
     return response.data;
   };
 }
