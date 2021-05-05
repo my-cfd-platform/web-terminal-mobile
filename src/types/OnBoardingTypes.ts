@@ -7,8 +7,8 @@ export interface OnBoardingButton {
 }
 
 export interface OnBoardingInfo {
-  "responseCode": OnBoardingResponseEnum,
-  "data": {
+  responseCode: OnBoardingResponseEnum,
+  data: {
     totalSteps: number,
     lottieJson: string,
     title: string,

@@ -1,22 +1,23 @@
-import React, {useCallback, useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import { FlexContainer } from '../styles/FlexContainer';
 import { PrimaryTextSpan } from '../styles/TextsElements';
 import BackFlowLayout from '../components/BackFlowLayout';
-import Colors from '../constants/Colors';
 import { PrimaryButton } from '../styles/Buttons';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
-import * as firstStep from '../assets/lotties/stepOne.json';
 import Lottie from 'react-lottie';
 import API from '../helpers/API';
-import {useStores} from "../hooks/useStores";
-import {OnBoardingInfo} from "../types/OnBoardingTypes";
-import LoaderForComponents from "../components/LoaderForComponents";
+import { useStores } from '../hooks/useStores';
+import { OnBoardingInfo } from '../types/OnBoardingTypes';
+import LoaderForComponents from '../components/LoaderForComponents';
+import { ButtonActionType } from '../enums/ButtonActionType';
+import Colors from '../constants/Colors';
+import Page from '../constants/Pages';
 
 const Onboarding = () => {
   const { t } = useTranslation();
   const { push } = useHistory();
-  const { badRequestPopupStore } = useStores();
+  const { badRequestPopupStore, mainAppStore } = useStores();
 
   const getLottieOptions = (step: any) => {
     return {
@@ -31,93 +32,42 @@ const Onboarding = () => {
   const [actualStep, setActualStep] = useState<number>(1);
   const [loading, setLoading] = useState<boolean>(false);
   const [actualStepInfo, setActualStepInfo] = useState<OnBoardingInfo | null>(null);
+  const [isAnimation, setIsAnimation] = useState<boolean>(false);
 
   const getInfoByStep = async (step: number) => {
     setLoading(true);
     try {
-      const response = await API.getOnBoardingInfoByStep(step, 1);
+      const response = await API.getOnBoardingInfoByStep(step, 2, mainAppStore.initModel.miscUrl);
       setActualStepInfo(response);
       setLoading(false);
+      setIsAnimation(true);
     } catch (error) {
       badRequestPopupStore.openModal();
       badRequestPopupStore.setMessage(error);
     }
-
   };
 
   const handleChangeStep = (nextStep: number) => () => {
     setActualStep(nextStep);
+    getInfoByStep(nextStep);
   };
-
-  const buttonByStep = useCallback(() => {
-    switch (actualStep) {
-      case 1:
-        return <PrimaryButton
-          padding="12px"
-          type="button"
-          width="100%"
-          onClick={handleChangeStep(2)}
-        >
-          <PrimaryTextSpan
-            color={Colors.BLACK}
-            fontWeight="bold"
-            fontSize="16px"
-          >
-            {t('Start Introduction')}
-          </PrimaryTextSpan>
-        </PrimaryButton>;
-      case 2:
-        return <PrimaryButton
-          padding="12px"
-          type="button"
-          width="100%"
-          onClick={handleChangeStep(3)}
-        >
-          <PrimaryTextSpan
-            color={Colors.BLACK}
-            fontWeight="bold"
-            fontSize="16px"
-          >
-            {t('Next')}
-          </PrimaryTextSpan>
-        </PrimaryButton>;
-      case 3:
-        return <PrimaryButton
-          padding="12px"
-          type="button"
-          width="100%"
-          onClick={handleChangeStep(4)}
-        >
-          <PrimaryTextSpan
-            color={Colors.BLACK}
-            fontWeight="bold"
-            fontSize="16px"
-          >
-            {t('Next')}
-          </PrimaryTextSpan>
-        </PrimaryButton>;
-      default: return;
-    }
-  }, [actualStep]);
-
-  const tabByStep = useCallback(() => {
-    switch (actualStep) {
-      case 1:
-        return <Lottie options={getLottieOptions(firstStep)}
-           isStopped={true}
-           height={520}
-           width={400}/>;
-      case 2:
-        return <Lottie options={getLottieOptions(firstStep)}
-           isStopped={false}
-           height={520}
-           width={400}/>;
-      default: return;
-    }
-  }, [actualStep]);
 
   const closeOnBoarding = () => {
     setActualStep(8);
+    getInfoByStep(8);
+  };
+
+  const actionByType = (type: ButtonActionType) => () => {
+    switch (type) {
+      case ButtonActionType.NextStep:
+        return handleChangeStep(actualStep + 1);
+      case ButtonActionType.Demo:
+        return push(Page.DASHBOARD);
+      case ButtonActionType.Deposit:
+        return push('/');
+      default:
+        return handleChangeStep(actualStep + 1);
+    }
   };
 
   useEffect(() => {
@@ -128,7 +78,7 @@ const Onboarding = () => {
     <BackFlowLayout
       onBoarding={true}
       type="close"
-      pageTitle={`${actualStep} / 8 ${t('steps')}`}
+      pageTitle={`${actualStep} / ${actualStepInfo?.data.totalSteps} ${t('steps')}`}
       handleGoBack={closeOnBoarding}
     >
       {loading
@@ -140,16 +90,51 @@ const Onboarding = () => {
           height="100%"
         >
           <FlexContainer flexDirection="column" width="100%">
-            {tabByStep()}
+            <Lottie options={getLottieOptions(actualStepInfo?.data.lottieJson)}
+              isStopped={false}
+              height={520}
+              eventListeners={[
+                {
+                  eventName: 'complete',
+                  callback: () => setIsAnimation(false),
+                }
+              ]}
+              width={400}/>
           </FlexContainer>
-          <FlexContainer
-            width="100%"
-            alignItems="center"
-            justifyContent="center"
-            padding="0 16px 40px"
-          >
-            {buttonByStep()}
-          </FlexContainer>
+          {!actualStepInfo?.data.fullScreen &&
+            <FlexContainer
+                width="100%"
+                alignItems="center"
+                justifyContent="center"
+                padding="0 16px 40px"
+                flexDirection="column"
+            >
+              {actualStepInfo?.data.buttons.map((button) => <PrimaryButton
+                padding="12px"
+                type="button"
+                width="100%"
+                backgroundColor={
+                  button.action === ButtonActionType.Demo ?
+                    'transparent' :
+                    Colors.ACCENT_BLUE
+                }
+                onClick={actionByType(button.action)}
+                disabled={isAnimation}
+              >
+                <PrimaryTextSpan
+                  color={
+                    button.action === ButtonActionType.Demo ?
+                      '#ffffff' :
+                      Colors.BLACK
+                  }
+                  fontWeight="bold"
+                  fontSize="16px"
+                >
+                  {button.text}
+                </PrimaryTextSpan>
+              </PrimaryButton>)}
+            </FlexContainer>
+          }
         </FlexContainer>
       }
     </BackFlowLayout>

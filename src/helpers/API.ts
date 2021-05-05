@@ -433,6 +433,7 @@ class API {
             termsUrl: '',
             tradingUrl: '/',
             authUrl: '',
+            miscUrl: '',
             mixpanelToken: '582507549d28c813188211a0d15ec940',
             recaptchaToken: '',
             androidAppId: '',
@@ -483,9 +484,9 @@ class API {
     return response.data;
   };
 
-  getOnBoardingInfoByStep = async (stepNumber: number, deviceType: number) => {
+  getOnBoardingInfoByStep = async (stepNumber: number, deviceType: number, miscUrl: string) => {
     const response = await axios.post<OnBoardingInfo>(
-      `${API_STRING}${API_LIST.ONBOARDING.STEPS}/${stepNumber}?deviceTypeId=${deviceType}`
+      `${API_MISC_STRING || miscUrl}${API_LIST.ONBOARDING.STEPS}/${stepNumber}?deviceTypeId=${deviceType}`
     );
     console.log(response);
     return response.data;
