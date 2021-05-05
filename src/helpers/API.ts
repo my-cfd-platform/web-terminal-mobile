@@ -491,11 +491,12 @@ class API {
     console.log(API_MISC_STRING);
     console.log(miscUrl);
     const response = await axios.get<OnBoardingInfo>(
-      `${
-        API_MISC_STRING.length ?
-          API_MISC_STRING :
-          miscUrl
-      }${API_LIST.ONBOARDING.STEPS}/${stepNumber}?deviceTypeId=${deviceType}`
+      // `${
+      //   API_MISC_STRING.length ?
+      //     API_MISC_STRING :
+      //     miscUrl
+      // }${API_LIST.ONBOARDING.STEPS}/${stepNumber}?deviceTypeId=${deviceType}`
+      `https://trading-api-misc-test.mnftx.biz${API_LIST.ONBOARDING.STEPS}/${stepNumber}?deviceTypeId=${deviceType}`
     );
     return response.data;
   };
