@@ -1,18 +1,45 @@
-import React from 'react';
+import React, {useEffect, useRef} from 'react';
 import styled from '@emotion/styled';
 import { FlexContainer } from '../../styles/FlexContainer';
 import { useStores } from '../../hooks/useStores';
-import { Observer } from 'mobx-react-lite';
+import { Observer, observer } from 'mobx-react-lite';
 import { PrimaryTextSpan } from '../../styles/TextsElements';
 import { ButtonWithoutStyles } from '../../styles/ButtonWithoutStyles';
 import Colors from '../../constants/Colors';
 
-const MarketsGroupList = () => {
-  const { instrumentsStore, sortingStore } = useStores();
+const MarketsGroupList = observer(() => {
+  const {
+    instrumentsStore,
+    sortingStore,
+    mainAppStore
+  } = useStores();
+
+  const activeAssetRef = useRef<HTMLButtonElement>(document.createElement('button'));
 
   const setActiveInstrumentGroup = (groupId: string) => () => {
     instrumentsStore.activeInstrumentGroupId = groupId;
   };
+
+  useEffect(() => {
+    activeAssetRef.current.scrollIntoView();
+  }, [instrumentsStore.activeInstrumentGroupId]);
+
+  useEffect(() => {
+    if (
+      mainAppStore.paramsMarkets &&
+      instrumentsStore.instrumentGroups.length > 0
+    ) {
+      const instrumentId = instrumentsStore.instrumentGroups
+        .find(
+          (item) => item.id === mainAppStore.paramsMarkets
+        )?.id || instrumentsStore.instrumentGroups[0].id;
+      instrumentsStore.setActiveInstrumentGroupId(instrumentId);
+      mainAppStore.setParamsMarkets(null);
+    }
+  }, [
+    mainAppStore.paramsMarkets,
+    instrumentsStore.instrumentGroups
+  ]);
 
   return (
     <ListWrap>
@@ -24,6 +51,10 @@ const MarketsGroupList = () => {
                 key={item.id}
                 isActive={instrumentsStore.activeInstrumentGroupId === item.id}
                 onClick={setActiveInstrumentGroup(item.id)}
+                ref={instrumentsStore.activeInstrumentGroupId === item.id
+                  ? activeAssetRef
+                  : null
+                }
               >
                 <PrimaryTextSpan
                   color={
@@ -43,7 +74,7 @@ const MarketsGroupList = () => {
       </Observer>
     </ListWrap>
   );
-};
+});
 
 export default MarketsGroupList;
 

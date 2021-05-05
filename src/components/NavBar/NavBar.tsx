@@ -36,6 +36,42 @@ const NavBar = observer(() => {
     mainAppStore.accounts,
     userProfileStore.userProfileId,
   ]);
+
+  useEffect(() => {
+    if (
+      mainAppStore.paramsDeposit &&
+      mainAppStore.refreshToken &&
+      userProfileStore.userProfileId &&
+      mainAppStore.accounts.length &&
+      mainAppStore.lang &&
+      mainAppStore.token &&
+      mainAppStore.initModel.tradingUrl
+    ) {
+      const newUrlParams = new URLSearchParams();
+      newUrlParams.set('token', mainAppStore.token);
+      newUrlParams.set(
+        'active_account_id',
+        mainAppStore.accounts.find((item) => item.isLive)?.id || ''
+      );
+      newUrlParams.set('lang', mainAppStore.lang);
+      newUrlParams.set('env', 'web_mob');
+      newUrlParams.set('trader_id', userProfileStore.userProfileId || '');
+      newUrlParams.set('api', mainAppStore.initModel.tradingUrl);
+      newUrlParams.set('rt', mainAppStore.refreshToken);
+      const newParsedParams = newUrlParams.toString();
+      mainAppStore.setParamsDeposit(false);
+      redirectWithUpdateRefreshToken(API_DEPOSIT_STRING, newParsedParams);
+    }
+  }, [
+    mainAppStore.refreshToken,
+    mainAppStore.paramsDeposit,
+    userProfileStore.userProfileId,
+    mainAppStore.accounts,
+    mainAppStore.lang,
+    mainAppStore.token,
+    mainAppStore.initModel.tradingUrl,
+  ]);
+
   return (
     <FlexContainer
       width="100vw"
@@ -46,9 +82,17 @@ const NavBar = observer(() => {
     >
       <AccountLabel />
       <AccountsSwitchLink />
-      <DepositLink onClick={() => redirectWithUpdateRefreshToken(API_DEPOSIT_STRING, parsedParams)}>
-        {t('Deposit')}
-      </DepositLink>
+      {mainAppStore.isPromoAccount ? (
+        <></>
+      ) : (
+        <DepositLink
+          onClick={() =>
+            redirectWithUpdateRefreshToken(API_DEPOSIT_STRING, parsedParams)
+          }
+        >
+          {t('Deposit')}
+        </DepositLink>
+      )}
     </FlexContainer>
   );
 });

@@ -5,6 +5,7 @@ import {
   LOCAL_STORAGE_LANGUAGE,
   LAST_PAGE_VISITED,
   LOCAL_IS_NEW_USER,
+  LOCAL_TARGET,
 } from './../constants/global';
 import axios, { AxiosRequestConfig } from 'axios';
 import {
@@ -64,6 +65,8 @@ interface MainAppStoreProps {
   lang: CountriesEnum;
   activeAccountId: string;
   connectionSignalRTimer: NodeJS.Timeout | null;
+  isPromoAccount: boolean;
+  promo: string;
 }
 
 // TODO: think about application initialization
@@ -119,11 +122,24 @@ export class MainAppStore implements MainAppStoreProps {
   @observable lpLoginFlag: boolean = false;
   @observable isVerification: boolean = false;
   @observable balanceWas: number = 0;
+  @observable isPromoAccount = false;
+  @observable promo = '';
+
   websocketConnectionTries = 0;
+
+  paramsAsset: string | null = null;
+  paramsMarkets: string | null = null;
+  paramsPortfolioTab: string | null = null;
+  paramsDeposit: boolean = false;
+  paramsKYC: boolean = false;
+  paramsWithdraw: boolean = false;
+  paramsSecurity: boolean = false;
+  paramsBalanceHistory: boolean = false;
 
   constructor(rootStore: RootStore) {
     this.rootStore = rootStore;
     this.token = localStorage.getItem(LOCAL_STORAGE_TOKEN_KEY) || '';
+    this.promo = localStorage.getItem(LOCAL_TARGET) || '';
     this.refreshToken =
       localStorage.getItem(LOCAL_STORAGE_REFRESH_TOKEN_KEY) || '';
     Axios.defaults.headers[RequestHeaders.AUTHORIZATION] = this.token;
@@ -423,6 +439,19 @@ export class MainAppStore implements MainAppStoreProps {
         KeysInApi.ACTIVE_ACCOUNT_ID,
         this.initModel.tradingUrl
       );
+
+      const activeAccountTarget = await API.getKeyValue(
+        KeysInApi.ACTIVE_ACCOUNT_TARGET,
+        this.initModel.tradingUrl
+      );
+      if (activeAccountTarget === "facebook") {
+        this.isPromoAccount = true;
+        localStorage.setItem(LOCAL_TARGET, activeAccountTarget);
+      } else {
+        localStorage.setItem(LOCAL_TARGET, '');
+      }
+      
+
       const activeAccount = this.accounts.find(
         (item) => item.id === activeAccountId
       );
@@ -554,6 +583,16 @@ export class MainAppStore implements MainAppStoreProps {
     this.activeAccountId = '';
     this.rootStore.withdrawalStore.clearStore();
     this.balanceWas = 0;
+    if (this.activeAccount) {
+      this.setParamsAsset(null);
+      this.setParamsMarkets(null);
+      this.setParamsPortfolioTab(null);
+      this.setParamsDeposit(false);
+      this.setParamsKYC(false);
+      this.setParamsWithdraw(false);
+      this.setParamsBalanceHistory(false);
+      this.setParamsSecurity(false);
+    }
   };
 
   setTokenHandler = (token: string) => {
@@ -577,6 +616,46 @@ export class MainAppStore implements MainAppStoreProps {
   setLoading = (on: boolean) => {
     this.isLoading = on;
   }
+
+  @action
+  setParamsAsset = (params: string | null) => {
+    this.paramsAsset = params;
+  };
+
+  @action
+  setParamsMarkets = (params: string | null) => {
+    this.paramsMarkets = params;
+  };
+
+  @action
+  setParamsPortfolioTab = (params: string | null) => {
+    this.paramsPortfolioTab = params;
+  };
+
+  @action
+  setParamsDeposit = (params: boolean) => {
+    this.paramsDeposit = params;
+  };
+
+  @action
+  setParamsKYC = (params: boolean) => {
+    this.paramsKYC = params;
+  };
+
+  @action
+  setParamsWithdraw = (params: boolean) => {
+    this.paramsWithdraw = params;
+  };
+
+  @action
+  setParamsSecurity = (params: boolean) => {
+    this.paramsSecurity = params;
+  };
+
+  @action
+  setParamsBalanceHistory = (params: boolean) => {
+    this.paramsBalanceHistory = params;
+  };
 
   @computed
   get sortedAccounts() {

@@ -8,13 +8,17 @@ import { observer } from 'mobx-react-lite';
 
 import LogoMonfex from '../assets/images/logo.png';
 import { PrimaryTextSpan, PrimaryTextParagraph } from '../styles/TextsElements';
+import Page from '../constants/Pages';
 
 const AccountAboutUs = observer(() => {
   const { t } = useTranslation();
   const { mainAppStore } = useStores();
 
   return (
-    <BackFlowLayout pageTitle={t('About us')}>
+    <BackFlowLayout
+      backLink={Page.ACCOUNT_PROFILE}
+      pageTitle={t('About us')}
+    >
       <FlexContainer flexDirection="column" width="100%" padding="40px 0 0">
         <FlexContainer width="100%" justifyContent="center" marginBottom="12px">
           <Logo src={mainAppStore.initModel.logo || LogoMonfex} />

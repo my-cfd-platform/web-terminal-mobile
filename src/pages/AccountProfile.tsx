@@ -59,7 +59,7 @@ const AccountProfile = observer(() => {
   }, [mainAppStore.token, mainAppStore.lang, mainAppStore.accounts]);
 
   return (
-    // TODO: Refactor Safari 
+    // TODO: Refactor Safari
     <FlexContainer flexDirection="column" minHeight="600px">
       <AchievementStatusLabel />
       <FlexContainer padding="16px" marginBottom="24px">
@@ -103,119 +103,129 @@ const AccountProfile = observer(() => {
         </FlexContainer>
       </FlexContainer>
 
-      {userProfileStore.userProfile?.kyc ===
-        PersonalDataKYCEnum.NotVerified && (
+      {!mainAppStore.isPromoAccount &&
+        userProfileStore.userProfile?.kyc ===
+          PersonalDataKYCEnum.NotVerified && (
+          <FlexContainer flexDirection="column" marginBottom="24px">
+            <ProfileMenuLink to={Page.ACCOUNT_VERIFICATION}>
+              <FlexContainer alignItems="center">
+                <FlexContainer
+                  width="28px"
+                  height="28px"
+                  backgroundColor="#00000000"
+                  borderRadius="50%"
+                  justifyContent="center"
+                  alignItems="center"
+                  marginRight="14px"
+                >
+                  <SvgIcon {...IconVerify} fillColor="#ED145B" />
+                </FlexContainer>
+                <PrimaryTextSpan
+                  color="#ffffff"
+                  fontSize="16px"
+                  fontWeight="normal"
+                >
+                  {t('Fill in personal details')}
+                </PrimaryTextSpan>
+              </FlexContainer>
+              <SvgIcon
+                {...IconArrowLink}
+                fillColor="rgba(196, 196, 196, 0.5)"
+              />
+            </ProfileMenuLink>
+          </FlexContainer>
+        )}
+
+      {!mainAppStore.isPromoAccount && (
         <FlexContainer flexDirection="column" marginBottom="24px">
-          <ProfileMenuLink to={Page.ACCOUNT_VERIFICATION}>
+          <FlexContainer padding="0 16px" marginBottom="8px">
+            <PrimaryTextSpan
+              textTransform="uppercase"
+              color="rgba(255, 255, 255, 0.4)"
+              fontWeight={500}
+              fontSize="13px"
+            >
+              {t('Balance')}
+            </PrimaryTextSpan>
+          </FlexContainer>
+
+          <ProfileMenuButton
+            onClick={() =>
+              redirectWithUpdateRefreshToken(API_DEPOSIT_STRING, parsedParams)
+            }
+          >
             <FlexContainer alignItems="center">
               <FlexContainer
                 width="28px"
                 height="28px"
-                backgroundColor="#00000000"
+                backgroundColor="#77787E"
                 borderRadius="50%"
                 justifyContent="center"
                 alignItems="center"
                 marginRight="14px"
               >
-                <SvgIcon {...IconVerify} fillColor="#ED145B" />
+                <SvgIcon {...IconDeposit} fillColor="#ffffff" />
               </FlexContainer>
               <PrimaryTextSpan
                 color="#ffffff"
                 fontSize="16px"
                 fontWeight="normal"
               >
-                {t('Fill in personal details')}
+                {t('Deposit')}
+              </PrimaryTextSpan>
+            </FlexContainer>
+            <SvgIcon {...IconArrowLink} fillColor="rgba(196, 196, 196, 0.5)" />
+          </ProfileMenuButton>
+
+          <ProfileMenuLink to={Page.WITHDRAW_LIST}>
+            <FlexContainer alignItems="center">
+              <FlexContainer
+                width="28px"
+                height="28px"
+                backgroundColor="#77787E"
+                borderRadius="50%"
+                justifyContent="center"
+                alignItems="center"
+                marginRight="14px"
+              >
+                <SvgIcon {...IconWithdraw} fillColor="#ffffff" />
+              </FlexContainer>
+              <PrimaryTextSpan
+                color="#ffffff"
+                fontSize="16px"
+                fontWeight="normal"
+              >
+                {t('Withdraw')}
+              </PrimaryTextSpan>
+            </FlexContainer>
+            <SvgIcon {...IconArrowLink} fillColor="rgba(196, 196, 196, 0.5)" />
+          </ProfileMenuLink>
+
+          <ProfileMenuLink to={Page.ACCOUNT_BALANCE_HISTORY}>
+            <FlexContainer alignItems="center">
+              <FlexContainer
+                width="28px"
+                height="28px"
+                backgroundColor="#77787E"
+                borderRadius="50%"
+                justifyContent="center"
+                alignItems="center"
+                marginRight="14px"
+              >
+                <SvgIcon {...IconBalanceHistory} fillColor="#ffffff" />
+              </FlexContainer>
+              <PrimaryTextSpan
+                color="#ffffff"
+                fontSize="16px"
+                fontWeight="normal"
+              >
+                {t('Balance history')}
               </PrimaryTextSpan>
             </FlexContainer>
             <SvgIcon {...IconArrowLink} fillColor="rgba(196, 196, 196, 0.5)" />
           </ProfileMenuLink>
         </FlexContainer>
       )}
-
-      <FlexContainer flexDirection="column" marginBottom="24px">
-        <FlexContainer padding="0 16px" marginBottom="8px">
-          <PrimaryTextSpan
-            textTransform="uppercase"
-            color="rgba(255, 255, 255, 0.4)"
-            fontWeight={500}
-            fontSize="13px"
-          >
-            {t('Balance')}
-          </PrimaryTextSpan>
-        </FlexContainer>
-
-        <ProfileMenuButton onClick={() => redirectWithUpdateRefreshToken(API_DEPOSIT_STRING, parsedParams)}>
-          <FlexContainer alignItems="center">
-            <FlexContainer
-              width="28px"
-              height="28px"
-              backgroundColor="#77787E"
-              borderRadius="50%"
-              justifyContent="center"
-              alignItems="center"
-              marginRight="14px"
-            >
-              <SvgIcon {...IconDeposit} fillColor="#ffffff" />
-            </FlexContainer>
-            <PrimaryTextSpan
-              color="#ffffff"
-              fontSize="16px"
-              fontWeight="normal"
-            >
-              {t('Deposit')}
-            </PrimaryTextSpan>
-          </FlexContainer>
-          <SvgIcon {...IconArrowLink} fillColor="rgba(196, 196, 196, 0.5)" />
-        </ProfileMenuButton>
-
-        <ProfileMenuLink to={Page.WITHDRAW_LIST}>
-          <FlexContainer alignItems="center">
-            <FlexContainer
-              width="28px"
-              height="28px"
-              backgroundColor="#77787E"
-              borderRadius="50%"
-              justifyContent="center"
-              alignItems="center"
-              marginRight="14px"
-            >
-              <SvgIcon {...IconWithdraw} fillColor="#ffffff" />
-            </FlexContainer>
-            <PrimaryTextSpan
-              color="#ffffff"
-              fontSize="16px"
-              fontWeight="normal"
-            >
-              {t('Withdraw')}
-            </PrimaryTextSpan>
-          </FlexContainer>
-          <SvgIcon {...IconArrowLink} fillColor="rgba(196, 196, 196, 0.5)" />
-        </ProfileMenuLink>
-
-        <ProfileMenuLink to={Page.ACCOUNT_BALANCE_HISTORY}>
-          <FlexContainer alignItems="center">
-            <FlexContainer
-              width="28px"
-              height="28px"
-              backgroundColor="#77787E"
-              borderRadius="50%"
-              justifyContent="center"
-              alignItems="center"
-              marginRight="14px"
-            >
-              <SvgIcon {...IconBalanceHistory} fillColor="#ffffff" />
-            </FlexContainer>
-            <PrimaryTextSpan
-              color="#ffffff"
-              fontSize="16px"
-              fontWeight="normal"
-            >
-              {t('Balance history')}
-            </PrimaryTextSpan>
-          </FlexContainer>
-          <SvgIcon {...IconArrowLink} fillColor="rgba(196, 196, 196, 0.5)" />
-        </ProfileMenuLink>
-      </FlexContainer>
 
       <FlexContainer flexDirection="column" marginBottom="24px">
         <FlexContainer padding="0 16px" marginBottom="8px">
@@ -269,7 +279,8 @@ const AccountProfile = observer(() => {
                 fontSize="9px"
                 fontWeight="normal"
               >
-                {mainAppStore.lang?.substr(0, 2).toUpperCase() || CountriesEnum.EN.substr(0, 2).toUpperCase()}
+                {mainAppStore.lang?.substr(0, 2).toUpperCase() ||
+                  CountriesEnum.EN.substr(0, 2).toUpperCase()}
               </PrimaryTextSpan>
             </FlexContainer>
             <PrimaryTextSpan
@@ -283,29 +294,31 @@ const AccountProfile = observer(() => {
           <SvgIcon {...IconArrowLink} fillColor="rgba(196, 196, 196, 0.5)" />
         </ProfileMenuLink>
 
-        <ProfileMenuLink to={Page.ACCOUNT_ABOUT_US}>
-          <FlexContainer alignItems="center">
-            <FlexContainer
-              width="28px"
-              height="28px"
-              backgroundColor="#77787E"
-              borderRadius="50%"
-              justifyContent="center"
-              alignItems="center"
-              marginRight="14px"
-            >
-              <SvgIcon {...IconAboutUs} fillColor="#ffffff" />
+        {!mainAppStore.isPromoAccount && (
+          <ProfileMenuLink to={Page.ACCOUNT_ABOUT_US}>
+            <FlexContainer alignItems="center">
+              <FlexContainer
+                width="28px"
+                height="28px"
+                backgroundColor="#77787E"
+                borderRadius="50%"
+                justifyContent="center"
+                alignItems="center"
+                marginRight="14px"
+              >
+                <SvgIcon {...IconAboutUs} fillColor="#ffffff" />
+              </FlexContainer>
+              <PrimaryTextSpan
+                color="#ffffff"
+                fontSize="16px"
+                fontWeight="normal"
+              >
+                {t('About us')}
+              </PrimaryTextSpan>
             </FlexContainer>
-            <PrimaryTextSpan
-              color="#ffffff"
-              fontSize="16px"
-              fontWeight="normal"
-            >
-              {t('About us')}
-            </PrimaryTextSpan>
-          </FlexContainer>
-          <SvgIcon {...IconArrowLink} fillColor="rgba(196, 196, 196, 0.5)" />
-        </ProfileMenuLink>
+            <SvgIcon {...IconArrowLink} fillColor="rgba(196, 196, 196, 0.5)" />
+          </ProfileMenuLink>
+        )}
 
         <ProfileMenuButton onClick={handleLogout}>
           <FlexContainer alignItems="center">

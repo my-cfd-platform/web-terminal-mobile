@@ -10,7 +10,11 @@ import { PortfolioTabEnum } from '../../enums/PortfolioTabEnum';
 const ActivePositions = observer(() => {
   const { t } = useTranslation();
 
-  const { quotesStore, historyStore, portfolioNavLinksStore } = useStores();
+  const {
+    quotesStore,
+    historyStore,
+    portfolioNavLinksStore
+  } = useStores();
 
   useEffect(() => {
     historyStore.clearPositionsHistory();

@@ -9,6 +9,7 @@ import IconChecked from '../../assets/svg/profile/icon-checked.svg';
 import { PrimaryButton } from '../../styles/Buttons';
 import Colors from '../../constants/Colors';
 import accountVerifySteps from '../../constants/accountVerifySteps';
+import Page from '../../constants/Pages';
 
 interface Props {
   changeStep: (name: string) => void;
@@ -19,7 +20,11 @@ const AccountVerificationFlow: FC<Props> = (props) => {
   const { t } = useTranslation();
 
   return (
-    <BackFlowLayout type="close" pageTitle={t('Verification Flow')}>
+    <BackFlowLayout
+      backLink={Page.DASHBOARD}
+      type="close"
+      pageTitle={t('Verification Flow')}
+    >
       <FlexContainer
         flexDirection="column"
         justifyContent="space-between"

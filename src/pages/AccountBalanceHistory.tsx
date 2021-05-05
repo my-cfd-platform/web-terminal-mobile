@@ -13,8 +13,9 @@ import BalanceHistoryItem from '../components/BalanceHistoryItem';
 import moment from 'moment';
 import { FULL_VH } from '../constants/global';
 import LoaderForComponents from '../components/LoaderForComponents';
+import { observer } from 'mobx-react-lite';
 
-const AccountBalanceHistory = () => {
+const AccountBalanceHistory = observer(() => {
   const { push } = useHistory();
   const { t } = useTranslation();
   const { mainAppStore, dateRangeAccountBalanceStore } = useStores();
@@ -72,13 +73,14 @@ const AccountBalanceHistory = () => {
       fetchBalanceHistory().finally(() => {
         setIsLoading(false);
       });
-    } else {
-      push(Page.ACCOUNT_PROFILE);
     }
   }, [mainAppStore.activeAccount]);
 
   return (
-    <BackFlowLayout pageTitle={t('Balance history')}>
+    <BackFlowLayout
+      backLink={Page.ACCOUNT_PROFILE}
+      pageTitle={t('Balance history')}
+    >
       {isLoading && <LoaderForComponents isLoading={isLoading} />}
       <FlexContainer
         maxHeight={`calc(${FULL_VH} - 72px)`}
@@ -109,6 +111,6 @@ const AccountBalanceHistory = () => {
       </FlexContainer>
     </BackFlowLayout>
   );
-};
+});
 
 export default AccountBalanceHistory;

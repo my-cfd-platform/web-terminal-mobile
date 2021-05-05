@@ -11,6 +11,7 @@ import Colors from '../../constants/Colors';
 import { ButtonWithoutStyles } from '../../styles/ButtonWithoutStyles';
 import ItemOperationLabel from './ItemOperationLabel';
 import { css } from '@emotion/core';
+import { observer } from 'mobx-react-lite';
 
 interface Props {
   tradingHistoryItem: PositionHistoryDTO;
@@ -18,7 +19,7 @@ interface Props {
   isInner?: boolean;
 }
 
-const ClosedPositionItem: FC<Props> = ({
+const ClosedPositionItem: FC<Props> = observer(({
   tradingHistoryItem,
   currencySymbol,
   isInner,
@@ -40,7 +41,10 @@ const ClosedPositionItem: FC<Props> = ({
     return instrumentsStore.instruments.find(
       (item) => item.instrumentItem.id === instrument
     )?.instrumentItem;
-  }, [tradingHistoryItem]);
+  }, [
+    tradingHistoryItem,
+    instrumentsStore.instruments
+  ]);
 
   const handleClickOpen = () => {
     push(`${Page.PORTFOLIO_MAIN}/${type}/${id}`);
@@ -102,7 +106,7 @@ const ClosedPositionItem: FC<Props> = ({
       </FlexContainer>
     </InstrumentItem>
   );
-};
+});
 
 export default ClosedPositionItem;
 
