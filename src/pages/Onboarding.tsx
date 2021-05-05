@@ -19,7 +19,6 @@ import mixapanelProps from '../constants/mixpanelProps';
 import KeysInApi from '../constants/keysInApi';
 import Topics from '../constants/websocketTopics';
 import Fields from '../constants/fields';
-import {logger} from "../helpers/ConsoleLoggerTool";
 
 const Onboarding = () => {
   const { t } = useTranslation();
@@ -67,7 +66,6 @@ const Onboarding = () => {
 
   const getInfoByStep = async (step: number) => {
     try {
-      logger(mainAppStore.initModel.miscUrl);
       const response = await API.getOnBoardingInfoByStep(step, 2, mainAppStore.initModel.miscUrl);
       if (response.responseCode === 0) {
         setActualStepInfo(response);
