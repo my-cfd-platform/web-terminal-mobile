@@ -50,6 +50,7 @@ const mixpanelEvents = {
   EDIT_SLTP_FAILED: 'edit sltp failed',
   DEMO_REAL_WELCOME: 'demo real welcome',
   MOBILE_CHART_POSITION_VIEW: 'mobile chart position view',
+  ONBOARDING: 'onboarding1',
 };
 
 Object.freeze(mixpanelEvents);

@@ -32,6 +32,7 @@ const mixapanelProps = {
   WITHDRAWAL_METHOD: 'Withdraw method',
   DEMO_REAL_FUNDS: 'DemoRealFunds',
   NUMBER_OF_POSITIONS: 'Number of positions',
+  ONBOARDING_VALUE: 'Onboarding1',
 };
 
 Object.freeze(mixapanelProps);
