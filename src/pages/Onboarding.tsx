@@ -74,6 +74,10 @@ const Onboarding = () => {
     getInfoByStep(1);
   }, []);
 
+  if (loading && !!actualStepInfo) {
+    return <LoaderForComponents isLoading={loading} />;
+  }
+
   return (
     <BackFlowLayout
       onBoarding={true}
@@ -81,62 +85,59 @@ const Onboarding = () => {
       pageTitle={`${actualStep} / ${actualStepInfo?.data.totalSteps} ${t('steps')}`}
       handleGoBack={closeOnBoarding}
     >
-      {loading
-        ? <LoaderForComponents isLoading={loading} />
-        : <FlexContainer
-          flexDirection="column"
-          justifyContent="space-between"
-          width="100%"
-          height="100%"
-        >
-          <FlexContainer flexDirection="column" width="100%">
-            <Lottie options={getLottieOptions(actualStepInfo?.data.lottieJson)}
-              isStopped={false}
-              height={520}
-              eventListeners={[
-                {
-                  eventName: 'complete',
-                  callback: () => setIsAnimation(false),
-                }
-              ]}
-              width={400}/>
-          </FlexContainer>
-          {!actualStepInfo?.data.fullScreen &&
-            <FlexContainer
-                width="100%"
-                alignItems="center"
-                justifyContent="center"
-                padding="0 16px 40px"
-                flexDirection="column"
-            >
-              {actualStepInfo?.data.buttons.map((button) => <PrimaryButton
-                padding="12px"
-                type="button"
-                width="100%"
-                backgroundColor={
-                  button.action === ButtonActionType.Demo ?
-                    'transparent' :
-                    Colors.ACCENT_BLUE
-                }
-                onClick={actionByType(button.action)}
-                disabled={isAnimation}
-              >
-                <PrimaryTextSpan
-                  color={
-                    button.action === ButtonActionType.Demo ?
-                      '#ffffff' :
-                      Colors.BLACK
-                  }
-                  fontWeight="bold"
-                  fontSize="16px"
-                >
-                  {button.text}
-                </PrimaryTextSpan>
-              </PrimaryButton>)}
-            </FlexContainer>
-          }
+      <FlexContainer
+        flexDirection="column"
+        justifyContent="space-between"
+        width="100%"
+        height="100%"
+      >
+        <FlexContainer flexDirection="column" width="100%">
+          <Lottie options={getLottieOptions(actualStepInfo?.data.lottieJson)}
+            isStopped={false}
+            height={520}
+            eventListeners={[
+              {
+                eventName: 'complete',
+                callback: () => setIsAnimation(false),
+              }
+            ]}
+            width={400}/>
         </FlexContainer>
-      }
+        {!actualStepInfo?.data.fullScreen &&
+          <FlexContainer
+              width="100%"
+              alignItems="center"
+              justifyContent="center"
+              padding="0 16px 40px"
+              flexDirection="column"
+          >
+            {actualStepInfo?.data.buttons.map((button) => <PrimaryButton
+              padding="12px"
+              type="button"
+              width="100%"
+              backgroundColor={
+                button.action === ButtonActionType.Demo ?
+                  'transparent' :
+                  Colors.ACCENT_BLUE
+              }
+              onClick={actionByType(button.action)}
+              disabled={isAnimation}
+            >
+              <PrimaryTextSpan
+                color={
+                  button.action === ButtonActionType.Demo ?
+                    '#ffffff' :
+                    Colors.BLACK
+                }
+                fontWeight="bold"
+                fontSize="16px"
+              >
+                {button.text}
+              </PrimaryTextSpan>
+            </PrimaryButton>)}
+          </FlexContainer>
+        }
+      </FlexContainer>
     </BackFlowLayout>
   );
 };
