@@ -485,7 +485,7 @@ class API {
   };
 
   getOnBoardingInfoByStep = async (stepNumber: number, deviceType: number, miscUrl: string) => {
-    const response = await axios.post<OnBoardingInfo>(
+    const response = await axios.get<OnBoardingInfo>(
       `${API_MISC_STRING || miscUrl}${API_LIST.ONBOARDING.STEPS}/${stepNumber}?deviceTypeId=${deviceType}`
     );
     console.log(response);

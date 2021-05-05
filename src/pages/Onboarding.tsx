@@ -67,13 +67,16 @@ const Onboarding = () => {
   const getInfoByStep = async (step: number) => {
     try {
       const response = await API.getOnBoardingInfoByStep(step, 2, mainAppStore.initModel.miscUrl);
-      setActualStepInfo(response);
-      setPause(false);
-      setLoading(false);
-      setIsAnimation(true);
+      if (response.responseCode === 0) {
+        setActualStepInfo(response);
+        setPause(false);
+        setLoading(false);
+        setIsAnimation(true);
+      } else {
+        push(Page.DASHBOARD);
+      }
     } catch (error) {
-      badRequestPopupStore.openModal();
-      badRequestPopupStore.setMessage(error);
+      push(Page.DASHBOARD);
     }
   };
 
