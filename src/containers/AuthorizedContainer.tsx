@@ -1,6 +1,6 @@
 import React, { FC, useEffect, useState } from 'react';
 import { FlexContainer } from '../styles/FlexContainer';
-import { Observer } from 'mobx-react-lite';
+import { observer, Observer } from 'mobx-react-lite';
 import NotificationPopup from '../components/NotificationPopup';
 import NotificationActivePositionPopup from '../components/NotificationActivePositionPopup';
 import NotificationPendingPositionPopup from '../components/NotificationPendingPositionPopup';
@@ -23,7 +23,7 @@ import NetworkErrorPopup from '../components/NetworkErrorPopup';
 import ServerErrorPopup from '../components/ServerErrorPopup';
 import mixpanelEvents from '../constants/mixpanelEvents';
 
-const AuthorizedContainer: FC = ({ children }) => {
+const AuthorizedContainer: FC = observer(({ children }) => {
   const match = useRouteMatch([
     Page.POSITION_DETAILS,
     Page.CHART_SETTING,
@@ -51,6 +51,31 @@ const AuthorizedContainer: FC = ({ children }) => {
   const { mainAppStore, userProfileStore, serverErrorPopupStore } = useStores();
   const [waitingData, setWaitingData] = useState<boolean>(true);
   const showNavbarAndNav = !match?.isExact;
+
+
+  const hidenPromoPageList = useRouteMatch([
+    Page.ONBOARDING,
+    Page.ACCOUNT_BALANCE_HISTORY,
+    Page.WITHDRAW_LIST,
+    Page.WITHDRAW_HISTORY_ID,
+    Page.WITHDRAW_HISTORY,
+    Page.WITHDRAW_VISAMASTER,
+    Page.WITHDRAW_BITCOIN,
+    Page.WITHDRAW_HISTORY_ID,
+    Page.WITHDRAW_SUCCESS,
+    Page.ACCOUNT_VERIFICATION,
+    Page.ACCOUNT_ABOUT_US,
+    Page.ACCOUNTS_SWITCH,
+  ]);
+
+  const isHiddenPromoPage = hidenPromoPageList?.isExact;
+  
+
+  useEffect(() =>{
+    if (mainAppStore.isPromoAccount && isHiddenPromoPage) {
+      push(Page.DASHBOARD);
+    }
+  }, [mainAppStore.isPromoAccount])
 
   useEffect(() => {
     async function fetchPersonalData() {
@@ -200,6 +225,6 @@ const AuthorizedContainer: FC = ({ children }) => {
       {showNavbarAndNav && <NavigationPanel />}
     </FlexContainer>
   );
-};
+});
 
 export default AuthorizedContainer;

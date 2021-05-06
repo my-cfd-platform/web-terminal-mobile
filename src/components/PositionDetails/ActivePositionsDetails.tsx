@@ -151,6 +151,7 @@ const ActivePositionsDetails: FC<Props> = observer((props) => {
   };
 
   useEffect(() => {
+    mainAppStore.setParamsPortfolioActive(null);
     const positionById = quotesStore.activePositions.find(
       (item) => item.id === +positionId
     );
@@ -158,6 +159,7 @@ const ActivePositionsDetails: FC<Props> = observer((props) => {
       setPosition(positionById);
     }
     if (quotesStore.activePositions && !positionById) {
+      mainAppStore.setParamsPortfolioActive(`${positionId}`);
       push(Page.PORTFOLIO_MAIN);
     }
   }, [quotesStore.activePositions, positionId]);

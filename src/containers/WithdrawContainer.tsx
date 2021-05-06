@@ -3,7 +3,7 @@ import { FlexContainer } from '../styles/FlexContainer';
 import BackFlowLayout from '../components/BackFlowLayout';
 import { useTranslation } from 'react-i18next';
 import styled from '@emotion/styled';
-import { NavLink, useRouteMatch } from 'react-router-dom';
+import { NavLink, useHistory, useRouteMatch } from 'react-router-dom';
 import Colors from '../constants/Colors';
 import Page from '../constants/Pages';
 import { useStores } from '../hooks/useStores';
@@ -21,8 +21,14 @@ interface Props {
 }
 const WithdrawContainer: FC<Props> = observer(({ children, backBtn }) => {
   const { t } = useTranslation();
-
+  const { push } = useHistory();
   const { mainAppStore, userProfileStore, withdrawalStore } = useStores();
+
+  useEffect(() => {
+    if (mainAppStore.isPromoAccount) {
+      push(Page.DASHBOARD);
+    }
+  }, [mainAppStore.isPromoAccount]);
 
   useEffect(() => {
     mixpanel.track(mixpanelEvents.WITHDRAW_VIEW, {
@@ -150,7 +156,10 @@ const OtherMethodsButton = styled.a`
   text-align: center;
   text-decoration: none;
 
-  &:hover, &:active, &:focus, &:visited {
+  &:hover,
+  &:active,
+  &:focus,
+  &:visited {
     color: #252636;
     text-decoration: none;
   }
