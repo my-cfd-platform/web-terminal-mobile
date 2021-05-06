@@ -126,7 +126,7 @@ const AuthorizedContainer: FC = ({ children }) => {
       mainAppStore.setParamsSecurity(false);
     }
     if (mainAppStore.paramsMarkets) {
-      push(Page.MARKETS);
+      push(`${Page.MARKETS}?markets=${mainAppStore.paramsMarkets}`);
     }
   }, [
     mainAppStore.activeAccount,
