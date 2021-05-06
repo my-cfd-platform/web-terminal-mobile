@@ -130,6 +130,9 @@ export class MainAppStore implements MainAppStoreProps {
   paramsAsset: string | null = null;
   paramsMarkets: string | null = null;
   paramsPortfolioTab: string | null = null;
+  paramsPortfolioActive: string | null = null;
+  paramsPortfolioPending: string | null = null;
+  paramsPortfolioClosed: string | null = null;
   paramsDeposit: boolean = false;
   paramsKYC: boolean = false;
   paramsWithdraw: boolean = false;
@@ -631,6 +634,21 @@ export class MainAppStore implements MainAppStoreProps {
   @action
   setParamsPortfolioTab = (params: string | null) => {
     this.paramsPortfolioTab = params;
+  };
+
+  @action
+  setParamsPortfolioActive = (params: string | null) => {
+    this.paramsPortfolioActive = params;
+  };
+
+  @action
+  setParamsPortfolioPending = (params: string | null) => {
+    this.paramsPortfolioPending = params;
+  };
+
+  @action
+  setParamsPortfolioClosed = (params: string | null) => {
+    this.paramsPortfolioClosed = params;
   };
 
   @action

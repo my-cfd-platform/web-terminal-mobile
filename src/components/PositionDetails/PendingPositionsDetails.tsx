@@ -88,11 +88,16 @@ const PendingPositionsDetails: FC<Props> = observer((props) => {
   );
 
   useEffect(() => {
+    mainAppStore.setParamsPortfolioPending(null);
     const positionById = quotesStore.pendingOrders.find(
       (item) => item.id === positionId
     );
     if (positionById) {
       setPosition(positionById);
+    }
+    if (quotesStore.pendingOrders && !positionById) {
+      mainAppStore.setParamsPortfolioPending(`${positionId}`);
+      push(`${Page.PORTFOLIO_MAIN}/pending`);
     }
   }, [positionId, quotesStore.pendingOrders]);
 

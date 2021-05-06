@@ -49,6 +49,7 @@ const ClosedPositionsDetails: FC<Props> = observer(({ positionId }) => {
   }, [historyStore.positionsHistoryReport]);
 
   useEffect(() => {
+    mainAppStore.setParamsPortfolioClosed(null);
     if (mainAppStore.activeAccountId) {
       const currentHistoryPosition = historyStore.positionsHistoryReport.positionsHistory.find(
         (item) => item.id === positionId
@@ -58,6 +59,10 @@ const ClosedPositionsDetails: FC<Props> = observer(({ positionId }) => {
       } else {
         setIsLoading(false);
         setPosition(currentHistoryPosition);
+      }
+      if (historyStore.positionsHistoryReport.positionsHistory && !currentHistoryPosition) {
+        mainAppStore.setParamsPortfolioClosed(`${positionId}`);
+        push(`${Page.PORTFOLIO_MAIN}/closed`);
       }
     }
   }, [mainAppStore.activeAccountId]);
