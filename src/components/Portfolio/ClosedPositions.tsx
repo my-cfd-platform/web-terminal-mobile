@@ -8,10 +8,13 @@ import EmptyListText from '../EmptyListText';
 import LoaderForComponents from '../LoaderForComponents';
 import { FlexContainer } from '../../styles/FlexContainer';
 import { PortfolioTabEnum } from '../../enums/PortfolioTabEnum';
+import Page from '../../constants/Pages';
+import { useHistory } from 'react-router-dom';
 
 const ClosedPositions = observer(() => {
   const { mainAppStore, historyStore, portfolioNavLinksStore } = useStores();
   const { t } = useTranslation();
+  const { push } = useHistory();
 
   const [isLoading, setIsLoading] = useState(true);
 
@@ -26,6 +29,26 @@ const ClosedPositions = observer(() => {
       }
     }
   }, [mainAppStore.activeAccountId]);
+
+  useEffect(() => {
+    if (
+      historyStore.positionsHistoryReport.positionsHistory.length &&
+      mainAppStore.paramsPortfolioClosed
+    ) {
+      const positionId = parseInt(mainAppStore.paramsPortfolioClosed);
+      const currentHistoryPosition = historyStore.positionsHistoryReport.positionsHistory.find(
+        (item) => item.id === positionId
+      );
+      if (currentHistoryPosition) {
+        push(`${Page.PORTFOLIO_MAIN}/closed/${positionId}`);
+      } else {
+        mainAppStore.setParamsPortfolioClosed(null);
+      }
+    }
+  }, [
+    mainAppStore.paramsPortfolioClosed,
+    historyStore.positionsHistoryReport.positionsHistory
+  ])
 
   useEffect(() => {
     portfolioNavLinksStore.setPortfolioNavLink(PortfolioTabEnum.CLOSED);
