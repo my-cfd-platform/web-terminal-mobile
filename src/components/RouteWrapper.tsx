@@ -35,9 +35,6 @@ const RouteWrapper: FC<Props> = observer((props) => {
       if (mainAppStore.isAuthorized) {
         mainAppStore.setParamsDeposit(unParsedData.paramsDeposit);
       }
-      if (unParsedData.status === null && mainAppStore.isAuthorized) {
-        push(Page.DASHBOARD);
-      }
     }
   }, []);
 

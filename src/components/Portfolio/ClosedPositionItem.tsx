@@ -12,6 +12,7 @@ import { ButtonWithoutStyles } from '../../styles/ButtonWithoutStyles';
 import ItemOperationLabel from './ItemOperationLabel';
 import { css } from '@emotion/core';
 import { observer } from 'mobx-react-lite';
+import LoaderForComponents from '../LoaderForComponents';
 
 interface Props {
   tradingHistoryItem: PositionHistoryDTO;
@@ -49,6 +50,10 @@ const ClosedPositionItem: FC<Props> = observer(({
   const handleClickOpen = () => {
     push(`${Page.PORTFOLIO_MAIN}/${type}/${id}`);
   };
+
+  if (!positionInstrument()) {
+    return <LoaderForComponents isLoading={true}/>;
+  }
 
   return (
     <InstrumentItem onClick={handleClickOpen}>
