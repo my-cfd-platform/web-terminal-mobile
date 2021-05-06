@@ -73,10 +73,10 @@ const Onboarding = () => {
         setLoading(false);
         setIsAnimation(true);
       } else {
-        push(Page.DASHBOARD);
+       // push(Page.DASHBOARD);
       }
     } catch (error) {
-      push(Page.DASHBOARD);
+      // push(Page.DASHBOARD);
     }
   };
 
