@@ -18,15 +18,19 @@ import { OperationApiResponseCodes } from './enums/OperationApiResponseCodes';
 import { FULL_VH } from './constants/global';
 import 'react-smartbanner/dist/main.css';
 import SmartBanner from 'react-smartbanner';
-import { Observer } from 'mobx-react-lite';
+import { observer, Observer } from 'mobx-react-lite';
 import HelmetMetaHeader from './components/HelmetMetaHeader';
 
 const DAYS_HIDDEN = IS_LIVE ? 30 : 1;
 const DAYS_VIEW_HIDDEN = IS_LIVE ? 90 : 1;
 
-const MainApp: FC = () => {
+const MainApp: FC = observer(() => {
   const { mainAppStore, instrumentsStore, badRequestPopupStore } = useStores();
   const { t, i18n } = useTranslation();
+
+  const isPromoAccountView =
+    (mainAppStore.promo !== 'facebook' || !mainAppStore.isDemoRealPopup) &&
+    !mainAppStore.isInitLoading;
 
   const fetchFavoriteInstruments = useCallback(async () => {
     const accountType = mainAppStore.activeAccount?.isLive
@@ -117,9 +121,7 @@ const MainApp: FC = () => {
       <Helmet>
         <title>
           {`${mainAppStore.initModel.brandName} ${t(
-            !mainAppStore.isPromoAccount && !mainAppStore.isInitLoading
-              ? 'trading platform'
-              : ''
+            `${!isPromoAccountView && 'trading platform'}`
           )}`}
         </title>
 
@@ -127,34 +129,37 @@ const MainApp: FC = () => {
         <script
           src={`https://www.google.com/recaptcha/api.js?render=${mainAppStore.initModel.recaptchaToken}`}
         ></script>
-        {(mainAppStore.promo !== 'facebook' || !mainAppStore.isDemoRealPopup) &&
-          !mainAppStore.isInitLoading && (
-            <>
-              <meta
-                name="apple-itunes-app"
-                content={`app-id=${
-                  IS_LOCAL ? '223123123' : mainAppStore.initModel.iosAppId
-                }`}
-              />
-              <meta
-                name="google-play-app"
-                content={`app-id=${mainAppStore.initModel.androidAppId}`}
-              />
-              <link
-                rel="apple-touch-icon"
-                href={
-                  IS_LOCAL
-                    ? 'https://trading-test.monfex.biz/br/mobile_app_logo.png'
-                    : mainAppStore.initModel.mobileAppLogo
-                }
-              ></link>
-            </>
-          )}
+
+        {!isPromoAccountView && (
+          <meta
+            name="apple-itunes-app"
+            content={`app-id=${
+              IS_LOCAL ? '223123123' : mainAppStore.initModel.iosAppId
+            }`}
+          />
+        )}
+        {!isPromoAccountView && (
+          <meta
+            name="google-play-app"
+            content={`app-id=${mainAppStore.initModel.androidAppId}`}
+          />
+        )}
+
+        <link
+          rel="apple-touch-icon"
+          href={
+            IS_LOCAL
+              ? 'https://trading-test.monfex.biz/br/mobile_app_logo.png'
+              : mainAppStore.initModel.mobileAppLogo
+          }
+        ></link>
+
         <link
           rel="android-touch-icon"
           href={mainAppStore.initModel.mobileAppLogo}
         ></link>
       </Helmet>
+
       <Router>
         <RoutingLayout></RoutingLayout>
       </Router>
@@ -228,6 +233,6 @@ const MainApp: FC = () => {
       />
     </>
   );
-};
+});
 
 export default MainApp;
