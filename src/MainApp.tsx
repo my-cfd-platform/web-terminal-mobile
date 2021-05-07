@@ -120,9 +120,7 @@ const MainApp: FC = () => {
     <>
       <Helmet>
         <title>
-          {`${mainAppStore.initModel.brandName} ${t(
-            `${!isPromoAccountView && 'trading platform'}`
-          )}`}
+          {`${mainAppStore.initModel.brandName} ${t(!isPromoAccountView ? 'trading platform' : '')}`}
         </title>
 
         <link rel="shortcut icon" href={mainAppStore.initModel.favicon} />
