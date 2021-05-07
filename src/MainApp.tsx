@@ -24,7 +24,7 @@ import HelmetMetaHeader from './components/HelmetMetaHeader';
 const DAYS_HIDDEN = IS_LIVE ? 30 : 1;
 const DAYS_VIEW_HIDDEN = IS_LIVE ? 90 : 1;
 
-const MainApp: FC = observer(() => {
+const MainApp: FC = () => {
   const { mainAppStore, instrumentsStore, badRequestPopupStore } = useStores();
   const { t, i18n } = useTranslation();
 
@@ -233,6 +233,6 @@ const MainApp: FC = observer(() => {
       />
     </>
   );
-});
+};
 
 export default MainApp;

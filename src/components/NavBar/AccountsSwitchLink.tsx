@@ -18,7 +18,7 @@ const AccountsSwitchLink = observer(() => {
     const step = (timestamp: number) => {
       if (!startTimestamp) startTimestamp = timestamp;
       const progress = Math.min((timestamp - startTimestamp) / 2000, 1);
-      setBalance((progress * (end - start) + start));
+      setBalance(progress * (end - start) + start);
       if (progress < 1) {
         window.requestAnimationFrame(step);
       }
@@ -29,41 +29,36 @@ const AccountsSwitchLink = observer(() => {
 
   useEffect(() => {
     if (mainAppStore.accounts) {
-      const newBalance = mainAppStore.accounts.find(
-        (item) => item.id === mainAppStore.activeAccountId
-      )?.balance || balance;
+      const newBalance =
+        mainAppStore.accounts.find(
+          (item) => item.id === mainAppStore.activeAccountId
+        )?.balance || balance;
       if (newBalance !== balance && balance !== 0) {
-        animateValue(
-          balance,
-          newBalance
-        );
+        animateValue(balance, newBalance);
       } else if (balance === 0) {
         mainAppStore.balanceWas = newBalance;
         setBalance(newBalance);
       }
     }
-  }, [
-    mainAppStore.activeAccountId,
-    mainAppStore.accounts
-  ]);
+  }, [mainAppStore.activeAccountId, mainAppStore.accounts]);
 
   return (
-    <AccountSwitch to={!mainAppStore.isPromoAccount ? Page.ACCOUNTS_SWITCH : Page.DASHBOARD}>
-      <Observer>
-        {() => (
-          <PrimaryTextSpan
-            color={mainAppStore.activeAccount?.isLive ? Colors.ACCENT : "#ffffff"}
-            fontSize="16px"
-            fontWeight="bold"
-            marginRight="8px"
-            lineHeight="1"
-          >
-            {mainAppStore.activeAccount?.symbol}
-            {balance.toFixed(2)}
-          </PrimaryTextSpan>
-        )}
-      </Observer>
-      {!mainAppStore.isPromoAccount && <SvgIcon {...DropDownArrov} fillColor="rgba(255, 255, 255, 0.4)"/>}
+    <AccountSwitch
+      to={!mainAppStore.isPromoAccount ? Page.ACCOUNTS_SWITCH : Page.DASHBOARD}
+    >
+      <PrimaryTextSpan
+        color={mainAppStore.activeAccount?.isLive ? Colors.ACCENT : '#ffffff'}
+        fontSize="16px"
+        fontWeight="bold"
+        marginRight="8px"
+        lineHeight="1"
+      >
+        {mainAppStore.activeAccount?.symbol}
+        {balance.toFixed(2)}
+      </PrimaryTextSpan>
+      {!mainAppStore.isPromoAccount && (
+        <SvgIcon {...DropDownArrov} fillColor="rgba(255, 255, 255, 0.4)" />
+      )}
     </AccountSwitch>
   );
 });
@@ -73,7 +68,7 @@ export default AccountsSwitchLink;
 const AccountSwitch = styled(Link)`
   margin-left: 16px;
   text-decoration: none;
-  transition: all .4s ease;
+  transition: all 0.4s ease;
   &:hover {
     text-decoration: none;
   }
