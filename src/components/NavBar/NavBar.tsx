@@ -46,7 +46,8 @@ const NavBar = observer(() => {
       mainAppStore.lang &&
       mainAppStore.token &&
       mainAppStore.initModel.tradingUrl && 
-      !mainAppStore.isPromoAccount
+      !mainAppStore.isPromoAccount && 
+      !mainAppStore.promo
     ) {
       const newUrlParams = new URLSearchParams();
       newUrlParams.set('token', mainAppStore.token);
@@ -71,6 +72,8 @@ const NavBar = observer(() => {
     mainAppStore.lang,
     mainAppStore.token,
     mainAppStore.initModel.tradingUrl,
+    mainAppStore.isPromoAccount,
+    mainAppStore.promo
   ]);
 
   return (
