@@ -28,9 +28,12 @@ const MainApp: FC = () => {
   const { mainAppStore, instrumentsStore, badRequestPopupStore } = useStores();
   const { t, i18n } = useTranslation();
 
-  const isPromoAccountView =
-    (mainAppStore.promo !== 'facebook' || !mainAppStore.isDemoRealPopup) &&
-    !mainAppStore.isInitLoading;
+  const isPromoAccountView = useCallback(() => {
+    return (
+      (mainAppStore.promo !== 'facebook' || !mainAppStore.isDemoRealPopup) &&
+      !mainAppStore.isInitLoading
+    );
+  }, [mainAppStore.promo, mainAppStore.isPromoAccount, mainAppStore.isInitLoading]);
 
   const fetchFavoriteInstruments = useCallback(async () => {
     const accountType = mainAppStore.activeAccount?.isLive
@@ -120,7 +123,11 @@ const MainApp: FC = () => {
     <>
       <Helmet>
         <title>
-          {`${mainAppStore.initModel.brandName} ${t(!isPromoAccountView && !mainAppStore.isPromoAccount ? 'trading platform' : '')}`}
+          {`${mainAppStore.initModel.brandName} ${t(
+            !isPromoAccountView && !mainAppStore.isPromoAccount
+              ? 'trading platform'
+              : ''
+          )}`}
         </title>
 
         <link rel="shortcut icon" href={mainAppStore.initModel.favicon} />
