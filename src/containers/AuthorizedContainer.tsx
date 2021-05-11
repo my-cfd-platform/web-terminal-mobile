@@ -161,7 +161,7 @@ const AuthorizedContainer: FC = observer(({ children }) => {
   ]);
 
   useEffect(() => {
-    if (mainAppStore.isDemoRealPopup && !mainAppStore.isVerification) {
+    if (mainAppStore.isDemoRealPopup && !mainAppStore.isVerification && !mainAppStore.isPromoAccount) {
       push(Page.ONBOARDING);
     }
   }, [
@@ -187,7 +187,7 @@ const AuthorizedContainer: FC = observer(({ children }) => {
             <NotificationPopup></NotificationPopup>
             <NotificationActivePositionPopup></NotificationActivePositionPopup>
             <NotificationPendingPositionPopup></NotificationPendingPositionPopup>
-            {mainAppStore.activeAccount && (
+            {mainAppStore.activeAccount && !mainAppStore.isPromoAccount && (
               <>
                 <DepositPaymentResultPopup />
               </>
