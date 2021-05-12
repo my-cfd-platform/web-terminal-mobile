@@ -57,7 +57,7 @@ const Onboarding = () => {
       loop: false,
       autoplay: true,
       pause: pause,
-      animationData: step,
+      animationData: JSON.parse(step),
       rendererSettings: {
         preserveAspectRatio: 'xMidYMid slice'
       }
