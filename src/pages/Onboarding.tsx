@@ -19,6 +19,8 @@ import mixapanelProps from '../constants/mixpanelProps';
 import KeysInApi from '../constants/keysInApi';
 import Topics from '../constants/websocketTopics';
 import Fields from '../constants/fields';
+import styled from '@emotion/styled';
+import { keyframes } from '@emotion/core';
 
 const Onboarding = () => {
   const { t } = useTranslation();
@@ -33,8 +35,6 @@ const Onboarding = () => {
   const [actualStep, setActualStep] = useState<number>(1);
   const [loading, setLoading] = useState<boolean>(false);
   const [actualStepInfo, setActualStepInfo] = useState<OnBoardingInfo | null>(null);
-  const [isAnimation, setIsAnimation] = useState<boolean>(true);
-  const [pause, setPause] = useState<boolean>(false);
   const [parsedParams, setParsedParams] = useState('');
   const urlParams = new URLSearchParams();
 
@@ -52,26 +52,27 @@ const Onboarding = () => {
     setParsedParams(urlParams.toString());
   }, [mainAppStore.token, mainAppStore.lang, mainAppStore.accounts]);
 
-  const getLottieOptions = (step: any) => {
+  const getLottieOptions = useCallback(() => {
     return {
       loop: false,
       autoplay: true,
-      pause: pause,
-      animationData: JSON.parse(step),
+      pause: false,
+      animationData: JSON.parse(actualStepInfo?.data.lottieJson || ''),
       rendererSettings: {
-        preserveAspectRatio: 'xMidYMid slice'
+        preserveAspectRatio: 'xMidYMid slice',
+        clearCanvas: false
       }
     };
-  };
+  }, [actualStepInfo]);
 
   const getInfoByStep = async (step: number) => {
     try {
       const response = await API.getOnBoardingInfoByStep(step, 2, mainAppStore.initModel.miscUrl);
       if (response.responseCode === 0) {
+        setActualStepInfo(null);
         setActualStepInfo(response);
-        setPause(false);
+        setActualStep(step);
         setLoading(false);
-        setIsAnimation(true);
       } else {
        push(Page.DASHBOARD);
       }
@@ -80,12 +81,11 @@ const Onboarding = () => {
     }
   };
 
-  const handleClickPause = () => {
-    setPause(!pause);
+  const handleClickLottie = (e: any) => {
+    e.preventDefault();
   };
 
   const handleChangeStep = (nextStep: number) => () => {
-    setActualStep(nextStep);
     getInfoByStep(nextStep);
   };
 
@@ -178,8 +178,8 @@ const Onboarding = () => {
     getInfoByStep(1);
   }, []);
 
-  if (loading || actualStepInfo === null ) {
-    return <LoaderForComponents isLoading={loading} />;
+  if (loading || actualStepInfo === null) {
+    return <LoaderForComponents isLoading={loading || actualStepInfo === null} />;
   }
 
   return (
@@ -202,22 +202,21 @@ const Onboarding = () => {
           onClick={
             actualStepInfo?.data.fullScreen ?
               handleChangeStep(actualStep + 1) :
-              handleClickPause
+              handleClickLottie
           }
         >
-          <Lottie options={getLottieOptions(actualStepInfo?.data.lottieJson)}
-            isStopped={false}
-            height={getActualWidth() * 1.3}
-            eventListeners={[
-              {
-                eventName: 'complete',
-                callback: () => setIsAnimation(false),
-              }
-            ]}
-            width={getActualWidth()}/>
+          <Lottie
+            options={getLottieOptions()}
+            height={getActualWidth() * 1.5}
+            width={getActualWidth()}
+            isClickToPauseDisabled={true}
+          />
         </FlexContainer>
         {!actualStepInfo?.data.fullScreen &&
-          <>
+          <BottomWrapper
+            justifyContent="center"
+            flexDirection="column"
+          >
             <FlexContainer
               width="100%"
               alignItems="center"
@@ -250,18 +249,13 @@ const Onboarding = () => {
                 padding="0 16px 40px"
                 flexDirection="column"
             >
-              {actualStepInfo?.data.buttons.map((button) => <PrimaryButton
+              {actualStepInfo?.data.buttons.map((button) => <OnboardingButton
                 padding="12px"
                 type="button"
                 width="100%"
-                backgroundColor={
-                  button.action === ButtonActionType.Demo ?
-                    'transparent' :
-                    Colors.ACCENT_BLUE
-                }
                 onClick={actionByType(button.action)}
-                disabled={isAnimation}
-                key={button.action}
+                key={`${button.action}_${actualStep}`}
+                isDemo={button.action === ButtonActionType.Demo}
               >
                 <PrimaryTextSpan
                   color={
@@ -274,9 +268,9 @@ const Onboarding = () => {
                 >
                   {button.text}
                 </PrimaryTextSpan>
-              </PrimaryButton>)}
+              </OnboardingButton>)}
             </FlexContainer>
-          </>
+          </BottomWrapper>
         }
       </FlexContainer>
     </BackFlowLayout>
@@ -284,3 +278,34 @@ const Onboarding = () => {
 };
 
 export default Onboarding;
+
+const translateAnimationIn = keyframes`
+    from {
+      transform: translateY(150px);
+      opacity: 0;
+    }
+    to {
+      transform: translateY(0);
+      opacity: 1;
+    }
+`;
+
+const buttonAnimation = keyframes`
+    from {
+      background-color: rgba(196, 196, 196, 0.5);
+    }
+    to {
+      background-color: #00FFDD;
+    }
+`;
+
+const BottomWrapper = styled(FlexContainer)`
+  opacity: 1;
+  transform: translateY(0);
+  animation: ${translateAnimationIn} 0.5s ease;
+`;
+
+const OnboardingButton = styled(PrimaryButton)<{ isDemo: boolean }>`
+  animation: ${(props) => !props.isDemo && buttonAnimation} 2s ease;
+  background-color: ${(props) => props.isDemo && 'transparent'}
+`;
