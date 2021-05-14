@@ -18,36 +18,47 @@ const LoaderFullscreen: FC<Props> = ({ isLoading }) => {
   const { mainAppStore } = useStores();
   const { t } = useTranslation();
   return (
-    <Modal>
-      <FixedContainerWrapper isLoading={isLoading}>
-        <FlexContainer
-          position="fixed"
-          top="0"
-          left="0"
-          right="0"
-          minHeight={`calc(${FULL_VH})`}
-          zIndex="1000"
-          backgroundColor="#1C2026"
-          justifyContent="center"
-          alignItems="center"
-          flexDirection="column"
-        >
+    <FlexContainerMain
+      position="fixed"
+      top="0"
+      left="0"
+      right="0"
+      minHeight={`calc(${FULL_VH})`}
+      zIndex="999"
+      backgroundColor="#1C2026"
+      isLoading={isLoading}
+    >
+      <Modal>
+        <FixedContainerWrapper isLoading={isLoading}>
           <FlexContainer
-            alignItems="center"
+            position="fixed"
+            top="0"
+            left="0"
+            right="0"
+            minHeight={`calc(${FULL_VH})`}
+            zIndex="1000"
+            backgroundColor="#1C2026"
             justifyContent="center"
-            marginBottom="32px"
+            alignItems="center"
+            flexDirection="column"
           >
-            <FlexContainer margin="0 6px 0 0" width="250px">
-              <Logo src={mainAppStore.initModel.logo || LogoMonfex} />
+            <FlexContainer
+              alignItems="center"
+              justifyContent="center"
+              marginBottom="32px"
+            >
+              <FlexContainer margin="0 6px 0 0" width="250px">
+                <Logo src={mainAppStore.initModel.logo || LogoMonfex} />
+              </FlexContainer>
+            </FlexContainer>
+            <FlexContainer alignItems="center">
+              <LoaderComponent />
+              <TextLoader>{t('Loading')}</TextLoader>
             </FlexContainer>
           </FlexContainer>
-          <FlexContainer alignItems="center">
-            <LoaderComponent />
-            <TextLoader>{t('Loading')}</TextLoader>
-          </FlexContainer>
-        </FlexContainer>
-      </FixedContainerWrapper>
-    </Modal>
+        </FixedContainerWrapper>
+      </Modal>
+    </FlexContainerMain>
   );
 };
 
@@ -71,6 +82,15 @@ const fadeOut = keyframes`
 `;
 
 const FixedContainerWrapper = styled.div<{ isLoading: boolean }>`
+  animation: ${(props) =>
+    !props.isLoading &&
+    css`
+      ${fadeOut} 0.5s linear forwards
+    `};
+  z-index: 1000;
+`;
+
+const FlexContainerMain = styled(FlexContainer)<{ isLoading: boolean }>`
   animation: ${(props) =>
     !props.isLoading &&
     css`

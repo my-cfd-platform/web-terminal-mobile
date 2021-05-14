@@ -90,12 +90,20 @@ const Onboarding = () => {
   };
 
   const closeOnBoarding = () => {
-    if (actualStepInfo?.data.totalSteps) {
+    if (
+      actualStepInfo?.data.totalSteps &&
+      actualStepInfo?.data.totalSteps !== actualStep
+    ) {
       mixpanel.track(mixpanelEvents.ONBOARDING, {
         [mixapanelProps.ONBOARDING_VALUE]: `close${actualStep}`,
       });
       setActualStep(actualStepInfo?.data.totalSteps);
       getInfoByStep(actualStepInfo?.data.totalSteps);
+    } else {
+      mixpanel.track(mixpanelEvents.ONBOARDING, {
+        [mixapanelProps.ONBOARDING_VALUE]: `close${actualStep}`,
+      });
+      push(Page.DASHBOARD);
     }
   };
 
@@ -224,7 +232,7 @@ const Onboarding = () => {
               padding="0 16px 40px"
               flexDirection="column"
               position="relative"
-              margin="-100px 0 0 0"
+              margin="-200px 0 0 0"
             >
               {actualStepInfo?.data.title && <PrimaryTextSpan
                 fontSize="24px"
