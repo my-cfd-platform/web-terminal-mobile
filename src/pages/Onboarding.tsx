@@ -28,7 +28,8 @@ const Onboarding = () => {
   const {
     badRequestPopupStore,
     mainAppStore,
-    userProfileStore
+    userProfileStore,
+    instrumentsStore
   } = useStores();
 
   const wrapperRef = useRef<HTMLDivElement>(document.createElement('div'));
@@ -183,6 +184,17 @@ const Onboarding = () => {
       [mixapanelProps.ONBOARDING_VALUE]: 'start1',
     });
     getInfoByStep(1);
+    return () => {
+      const useAccount = mainAppStore.accounts.find(
+        (account) => !account.isLive
+      );
+      if (useAccount) {
+        mainAppStore.setActiveAccount(useAccount);
+        instrumentsStore.switchInstrument(
+          instrumentsStore.activeInstruments[0].instrumentItem.id
+        );
+      }
+    };
   }, []);
 
   if (loading || actualStepInfo === null) {
