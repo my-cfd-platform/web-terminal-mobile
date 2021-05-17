@@ -94,16 +94,22 @@ const PhoneVerification: FC = () => {
   };
 
   useEffect(() => {
+    let cleanupFunction = false;
     async function fetchCountries() {
       try {
         const response = await API.getCountries(
           CountriesEnum.EN,
           mainAppStore.initModel.authUrl
         );
-        setCountries(response);
+        if (!cleanupFunction) {
+          setCountries(response);
+        }
       } catch (error) {}
     }
     fetchCountries();
+    return () => {
+      cleanupFunction = true
+    };
   }, []);
 
   useEffect(() => {

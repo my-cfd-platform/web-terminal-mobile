@@ -97,7 +97,6 @@ const Onboarding = () => {
       mixpanel.track(mixpanelEvents.ONBOARDING, {
         [mixapanelProps.ONBOARDING_VALUE]: `close${actualStep}`,
       });
-      setActualStep(actualStepInfo?.data.totalSteps);
       getInfoByStep(actualStepInfo?.data.totalSteps);
     } else {
       mixpanel.track(mixpanelEvents.ONBOARDING, {
@@ -288,11 +287,17 @@ const Onboarding = () => {
 export default Onboarding;
 
 const translateAnimationIn = keyframes`
-    from {
+    0% {
       transform: translateY(150px);
       opacity: 0;
     }
-    to {
+    
+    50% {
+      transform: translateY(150px);
+      opacity: 0;
+    }
+    
+    100% {
       transform: translateY(0);
       opacity: 1;
     }
@@ -310,10 +315,13 @@ const buttonAnimation = keyframes`
 const BottomWrapper = styled(FlexContainer)`
   opacity: 1;
   transform: translateY(0);
-  animation: ${translateAnimationIn} 0.5s ease;
+  animation: ${translateAnimationIn} 1s ease;
 `;
 
 const OnboardingButton = styled(PrimaryButton)<{ isDemo: boolean }>`
   animation: ${(props) => !props.isDemo && buttonAnimation} 2s ease;
-  background-color: ${(props) => props.isDemo && 'transparent'}
+  background-color: ${(props) => props.isDemo && 'transparent'};
+  &:hover {
+    background-color: ${(props) => props.isDemo && 'transparent'};
+  }
 `;
