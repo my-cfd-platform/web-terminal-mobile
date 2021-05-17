@@ -134,7 +134,7 @@ const ChartContainer: FC = observer(() => {
           to: moment.utc().valueOf() / 1000,
         };
 
-        tvWidget.activeChart().setVisibleRange(fromTo);
+        // tvWidget.activeChart().setVisibleRange(fromTo);
 
         if (
           instrumentsStore.activeInstrument &&
