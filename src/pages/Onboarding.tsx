@@ -21,8 +21,10 @@ import Topics from '../constants/websocketTopics';
 import Fields from '../constants/fields';
 import styled from '@emotion/styled';
 import { keyframes } from '@emotion/core';
+import { LOCAL_STORAGE_SKIPPED_ONBOARDING } from '../constants/global';
+import { observer } from 'mobx-react-lite';
 
-const Onboarding = () => {
+const Onboarding = observer(() => {
   const { t } = useTranslation();
   const { push } = useHistory();
   const {
@@ -95,6 +97,15 @@ const Onboarding = () => {
       actualStepInfo?.data.totalSteps &&
       actualStepInfo?.data.totalSteps !== actualStep
     ) {
+      const storageCheck = localStorage.getItem(LOCAL_STORAGE_SKIPPED_ONBOARDING);
+      const alreadySkipped = (storageCheck !== null)
+        ? JSON.parse(storageCheck)
+        : [];
+      alreadySkipped.push(mainAppStore.activeAccountId);
+      localStorage.setItem(
+        LOCAL_STORAGE_SKIPPED_ONBOARDING,
+        JSON.stringify(alreadySkipped)
+      );
       mixpanel.track(mixpanelEvents.ONBOARDING, {
         [mixapanelProps.ONBOARDING_VALUE]: `close${actualStep}`,
       });
@@ -181,11 +192,38 @@ const Onboarding = () => {
   }, [wrapperRef]);
 
   useEffect(() => {
+    const storageCheck = localStorage.getItem(LOCAL_STORAGE_SKIPPED_ONBOARDING);
+    const alreadySkipped = (storageCheck !== null)
+      ? JSON.parse(storageCheck)
+      : [];
+    if (alreadySkipped.includes(mainAppStore.activeAccountId)) {
+      push(Page.DASHBOARD);
+    }
+  }, [mainAppStore.activeAccountId]);
+
+  useEffect(() => {
+    let cleanupFunction = false;
     mixpanel.track(mixpanelEvents.ONBOARDING, {
       [mixapanelProps.ONBOARDING_VALUE]: 'start1',
     });
-    getInfoByStep(1);
+    const getInfoFirstStep = async () => {
+      try {
+        const response = await API.getOnBoardingInfoByStep(1, 2, mainAppStore.initModel.miscUrl);
+        if (response.responseCode === 0 && !cleanupFunction) {
+          setActualStepInfo(null);
+          setActualStepInfo(response);
+          setActualStep(1);
+          setLoading(false);
+        } else {
+          push(Page.DASHBOARD);
+        }
+      } catch (error) {
+        push(Page.DASHBOARD);
+      }
+    };
+    getInfoFirstStep();
     return () => {
+      cleanupFunction = true;
       const useAccount = mainAppStore.accounts.find(
         (account) => !account.isLive
       );
@@ -292,7 +330,7 @@ const Onboarding = () => {
       </FlexContainer>
     </BackFlowLayout>
   );
-};
+});
 
 export default Onboarding;
 
