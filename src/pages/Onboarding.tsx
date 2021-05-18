@@ -103,6 +103,7 @@ const Onboarding = () => {
       mixpanel.track(mixpanelEvents.ONBOARDING, {
         [mixapanelProps.ONBOARDING_VALUE]: `close${actualStep}`,
       });
+      mainAppStore.onboardingJustClosed = true;
       push(Page.DASHBOARD);
     }
   };
@@ -190,9 +191,6 @@ const Onboarding = () => {
       );
       if (useAccount) {
         mainAppStore.setActiveAccount(useAccount);
-        instrumentsStore.switchInstrument(
-          instrumentsStore.activeInstruments[0].instrumentItem.id
-        );
       }
     };
   }, []);
