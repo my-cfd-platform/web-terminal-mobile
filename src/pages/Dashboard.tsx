@@ -13,7 +13,11 @@ import ActiveChartOrders from '../components/Dashboard/ActiveChartOrders';
 import { observer } from 'mobx-react-lite';
 
 const Dashboard: FC = observer(() => {
-  const { instrumentsStore, quotesStore } = useStores();
+  const {
+    instrumentsStore,
+    quotesStore,
+    mainAppStore
+  } = useStores();
   const { push } = useHistory();
 
   const [activePositions, setActivePositions] = useState<PositionModelWSDTO[]>(
@@ -30,6 +34,21 @@ const Dashboard: FC = observer(() => {
   }, [
     instrumentsStore.activeInstrument,
     quotesStore.sortedActivePositions
+  ]);
+
+  useEffect(() => {
+    if (
+      instrumentsStore.activeInstruments.length &&
+      mainAppStore.onboardingJustClosed
+    ) {
+      instrumentsStore.switchInstrument(
+        instrumentsStore.activeInstruments[0].instrumentItem.id
+      );
+      mainAppStore.onboardingJustClosed = false;
+    }
+  }, [
+    instrumentsStore.activeInstruments,
+    mainAppStore.onboardingJustClosed
   ]);
 
   const handleClickBuy = () => {
