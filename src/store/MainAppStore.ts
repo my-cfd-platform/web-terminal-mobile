@@ -282,7 +282,6 @@ export class MainAppStore implements MainAppStoreProps {
               id: item.id,
             });
           });
-          console.log('here');
           this.rootStore.instrumentsStore.setInstruments(response.data);
         }
       }
