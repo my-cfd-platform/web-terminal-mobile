@@ -31,7 +31,6 @@ const Onboarding = observer(() => {
     badRequestPopupStore,
     mainAppStore,
     userProfileStore,
-    instrumentsStore
   } = useStores();
 
   const wrapperRef = useRef<HTMLDivElement>(document.createElement('div'));
@@ -98,10 +97,17 @@ const Onboarding = observer(() => {
       actualStepInfo?.data.totalSteps !== actualStep
     ) {
       const storageCheck = localStorage.getItem(LOCAL_STORAGE_SKIPPED_ONBOARDING);
+      const neededId = mainAppStore
+        .accounts
+        ?.find((account) => !account.isLive)?.id;
       const alreadySkipped = (storageCheck !== null)
         ? JSON.parse(storageCheck)
         : [];
-      alreadySkipped.push(mainAppStore.activeAccountId);
+      alreadySkipped.push(neededId);
+      mainAppStore.activeAccountId = neededId || '';
+      mainAppStore.activeAccount = mainAppStore
+        .accounts
+        ?.find((account) => !account.isLive);
       localStorage.setItem(
         LOCAL_STORAGE_SKIPPED_ONBOARDING,
         JSON.stringify(alreadySkipped)
@@ -193,13 +199,20 @@ const Onboarding = observer(() => {
 
   useEffect(() => {
     const storageCheck = localStorage.getItem(LOCAL_STORAGE_SKIPPED_ONBOARDING);
+    const neededId = mainAppStore
+      .accounts
+      ?.find((account) => !account.isLive)?.id;
     const alreadySkipped = (storageCheck !== null)
       ? JSON.parse(storageCheck)
       : [];
-    if (alreadySkipped.includes(mainAppStore.activeAccountId)) {
+    if (alreadySkipped.includes(neededId)) {
+      mainAppStore.activeAccountId = neededId || '';
+      mainAppStore.activeAccount = mainAppStore
+        .accounts
+        ?.find((account) => !account.isLive);
       push(Page.DASHBOARD);
     }
-  }, [mainAppStore.activeAccountId]);
+  }, []);
 
   useEffect(() => {
     let cleanupFunction = false;
