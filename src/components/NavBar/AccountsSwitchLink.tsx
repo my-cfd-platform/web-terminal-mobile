@@ -8,6 +8,7 @@ import { useStores } from '../../hooks/useStores';
 import { Observer, observer } from 'mobx-react-lite';
 import DropDownArrov from '../../assets/svg/icon-dropdown.svg';
 import SvgIcon from '../SvgIcon';
+import { ButtonWithoutStyles } from '../../styles/ButtonWithoutStyles';
 
 const AccountsSwitchLink = observer(() => {
   const { mainAppStore } = useStores();
@@ -26,6 +27,10 @@ const AccountsSwitchLink = observer(() => {
     window.requestAnimationFrame(step);
     mainAppStore.balanceWas = end;
   };
+
+  const handleOpenAccounts = () => () => {
+    mainAppStore.openAccountSwitcher();
+  }
 
   useEffect(() => {
     if (mainAppStore.accounts) {
@@ -48,7 +53,7 @@ const AccountsSwitchLink = observer(() => {
   ]);
 
   return (
-    <AccountSwitch to={Page.ACCOUNTS_SWITCH}>
+    <AccountSwitch onClick={handleOpenAccounts()}>
       <Observer>
         {() => (
           <PrimaryTextSpan
@@ -70,7 +75,7 @@ const AccountsSwitchLink = observer(() => {
 
 export default AccountsSwitchLink;
 
-const AccountSwitch = styled(Link)`
+const AccountSwitch = styled(ButtonWithoutStyles)`
   margin-left: 16px;
   text-decoration: none;
   transition: all .4s ease;

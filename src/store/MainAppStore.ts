@@ -64,6 +64,7 @@ interface MainAppStoreProps {
   lang: CountriesEnum;
   activeAccountId: string;
   connectionSignalRTimer: NodeJS.Timeout | null;
+  showAccountSwitcher: boolean;
 }
 
 // TODO: think about application initialization
@@ -118,6 +119,7 @@ export class MainAppStore implements MainAppStoreProps {
   @observable lpLoginFlag: boolean = false;
   @observable isVerification: boolean = false;
   @observable balanceWas: number = 0;
+  @observable showAccountSwitcher: boolean = false;
   websocketConnectionTries = 0;
 
   constructor(rootStore: RootStore) {
@@ -373,6 +375,16 @@ export class MainAppStore implements MainAppStoreProps {
       }
     );
   };
+
+  @action 
+  openAccountSwitcher = () => {
+    this.showAccountSwitcher = true;
+  }
+
+  @action 
+  closeAccountSwitcher = () => {
+    this.showAccountSwitcher = false;
+  }
 
   @action
   setSignUpFlag = (value: boolean) => {

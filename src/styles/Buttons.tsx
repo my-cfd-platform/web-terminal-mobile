@@ -6,13 +6,22 @@ interface PrimaryButtonProps {
   padding?: string;
   backgroundColor?: string;
   width?: string;
+  isBorder?: boolean;
+  height?: string;
+}
+
+interface SecondaryButtonProps {
+  padding?: string;
+  backgroundColor?: string;
+  width?: string;
 }
 
 export const PrimaryButton = styled(ButtonWithoutStyles)<PrimaryButtonProps>`
   padding: ${props => props.padding || '4px 8px'};
   width: ${props => props.width};
-  height: 56px;
-  background-color: ${props => props.backgroundColor || Colors.ACCENT_BLUE};
+  height: ${props => props.height || "56px"};
+  background-color: ${props => props.isBorder ? 'transparent' : props.backgroundColor || Colors.ACCENT_BLUE};
+  border: ${props => props.isBorder && "2px solid #FFFFFF"};
   border-radius: 12px;
   transition: background-color 0.2s ease;
   font-weight: 600;
@@ -31,10 +40,12 @@ export const PrimaryButton = styled(ButtonWithoutStyles)<PrimaryButtonProps>`
   }
 `;
 
-export const SecondaryButton = styled(ButtonWithoutStyles)`
+export const SecondaryButton = styled(ButtonWithoutStyles)<SecondaryButtonProps>`
+  width: ${props => props.width};
   padding: 4px 8px;
   background-color: rgba(255, 255, 255, 0.12);
-  border-radius: 4px;
+  border-radius: 12px;
+  height: 56px;
   transition: background-color 0.2s ease;
 
   &:hover {

@@ -9,6 +9,7 @@ import { observer } from 'mobx-react-lite';
 import { useTranslation } from 'react-i18next';
 import useRedirectMiddleware from '../../hooks/useRedirectMiddleware';
 import { ButtonWithoutStyles } from '../../styles/ButtonWithoutStyles';
+import AccountSwitcher from '../AccountSwitcher/AccountSwitcher';
 
 const NavBar = observer(() => {
   const { mainAppStore, userProfileStore } = useStores();
@@ -49,6 +50,7 @@ const NavBar = observer(() => {
       <DepositLink onClick={() => redirectWithUpdateRefreshToken(API_DEPOSIT_STRING, parsedParams)}>
         {t('Deposit')}
       </DepositLink>
+      <AccountSwitcher show={mainAppStore.showAccountSwitcher} />
     </FlexContainer>
   );
 });

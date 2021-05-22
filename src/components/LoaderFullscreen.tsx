@@ -53,22 +53,20 @@ const LoaderFullscreen: FC<Props> = ({ isLoading }) => {
 
 export default LoaderFullscreen;
 
-const fadeOut = keyframes`
-    0 {
-        opacity: 1;
-        visibility: visible;
-    }
-
-    99% {
-        opacity: 0;
-        visibility: visible;
-    }
-
-    100% {
-        opacity: 0;
-        visibility: hidden;
-    }
-`;
+const fadeOut = keyframes(`
+  0 {
+    opacity: 1;
+    visibility: visible;
+  }
+  99% {
+    opacity: 0;
+    visibility: visible;
+  }
+  100% {
+    opacity: 0;
+    visibility: hidden;
+  }
+`);
 
 const FixedContainerWrapper = styled.div<{ isLoading: boolean }>`
   animation: ${(props) =>
