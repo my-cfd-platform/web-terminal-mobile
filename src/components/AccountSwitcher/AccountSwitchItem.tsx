@@ -128,12 +128,12 @@ const AccountSwitchItem = ({
               {t(account?.isLive ? 'Real' : 'Demo')}
             </PrimaryTextSpan>
 
-            <FlexContainer>
+            <FlexContainer alignItems="flex-end">
               <PrimaryTextSpan
                 fontSize="12px"
                 color="rgba(255, 255, 255, 0.4)"
                 textTransform="uppercase"
-                marginRight="8px"
+                
               >
                 {account?.id}
               </PrimaryTextSpan>
@@ -141,7 +141,10 @@ const AccountSwitchItem = ({
               <ButtonWithoutStyles
                 onClick={(e) => handleClickCopy(e, account?.id || '')}
               >
+                <FlexContainer padding="4px 0 0 8px">
                 <SvgIcon {...CopyIcon} fillColor="rgba(255, 255, 255, 0.4)" />
+                </FlexContainer>
+                
               </ButtonWithoutStyles>
             </FlexContainer>
           </FlexContainer>

@@ -35,13 +35,13 @@ const AccountsSwitchLink = observer(() => {
     if (mainAppStore.accounts) {
       const newBalance = mainAppStore.accounts.find(
         (item) => item.id === mainAppStore.activeAccountId
-      )?.balance || balance;
+      )?.balance || 0;
       if (newBalance !== balance && balance !== 0) {
         animateValue(
           balance,
           newBalance
         );
-      } else if (balance === 0) {
+      } else {
         mainAppStore.balanceWas = newBalance;
         setBalance(newBalance);
       }
