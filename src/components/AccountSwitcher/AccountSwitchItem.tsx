@@ -24,7 +24,7 @@ interface IAccountSwitchItemProps {
 const AccountSwitchItem = ({
   onSwitch,
   account,
-  isActive,
+  isActive
 }: IAccountSwitchItemProps) => {
   const {
     quotesStore,
@@ -107,7 +107,7 @@ const AccountSwitchItem = ({
       backgroundColor={isActive ? '#292C33' : '#1C1F26'}
       borderRadius="8px"
       margin="0 0 0 16px"
-      width="80vw"
+      width="100%"
       flexDirection="column"
       justifyContent="space-between"
       {...handlerSwipe}

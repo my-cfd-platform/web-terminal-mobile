@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import styled from '@emotion/styled';
-import { Link } from 'react-router-dom';
-import Page from '../../constants/Pages';
 import { PrimaryTextSpan } from '../../styles/TextsElements';
 import Colors from '../../constants/Colors';
 import { useStores } from '../../hooks/useStores';
@@ -9,6 +7,7 @@ import { Observer, observer } from 'mobx-react-lite';
 import DropDownArrov from '../../assets/svg/icon-dropdown.svg';
 import SvgIcon from '../SvgIcon';
 import { ButtonWithoutStyles } from '../../styles/ButtonWithoutStyles';
+import { moneyFormat } from '../../helpers/moneyFormat';
 
 const AccountsSwitchLink = observer(() => {
   const { mainAppStore } = useStores();
@@ -64,7 +63,7 @@ const AccountsSwitchLink = observer(() => {
             lineHeight="1"
           >
             {mainAppStore.activeAccount?.symbol}
-            {balance.toFixed(2)}
+            {moneyFormat(balance)}
           </PrimaryTextSpan>
         )}
       </Observer>

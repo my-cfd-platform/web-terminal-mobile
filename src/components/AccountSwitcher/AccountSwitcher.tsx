@@ -11,6 +11,10 @@ import { FlexContainer } from '../../styles/FlexContainer';
 import Modal from '../Modal';
 import AccountSwitchItem from './AccountSwitchItem';
 
+import OwlCarousel from 'react-owl-carousel';
+import 'owl.carousel/dist/assets/owl.carousel.css';
+import 'owl.carousel/dist/assets/owl.theme.default.css';
+import './style-carousel.css';
 
 interface IAccountSwitcherProps {
   show: boolean;
@@ -83,27 +87,37 @@ const AccountSwitcher = observer(({ show }: IAccountSwitcherProps) => {
     }
   }, [mainAppStore.showAccountSwitcher]);
 
-  return shouldRender ? (
+  return (
     <Modal>
       <Wrapper alignItems="flex-end" show={show}>
         <AccountSlider
+          className="account-switch-slider"
           show={show}
           ref={wrapperRef}
           onAnimationEnd={onAnimationEnd}
-          width="200vw"
+          width="100vw"
         >
-          {mainAppStore.accounts.map((acc, i) => (
-            <AccountSwitchItem
-              onSwitch={handleSwitch}
-              key={acc.id}
-              account={acc}
-              isActive={mainAppStore.activeAccountId === acc.id}
-            />
-          ))}
+          <OwlCarousel
+            className="owl-theme"
+            items={1}
+            stagePadding={44}
+            margin={16}
+          >
+            {mainAppStore.accounts.map((acc, i) => (
+              <span className="item">
+                <AccountSwitchItem
+                  onSwitch={handleSwitch}
+                  key={acc.id}
+                  account={acc}
+                  isActive={mainAppStore.activeAccountId === acc.id}
+                />
+              </span>
+            ))}
+          </OwlCarousel>
         </AccountSlider>
       </Wrapper>
     </Modal>
-  ) : null;
+  );
 });
 
 export default AccountSwitcher;
@@ -180,5 +194,5 @@ const Wrapper = styled(FlexContainer)<IAnimationProps>`
 const AccountSlider = styled(FlexContainer)<IAnimationProps>`
   animation: ${(props) =>
       props.show ? translateAnimationIn : translateAnimationOut}
-    0.5s ease;
+    0.8s ease;
 `;
