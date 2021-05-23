@@ -1,6 +1,8 @@
 .account-switch-slider .owl-stage {
   padding-left: 0px !important;
 }
+
+
 .account-switch-slider .owl-theme .owl-dots .owl-dot, 
 .account-switch-slider .owl-theme .owl-dots .owl-dot.active {
   outline: none;

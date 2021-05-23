@@ -15,6 +15,7 @@ import OwlCarousel from 'react-owl-carousel';
 import 'owl.carousel/dist/assets/owl.carousel.css';
 import 'owl.carousel/dist/assets/owl.theme.default.css';
 import './style-carousel.css';
+import { FULL_VH } from '../../constants/global';
 
 interface IAccountSwitcherProps {
   show: boolean;
@@ -31,12 +32,10 @@ const AccountSwitcher = observer(({ show }: IAccountSwitcherProps) => {
   const { t } = useTranslation();
   const wrapperRef = useRef<HTMLDivElement>(null);
   const [shouldRender, setRender] = useState(mainAppStore.showAccountSwitcher);
-
   // --
 
   // functions
   const handleSwitch = (accId: string) => {
-    console.log(accId);
     if (mainAppStore.activeAccount?.id === accId) {
       return;
     }
@@ -62,10 +61,8 @@ const AccountSwitcher = observer(({ show }: IAccountSwitcherProps) => {
   };
   // --
 
-  const handleClickOutside = (e: any) => {
-    if (wrapperRef.current && !wrapperRef.current.contains(e.target)) {
-      mainAppStore.closeAccountSwitcher();
-    }
+  const handleClickClose = () => {
+    mainAppStore.closeAccountSwitcher();
   };
 
   const onAnimationEnd = () => {
@@ -74,12 +71,6 @@ const AccountSwitcher = observer(({ show }: IAccountSwitcherProps) => {
     }
   };
 
-  useEffect(() => {
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, []);
 
   useEffect(() => {
     if (mainAppStore.showAccountSwitcher) {
@@ -89,11 +80,14 @@ const AccountSwitcher = observer(({ show }: IAccountSwitcherProps) => {
 
   return (
     <Modal>
-      <Wrapper alignItems="flex-end" show={show}>
+      <Wrapper flexDirection="column" show={show} justifyContent="flex-end">
+        <FlexContainer
+          height={`calc(${FULL_VH} - 398px)`}
+          onClick={handleClickClose}
+        />
         <AccountSlider
           className="account-switch-slider"
           show={show}
-          ref={wrapperRef}
           onAnimationEnd={onAnimationEnd}
           width="100vw"
         >
@@ -103,11 +97,10 @@ const AccountSwitcher = observer(({ show }: IAccountSwitcherProps) => {
             stagePadding={44}
             margin={16}
           >
-            {mainAppStore.accounts.map((acc, i) => (
-              <span className="item">
+            {mainAppStore.accounts.map((acc) => (
+              <span className="item" key={acc.id}>
                 <AccountSwitchItem
                   onSwitch={handleSwitch}
-                  key={acc.id}
                   account={acc}
                   isActive={mainAppStore.activeAccountId === acc.id}
                 />
@@ -174,7 +167,7 @@ const Wrapper = styled(FlexContainer)<IAnimationProps>`
   left: 0;
   z-index: 99;
   width: 100%;
-  height: 100%;
+  height: ${`calc(${FULL_VH})`};
   overflow: hidden;
   animation: ${(props) =>
     props.show

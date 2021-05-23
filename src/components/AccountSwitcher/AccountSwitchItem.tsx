@@ -15,6 +15,7 @@ import { useSwipeable } from 'react-swipeable';
 import useRedirectMiddleware from '../../hooks/useRedirectMiddleware';
 import { useHistory } from 'react-router';
 import Page from '../../constants/Pages';
+import InformationPopup from '../InformationPopup';
 
 interface IAccountSwitchItemProps {
   onSwitch: (accId: string) => void;
@@ -24,7 +25,7 @@ interface IAccountSwitchItemProps {
 const AccountSwitchItem = ({
   onSwitch,
   account,
-  isActive
+  isActive,
 }: IAccountSwitchItemProps) => {
   const {
     quotesStore,
@@ -133,7 +134,6 @@ const AccountSwitchItem = ({
                 fontSize="12px"
                 color="rgba(255, 255, 255, 0.4)"
                 textTransform="uppercase"
-                
               >
                 {account?.id}
               </PrimaryTextSpan>
@@ -142,9 +142,8 @@ const AccountSwitchItem = ({
                 onClick={(e) => handleClickCopy(e, account?.id || '')}
               >
                 <FlexContainer padding="4px 0 0 8px">
-                <SvgIcon {...CopyIcon} fillColor="rgba(255, 255, 255, 0.4)" />
+                  <SvgIcon {...CopyIcon} fillColor="rgba(255, 255, 255, 0.4)" />
                 </FlexContainer>
-                
               </ButtonWithoutStyles>
             </FlexContainer>
           </FlexContainer>
@@ -257,12 +256,17 @@ const AccountSwitchItem = ({
                     alignItems="center"
                     marginBottom="16px"
                   >
-                    <PrimaryTextSpan
-                      fontSize="16px"
-                      color="rgba(255, 255, 255, 0.4)"
-                    >
-                      {t('Bonus')}
-                    </PrimaryTextSpan>
+                    <FlexContainer>
+                      <PrimaryTextSpan
+                        fontSize="16px"
+                        color="rgba(255, 255, 255, 0.4)"
+                        marginRight="8px"
+                      >
+                        {t('Bonus')}
+                      </PrimaryTextSpan>
+                      <InformationPopup infoText={t('There is no possibility of withdrawing bonus. But this is an extra amount on your account and when you make a profit with them, this is something you can withdraw.')} />
+                    </FlexContainer>
+
                     <PrimaryTextSpan fontSize="16px" color="#FFFCCC">
                       {account?.symbol}
                       {moneyFormatPart(account.bonus).int}
