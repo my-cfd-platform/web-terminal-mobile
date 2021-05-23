@@ -71,7 +71,6 @@ const AccountSwitcher = observer(({ show }: IAccountSwitcherProps) => {
     }
   };
 
-
   useEffect(() => {
     if (mainAppStore.showAccountSwitcher) {
       setRender(true);
@@ -99,11 +98,13 @@ const AccountSwitcher = observer(({ show }: IAccountSwitcherProps) => {
           >
             {mainAppStore.accounts.map((acc) => (
               <span className="item" key={acc.id}>
-                <AccountSwitchItem
-                  onSwitch={handleSwitch}
-                  account={acc}
-                  isActive={mainAppStore.activeAccountId === acc.id}
-                />
+                {mainAppStore.showAccountSwitcher && (
+                  <AccountSwitchItem
+                    onSwitch={handleSwitch}
+                    account={acc}
+                    isActive={mainAppStore.activeAccountId === acc.id}
+                  />
+                )}
               </span>
             ))}
           </OwlCarousel>
@@ -114,26 +115,6 @@ const AccountSwitcher = observer(({ show }: IAccountSwitcherProps) => {
 });
 
 export default AccountSwitcher;
-
-const translateAnimationFadeIn = keyframes`
-   from { opacity: 0; }
-   to { opacity: 1; }
-`;
-
-const translateAnimationFadeOut = keyframes(`
-  0% {
-    opacity: 1; 
-    visibility: visible; 
-  } 
-  99% { 
-    opacity: 0;
-    visibility: visible; 
-  } 
-  100% { 
-    opacity: 0;  
-    visibility: hidden; 
-  }
-`);
 
 const translateAnimationIn = keyframes`
     from {
@@ -160,6 +141,7 @@ const translateAnimationOut = keyframes`
 `;
 
 const Wrapper = styled(FlexContainer)<IAnimationProps>`
+  visibility: ${(props) => (props.show ? 'visible' : 'hidden')};
   position: fixed;
   top: 0;
   right: 0;
@@ -169,14 +151,6 @@ const Wrapper = styled(FlexContainer)<IAnimationProps>`
   width: 100%;
   height: ${`calc(${FULL_VH})`};
   overflow: hidden;
-  animation: ${(props) =>
-    props.show
-      ? css`
-          ${translateAnimationFadeIn} 0.6s linear forwards
-        `
-      : css`
-          ${translateAnimationFadeOut} 0.3s linear forwards
-        `};
   padding-bottom: 16px;
   background: rgba(18, 21, 28, 0.6);
   @supports ((-webkit-backdrop-filter: none) or (backdrop-filter: none)) {
