@@ -21,7 +21,7 @@ const InformationPopup = ({ infoText }: InformationPopupProps) => {
 
   return (
     <>
-      <ButtonWithoutStyles onClick={handleOpen()}>
+      <ButtonWithoutStyles onClick={handleOpen()} type="button">
         <FlexContainer
           backgroundColor="rgba(255, 255, 255, 0.4)"
           borderRadius="50%"
