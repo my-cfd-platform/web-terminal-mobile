@@ -10,7 +10,6 @@ import { css } from '@emotion/core';
 import Colors from '../constants/Colors';
 import withdrawalResponseMessages from '../constants/withdrawalResponseMessages';
 import { WithdrawalHistoryResponseStatus } from '../enums/WithdrawalHistoryResponseStatus';
-import { WithdrawalTabsEnum } from '../enums/WithdrawalTabsEnum';
 import { WithdrawalTypesEnum } from '../enums/WithdrawalTypesEnum';
 import API from '../helpers/API';
 import { CreateWithdrawalParams } from '../types/WithdrawalTypes';
@@ -25,6 +24,8 @@ import Page from '../constants/Pages';
 import WithdrawContainer from '../containers/WithdrawContainer';
 import InformationPopup from '../components/InformationPopup';
 import { moneyFormatPart } from '../helpers/moneyFormat';
+import ConfirmationPopup from '../components/ConfirmationPopup';
+import Modal from '../components/Modal';
 
 interface RequestValues {
   amount: number;
@@ -42,6 +43,7 @@ const WithdrawBitcoinForm = () => {
     bitcoinAdress: '',
   };
   const { mainAppStore, withdrawalStore, notificationStore } = useStores();
+  const [showConfirm, setShowConfirm] = useState(false);
 
   const validationSchema = useCallback(
     () =>
@@ -50,7 +52,7 @@ const WithdrawBitcoinForm = () => {
           .number()
           .min(10, `${t('min')}: $10`)
           .max(
-            mainAppStore.activeAccount?.balance || 0,
+            mainAppStore.accounts.find((item) => item.isLive)?.balance || 0,
             `${t('max')}: ${
               mainAppStore.accounts
                 .find((item) => item.isLive)
@@ -121,6 +123,7 @@ const WithdrawBitcoinForm = () => {
     validateForm,
     handleChange,
     handleSubmit,
+    submitForm,
     errors,
     touched,
     isSubmitting,
@@ -189,6 +192,19 @@ const WithdrawBitcoinForm = () => {
       const el = document.getElementById(curErrorsKeys[0]);
       if (el) el.focus();
     }
+
+    if (mainAppStore.accounts.find((item) => item.isLive)?.balance) {
+      setShowConfirm(true);
+    } else {
+      submitForm();
+    }
+  };
+
+  const handleConfirm = (confirm: boolean) => {
+    if (confirm) {
+      submitForm();
+    }
+    setShowConfirm(false);
   };
 
   useEffect(() => {
@@ -198,6 +214,15 @@ const WithdrawBitcoinForm = () => {
 
   return (
     <WithdrawContainer backBtn={Page.WITHDRAW_LIST}>
+      {showConfirm && (
+        <Modal>
+          <ConfirmationPopup confirmAction={handleConfirm}>
+            {t(
+              'When you withdraw your funds, the bonus will be deducted from your account.'
+            )}
+          </ConfirmationPopup>
+        </Modal>
+      )}
       <CustomForm noValidate onSubmit={handleSubmit}>
         <FlexContainer
           flexDirection="column"
@@ -353,7 +378,7 @@ const WithdrawBitcoinForm = () => {
           </FlexContainer>
           <FlexContainer padding="16px" width="100%">
             <PrimaryButton
-              type="submit"
+              type="button"
               onClick={handlerClickSubmit}
               width="100%"
               disabled={

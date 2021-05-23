@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import React, { useCallback } from 'react';
+import React, { useCallback, useState } from 'react';
 import { FlexContainer } from '../styles/FlexContainer';
 import * as yup from 'yup';
 import { useFormik } from 'formik';
@@ -25,6 +25,8 @@ import { useHistory } from 'react-router-dom';
 import WithdrawContainer from '../containers/WithdrawContainer';
 import { moneyFormatPart } from '../helpers/moneyFormat';
 import InformationPopup from '../components/InformationPopup';
+import ConfirmationPopup from '../components/ConfirmationPopup';
+import Modal from '../components/Modal';
 
 interface RequestValues {
   amount: number;
@@ -42,6 +44,8 @@ const WithdrawVisaMasterForm = () => {
   const { push } = useHistory();
   const { mainAppStore, withdrawalStore, notificationStore } = useStores();
 
+  const [showConfirm, setShowConfirm] = useState(false);
+
   const validationSchema = useCallback(
     () =>
       yup.object().shape<RequestValues>({
@@ -49,7 +53,7 @@ const WithdrawVisaMasterForm = () => {
           .number()
           .min(10, `${t('min')}: $10`)
           .max(
-            mainAppStore.activeAccount?.balance || 0,
+            mainAppStore.accounts.find((item) => item.isLive)?.balance || 0,
             `${t('max')}: ${mainAppStore.accounts
               .find((item) => item.isLive)
               ?.balance.toFixed(2)}`
@@ -114,6 +118,7 @@ const WithdrawVisaMasterForm = () => {
     validateForm,
     handleChange,
     handleSubmit,
+    submitForm,
     errors,
     touched,
     isValid,
@@ -195,10 +200,31 @@ const WithdrawVisaMasterForm = () => {
       const el = document.getElementById(curErrorsKeys[0]);
       if (el) el.focus();
     }
+    if (mainAppStore.accounts.find((item) => item.isLive)?.balance) {
+      setShowConfirm(true);
+    } else {
+      submitForm();
+    }
+  };
+
+  const handleConfirm = (confirm: boolean) => {
+    if (confirm) {
+      submitForm();
+    }
+    setShowConfirm(false);
   };
 
   return (
     <WithdrawContainer backBtn={Page.WITHDRAW_LIST}>
+      {showConfirm && (
+        <Modal>
+          <ConfirmationPopup confirmAction={handleConfirm}>
+            {t(
+              'When you withdraw your funds, the bonus will be deducted from your account.'
+            )}
+          </ConfirmationPopup>
+        </Modal>
+      )}
       <CustomForm noValidate onSubmit={handleSubmit}>
         <FlexContainer
           flexDirection="column"
@@ -360,7 +386,7 @@ const WithdrawVisaMasterForm = () => {
 
           <FlexContainer padding="16px" width="100%">
             <PrimaryButton
-              type="submit"
+              type="button"
               onClick={handlerClickSubmit}
               width="100%"
               disabled={
