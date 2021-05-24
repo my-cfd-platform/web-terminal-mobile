@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import React, { useCallback, useState } from 'react';
+import React, { ChangeEvent, useCallback, useState } from 'react';
 import { FlexContainer } from '../styles/FlexContainer';
 import * as yup from 'yup';
 import { useFormik } from 'formik';
@@ -27,6 +27,7 @@ import { moneyFormatPart } from '../helpers/moneyFormat';
 import InformationPopup from '../components/InformationPopup';
 import ConfirmationPopup from '../components/ConfirmationPopup';
 import Modal from '../components/Modal';
+import WithdrawAvailableBalanceInfo from '../components/Withdraw/WithdrawAvailableBalanceInfo';
 
 interface RequestValues {
   amount: number;
@@ -53,10 +54,8 @@ const WithdrawVisaMasterForm = () => {
           .number()
           .min(10, `${t('min')}: $10`)
           .max(
-            mainAppStore.accounts.find((item) => item.isLive)?.balance || 0,
-            `${t('max')}: ${mainAppStore.accounts
-              .find((item) => item.isLive)
-              ?.balance.toFixed(2)}`
+            ((mainAppStore.realAcc?.balance || 0) - (mainAppStore.realAcc?.bonus || 0)),
+            `${t('max')}: ${moneyFormatPart(((mainAppStore.realAcc?.balance || 0) - (mainAppStore.realAcc?.bonus || 0))).full}`
           ),
         details: yup
           .string()
@@ -115,26 +114,24 @@ const WithdrawVisaMasterForm = () => {
   const {
     values,
     setFieldValue,
+    setFieldError,
     validateForm,
-    handleChange,
     handleSubmit,
+    setErrors,
     submitForm,
     errors,
-    touched,
-    isValid,
-    dirty,
   } = useFormik({
     initialValues,
-
     onSubmit: handleSubmitForm,
     validationSchema,
-    validateOnBlur: true,
-    validateOnChange: true,
+    validateOnBlur: false,
+    validateOnChange: false,
   });
 
   const handleChangeAmount = (e: any) => {
     let filteredValue: any = e.target.value.replace(',', '.');
     setFieldValue('amount', filteredValue);
+    setFieldError('amount', undefined);
   };
 
   const handleBlurAmount = () => {
@@ -193,13 +190,22 @@ const WithdrawVisaMasterForm = () => {
 
   const textOnBeforeInputHandler = () => {};
 
+  const handleChangeFiled = (e: ChangeEvent<HTMLInputElement>) => {
+    setFieldValue(e.target.name, e.target.value);
+    setFieldError(e.target.name, undefined);
+  };
+
   const handlerClickSubmit = async () => {
     const curErrors = await validateForm();
     const curErrorsKeys = Object.keys(curErrors);
+
     if (curErrorsKeys.length) {
+      setErrors(curErrors);
       const el = document.getElementById(curErrorsKeys[0]);
       if (el) el.focus();
+      return;
     }
+
     if (mainAppStore.accounts.find((item) => item.isLive)?.balance) {
       setShowConfirm(true);
     } else {
@@ -240,7 +246,7 @@ const WithdrawVisaMasterForm = () => {
                 padding="12px 16px"
                 position="relative"
                 marginBottom="4px"
-                hasError={!!(touched.amount && errors.amount)}
+                hasError={!!errors.amount}
               >
                 <FlexContainer
                   position="absolute"
@@ -271,7 +277,7 @@ const WithdrawVisaMasterForm = () => {
                 />
               </InputWrap>
 
-              {touched.amount && errors.amount && (
+              {errors.amount && (
                 <FlexContainer marginBottom="12px" padding="0 16px">
                   <PrimaryTextSpan fontSize="11px" color={Colors.RED}>
                     {errors.amount}
@@ -285,103 +291,19 @@ const WithdrawVisaMasterForm = () => {
                 name="details"
                 id="details"
                 onBeforeInput={textOnBeforeInputHandler}
-                onChange={handleChange}
+                onChange={handleChangeFiled}
                 value={values.details}
                 type="text"
                 placeholder={t('Details')}
-                hasError={!!(touched.details && errors.details)}
+                hasError={!!errors.details}
                 errorText={errors.details}
               />
             </FlexContainer>
 
-            <FlexContainer padding="16px" justifyContent="space-between">
-              <PrimaryTextSpan fontSize="14px" color="rgba(196, 196, 196, 0.5)">
-                {t('Available')}
-              </PrimaryTextSpan>
-              <Observer>
-                {() => (
-                  <PrimaryTextSpan
-                    fontSize="14px"
-                    color="rgba(255, 255, 255, 0.4)"
-                  >
-                    {mainAppStore.accounts.find((acc) => acc.isLive)?.symbol}
-                    {
-                      moneyFormatPart(
-                        mainAppStore.accounts.find((acc) => acc.isLive)
-                          ?.balance || 0
-                      ).int
-                    }
-                    .
-                    <PrimaryTextSpan
-                      fontSize="10px"
-                      color="rgba(255, 255, 255, 0.4)"
-                    >
-                      {
-                        moneyFormatPart(
-                          mainAppStore.accounts.find((acc) => acc.isLive)
-                            ?.balance || 0
-                        ).decimal
-                      }
-                    </PrimaryTextSpan>
-                  </PrimaryTextSpan>
-                )}
-              </Observer>
-            </FlexContainer>
+            
+            <WithdrawAvailableBalanceInfo />
 
-            <Observer>
-              {() => (
-                <>
-                  {mainAppStore.accounts.find((acc) => acc.isLive)?.bonus && (
-                    <FlexContainer
-                      padding="16px"
-                      justifyContent="space-between"
-                    >
-                      <FlexContainer>
-                        <PrimaryTextSpan
-                          fontSize="14px"
-                          color="rgba(196, 196, 196, 0.5)"
-                          marginRight="8px"
-                        >
-                          {t('Bonus')}
-                        </PrimaryTextSpan>
-                        <InformationPopup
-                          infoText={t(
-                            'There is no possibility of withdrawing bonus. But this is an extra amount on your account and when you make a profit with them, this is something you can withdraw.'
-                          )}
-                        />
-                      </FlexContainer>
-                      <PrimaryTextSpan
-                        fontSize="14px"
-                        color="rgba(255, 255, 255, 0.4)"
-                      >
-                        {
-                          mainAppStore.accounts.find((acc) => acc.isLive)
-                            ?.symbol
-                        }
-                        {
-                          moneyFormatPart(
-                            mainAppStore.accounts.find((acc) => acc.isLive)
-                              ?.bonus || 0
-                          ).int
-                        }
-                        .
-                        <PrimaryTextSpan
-                          fontSize="10px"
-                          color="rgba(255, 255, 255, 0.4)"
-                        >
-                          {
-                            moneyFormatPart(
-                              mainAppStore.accounts.find((acc) => acc.isLive)
-                                ?.bonus || 0
-                            ).decimal
-                          }
-                        </PrimaryTextSpan>
-                      </PrimaryTextSpan>
-                    </FlexContainer>
-                  )}
-                </>
-              )}
-            </Observer>
+
           </FlexContainer>
 
           <FlexContainer padding="16px" width="100%">

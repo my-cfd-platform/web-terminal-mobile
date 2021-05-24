@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { ChangeEvent, useCallback, useEffect, useState } from 'react';
 import { FlexContainer } from '../styles/FlexContainer';
 import * as yup from 'yup';
 import { useFormik } from 'formik';
@@ -120,26 +120,25 @@ const WithdrawBitcoinForm = () => {
   const {
     values,
     setFieldValue,
+    setFieldError,
+    setErrors,
     validateForm,
-    handleChange,
     handleSubmit,
     submitForm,
     errors,
     touched,
-    isSubmitting,
   } = useFormik({
     initialValues,
     onSubmit: handleSubmitForm,
     validationSchema,
-    validateOnBlur: true,
-    validateOnChange: true,
+    validateOnBlur: false,
+    validateOnChange: false,
   });
 
   const handleChangeAmount = (e: any) => {
     let filteredValue: any = e.target.value.replace(',', '.');
-    console.log('replace');
-    console.log(filteredValue);
     setFieldValue('amount', filteredValue);
+    setFieldError('amount', undefined);
   };
 
   const amountOnBeforeInputHandler = (e: any) => {
@@ -185,12 +184,20 @@ const WithdrawBitcoinForm = () => {
     }
   };
 
+  const handleChangeFiled = (e: ChangeEvent<HTMLInputElement>) => {
+    setFieldValue(e.target.name, e.target.value);
+    setFieldError(e.target.name, undefined);
+  };
+
   const handlerClickSubmit = async () => {
     const curErrors = await validateForm();
     const curErrorsKeys = Object.keys(curErrors);
+
     if (curErrorsKeys.length) {
+      setErrors(curErrors);
       const el = document.getElementById(curErrorsKeys[0]);
       if (el) el.focus();
+      return;
     }
 
     if (mainAppStore.accounts.find((item) => item.isLive)?.balance) {
@@ -238,7 +245,7 @@ const WithdrawBitcoinForm = () => {
                 padding="12px 16px"
                 position="relative"
                 marginBottom="4px"
-                hasError={!!(touched.amount && errors.amount)}
+                hasError={!!errors.amount}
               >
                 <FlexContainer
                   position="absolute"
@@ -278,11 +285,11 @@ const WithdrawBitcoinForm = () => {
               <InputField
                 name="bitcoinAdress"
                 id="bitcoinAdress"
-                onChange={handleChange}
+                onChange={handleChangeFiled}
                 value={values.bitcoinAdress}
                 type="text"
                 placeholder={t('Bitcoin Address')}
-                hasError={!!(touched.bitcoinAdress && errors.bitcoinAdress)}
+                hasError={!!errors.bitcoinAdress}
                 errorText={errors.bitcoinAdress}
               />
             </FlexContainer>

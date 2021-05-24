@@ -590,6 +590,11 @@ export class MainAppStore implements MainAppStoreProps {
   }
 
   @computed
+  get realAcc() {
+    return this.accounts.find(acc => acc.isLive)
+  }
+
+  @computed
   get sortedAccounts() {
     return this.accounts.reduce(
       (acc, prev) =>
