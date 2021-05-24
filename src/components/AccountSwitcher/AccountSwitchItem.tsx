@@ -301,10 +301,10 @@ const AccountSwitchItem = observer(
 
                       <PrimaryTextSpan fontSize="16px" color="#FFFCCC">
                         {account?.symbol}
-                        {moneyFormatPart(account.bonus).int}
+                        {moneyFormatPart(user.bonus).int}
 
                         <PrimaryTextSpan fontSize="10px" color="#fffccc">
-                          .{moneyFormatPart(account.bonus).decimal}
+                          .{moneyFormatPart(user.bonus).decimal}
                         </PrimaryTextSpan>
                       </PrimaryTextSpan>
                     </FlexContainer>
