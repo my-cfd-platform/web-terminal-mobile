@@ -101,13 +101,11 @@ const AccountSwitcher = observer(({ show }: IAccountSwitcherProps) => {
                 <>
                   {mainAppStore.sortedAccounts.map((acc) => (
                     <span className="item" key={acc.id}>
-                      {mainAppStore.showAccountSwitcher && (
-                        <AccountSwitchItem
+                      <AccountSwitchItem
                           onSwitch={handleSwitch}
                           account={acc}
                           isActive={mainAppStore.activeAccountId === acc.id}
                         />
-                      )}
                     </span>
                   ))}
                 </>
