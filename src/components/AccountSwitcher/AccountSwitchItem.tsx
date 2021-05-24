@@ -123,6 +123,7 @@ const AccountSwitchItem = ({
             justifyContent="space-between"
           >
             <PrimaryTextSpan
+              fontWeight={700}
               fontSize="18px"
               color={isActive ? '#ffffff' : 'rgba(255, 255, 255, 0.4)'}
             >
@@ -159,6 +160,7 @@ const AccountSwitchItem = ({
             <PrimaryTextSpan
               color={isActive ? '#ffffff' : 'rgba(255, 255, 255, 0.4)'}
               fontSize="28px"
+              fontWeight={700}
             >
               {account?.symbol}
               {isActive
@@ -166,6 +168,7 @@ const AccountSwitchItem = ({
                 : moneyFormatPart(account?.balance || 0).int}
               <PrimaryTextSpan
                 fontSize="18px"
+                fontWeight={700}
                 color={isActive ? '#ffffff' : 'rgba(255, 255, 255, 0.4)'}
               >
                 .
@@ -264,7 +267,11 @@ const AccountSwitchItem = ({
                       >
                         {t('Bonus')}
                       </PrimaryTextSpan>
-                      <InformationPopup infoText={t('There is no possibility of withdrawing bonus. But this is an extra amount on your account and when you make a profit with them, this is something you can withdraw.')} />
+                      <InformationPopup
+                        infoText={t(
+                          'There is no possibility of withdrawing bonus. But this is an extra amount on your account and when you make a profit with them, this is something you can withdraw.'
+                        )}
+                      />
                     </FlexContainer>
 
                     <PrimaryTextSpan fontSize="16px" color="#FFFCCC">

@@ -69,7 +69,6 @@ export const PrimaryTextParagraph = styled.p<PrimaryTextType>`
 export const QuoteText = styled(PrimaryTextSpan)<
   PrimaryTextType & { isGrowth?: boolean }
 >`
-  font-family: 'Roboto', sans-serif;
   font-style: ${(props) => props.fontStyle || 'normal'};
   font-weight: ${(props) => props.fontWeight || 'normal'};
   font-size: ${(props) => props.fontSize || '16px'};

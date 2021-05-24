@@ -152,9 +152,9 @@ const Wrapper = styled(FlexContainer)<IAnimationProps>`
   height: ${`calc(${FULL_VH})`};
   overflow: hidden;
   padding-bottom: 16px;
-  background: rgba(18, 21, 28, 0.6);
+  background: rgba(18, 21, 28, 0.8);
   @supports ((-webkit-backdrop-filter: none) or (backdrop-filter: none)) {
-    backdrop-filter: blur(1px);
+    backdrop-filter: blur(6px);
   }
 `;
 
