@@ -1,6 +1,6 @@
 import { css, keyframes } from '@emotion/core';
 import styled from '@emotion/styled';
-import { observer } from 'mobx-react-lite';
+import { Observer, observer } from 'mobx-react-lite';
 import React, { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import Fields from '../../constants/fields';
@@ -96,17 +96,23 @@ const AccountSwitcher = observer(({ show }: IAccountSwitcherProps) => {
             stagePadding={44}
             margin={16}
           >
-            {mainAppStore.sortedAccounts.map((acc) => (
-              <span className="item" key={acc.id}>
-                {mainAppStore.showAccountSwitcher && (
-                  <AccountSwitchItem
-                    onSwitch={handleSwitch}
-                    account={acc}
-                    isActive={mainAppStore.activeAccountId === acc.id}
-                  />
-                )}
-              </span>
-            ))}
+            <Observer>
+              {() => (
+                <>
+                  {mainAppStore.sortedAccounts.map((acc) => (
+                    <span className="item" key={acc.id}>
+                      {mainAppStore.showAccountSwitcher && (
+                        <AccountSwitchItem
+                          onSwitch={handleSwitch}
+                          account={acc}
+                          isActive={mainAppStore.activeAccountId === acc.id}
+                        />
+                      )}
+                    </span>
+                  ))}
+                </>
+              )}
+            </Observer>
           </OwlCarousel>
         </AccountSlider>
       </Wrapper>
