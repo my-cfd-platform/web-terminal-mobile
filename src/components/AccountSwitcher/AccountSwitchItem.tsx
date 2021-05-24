@@ -16,15 +16,18 @@ import useRedirectMiddleware from '../../hooks/useRedirectMiddleware';
 import { useHistory } from 'react-router';
 import Page from '../../constants/Pages';
 import InformationPopup from '../InformationPopup';
+import { observer } from 'mobx-react-lite';
 
 interface IAccountSwitchItemProps {
   onSwitch: (accId: string) => void;
   account: AccountModelWebSocketDTO;
   isActive: boolean;
+  className?: string;
 }
-const AccountSwitchItem = ({
+const AccountSwitchItem = observer(({
   onSwitch,
   account,
+  className,
   isActive,
 }: IAccountSwitchItemProps) => {
   const {
@@ -100,6 +103,7 @@ const AccountSwitchItem = ({
 
   return (
     <FlexContainer
+      className={className}
       padding="16px"
       height="368px"
       border="1px solid rgba(255, 255, 255, 0.2)"
@@ -369,6 +373,6 @@ const AccountSwitchItem = ({
       {/* END BOTTOM */}
     </FlexContainer>
   );
-};
+});
 
 export default AccountSwitchItem;
