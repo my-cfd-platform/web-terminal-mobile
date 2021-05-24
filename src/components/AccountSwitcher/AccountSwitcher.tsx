@@ -96,7 +96,7 @@ const AccountSwitcher = observer(({ show }: IAccountSwitcherProps) => {
             stagePadding={44}
             margin={16}
           >
-            {mainAppStore.accounts.map((acc) => (
+            {mainAppStore.sortedAccounts.map((acc) => (
               <span className="item" key={acc.id}>
                 {mainAppStore.showAccountSwitcher && (
                   <AccountSwitchItem
