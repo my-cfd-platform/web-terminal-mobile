@@ -90,28 +90,26 @@ const AccountSwitcher = observer(({ show }: IAccountSwitcherProps) => {
           onAnimationEnd={onAnimationEnd}
           width="100vw"
         >
-          <OwlCarousel
-            className="owl-theme"
-            items={1}
-            stagePadding={44}
-            margin={16}
-          >
-            <Observer>
-              {() => (
-                <>
-                  {mainAppStore.sortedAccounts.map((acc) => (
-                    <span className="item" key={acc.id}>
-                      <AccountSwitchItem
-                          onSwitch={handleSwitch}
-                          account={acc}
-                          isActive={mainAppStore.activeAccountId === acc.id}
-                        />
-                    </span>
-                  ))}
-                </>
-              )}
-            </Observer>
-          </OwlCarousel>
+          <Observer>
+            {() => (
+              <OwlCarousel
+                className="owl-theme"
+                items={1}
+                stagePadding={44}
+                margin={16}
+              >
+                {mainAppStore.sortedAccounts.map((acc) => (
+                  <AccountSwitchItem
+                    className="item"
+                    key={acc.id}
+                    onSwitch={handleSwitch}
+                    account={acc}
+                    isActive={mainAppStore.activeAccountId === acc.id}
+                  />
+                ))}
+              </OwlCarousel>
+            )}
+          </Observer>
         </AccountSlider>
       </Wrapper>
     </Modal>

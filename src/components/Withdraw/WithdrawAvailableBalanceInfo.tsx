@@ -34,7 +34,7 @@ const WithdrawAvailableBalanceInfo = observer(() => {
         </PrimaryTextSpan>
       </FlexContainer>
 
-      {mainAppStore.accounts.find((acc) => acc.isLive)?.bonus && (
+      {Number(mainAppStore.accounts.find((acc) => acc.isLive)?.bonus) > 0 && (
         <FlexContainer padding="16px" justifyContent="space-between">
           <FlexContainer>
             <PrimaryTextSpan

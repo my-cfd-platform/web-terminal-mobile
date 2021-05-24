@@ -38,7 +38,6 @@ export class QuotesStore implements IQuotesStore {
     this.activePositions = activePositions;
   };
 
-  @computed
   get profit() {
     return this.activePositions.reduce(
       (acc, prev) =>
@@ -59,33 +58,34 @@ export class QuotesStore implements IQuotesStore {
     );
   }
 
-  @computed
   get invest() {
     return this.activePositions.reduce(
       (acc, prev) => acc + prev.investmentAmount,
       0
     );
   }
-  
-  @computed
+
   get totalReservedFoundsForToppingUp() {
     let value: number = 0;
-    this.activePositions.map((pos) => value += pos.reservedFundsForToppingUp);
+    this.activePositions.map((pos) => (value += pos.reservedFundsForToppingUp));
     return value;
   }
-  
-  @computed
+
   get total() {
     return (
       this.profit +
       (this.rootStore.mainAppStore.activeAccount?.balance || 0) +
-      this.invest + this.totalReservedFoundsForToppingUp
+      this.invest +
+      this.totalReservedFoundsForToppingUp
     );
   }
 
-  @computed
+  get totalWithoutBalance() {
+    return this.profit + this.invest + this.totalReservedFoundsForToppingUp;
+  }
+
   get totalEquity() {
-    return this.profit + this.invest;
+    return this.profit + this.invest + this.totalReservedFoundsForToppingUp;
   }
 
   // TODO: move to sorting store?
@@ -174,29 +174,33 @@ export class QuotesStore implements IQuotesStore {
     a: PositionModelWSDTO,
     b: PositionModelWSDTO
   ) => {
-    const aProfitNLoss = this.quotes[b.instrument] ? calculateFloatingProfitAndLoss({
-      investment: b.investmentAmount,
-      multiplier: b.multiplier,
-      costs: b.swap + b.commission,
-      side: b.operation === AskBidEnum.Buy ? 1 : -1,
-      currentPrice:
-        b.operation === AskBidEnum.Buy
-          ? this.quotes[b.instrument].bid.c
-          : this.quotes[b.instrument].ask.c,
-      openPrice: b.openPrice,
-    }) : 0;
+    const aProfitNLoss = this.quotes[b.instrument]
+      ? calculateFloatingProfitAndLoss({
+          investment: b.investmentAmount,
+          multiplier: b.multiplier,
+          costs: b.swap + b.commission,
+          side: b.operation === AskBidEnum.Buy ? 1 : -1,
+          currentPrice:
+            b.operation === AskBidEnum.Buy
+              ? this.quotes[b.instrument].bid.c
+              : this.quotes[b.instrument].ask.c,
+          openPrice: b.openPrice,
+        })
+      : 0;
 
-    const bProfitNLoss = this.quotes[a.instrument] ? calculateFloatingProfitAndLoss({
-      investment: a.investmentAmount,
-      multiplier: a.multiplier,
-      costs: a.swap + a.commission,
-      side: a.operation === AskBidEnum.Buy ? 1 : -1,
-      currentPrice:
-        a.operation === AskBidEnum.Buy
-          ? this.quotes[a.instrument].bid.c
-          : this.quotes[a.instrument].ask.c,
-      openPrice: a.openPrice,
-    }) : 0;
+    const bProfitNLoss = this.quotes[a.instrument]
+      ? calculateFloatingProfitAndLoss({
+          investment: a.investmentAmount,
+          multiplier: a.multiplier,
+          costs: a.swap + a.commission,
+          side: a.operation === AskBidEnum.Buy ? 1 : -1,
+          currentPrice:
+            a.operation === AskBidEnum.Buy
+              ? this.quotes[a.instrument].bid.c
+              : this.quotes[a.instrument].ask.c,
+          openPrice: a.openPrice,
+        })
+      : 0;
     return ascending
       ? bProfitNLoss - aProfitNLoss
       : aProfitNLoss - bProfitNLoss;
