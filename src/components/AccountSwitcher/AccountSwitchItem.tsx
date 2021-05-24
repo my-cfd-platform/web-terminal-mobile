@@ -82,19 +82,17 @@ const AccountSwitchItem = ({
   ]);
 
   useEffect(() => {
-    if (isActive) {
-      const disposer = autorun(
-        () => {
-          setProfit(quotesStore.profit);
-          setTotal(quotesStore.total);
-        },
-        { delay: 1000 }
-      );
-      return () => {
-        disposer();
-      };
-    }
-  }, [isActive]);
+    const disposer = autorun(
+      () => {
+        setProfit(quotesStore.profit);
+        setTotal(quotesStore.total);
+      },
+      { delay: 1000 }
+    );
+    return () => {
+      disposer();
+    };
+  }, []);
 
   const handleSwitch = () => () => {
     onSwitch(account.id);
