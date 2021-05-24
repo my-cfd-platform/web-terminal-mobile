@@ -71,6 +71,7 @@ export class QuotesStore implements IQuotesStore {
   get totalReservedFoundsForToppingUp() {
     let value: number = 0;
     this.activePositions.map((pos) => value += pos.reservedFundsForToppingUp);
+    console.log('topping up: ', value)
     return value;
   }
   
