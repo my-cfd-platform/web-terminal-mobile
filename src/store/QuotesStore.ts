@@ -86,7 +86,7 @@ export class QuotesStore implements IQuotesStore {
 
   @computed
   get totalEquity() {
-    return this.profit + this.invest;
+    return this.profit + this.invest + this.totalReservedFoundsForToppingUp;
   }
 
   // TODO: move to sorting store?
