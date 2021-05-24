@@ -24,355 +24,379 @@ interface IAccountSwitchItemProps {
   isActive: boolean;
   className?: string;
 }
-const AccountSwitchItem = observer(({
-  onSwitch,
-  account,
-  className,
-  isActive,
-}: IAccountSwitchItemProps) => {
-  const {
-    quotesStore,
-    notificationStore,
-    mainAppStore,
-    userProfileStore,
-  } = useStores();
-  const { t } = useTranslation();
-  const { push } = useHistory();
+const AccountSwitchItem = observer(
+  ({ onSwitch, account, className, isActive }: IAccountSwitchItemProps) => {
+    const {
+      quotesStore,
+      notificationStore,
+      mainAppStore,
+      userProfileStore,
+    } = useStores();
+    const { t } = useTranslation();
+    const { push } = useHistory();
 
-  const [profit, setProfit] = useState(quotesStore.profit);
-  const [total, setTotal] = useState(quotesStore.total);
+    const [profit, setProfit] = useState(quotesStore.profit);
+    const [total, setTotal] = useState(quotesStore.total);
+    const [balance, setBalance] = useState<number>(0);
 
-  const handlerSwipe = useSwipeable({
-    onSwipedDown: () => mainAppStore.closeAccountSwitcher(),
-  });
+    const [user, setUser] = useState<AccountModelWebSocketDTO>(account);
 
-  const handleClickCopy = (e: any, accountId: string) => {
-    e.stopPropagation();
-    let el = document.createElement('textarea');
-    el.value = accountId;
-    el.setAttribute('readonly', '');
-    document.body.appendChild(el);
-    el.select();
-    document.execCommand('copy');
-    document.body.removeChild(el);
-    //  --- --- --- --- ---
-    notificationStore.setNotification(t('Copied to clipboard'));
-    notificationStore.isSuccessfull = true;
-    notificationStore.openNotification();
-  };
+    const handlerSwipe = useSwipeable({
+      onSwipedDown: () => mainAppStore.closeAccountSwitcher(),
+    });
 
-  const [parsedParams, setParsedParams] = useState('');
-
-  const { redirectWithUpdateRefreshToken } = useRedirectMiddleware();
-  const urlParams = new URLSearchParams();
-  useEffect(() => {
-    urlParams.set('token', mainAppStore.token);
-    urlParams.set(
-      'active_account_id',
-      mainAppStore.accounts.find((item) => item.isLive)?.id || ''
-    );
-    urlParams.set('lang', mainAppStore.lang);
-    urlParams.set('env', 'web_mob');
-    urlParams.set('trader_id', userProfileStore.userProfileId || '');
-    urlParams.set('api', mainAppStore.initModel.tradingUrl);
-    urlParams.set('rt', mainAppStore.refreshToken);
-    setParsedParams(urlParams.toString());
-  }, [
-    mainAppStore.token,
-    mainAppStore.lang,
-    mainAppStore.accounts,
-    userProfileStore.userProfileId,
-  ]);
-
-  useEffect(() => {
-    const disposer = autorun(
-      () => {
-        setProfit(quotesStore.profit);
-        setTotal(quotesStore.total);
-      },
-      { delay: 1000 }
-    );
-    return () => {
-      disposer();
+    const handleClickCopy = (e: any, accountId: string) => {
+      e.stopPropagation();
+      let el = document.createElement('textarea');
+      el.value = accountId;
+      el.setAttribute('readonly', '');
+      document.body.appendChild(el);
+      el.select();
+      document.execCommand('copy');
+      document.body.removeChild(el);
+      //  --- --- --- --- ---
+      notificationStore.setNotification(t('Copied to clipboard'));
+      notificationStore.isSuccessfull = true;
+      notificationStore.openNotification();
     };
-  }, []);
 
-  const handleSwitch = () => () => {
-    onSwitch(account.id);
-  };
+    const [parsedParams, setParsedParams] = useState('');
 
-  return (
-    <FlexContainer
-      className={className}
-      padding="16px"
-      height="368px"
-      border="1px solid rgba(255, 255, 255, 0.2)"
-      backgroundColor={isActive ? '#292C33' : '#1C1F26'}
-      borderRadius="8px"
-      margin="0 0 0 16px"
-      width="100%"
-      flexDirection="column"
-      justifyContent="space-between"
-      {...handlerSwipe}
-    >
-      {/* TOP */}
-      <FlexContainer flexDirection="column" flex="1">
-        {/* HEADER */}
-        <FlexContainer flexDirection="column">
-          <FlexContainer
-            width="100%"
-            alignItems="flex-end"
-            justifyContent="space-between"
-          >
-            <PrimaryTextSpan
-              fontWeight={700}
-              fontSize="18px"
-              color={isActive ? '#ffffff' : 'rgba(255, 255, 255, 0.4)'}
+    const { redirectWithUpdateRefreshToken } = useRedirectMiddleware();
+    const urlParams = new URLSearchParams();
+    useEffect(() => {
+      urlParams.set('token', mainAppStore.token);
+      urlParams.set(
+        'active_account_id',
+        mainAppStore.accounts.find((item) => item.isLive)?.id || ''
+      );
+      urlParams.set('lang', mainAppStore.lang);
+      urlParams.set('env', 'web_mob');
+      urlParams.set('trader_id', userProfileStore.userProfileId || '');
+      urlParams.set('api', mainAppStore.initModel.tradingUrl);
+      urlParams.set('rt', mainAppStore.refreshToken);
+      setParsedParams(urlParams.toString());
+    }, [
+      mainAppStore.token,
+      mainAppStore.lang,
+      mainAppStore.accounts,
+      userProfileStore.userProfileId,
+    ]);
+
+    useEffect(() => {
+      if (mainAppStore.activeAccount?.balance !== undefined) {
+        setBalance(mainAppStore.activeAccount.balance);
+      }
+    }, [mainAppStore.activeAccount]);
+
+    useEffect(() => {
+      const disposer = autorun(
+        () => {
+          setProfit(quotesStore.profit);
+        },
+        { delay: 1000 }
+      );
+      return () => {
+        disposer();
+      };
+    }, []);
+
+    useEffect(() => {
+      setTotal(quotesStore.totalWithoutBalance + user.balance);
+    }, [quotesStore.activePositions, user, profit]);
+
+    useEffect(() => {
+      if (mainAppStore.accounts) {
+        const upd = mainAppStore.accounts.find((acc) => acc.id === account.id);
+        if (upd) {
+          setUser(upd);
+        }
+      }
+    }, [mainAppStore.activeAccountId, mainAppStore.accounts]);
+
+    const handleSwitch = () => () => {
+      onSwitch(account.id);
+    };
+
+    return (
+      <FlexContainer
+        className={className}
+        padding="16px"
+        height="368px"
+        border="1px solid rgba(255, 255, 255, 0.2)"
+        backgroundColor={isActive ? '#292C33' : '#1C1F26'}
+        borderRadius="8px"
+        margin="0 0 0 16px"
+        width="100%"
+        flexDirection="column"
+        justifyContent="space-between"
+        {...handlerSwipe}
+      >
+        {/* TOP */}
+        <FlexContainer flexDirection="column" flex="1">
+          {/* HEADER */}
+          <FlexContainer flexDirection="column">
+            <FlexContainer
+              width="100%"
+              alignItems="flex-end"
+              justifyContent="space-between"
             >
-              {t(account?.isLive ? 'Real' : 'Demo')}
-            </PrimaryTextSpan>
-
-            <FlexContainer alignItems="flex-end">
               <PrimaryTextSpan
-                fontSize="12px"
-                color="rgba(255, 255, 255, 0.4)"
-                textTransform="uppercase"
-              >
-                {account?.id}
-              </PrimaryTextSpan>
-
-              <ButtonWithoutStyles
-                onClick={(e) => handleClickCopy(e, account?.id || '')}
-              >
-                <FlexContainer padding="4px 0 0 8px">
-                  <SvgIcon {...CopyIcon} fillColor="rgba(255, 255, 255, 0.4)" />
-                </FlexContainer>
-              </ButtonWithoutStyles>
-            </FlexContainer>
-          </FlexContainer>
-
-          <FlexContainer
-            height="1px"
-            width="100%"
-            margin="16px 0"
-            backgroundColor="rgba(255, 255, 255, 0.2)"
-          />
-
-          <FlexContainer justifyContent="flex-end" marginBottom="16px">
-            <PrimaryTextSpan
-              color={isActive ? '#ffffff' : 'rgba(255, 255, 255, 0.4)'}
-              fontSize="28px"
-              fontWeight={700}
-            >
-              {account?.symbol}
-              {isActive
-                ? moneyFormatPart(total).int
-                : moneyFormatPart(account?.balance || 0).int}
-              <PrimaryTextSpan
-                fontSize="18px"
                 fontWeight={700}
+                fontSize="18px"
                 color={isActive ? '#ffffff' : 'rgba(255, 255, 255, 0.4)'}
               >
-                .
-                {isActive
-                  ? moneyFormatPart(total).decimal
-                  : moneyFormatPart(account?.balance || 0).decimal}
+                {t(user.isLive ? 'Real' : 'Demo')}
               </PrimaryTextSpan>
-            </PrimaryTextSpan>
-          </FlexContainer>
-        </FlexContainer>
-        {/*END HEADER */}
 
-        {/* ACCOUNT DESCRIPTION */}
-        {isActive && (
-          <>
-            <FlexContainer flexDirection="column">
-              <FlexContainer
-                justifyContent="space-between"
-                alignItems="center"
-                marginBottom="16px"
-              >
+              <FlexContainer alignItems="flex-end">
                 <PrimaryTextSpan
-                  fontSize="16px"
+                  fontSize="12px"
                   color="rgba(255, 255, 255, 0.4)"
+                  textTransform="uppercase"
                 >
-                  {t('Invested')}
+                  {user.id}
                 </PrimaryTextSpan>
-                <PrimaryTextSpan fontSize="16px" color="#FFFCCC">
-                  {account?.symbol}
-                  {moneyFormatPart(quotesStore.invest).int}
 
-                  <PrimaryTextSpan fontSize="10px" color="#fffccc">
-                    .{moneyFormatPart(quotesStore.invest).decimal}
-                  </PrimaryTextSpan>
-                </PrimaryTextSpan>
-              </FlexContainer>
-
-              <FlexContainer
-                justifyContent="space-between"
-                alignItems="center"
-                marginBottom="16px"
-              >
-                <PrimaryTextSpan
-                  fontSize="16px"
-                  color="rgba(255, 255, 255, 0.4)"
+                <ButtonWithoutStyles
+                  onClick={(e) => handleClickCopy(e, account?.id || '')}
                 >
-                  {t('Profit')}
-                </PrimaryTextSpan>
-                <PrimaryTextSpan>
-                  <QuoteText fontSize="16px" isGrowth={profit >= 0}>
-                    {getNumberSign(profit)}
-                    {account?.symbol}
-                    {moneyFormatPart(Math.abs(profit)).int}
-                    <QuoteText fontSize="10px" isGrowth={profit >= 0}>
-                      .{moneyFormatPart(Math.abs(profit)).decimal}
-                    </QuoteText>
-                  </QuoteText>
-                </PrimaryTextSpan>
-              </FlexContainer>
-
-              <FlexContainer justifyContent="space-between" alignItems="center">
-                <PrimaryTextSpan
-                  fontSize="16px"
-                  color="rgba(255, 255, 255, 0.4)"
-                >
-                  {t('Available')}
-                </PrimaryTextSpan>
-
-                <PrimaryTextSpan fontSize="16px" color="#FFFCCC">
-                  {account?.symbol}
-                  {moneyFormatPart(account?.balance || 0).int}
-                  <PrimaryTextSpan fontSize="10px" color="#fffccc">
-                    .{moneyFormatPart(account?.balance || 0).decimal}
-                  </PrimaryTextSpan>
-                </PrimaryTextSpan>
-              </FlexContainer>
-
-              {account.bonus > 0 && (
-                <>
-                  <FlexContainer
-                    height="1px"
-                    width="100%"
-                    margin="16px 0"
-                    backgroundColor="rgba(255, 255, 255, 0.2)"
-                  />
-                  <FlexContainer
-                    justifyContent="space-between"
-                    alignItems="center"
-                    marginBottom="16px"
-                  >
-                    <FlexContainer>
-                      <PrimaryTextSpan
-                        fontSize="16px"
-                        color="rgba(255, 255, 255, 0.4)"
-                        marginRight="8px"
-                      >
-                        {t('Bonus')}
-                      </PrimaryTextSpan>
-                      <InformationPopup
-                        infoText={t(
-                          'There is no possibility of withdrawing bonus. But this is an extra amount on your account and when you make a profit with them, this is something you can withdraw.'
-                        )}
-                      />
-                    </FlexContainer>
-
-                    <PrimaryTextSpan fontSize="16px" color="#FFFCCC">
-                      {account?.symbol}
-                      {moneyFormatPart(account.bonus).int}
-
-                      <PrimaryTextSpan fontSize="10px" color="#fffccc">
-                        .{moneyFormatPart(account.bonus).decimal}
-                      </PrimaryTextSpan>
-                    </PrimaryTextSpan>
+                  <FlexContainer padding="4px 0 0 8px">
+                    <SvgIcon
+                      {...CopyIcon}
+                      fillColor="rgba(255, 255, 255, 0.4)"
+                    />
                   </FlexContainer>
-                </>
-              )}
+                </ButtonWithoutStyles>
+              </FlexContainer>
             </FlexContainer>
-          </>
-        )}
-        {/* END ACCOUNT DESCRIPTION */}
-      </FlexContainer>
-      {/* END TOP */}
 
-      {/* CENTER */}
-      {!isActive && (
-        <FlexContainer flex="2" alignItems="center" justifyContent="center">
-          <PrimaryButton
-            isBorder={!account.isLive}
-            height="46px"
-            width="176px"
-            onClick={handleSwitch()}
-          >
-            <PrimaryTextSpan
-              fontWeight="bold"
-              fontSize="16px"
-              color={account.isLive ? '#252636' : '#ffffff'}
-            >
-              {t('Select account')}
-            </PrimaryTextSpan>
-          </PrimaryButton>
+            <FlexContainer
+              height="1px"
+              width="100%"
+              margin="16px 0"
+              backgroundColor="rgba(255, 255, 255, 0.2)"
+            />
+
+            <FlexContainer justifyContent="flex-end" marginBottom="16px">
+              <PrimaryTextSpan
+                color={isActive ? '#ffffff' : 'rgba(255, 255, 255, 0.4)'}
+                fontSize="28px"
+                fontWeight={700}
+              >
+                {account?.symbol}
+                {isActive
+                  ? moneyFormatPart(total).int
+                  : moneyFormatPart(user.balance).int}
+                <PrimaryTextSpan
+                  fontSize="18px"
+                  fontWeight={700}
+                  color={isActive ? '#ffffff' : 'rgba(255, 255, 255, 0.4)'}
+                >
+                  .
+                  {isActive
+                    ? moneyFormatPart(total).decimal
+                    : moneyFormatPart(user.balance).decimal}
+                </PrimaryTextSpan>
+              </PrimaryTextSpan>
+            </FlexContainer>
+          </FlexContainer>
+          {/*END HEADER */}
+
+          {/* ACCOUNT DESCRIPTION */}
+          {isActive && (
+            <>
+              <FlexContainer flexDirection="column">
+                <FlexContainer
+                  justifyContent="space-between"
+                  alignItems="center"
+                  marginBottom="16px"
+                >
+                  <PrimaryTextSpan
+                    fontSize="16px"
+                    color="rgba(255, 255, 255, 0.4)"
+                  >
+                    {t('Invested')}
+                  </PrimaryTextSpan>
+                  <PrimaryTextSpan fontSize="16px" color="#FFFCCC">
+                    {account?.symbol}
+                    {moneyFormatPart(quotesStore.invest).int}
+
+                    <PrimaryTextSpan fontSize="10px" color="#fffccc">
+                      .{moneyFormatPart(quotesStore.invest).decimal}
+                    </PrimaryTextSpan>
+                  </PrimaryTextSpan>
+                </FlexContainer>
+
+                <FlexContainer
+                  justifyContent="space-between"
+                  alignItems="center"
+                  marginBottom="16px"
+                >
+                  <PrimaryTextSpan
+                    fontSize="16px"
+                    color="rgba(255, 255, 255, 0.4)"
+                  >
+                    {t('Profit')}
+                  </PrimaryTextSpan>
+                  <PrimaryTextSpan>
+                    <QuoteText fontSize="16px" isGrowth={profit >= 0}>
+                      {getNumberSign(profit)}
+                      {account?.symbol}
+                      {moneyFormatPart(Math.abs(profit)).int}
+                      <QuoteText fontSize="10px" isGrowth={profit >= 0}>
+                        .{moneyFormatPart(Math.abs(profit)).decimal}
+                      </QuoteText>
+                    </QuoteText>
+                  </PrimaryTextSpan>
+                </FlexContainer>
+
+                <FlexContainer
+                  justifyContent="space-between"
+                  alignItems="center"
+                >
+                  <PrimaryTextSpan
+                    fontSize="16px"
+                    color="rgba(255, 255, 255, 0.4)"
+                  >
+                    {t('Available')}
+                  </PrimaryTextSpan>
+
+                  <PrimaryTextSpan fontSize="16px" color="#FFFCCC">
+                    {account?.symbol}
+                    {moneyFormatPart(user.balance).int}
+                    <PrimaryTextSpan fontSize="10px" color="#fffccc">
+                      .{moneyFormatPart(user.balance).decimal}
+                    </PrimaryTextSpan>
+                  </PrimaryTextSpan>
+                </FlexContainer>
+
+                {account.bonus > 0 && (
+                  <>
+                    <FlexContainer
+                      height="1px"
+                      width="100%"
+                      margin="16px 0"
+                      backgroundColor="rgba(255, 255, 255, 0.2)"
+                    />
+                    <FlexContainer
+                      justifyContent="space-between"
+                      alignItems="center"
+                      marginBottom="16px"
+                    >
+                      <FlexContainer>
+                        <PrimaryTextSpan
+                          fontSize="16px"
+                          color="rgba(255, 255, 255, 0.4)"
+                          marginRight="8px"
+                        >
+                          {t('Bonus')}
+                        </PrimaryTextSpan>
+                        <InformationPopup
+                          infoText={t(
+                            'There is no possibility of withdrawing bonus. But this is an extra amount on your account and when you make a profit with them, this is something you can withdraw.'
+                          )}
+                        />
+                      </FlexContainer>
+
+                      <PrimaryTextSpan fontSize="16px" color="#FFFCCC">
+                        {account?.symbol}
+                        {moneyFormatPart(account.bonus).int}
+
+                        <PrimaryTextSpan fontSize="10px" color="#fffccc">
+                          .{moneyFormatPart(account.bonus).decimal}
+                        </PrimaryTextSpan>
+                      </PrimaryTextSpan>
+                    </FlexContainer>
+                  </>
+                )}
+              </FlexContainer>
+            </>
+          )}
+          {/* END ACCOUNT DESCRIPTION */}
         </FlexContainer>
-      )}
-      {/* END CENTER */}
+        {/* END TOP */}
 
-      {/* BOTOOM */}
-      <FlexContainer flexDirection="column">
-        {isActive && account.isLive && (
-          <FlexContainer justifyContent="space-between" width="100%">
+        {/* CENTER */}
+        {!isActive && (
+          <FlexContainer flex="2" alignItems="center" justifyContent="center" position="relative" zIndex="5">
             <PrimaryButton
-              width="calc(50% - 4px)"
-              onClick={() => {
-                redirectWithUpdateRefreshToken(
-                  API_DEPOSIT_STRING,
-                  parsedParams
-                );
-                mainAppStore.closeAccountSwitcher();
-              }}
+              isBorder={!account.isLive}
+              height="46px"
+              width="176px"
+              onClick={handleSwitch()}
             >
               <PrimaryTextSpan
-                color="#252636"
-                fontSize="16px"
                 fontWeight="bold"
+                fontSize="16px"
+                color={account.isLive ? '#252636' : '#ffffff'}
               >
-                {t('Deposit')}
+                {t('Select account')}
               </PrimaryTextSpan>
             </PrimaryButton>
-            <SecondaryButton
-              width="calc(50% - 4px)"
-              onClick={() => {
-                mainAppStore.closeAccountSwitcher();
-                push(Page.WITHDRAW_LIST);
-              }}
-            >
-              <PrimaryTextSpan
-                fontSize="16px"
-                color="#fffccc"
-                fontWeight="bold"
-              >
-                {t('Withdraw')}
-              </PrimaryTextSpan>
-            </SecondaryButton>
           </FlexContainer>
         )}
+        {/* END CENTER */}
 
-        {/* Фича будет в будущем */}
-        {isActive && !account.isLive && 1 < 0 && (
-          <FlexContainer justifyContent="space-between" width="100%">
-            <SecondaryButton width="100%">
-              <PrimaryTextSpan
-                fontSize="16px"
-                color="#fffccc"
-                fontWeight="bold"
+        {/* BOTOOM */}
+        <FlexContainer flexDirection="column">
+          {isActive && account.isLive && (
+            <FlexContainer justifyContent="space-between" width="100%">
+              <PrimaryButton
+                width="calc(50% - 4px)"
+                onClick={() => {
+                  redirectWithUpdateRefreshToken(
+                    API_DEPOSIT_STRING,
+                    parsedParams
+                  );
+                  mainAppStore.closeAccountSwitcher();
+                }}
               >
-                {t('Reload')}
-              </PrimaryTextSpan>
-            </SecondaryButton>
-          </FlexContainer>
-        )}
+                <PrimaryTextSpan
+                  color="#252636"
+                  fontSize="16px"
+                  fontWeight="bold"
+                >
+                  {t('Deposit')}
+                </PrimaryTextSpan>
+              </PrimaryButton>
+              <SecondaryButton
+                width="calc(50% - 4px)"
+                onClick={() => {
+                  mainAppStore.closeAccountSwitcher();
+                  push(Page.WITHDRAW_LIST);
+                }}
+              >
+                <PrimaryTextSpan
+                  fontSize="16px"
+                  color="#fffccc"
+                  fontWeight="bold"
+                >
+                  {t('Withdraw')}
+                </PrimaryTextSpan>
+              </SecondaryButton>
+            </FlexContainer>
+          )}
+
+          {/* Фича будет в будущем */}
+          {isActive && !account.isLive && 1 < 0 && (
+            <FlexContainer justifyContent="space-between" width="100%">
+              <SecondaryButton width="100%">
+                <PrimaryTextSpan
+                  fontSize="16px"
+                  color="#fffccc"
+                  fontWeight="bold"
+                >
+                  {t('Reload')}
+                </PrimaryTextSpan>
+              </SecondaryButton>
+            </FlexContainer>
+          )}
+        </FlexContainer>
+        {/* END BOTTOM */}
       </FlexContainer>
-      {/* END BOTTOM */}
-    </FlexContainer>
-  );
-});
+    );
+  }
+);
 
 export default AccountSwitchItem;

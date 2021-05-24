@@ -38,8 +38,6 @@ export class QuotesStore implements IQuotesStore {
     this.activePositions = activePositions;
   };
 
-  
-  
   get profit() {
     return this.activePositions.reduce(
       (acc, prev) =>
@@ -67,22 +65,25 @@ export class QuotesStore implements IQuotesStore {
     );
   }
 
-  
-  
   get totalReservedFoundsForToppingUp() {
     let value: number = 0;
-    this.activePositions.map((pos) => value += pos.reservedFundsForToppingUp);
+    this.activePositions.map((pos) => (value += pos.reservedFundsForToppingUp));
     return value;
   }
-  
+
   get total() {
     return (
       this.profit +
       (this.rootStore.mainAppStore.activeAccount?.balance || 0) +
-      this.invest + this.totalReservedFoundsForToppingUp
+      this.invest +
+      this.totalReservedFoundsForToppingUp
     );
   }
-  
+
+  get totalWithoutBalance() {
+    return this.profit + this.invest + this.totalReservedFoundsForToppingUp;
+  }
+
   get totalEquity() {
     return this.profit + this.invest + this.totalReservedFoundsForToppingUp;
   }
