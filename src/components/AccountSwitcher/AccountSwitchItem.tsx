@@ -272,7 +272,7 @@ const AccountSwitchItem = observer(
                   </PrimaryTextSpan>
                 </FlexContainer>
 
-                {account.bonus > 0 && (
+                {user.bonus > 0 && (
                   <>
                     <FlexContainer
                       height="1px"

@@ -53,11 +53,11 @@ const WithdrawBitcoinForm = () => {
           .number()
           .min(10, `${t('min')}: $10`)
           .max(
-            mainAppStore.accounts.find((item) => item.isLive)?.balance || 0,
+            mainAppStore.accounts.find((item) => item.isLive)?.freeToWithdrawal || 0,
             `${t('max')}: $${
               mainAppStore.accounts
                 .find((item) => item.isLive)
-                ?.balance.toFixed(2) || 0
+                ?.freeToWithdrawal.toFixed(2) || 0
             }`
           ),
 

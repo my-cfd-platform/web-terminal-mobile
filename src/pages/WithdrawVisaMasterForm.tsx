@@ -54,8 +54,12 @@ const WithdrawVisaMasterForm = () => {
           .number()
           .min(10, `${t('min')}: $10`)
           .max(
-            ((mainAppStore.realAcc?.balance || 0) - (mainAppStore.realAcc?.bonus || 0)),
-            `${t('max')}: $${moneyFormatPart(((mainAppStore.realAcc?.balance || 0) - (mainAppStore.realAcc?.bonus || 0))).full}`
+            mainAppStore.accounts.find((item) => item.isLive)?.freeToWithdrawal || 0,
+            `${t('max')}: $${
+              mainAppStore.accounts
+                .find((item) => item.isLive)
+                ?.freeToWithdrawal.toFixed(2) || 0
+            }`
           ),
         details: yup
           .string()

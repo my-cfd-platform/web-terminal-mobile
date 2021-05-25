@@ -18,17 +18,11 @@ const WithdrawAvailableBalanceInfo = observer(() => {
         </PrimaryTextSpan>
         <PrimaryTextSpan fontSize="14px" color="rgba(255, 255, 255, 0.4)">
           {mainAppStore.realAcc?.symbol}
-          {
-            moneyFormatPart(
-              (mainAppStore.realAcc?.balance || 0) - (mainAppStore.realAcc?.bonus || 0)
-            ).int
-          }
-          .
+          {moneyFormatPart(mainAppStore.realAcc?.freeToWithdrawal || 0).int}.
           <PrimaryTextSpan fontSize="10px" color="rgba(255, 255, 255, 0.4)">
             {
-              moneyFormatPart(
-                (mainAppStore.realAcc?.balance || 0) - (mainAppStore.realAcc?.bonus || 0)
-              ).decimal
+              moneyFormatPart(mainAppStore.realAcc?.freeToWithdrawal || 0)
+                .decimal
             }
           </PrimaryTextSpan>
         </PrimaryTextSpan>
@@ -52,18 +46,9 @@ const WithdrawAvailableBalanceInfo = observer(() => {
           </FlexContainer>
           <PrimaryTextSpan fontSize="14px" color="rgba(255, 255, 255, 0.4)">
             {mainAppStore.realAcc?.symbol}
-            {
-              moneyFormatPart(
-                mainAppStore.realAcc?.bonus || 0
-              ).int
-            }
-            .
+            {moneyFormatPart(mainAppStore.realAcc?.bonus || 0).int}.
             <PrimaryTextSpan fontSize="10px" color="rgba(255, 255, 255, 0.4)">
-              {
-                moneyFormatPart(
-                  mainAppStore.realAcc?.bonus || 0
-                ).decimal
-              }
+              {moneyFormatPart(mainAppStore.realAcc?.bonus || 0).decimal}
             </PrimaryTextSpan>
           </PrimaryTextSpan>
         </FlexContainer>
