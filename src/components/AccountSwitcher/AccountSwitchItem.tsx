@@ -8,7 +8,7 @@ import SvgIcon from '../SvgIcon';
 import CopyIcon from '../../assets/svg/accounts/icon-copy.svg';
 import { useStores } from '../../hooks/useStores';
 import { moneyFormatPart } from '../../helpers/moneyFormat';
-import { getNumberSign } from '../../helpers/getNumberSign';
+import { getNumberSignNegative } from '../../helpers/getNumberSign';
 import { autorun } from 'mobx';
 import { PrimaryButton, SecondaryButton } from '../../styles/Buttons';
 import { useSwipeable } from 'react-swipeable';
@@ -184,9 +184,10 @@ const AccountSwitchItem = observer(
                 fontSize="28px"
                 fontWeight={700}
               >
+                {isActive && getNumberSignNegative(total)}
                 {account?.symbol}
                 {isActive
-                  ? moneyFormatPart(total).int
+                  ? moneyFormatPart(Math.abs(total)).int
                   : moneyFormatPart(user.balance).int}
                 <PrimaryTextSpan
                   fontSize="18px"
@@ -195,7 +196,7 @@ const AccountSwitchItem = observer(
                 >
                   .
                   {isActive
-                    ? moneyFormatPart(total).decimal
+                    ? moneyFormatPart(Math.abs(total)).decimal
                     : moneyFormatPart(user.balance).decimal}
                 </PrimaryTextSpan>
               </PrimaryTextSpan>
