@@ -26,6 +26,7 @@ import InformationPopup from '../components/InformationPopup';
 import { moneyFormatPart } from '../helpers/moneyFormat';
 import ConfirmationPopup from '../components/ConfirmationPopup';
 import Modal from '../components/Modal';
+import WithdrawAvailableBalanceInfo from '../components/Withdraw/WithdrawAvailableBalanceInfo';
 
 interface RequestValues {
   amount: number;
@@ -53,7 +54,7 @@ const WithdrawBitcoinForm = () => {
           .min(10, `${t('min')}: $10`)
           .max(
             mainAppStore.accounts.find((item) => item.isLive)?.balance || 0,
-            `${t('max')}: ${
+            `${t('max')}: $${
               mainAppStore.accounts
                 .find((item) => item.isLive)
                 ?.balance.toFixed(2) || 0
@@ -273,7 +274,7 @@ const WithdrawBitcoinForm = () => {
                   onChange={handleChangeAmount}
                 />
               </InputWrap>
-              {touched.amount && errors.amount && (
+              {errors.amount && (
                 <FlexContainer marginBottom="12px" padding="0 16px">
                   <PrimaryTextSpan fontSize="11px" color={Colors.RED}>
                     {errors.amount}
@@ -294,94 +295,7 @@ const WithdrawBitcoinForm = () => {
               />
             </FlexContainer>
 
-            <FlexContainer padding="16px" justifyContent="space-between">
-              <PrimaryTextSpan fontSize="14px" color="rgba(196, 196, 196, 0.5)">
-                {t('Available')}
-              </PrimaryTextSpan>
-              <Observer>
-                {() => (
-                  <PrimaryTextSpan
-                    fontSize="14px"
-                    color="rgba(255, 255, 255, 0.4)"
-                  >
-                    {mainAppStore.accounts.find((acc) => acc.isLive)?.symbol}
-                    {
-                      moneyFormatPart(
-                        mainAppStore.accounts.find((acc) => acc.isLive)
-                          ?.balance || 0
-                      ).int
-                    }
-                    .
-                    <PrimaryTextSpan
-                      fontSize="10px"
-                      color="rgba(255, 255, 255, 0.4)"
-                    >
-                      {
-                        moneyFormatPart(
-                          mainAppStore.accounts.find((acc) => acc.isLive)
-                            ?.balance || 0
-                        ).decimal
-                      }
-                    </PrimaryTextSpan>
-                  </PrimaryTextSpan>
-                )}
-              </Observer>
-            </FlexContainer>
-
-            <Observer>
-              {() => (
-                <>
-                  {mainAppStore.accounts.find((acc) => acc.isLive)?.bonus && (
-                    <FlexContainer
-                      padding="16px"
-                      justifyContent="space-between"
-                    >
-                      <FlexContainer>
-                        <PrimaryTextSpan
-                          fontSize="14px"
-                          color="rgba(196, 196, 196, 0.5)"
-                          marginRight="8px"
-                        >
-                          {t('Bonus')}
-                        </PrimaryTextSpan>
-                        <InformationPopup
-                          infoText={t(
-                            'There is no possibility of withdrawing bonus. But this is an extra amount on your account and when you make a profit with them, this is something you can withdraw.'
-                          )}
-                        />
-                      </FlexContainer>
-                      <PrimaryTextSpan
-                        fontSize="14px"
-                        color="rgba(255, 255, 255, 0.4)"
-                      >
-                        {
-                          mainAppStore.accounts.find((acc) => acc.isLive)
-                            ?.symbol
-                        }
-                        {
-                          moneyFormatPart(
-                            mainAppStore.accounts.find((acc) => acc.isLive)
-                              ?.bonus || 0
-                          ).int
-                        }
-                        .
-                        <PrimaryTextSpan
-                          fontSize="10px"
-                          color="rgba(255, 255, 255, 0.4)"
-                        >
-                          {
-                            moneyFormatPart(
-                              mainAppStore.accounts.find((acc) => acc.isLive)
-                                ?.bonus || 0
-                            ).decimal
-                          }
-                        </PrimaryTextSpan>
-                      </PrimaryTextSpan>
-                    </FlexContainer>
-                  )}
-                </>
-              )}
-            </Observer>
+            <WithdrawAvailableBalanceInfo />
           </FlexContainer>
           <FlexContainer padding="16px" width="100%">
             <PrimaryButton
