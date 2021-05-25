@@ -200,7 +200,7 @@ const WithdrawBitcoinForm = () => {
       return;
     }
 
-    if (Number(mainAppStore.accounts.find((item) => item.isLive)?.balance) > 0) {
+    if (Number(mainAppStore.accounts.find((item) => item.isLive)?.bonus) > 0) {
       setShowConfirm(true);
     } else {
       submitForm();
