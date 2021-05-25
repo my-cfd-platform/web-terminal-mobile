@@ -8,7 +8,7 @@ import SvgIcon from '../SvgIcon';
 import CopyIcon from '../../assets/svg/accounts/icon-copy.svg';
 import { useStores } from '../../hooks/useStores';
 import { moneyFormatPart } from '../../helpers/moneyFormat';
-import { getNumberSignNegative } from '../../helpers/getNumberSign';
+import { getNumberSignNegative, getNumberSign } from '../../helpers/getNumberSign';
 import { autorun } from 'mobx';
 import { PrimaryButton, SecondaryButton } from '../../styles/Buttons';
 import { useSwipeable } from 'react-swipeable';
