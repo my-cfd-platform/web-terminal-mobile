@@ -84,14 +84,14 @@ const AccountProfile = observer(() => {
           <Observer>
             {() => (
               <>
-                <PrimaryTextSpan
+                {/* <PrimaryTextSpan
                   color="#ffffff"
                   fontSize="16px"
                   fontWeight={500}
                   marginBottom="6px"
                 >
                   {`${userProfileStore.userProfile?.firstName} ${userProfileStore.userProfile?.lastName}`}
-                </PrimaryTextSpan>
+                </PrimaryTextSpan> */}
                 <PrimaryTextSpan
                   color="rgba(255, 255, 255, 0.4)"
                   fontSize="13px"
