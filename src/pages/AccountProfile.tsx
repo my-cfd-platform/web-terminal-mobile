@@ -59,7 +59,7 @@ const AccountProfile = observer(() => {
   }, [mainAppStore.token, mainAppStore.lang, mainAppStore.accounts]);
 
   return (
-    // TODO: Refactor Safari 
+    // TODO: Refactor Safari
     <FlexContainer flexDirection="column" minHeight="600px">
       <AchievementStatusLabel />
       <FlexContainer padding="16px" marginBottom="24px">
@@ -81,23 +81,25 @@ const AccountProfile = observer(() => {
         </UserPhoto>
 
         <FlexContainer flexDirection="column" justifyContent="center">
-          <PrimaryTextSpan
-            color="#ffffff"
-            fontSize="16px"
-            fontWeight={500}
-            marginBottom="6px"
-          >
-            {name}
-          </PrimaryTextSpan>
           <Observer>
             {() => (
-              <PrimaryTextSpan
-                color="rgba(255, 255, 255, 0.4)"
-                fontSize="13px"
-                fontWeight={500}
-              >
-                {userProfileStore.userProfile?.email}
-              </PrimaryTextSpan>
+              <>
+                <PrimaryTextSpan
+                  color="#ffffff"
+                  fontSize="16px"
+                  fontWeight={500}
+                  marginBottom="6px"
+                >
+                  {`${userProfileStore.userProfile?.firstName} ${userProfileStore.userProfile?.lastName}`}
+                </PrimaryTextSpan>
+                <PrimaryTextSpan
+                  color="rgba(255, 255, 255, 0.4)"
+                  fontSize="13px"
+                  fontWeight={500}
+                >
+                  {userProfileStore.userProfile?.email}
+                </PrimaryTextSpan>
+              </>
             )}
           </Observer>
         </FlexContainer>
@@ -144,7 +146,11 @@ const AccountProfile = observer(() => {
           </PrimaryTextSpan>
         </FlexContainer>
 
-        <ProfileMenuButton onClick={() => redirectWithUpdateRefreshToken(API_DEPOSIT_STRING, parsedParams)}>
+        <ProfileMenuButton
+          onClick={() =>
+            redirectWithUpdateRefreshToken(API_DEPOSIT_STRING, parsedParams)
+          }
+        >
           <FlexContainer alignItems="center">
             <FlexContainer
               width="28px"
@@ -217,7 +223,11 @@ const AccountProfile = observer(() => {
         </ProfileMenuLink>
       </FlexContainer>
 
-      <FlexContainer flexDirection="column" marginBottom="24px">
+      <FlexContainer
+        flexDirection="column"
+        marginBottom="24px"
+        backgroundColor="rgb(28, 31, 38)"
+      >
         <FlexContainer padding="0 16px" marginBottom="8px">
           <PrimaryTextSpan
             textTransform="uppercase"
@@ -269,7 +279,8 @@ const AccountProfile = observer(() => {
                 fontSize="9px"
                 fontWeight="normal"
               >
-                {mainAppStore.lang?.substr(0, 2).toUpperCase() || CountriesEnum.EN.substr(0, 2).toUpperCase()}
+                {mainAppStore.lang?.substr(0, 2).toUpperCase() ||
+                  CountriesEnum.EN.substr(0, 2).toUpperCase()}
               </PrimaryTextSpan>
             </FlexContainer>
             <PrimaryTextSpan
