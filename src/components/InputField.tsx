@@ -34,7 +34,8 @@ const InputField: FC<InputFieldProps> = ({
   autoComplete,
   inputMode,
   onBeforeInput,
-  padding
+  padding,
+  name
 }) => {
   return (
     <InputWrap>

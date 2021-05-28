@@ -9,6 +9,7 @@ import { observer } from 'mobx-react-lite';
 import { useTranslation } from 'react-i18next';
 import useRedirectMiddleware from '../../hooks/useRedirectMiddleware';
 import { ButtonWithoutStyles } from '../../styles/ButtonWithoutStyles';
+import AccountSwitcher from '../AccountSwitcher/AccountSwitcher';
 
 const NavBar = observer(() => {
   const { mainAppStore, userProfileStore } = useStores();
@@ -45,8 +46,8 @@ const NavBar = observer(() => {
       mainAppStore.accounts.length &&
       mainAppStore.lang &&
       mainAppStore.token &&
-      mainAppStore.initModel.tradingUrl && 
-      !mainAppStore.isPromoAccount && 
+      mainAppStore.initModel.tradingUrl &&
+      !mainAppStore.isPromoAccount &&
       !mainAppStore.promo
     ) {
       const newUrlParams = new URLSearchParams();
@@ -73,7 +74,7 @@ const NavBar = observer(() => {
     mainAppStore.token,
     mainAppStore.initModel.tradingUrl,
     mainAppStore.isPromoAccount,
-    mainAppStore.promo
+    mainAppStore.promo,
   ]);
 
   return (
@@ -86,16 +87,17 @@ const NavBar = observer(() => {
     >
       <AccountLabel />
       <AccountsSwitchLink />
-      {mainAppStore.isPromoAccount ? (
-        <></>
-      ) : (
-        <DepositLink
-          onClick={() =>
-            redirectWithUpdateRefreshToken(API_DEPOSIT_STRING, parsedParams)
-          }
-        >
-          {t('Deposit')}
-        </DepositLink>
+      {mainAppStore.isPromoAccount && (
+        <>
+          <DepositLink
+            onClick={() =>
+              redirectWithUpdateRefreshToken(API_DEPOSIT_STRING, parsedParams)
+            }
+          >
+            {t('Deposit')}
+          </DepositLink>
+          <AccountSwitcher show={mainAppStore.showAccountSwitcher} />
+        </>
       )}
     </FlexContainer>
   );

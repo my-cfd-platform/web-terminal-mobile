@@ -67,6 +67,7 @@ interface MainAppStoreProps {
   connectionSignalRTimer: NodeJS.Timeout | null;
   isPromoAccount: boolean;
   promo: string;
+  showAccountSwitcher: boolean;
 }
 
 // TODO: think about application initialization
@@ -124,7 +125,7 @@ export class MainAppStore implements MainAppStoreProps {
   @observable balanceWas: number = 0;
   @observable isPromoAccount = false;
   @observable promo = '';
-
+  @observable showAccountSwitcher: boolean = false;
   websocketConnectionTries = 0;
 
   paramsAsset: string | null = null;
@@ -394,6 +395,16 @@ export class MainAppStore implements MainAppStoreProps {
       }
     );
   };
+
+  @action 
+  openAccountSwitcher = () => {
+    this.showAccountSwitcher = true;
+  }
+
+  @action 
+  closeAccountSwitcher = () => {
+    this.showAccountSwitcher = false;
+  }
 
   @action
   setSignUpFlag = (value: boolean) => {
@@ -677,6 +688,11 @@ export class MainAppStore implements MainAppStoreProps {
   setParamsBalanceHistory = (params: boolean) => {
     this.paramsBalanceHistory = params;
   };
+
+  @computed
+  get realAcc() {
+    return this.accounts.find(acc => acc.isLive)
+  }
 
   @computed
   get sortedAccounts() {

@@ -3,7 +3,7 @@ import { PersonalDataDTO } from '../types/PersonalDataTypes';
 
 interface ContextProps {
   userProfile: PersonalDataDTO | null;
-  userProfileId: string 
+  userProfileId: string;
 }
 
 export class UserProfileStore implements ContextProps {

@@ -4,12 +4,13 @@ import { PrimaryTextSpan } from '../styles/TextsElements';
 import { useTranslation } from 'react-i18next';
 import styled from '@emotion/styled';
 import NoNews from '../assets/images/no-news.png';
+import { FULL_VH } from '../constants/global';
 
 const News = () => {
   const { t } = useTranslation();
 
   return (
-    <FlexContainer flexDirection="column">
+    <FlexContainer flexDirection="column" minHeight={`calc(${FULL_VH} - 228px)`}>
       <FlexContainer
         padding="0 16px"
         alignItems="center"

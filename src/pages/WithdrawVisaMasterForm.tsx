@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import React, { useCallback } from 'react';
+import React, { ChangeEvent, useCallback, useState } from 'react';
 import { FlexContainer } from '../styles/FlexContainer';
 import * as yup from 'yup';
 import { useFormik } from 'formik';
@@ -23,6 +23,11 @@ import mixapanelProps from '../constants/mixpanelProps';
 import Page from '../constants/Pages';
 import { useHistory } from 'react-router-dom';
 import WithdrawContainer from '../containers/WithdrawContainer';
+import { moneyFormatPart } from '../helpers/moneyFormat';
+import InformationPopup from '../components/InformationPopup';
+import ConfirmationPopup from '../components/ConfirmationPopup';
+import Modal from '../components/Modal';
+import WithdrawAvailableBalanceInfo from '../components/Withdraw/WithdrawAvailableBalanceInfo';
 
 interface RequestValues {
   amount: number;
@@ -40,6 +45,8 @@ const WithdrawVisaMasterForm = () => {
   const { push } = useHistory();
   const { mainAppStore, withdrawalStore, notificationStore } = useStores();
 
+  const [showConfirm, setShowConfirm] = useState(false);
+
   const validationSchema = useCallback(
     () =>
       yup.object().shape<RequestValues>({
@@ -47,10 +54,12 @@ const WithdrawVisaMasterForm = () => {
           .number()
           .min(10, `${t('min')}: $10`)
           .max(
-            mainAppStore.activeAccount?.balance || 0,
-            `${t('max')}: ${mainAppStore.accounts
-              .find((item) => item.isLive)
-              ?.balance.toFixed(2)}`
+            mainAppStore.accounts.find((item) => item.isLive)?.freeToWithdrawal || 0,
+            `${t('max')}: $${
+              mainAppStore.accounts
+                .find((item) => item.isLive)
+                ?.freeToWithdrawal.toFixed(2) || 0
+            }`
           ),
         details: yup
           .string()
@@ -80,11 +89,10 @@ const WithdrawVisaMasterForm = () => {
         mainAppStore.initModel.tradingUrl
       );
       if (result.status === WithdrawalHistoryResponseStatus.Successful) {
-        
         notificationStore.isSuccessfull = true;
         push(Page.WITHDRAW_SUCCESS);
         withdrawalStore.setPendingPopup();
-        
+
         mixpanel.track(mixpanelEvents.WITHDRAW_REQUEST, {
           [mixapanelProps.AMOUNT]: +values.amount,
           [mixapanelProps.WITHDRAWAL_METHOD]: 'Bankwire',
@@ -110,25 +118,24 @@ const WithdrawVisaMasterForm = () => {
   const {
     values,
     setFieldValue,
+    setFieldError,
     validateForm,
-    handleChange,
     handleSubmit,
+    setErrors,
+    submitForm,
     errors,
-    touched,
-    isValid,
-    dirty,
   } = useFormik({
     initialValues,
-
     onSubmit: handleSubmitForm,
     validationSchema,
-    validateOnBlur: true,
-    validateOnChange: true,
+    validateOnBlur: false,
+    validateOnChange: false,
   });
 
   const handleChangeAmount = (e: any) => {
     let filteredValue: any = e.target.value.replace(',', '.');
     setFieldValue('amount', filteredValue);
+    setFieldError('amount', undefined);
   };
 
   const handleBlurAmount = () => {
@@ -187,17 +194,47 @@ const WithdrawVisaMasterForm = () => {
 
   const textOnBeforeInputHandler = () => {};
 
+  const handleChangeFiled = (e: ChangeEvent<HTMLInputElement>) => {
+    setFieldValue(e.target.name, e.target.value);
+    setFieldError(e.target.name, undefined);
+  };
+
   const handlerClickSubmit = async () => {
     const curErrors = await validateForm();
     const curErrorsKeys = Object.keys(curErrors);
+
     if (curErrorsKeys.length) {
+      setErrors(curErrors);
       const el = document.getElementById(curErrorsKeys[0]);
       if (el) el.focus();
+      return;
     }
+
+    if (Number(mainAppStore.accounts.find((item) => item.isLive)?.bonus) > 0) {
+      setShowConfirm(true);
+    } else {
+      submitForm();
+    }
+  };
+
+  const handleConfirm = (confirm: boolean) => {
+    if (confirm) {
+      submitForm();
+    }
+    setShowConfirm(false);
   };
 
   return (
     <WithdrawContainer backBtn={Page.WITHDRAW_LIST}>
+      {showConfirm && (
+        <Modal>
+          <ConfirmationPopup confirmAction={handleConfirm}>
+            {t(
+              'When you withdraw your funds, the bonus will be deducted from your account.'
+            )}
+          </ConfirmationPopup>
+        </Modal>
+      )}
       <CustomForm noValidate onSubmit={handleSubmit}>
         <FlexContainer
           flexDirection="column"
@@ -205,11 +242,7 @@ const WithdrawVisaMasterForm = () => {
           justifyContent="space-between"
         >
           <FlexContainer flexDirection="column">
-            <FlexContainer
-              flexDirection="column"
-              width="100%"
-              marginBottom="12px"
-            >
+            <FlexContainer flexDirection="column" width="100%">
               <InputWrap
                 flexDirection="column"
                 width="100%"
@@ -217,7 +250,7 @@ const WithdrawVisaMasterForm = () => {
                 padding="12px 16px"
                 position="relative"
                 marginBottom="4px"
-                hasError={!!(touched.amount && errors.amount)}
+                hasError={!!errors.amount}
               >
                 <FlexContainer
                   position="absolute"
@@ -248,31 +281,13 @@ const WithdrawVisaMasterForm = () => {
                 />
               </InputWrap>
 
-              <FlexContainer marginBottom="12px" padding="0 16px">
-                {touched.amount && errors.amount ? (
+              {errors.amount && (
+                <FlexContainer marginBottom="12px" padding="0 16px">
                   <PrimaryTextSpan fontSize="11px" color={Colors.RED}>
                     {errors.amount}
                   </PrimaryTextSpan>
-                ) : (
-                  <Observer>
-                    {() => (
-                      <PrimaryTextSpan
-                        fontSize="11px"
-                        color="rgba(196, 196, 196, 0.5)"
-                      >
-                        {t('Available')}&nbsp;
-                        {
-                          mainAppStore.accounts.find((acc) => acc.isLive)
-                            ?.symbol
-                        }
-                        {mainAppStore.accounts
-                          .find((acc) => acc.isLive)
-                          ?.balance.toFixed(2)}
-                      </PrimaryTextSpan>
-                    )}
-                  </Observer>
-                )}
-              </FlexContainer>
+                </FlexContainer>
+              )}
             </FlexContainer>
 
             <FlexContainer>
@@ -280,19 +295,24 @@ const WithdrawVisaMasterForm = () => {
                 name="details"
                 id="details"
                 onBeforeInput={textOnBeforeInputHandler}
-                onChange={handleChange}
+                onChange={handleChangeFiled}
                 value={values.details}
                 type="text"
                 placeholder={t('Details')}
-                hasError={!!(touched.details && errors.details)}
+                hasError={!!errors.details}
                 errorText={errors.details}
               />
             </FlexContainer>
+
+            
+            <WithdrawAvailableBalanceInfo />
+
+
           </FlexContainer>
 
           <FlexContainer padding="16px" width="100%">
             <PrimaryButton
-              type="submit"
+              type="button"
               onClick={handlerClickSubmit}
               width="100%"
               disabled={

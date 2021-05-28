@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import styled from '@emotion/styled';
-import { Link } from 'react-router-dom';
-import Page from '../../constants/Pages';
 import { PrimaryTextSpan } from '../../styles/TextsElements';
 import Colors from '../../constants/Colors';
 import { useStores } from '../../hooks/useStores';
 import { Observer, observer } from 'mobx-react-lite';
 import DropDownArrov from '../../assets/svg/icon-dropdown.svg';
 import SvgIcon from '../SvgIcon';
+import { ButtonWithoutStyles } from '../../styles/ButtonWithoutStyles';
+import { moneyFormat } from '../../helpers/moneyFormat';
 
 const AccountsSwitchLink = observer(() => {
   const { mainAppStore } = useStores();
@@ -27,15 +27,21 @@ const AccountsSwitchLink = observer(() => {
     mainAppStore.balanceWas = end;
   };
 
+  const handleOpenAccounts = () => () => {
+    mainAppStore.openAccountSwitcher();
+  }
+
   useEffect(() => {
     if (mainAppStore.accounts) {
-      const newBalance =
-        mainAppStore.accounts.find(
-          (item) => item.id === mainAppStore.activeAccountId
-        )?.balance || balance;
+      const newBalance = mainAppStore.accounts.find(
+        (item) => item.id === mainAppStore.activeAccountId
+      )?.balance || 0;
       if (newBalance !== balance && balance !== 0) {
-        animateValue(balance, newBalance);
-      } else if (balance === 0) {
+        animateValue(
+          balance,
+          newBalance
+        );
+      } else {
         mainAppStore.balanceWas = newBalance;
         setBalance(newBalance);
       }
@@ -43,29 +49,29 @@ const AccountsSwitchLink = observer(() => {
   }, [mainAppStore.activeAccountId, mainAppStore.accounts]);
 
   return (
-    <AccountSwitch
-      to={!mainAppStore.isPromoAccount ? Page.ACCOUNTS_SWITCH : Page.DASHBOARD}
-    >
-      <PrimaryTextSpan
-        color={mainAppStore.activeAccount?.isLive ? Colors.ACCENT : '#ffffff'}
-        fontSize="16px"
-        fontWeight="bold"
-        marginRight="8px"
-        lineHeight="1"
-      >
-        {mainAppStore.activeAccount?.symbol}
-        {balance.toFixed(2)}
-      </PrimaryTextSpan>
-      {!mainAppStore.isPromoAccount && (
-        <SvgIcon {...DropDownArrov} fillColor="rgba(255, 255, 255, 0.4)" />
-      )}
+    <AccountSwitch onClick={handleOpenAccounts()}>
+      <Observer>
+        {() => (
+          <PrimaryTextSpan
+            color={mainAppStore.activeAccount?.isLive ? Colors.ACCENT : "#ffffff"}
+            fontSize="16px"
+            fontWeight="bold"
+            marginRight="8px"
+            lineHeight="1"
+          >
+            {mainAppStore.activeAccount?.symbol}
+            {moneyFormat(balance)}
+          </PrimaryTextSpan>
+        )}
+      </Observer>
+      <SvgIcon {...DropDownArrov} fillColor="rgba(255, 255, 255, 0.4)"/>
     </AccountSwitch>
   );
 });
 
 export default AccountsSwitchLink;
 
-const AccountSwitch = styled(Link)`
+const AccountSwitch = styled(ButtonWithoutStyles)`
   margin-left: 16px;
   text-decoration: none;
   transition: all 0.4s ease;

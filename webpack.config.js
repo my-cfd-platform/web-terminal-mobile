@@ -86,6 +86,11 @@ module.exports = (env, argv) => {
       //host: '0.0.0.0',
     },
     plugins: [
+      new webpack.ProvidePlugin({
+        $: 'jquery',
+        jQuery: 'jquery',
+        'window.jQuery': 'jquery'
+    }),
       new HtmlWebpackPlugin({
         template: './src/index.html',
         filename: './index.html',
