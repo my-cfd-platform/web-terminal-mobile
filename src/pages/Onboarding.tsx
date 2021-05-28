@@ -21,14 +21,16 @@ import Topics from '../constants/websocketTopics';
 import Fields from '../constants/fields';
 import styled from '@emotion/styled';
 import { keyframes } from '@emotion/core';
+import { LOCAL_STORAGE_SKIPPED_ONBOARDING } from '../constants/global';
+import { observer } from 'mobx-react-lite';
 
-const Onboarding = () => {
+const Onboarding = observer(() => {
   const { t } = useTranslation();
   const { push } = useHistory();
   const {
     badRequestPopupStore,
     mainAppStore,
-    userProfileStore
+    userProfileStore,
   } = useStores();
 
   const wrapperRef = useRef<HTMLDivElement>(document.createElement('div'));
@@ -94,6 +96,22 @@ const Onboarding = () => {
       actualStepInfo?.data.totalSteps &&
       actualStepInfo?.data.totalSteps !== actualStep
     ) {
+      const storageCheck = localStorage.getItem(LOCAL_STORAGE_SKIPPED_ONBOARDING);
+      const neededId = mainAppStore
+        .accounts
+        ?.find((account) => !account.isLive)?.id;
+      const alreadySkipped = (storageCheck !== null)
+        ? JSON.parse(storageCheck)
+        : [];
+      alreadySkipped.push(neededId);
+      mainAppStore.activeAccountId = neededId || '';
+      mainAppStore.activeAccount = mainAppStore
+        .accounts
+        ?.find((account) => !account.isLive);
+      localStorage.setItem(
+        LOCAL_STORAGE_SKIPPED_ONBOARDING,
+        JSON.stringify(alreadySkipped)
+      );
       mixpanel.track(mixpanelEvents.ONBOARDING, {
         [mixapanelProps.ONBOARDING_VALUE]: `close${actualStep}`,
       });
@@ -102,6 +120,7 @@ const Onboarding = () => {
       mixpanel.track(mixpanelEvents.ONBOARDING, {
         [mixapanelProps.ONBOARDING_VALUE]: `close${actualStep}`,
       });
+      mainAppStore.onboardingJustClosed = true;
       push(Page.DASHBOARD);
     }
   };
@@ -179,10 +198,52 @@ const Onboarding = () => {
   }, [wrapperRef]);
 
   useEffect(() => {
+    const storageCheck = localStorage.getItem(LOCAL_STORAGE_SKIPPED_ONBOARDING);
+    const neededId = mainAppStore
+      .accounts
+      ?.find((account) => !account.isLive)?.id;
+    const alreadySkipped = (storageCheck !== null)
+      ? JSON.parse(storageCheck)
+      : [];
+    if (alreadySkipped.includes(neededId)) {
+      mainAppStore.activeAccountId = neededId || '';
+      mainAppStore.activeAccount = mainAppStore
+        .accounts
+        ?.find((account) => !account.isLive);
+      push(Page.DASHBOARD);
+    }
+  }, []);
+
+  useEffect(() => {
+    let cleanupFunction = false;
     mixpanel.track(mixpanelEvents.ONBOARDING, {
       [mixapanelProps.ONBOARDING_VALUE]: 'start1',
     });
-    getInfoByStep(1);
+    const getInfoFirstStep = async () => {
+      try {
+        const response = await API.getOnBoardingInfoByStep(1, 2, mainAppStore.initModel.miscUrl);
+        if (response.responseCode === 0 && !cleanupFunction) {
+          setActualStepInfo(null);
+          setActualStepInfo(response);
+          setActualStep(1);
+          setLoading(false);
+        } else {
+          push(Page.DASHBOARD);
+        }
+      } catch (error) {
+        push(Page.DASHBOARD);
+      }
+    };
+    getInfoFirstStep();
+    return () => {
+      cleanupFunction = true;
+      const useAccount = mainAppStore.accounts.find(
+        (account) => !account.isLive
+      );
+      if (useAccount) {
+        mainAppStore.setActiveAccount(useAccount);
+      }
+    };
   }, []);
 
   if (loading || actualStepInfo === null) {
@@ -282,7 +343,7 @@ const Onboarding = () => {
       </FlexContainer>
     </BackFlowLayout>
   );
-};
+});
 
 export default Onboarding;
 

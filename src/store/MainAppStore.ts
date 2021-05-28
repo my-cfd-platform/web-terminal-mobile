@@ -126,6 +126,8 @@ export class MainAppStore implements MainAppStoreProps {
   @observable isPromoAccount = false;
   @observable promo = '';
   @observable showAccountSwitcher: boolean = false;
+  @observable onboardingJustClosed: boolean = false;
+
   websocketConnectionTries = 0;
 
   paramsAsset: string | null = null;
