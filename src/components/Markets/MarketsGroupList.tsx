@@ -48,7 +48,7 @@ const MarketsGroupList = observer(() => {
       <Observer>
         {() => (
           <>
-            {instrumentsStore.instrumentGroups.sort((a: InstrumentGroupWSDTO, b: InstrumentGroupWSDTO) => a.weight - b.weight).map((item) => (
+            {instrumentsStore.instrumentGroups.map((item) => (
               <MarketButton
                 key={item.id}
                 isActive={instrumentsStore.activeInstrumentGroupId === item.id}

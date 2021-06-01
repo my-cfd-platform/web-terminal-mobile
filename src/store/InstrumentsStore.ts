@@ -82,6 +82,12 @@ export class InstrumentsStore implements ContextProps {
   }
 
   @action
+  setInstrumentGroups = (newInstrumentGroups: InstrumentGroupWSDTO[]) => {
+    this.instrumentGroups = newInstrumentGroups.sort((a: InstrumentGroupWSDTO, b: InstrumentGroupWSDTO) => a.weight - b.weight);
+  };
+
+
+  @action
   setInstruments = (instruments: InstrumentModelWSDTO[]) => {
     const localType = localStorage.getItem(LOCAL_CHART_TYPE);
     const currentType = localType
