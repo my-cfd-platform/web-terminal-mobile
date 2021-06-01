@@ -58,6 +58,7 @@ const DemoRealPopup = () => {
         });
         mainAppStore.setActiveAccount(acc);
         sendMixpanelEvents('demo');
+        mainAppStore.addTriggerDissableOnboarding();
         mainAppStore.isDemoRealPopup = false;
       } catch (error) {
         badRequestPopupStore.openModal();
@@ -84,6 +85,7 @@ const DemoRealPopup = () => {
         mainAppStore.isLoading = true;
         sendMixpanelEvents('real');
         window.location.href = `${API_DEPOSIT_STRING}/?${parsedParams}`;
+        mainAppStore.addTriggerDissableOnboarding();
         mainAppStore.isDemoRealPopup = false;
       } catch (error) {
         badRequestPopupStore.openModal();

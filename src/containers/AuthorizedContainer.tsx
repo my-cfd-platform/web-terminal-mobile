@@ -44,14 +44,13 @@ const AuthorizedContainer: FC = observer(({ children }) => {
     Page.TP_EDIT,
     Page.ACCOUNT_BALANCE_HISTORY,
     Page.PHONE_VERIFICATION,
-    Page.ONBOARDING
+    Page.ONBOARDING,
   ]);
 
   const { push } = useHistory();
   const { mainAppStore, userProfileStore, serverErrorPopupStore } = useStores();
   const [waitingData, setWaitingData] = useState<boolean>(true);
   const showNavbarAndNav = !match?.isExact;
-
 
   const hidenPromoPageList = useRouteMatch([
     Page.ONBOARDING,
@@ -69,13 +68,12 @@ const AuthorizedContainer: FC = observer(({ children }) => {
   ]);
 
   const isHiddenPromoPage = hidenPromoPageList?.isExact;
-  
 
-  useEffect(() =>{
+  useEffect(() => {
     if (mainAppStore.isPromoAccount && isHiddenPromoPage) {
       push(Page.DASHBOARD);
     }
-  }, [mainAppStore.isPromoAccount])
+  }, [mainAppStore.isPromoAccount]);
 
   useEffect(() => {
     let cleanupFunction = false;
@@ -107,8 +105,7 @@ const AuthorizedContainer: FC = observer(({ children }) => {
 
           if (mainAppStore.lpLoginFlag) {
             mixpanel.track(mixpanelEvents.SIGN_UP, {
-              [mixapanelProps.BRAND_NAME]:
-                mainAppStore.initModel.brandName.toLowerCase(),
+              [mixapanelProps.BRAND_NAME]: mainAppStore.initModel.brandName.toLowerCase(),
             });
           }
           mainAppStore.setSignUpFlag(false);
@@ -132,7 +129,7 @@ const AuthorizedContainer: FC = observer(({ children }) => {
     }
     fetchPersonalData();
     return () => {
-      cleanupFunction = true
+      cleanupFunction = true;
     };
   }, []);
 
@@ -165,16 +162,22 @@ const AuthorizedContainer: FC = observer(({ children }) => {
     mainAppStore.activeAccount,
     mainAppStore.paramsMarkets,
     mainAppStore.paramsPortfolioTab,
-    mainAppStore.paramsDeposit
+    mainAppStore.paramsDeposit,
   ]);
 
   useEffect(() => {
-    if (mainAppStore.isOnboarding && !mainAppStore.isDemoRealPopup && !mainAppStore.isVerification && !mainAppStore.isPromoAccount) {
+    if (
+      mainAppStore.isOnboarding &&
+      !mainAppStore.isDemoRealPopup &&
+      !mainAppStore.isVerification &&
+      !mainAppStore.isPromoAccount
+    ) {
       push(Page.ONBOARDING);
     }
   }, [
     mainAppStore.isDemoRealPopup,
-    mainAppStore.isVerification
+    mainAppStore.isOnboarding,
+    mainAppStore.isVerification,
   ]);
 
   useEffect(() => {
@@ -215,9 +218,14 @@ const AuthorizedContainer: FC = observer(({ children }) => {
       </Observer>
       <Observer>{() => <NetworkErrorPopup></NetworkErrorPopup>}</Observer>
       <Observer>
-       {() => (
-         <>{(mainAppStore.isDemoRealPopup && !mainAppStore.isVerification && !mainAppStore.isPromoAccount) && <DemoRealPopup></DemoRealPopup>}</>
-       )}
+        {() => (
+          <>
+            {mainAppStore.isDemoRealPopup &&
+              !mainAppStore.isOnboarding &&
+              !mainAppStore.isVerification &&
+              !mainAppStore.isPromoAccount && <DemoRealPopup></DemoRealPopup>}
+          </>
+        )}
       </Observer>
       {showNavbarAndNav && <NavBar />}
       <FlexContainer

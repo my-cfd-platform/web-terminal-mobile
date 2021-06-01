@@ -100,13 +100,7 @@ const SignUp = () => {
                   });
                 } else {
                   
-                  API.setKeyValue(
-                    {
-                      key: KeysInApi.SHOW_ONBOARDING,
-                      value: true,
-                    },
-                    mainAppStore.initModel.tradingUrl
-                  );
+                  mainAppStore.addTriggerShowOnboarding();
 
                   mainAppStore.setSignUpFlag(true);
                   mixpanel.track(mixpanelEvents.SIGN_UP, {
