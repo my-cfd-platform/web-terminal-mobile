@@ -35,6 +35,7 @@ interface DayOff {
 export interface InstrumentGroupWSDTO {
   id: string;
   name: string;
+  weight: number;
 }
 
 export interface PriceChangeWSDTO {

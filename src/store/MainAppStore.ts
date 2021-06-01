@@ -748,6 +748,10 @@ export class MainAppStore implements MainAppStoreProps {
 
   @computed
   get sortedAccounts() {
+    if (this.isPromoAccount) {
+      return this.accounts.filter((acc) => !acc.isLive);
+    }
+
     return this.accounts.reduce(
       (acc, prev) =>
         prev.id === this.activeAccount?.id ? [prev, ...acc] : [...acc, prev],
