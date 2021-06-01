@@ -350,7 +350,7 @@ export class MainAppStore implements MainAppStoreProps {
       Topics.INSTRUMENT_GROUPS,
       (response: ResponseFromWebsocket<InstrumentModelWSDTO[]>) => {
         if (this.activeAccountId === response.accountId) {
-          this.rootStore.instrumentsStore.instrumentGroups = response.data;
+          this.rootStore.instrumentsStore.setInstrumentGroups(response.data);
           if (response.data.length) {
             this.rootStore.instrumentsStore.activeInstrumentGroupId =
               response.data[0].id;
