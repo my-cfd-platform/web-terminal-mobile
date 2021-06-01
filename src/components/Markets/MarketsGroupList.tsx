@@ -6,6 +6,8 @@ import { Observer, observer } from 'mobx-react-lite';
 import { PrimaryTextSpan } from '../../styles/TextsElements';
 import { ButtonWithoutStyles } from '../../styles/ButtonWithoutStyles';
 import Colors from '../../constants/Colors';
+import { autorun } from 'mobx';
+import { InstrumentGroupWSDTO } from '../../types/InstrumentsTypes';
 
 const MarketsGroupList = observer(() => {
   const {
@@ -46,7 +48,7 @@ const MarketsGroupList = observer(() => {
       <Observer>
         {() => (
           <>
-            {instrumentsStore.instrumentGroups.map((item) => (
+            {instrumentsStore.instrumentGroups.sort((a: InstrumentGroupWSDTO, b: InstrumentGroupWSDTO) => a.weight - b.weight).map((item) => (
               <MarketButton
                 key={item.id}
                 isActive={instrumentsStore.activeInstrumentGroupId === item.id}
