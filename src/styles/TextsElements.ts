@@ -16,12 +16,13 @@ interface PrimaryTextType {
     | '18px'
     | '20px'
     | '24px'
+    | '28px'
     | '30px';
   lineHeight?: string;
   marginRight?: string;
   marginBottom?: string;
   textDecoration?: 'underline';
-  textTransform?: 'capitalize' | 'lowercase' | 'uppercase';
+  textTransform?: 'capitalize' | 'lowercase' | 'uppercase' | 'none';
   whiteSpace?: 'nowrap' | 'pre' | 'normal';
   textAlign?: 'left' | 'center' | 'right' | 'justify';
   textOverflow?: 'ellipsis';
@@ -68,7 +69,6 @@ export const PrimaryTextParagraph = styled.p<PrimaryTextType>`
 export const QuoteText = styled(PrimaryTextSpan)<
   PrimaryTextType & { isGrowth?: boolean }
 >`
-  font-family: 'Roboto', sans-serif;
   font-style: ${(props) => props.fontStyle || 'normal'};
   font-weight: ${(props) => props.fontWeight || 'normal'};
   font-size: ${(props) => props.fontSize || '16px'};

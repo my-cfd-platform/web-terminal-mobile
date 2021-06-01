@@ -86,6 +86,11 @@ module.exports = (env, argv) => {
       //host: '0.0.0.0',
     },
     plugins: [
+      new webpack.ProvidePlugin({
+        $: 'jquery',
+        jQuery: 'jquery',
+        'window.jQuery': 'jquery'
+    }),
       new HtmlWebpackPlugin({
         template: './src/index.html',
         filename: './index.html',
@@ -101,10 +106,10 @@ module.exports = (env, argv) => {
         ),
       }),
       new webpack.DefinePlugin({
-        WS_HOST: JSON.stringify('http://localhost:5678/signalr'),
+        WS_HOST: JSON.stringify('http://trading-api:5678/signalr'),
         API_STRING: ['production', 'none'].includes(argv.mode)
           ? JSON.stringify('')
-          : JSON.stringify('http://localhost:5678'),
+          : JSON.stringify('http://trading-api:5678'),
         API_AUTH_STRING: ['production', 'none'].includes(argv.mode)
           ? JSON.stringify('')
           : JSON.stringify('http://localhost:5679'),

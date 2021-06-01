@@ -81,23 +81,25 @@ const AccountProfile = observer(() => {
         </UserPhoto>
 
         <FlexContainer flexDirection="column" justifyContent="center">
-          <PrimaryTextSpan
-            color="#ffffff"
-            fontSize="16px"
-            fontWeight={500}
-            marginBottom="6px"
-          >
-            {name}
-          </PrimaryTextSpan>
           <Observer>
             {() => (
-              <PrimaryTextSpan
-                color="rgba(255, 255, 255, 0.4)"
-                fontSize="13px"
-                fontWeight={500}
-              >
-                {userProfileStore.userProfile?.email}
-              </PrimaryTextSpan>
+              <>
+                {/* <PrimaryTextSpan
+                  color="#ffffff"
+                  fontSize="16px"
+                  fontWeight={500}
+                  marginBottom="6px"
+                >
+                  {`${userProfileStore.userProfile?.firstName} ${userProfileStore.userProfile?.lastName}`}
+                </PrimaryTextSpan> */}
+                <PrimaryTextSpan
+                  color="rgba(255, 255, 255, 0.4)"
+                  fontSize="13px"
+                  fontWeight={500}
+                >
+                  {userProfileStore.userProfile?.email}
+                </PrimaryTextSpan>
+              </>
             )}
           </Observer>
         </FlexContainer>
@@ -227,7 +229,11 @@ const AccountProfile = observer(() => {
         </FlexContainer>
       )}
 
-      <FlexContainer flexDirection="column" marginBottom="24px">
+      <FlexContainer
+        flexDirection="column"
+        marginBottom="24px"
+        backgroundColor="rgb(28, 31, 38)"
+      >
         <FlexContainer padding="0 16px" marginBottom="8px">
           <PrimaryTextSpan
             textTransform="uppercase"

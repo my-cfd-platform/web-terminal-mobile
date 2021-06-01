@@ -60,6 +60,7 @@ interface MainAppStoreProps {
   setActiveAccount: (acc: AccountModelWebSocketDTO) => void;
   profileStatus: PersonalDataKYCEnum;
   isDemoRealPopup: boolean;
+  isOnboarding: boolean;
   signalRReconnectTimeOut: string;
   initModel: InitModel;
   lang: CountriesEnum;
@@ -67,6 +68,7 @@ interface MainAppStoreProps {
   connectionSignalRTimer: NodeJS.Timeout | null;
   isPromoAccount: boolean;
   promo: string;
+  showAccountSwitcher: boolean;
 }
 
 // TODO: think about application initialization
@@ -102,6 +104,7 @@ export class MainAppStore implements MainAppStoreProps {
   @observable isLoading = false;
   @observable isInitLoading = true;
   @observable isDemoRealPopup = false;
+  @observable isOnboarding = false;
   @observable isAuthorized = true;
   @observable activeSession?: HubConnection;
   @observable activeAccount?: AccountModelWebSocketDTO;
@@ -124,6 +127,7 @@ export class MainAppStore implements MainAppStoreProps {
   @observable balanceWas: number = 0;
   @observable isPromoAccount = false;
   @observable promo = '';
+  @observable showAccountSwitcher: boolean = false;
   @observable onboardingJustClosed: boolean = false;
 
   websocketConnectionTries = 0;
@@ -396,6 +400,16 @@ export class MainAppStore implements MainAppStoreProps {
     );
   };
 
+  @action 
+  openAccountSwitcher = () => {
+    this.showAccountSwitcher = true;
+  }
+
+  @action 
+  closeAccountSwitcher = () => {
+    this.showAccountSwitcher = false;
+  }
+
   @action
   setSignUpFlag = (value: boolean) => {
     this.signUpFlag = value;
@@ -445,10 +459,19 @@ export class MainAppStore implements MainAppStoreProps {
         this.initModel.tradingUrl
       );
 
+      const showOnboarding = await API.getKeyValue(
+        KeysInApi.SHOW_ONBOARDING,
+        this.initModel.tradingUrl
+      );
+
       const activeAccountTarget = await API.getKeyValue(
         KeysInApi.ACTIVE_ACCOUNT_TARGET,
         this.initModel.tradingUrl
       );
+
+      console.log('showOnboarding ', showOnboarding)
+
+
       if (activeAccountTarget === "facebook") {
         this.isPromoAccount = true;
         localStorage.setItem(LOCAL_TARGET, activeAccountTarget);
@@ -678,6 +701,11 @@ export class MainAppStore implements MainAppStoreProps {
   setParamsBalanceHistory = (params: boolean) => {
     this.paramsBalanceHistory = params;
   };
+
+  @computed
+  get realAcc() {
+    return this.accounts.find(acc => acc.isLive)
+  }
 
   @computed
   get sortedAccounts() {

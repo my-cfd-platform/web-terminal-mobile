@@ -9,10 +9,11 @@ import LoaderForComponents from './LoaderForComponents';
 interface Props {
   confirmAction: (status: boolean) => void;
   isLoading?: boolean;
+  isInfo?: boolean;
 }
 
 const ConfirmationPopup: FC<Props> = (props) => {
-  const { children, confirmAction, isLoading = false } = props;
+  const { children, confirmAction, isLoading = false, isInfo = false } = props;
   const { t } = useTranslation();
 
   const handleConfirm = () => confirmAction(true);
@@ -28,8 +29,8 @@ const ConfirmationPopup: FC<Props> = (props) => {
           alignItems="center"
         >
           <PrimaryTextParagraph
-            color="rgba(255, 255, 255, 0.5)"
-            fontSize="16px"
+            color="#ffffff"
+            fontSize="13px"
             textAlign="center"
           >
             {children}
@@ -37,14 +38,17 @@ const ConfirmationPopup: FC<Props> = (props) => {
         </FlexContainer>
 
         <ButtonsWrap>
-          <FlexContainer width="50%">
-            <ActionButton onClick={handleCancel}>
-              <PrimaryTextSpan color="#fff">{t('Cancel')}</PrimaryTextSpan>
-            </ActionButton>
-          </FlexContainer>
-          <FlexContainer width="50%">
+          {!isInfo && (
+            <FlexContainer width="50%">
+              <ActionButton onClick={handleCancel}>
+                <PrimaryTextSpan color="#fff">{t('Cancel')}</PrimaryTextSpan>
+              </ActionButton>
+            </FlexContainer>
+          )}
+
+          <FlexContainer width={isInfo ? "100%" : "50%"}>
             <ActionButton onClick={handleConfirm}>
-              <PrimaryTextSpan>{t('Ok')}</PrimaryTextSpan>
+              <PrimaryTextSpan textTransform={isInfo ? 'uppercase' : 'none'} color={isInfo ? "#ffffff" : "#fffccc"}>{t('Ok')}</PrimaryTextSpan>
             </ActionButton>
           </FlexContainer>
         </ButtonsWrap>

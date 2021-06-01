@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { ChangeEvent, useCallback, useEffect, useState } from 'react';
 import { FlexContainer } from '../styles/FlexContainer';
 import * as yup from 'yup';
 import { useFormik } from 'formik';
@@ -10,7 +10,6 @@ import { css } from '@emotion/core';
 import Colors from '../constants/Colors';
 import withdrawalResponseMessages from '../constants/withdrawalResponseMessages';
 import { WithdrawalHistoryResponseStatus } from '../enums/WithdrawalHistoryResponseStatus';
-import { WithdrawalTabsEnum } from '../enums/WithdrawalTabsEnum';
 import { WithdrawalTypesEnum } from '../enums/WithdrawalTypesEnum';
 import API from '../helpers/API';
 import { CreateWithdrawalParams } from '../types/WithdrawalTypes';
@@ -23,6 +22,11 @@ import mixapanelProps from '../constants/mixpanelProps';
 import { useHistory } from 'react-router-dom';
 import Page from '../constants/Pages';
 import WithdrawContainer from '../containers/WithdrawContainer';
+import InformationPopup from '../components/InformationPopup';
+import { moneyFormatPart } from '../helpers/moneyFormat';
+import ConfirmationPopup from '../components/ConfirmationPopup';
+import Modal from '../components/Modal';
+import WithdrawAvailableBalanceInfo from '../components/Withdraw/WithdrawAvailableBalanceInfo';
 
 interface RequestValues {
   amount: number;
@@ -40,6 +44,7 @@ const WithdrawBitcoinForm = () => {
     bitcoinAdress: '',
   };
   const { mainAppStore, withdrawalStore, notificationStore } = useStores();
+  const [showConfirm, setShowConfirm] = useState(false);
 
   const validationSchema = useCallback(
     () =>
@@ -48,11 +53,11 @@ const WithdrawBitcoinForm = () => {
           .number()
           .min(10, `${t('min')}: $10`)
           .max(
-            mainAppStore.activeAccount?.balance || 0,
-            `${t('max')}: ${
+            mainAppStore.accounts.find((item) => item.isLive)?.freeToWithdrawal || 0,
+            `${t('max')}: $${
               mainAppStore.accounts
                 .find((item) => item.isLive)
-                ?.balance.toFixed(2) || 0
+                ?.freeToWithdrawal.toFixed(2) || 0
             }`
           ),
 
@@ -116,25 +121,25 @@ const WithdrawBitcoinForm = () => {
   const {
     values,
     setFieldValue,
+    setFieldError,
+    setErrors,
     validateForm,
-    handleChange,
     handleSubmit,
+    submitForm,
     errors,
     touched,
-    isSubmitting,
   } = useFormik({
     initialValues,
     onSubmit: handleSubmitForm,
     validationSchema,
-    validateOnBlur: true,
-    validateOnChange: true,
+    validateOnBlur: false,
+    validateOnChange: false,
   });
 
   const handleChangeAmount = (e: any) => {
     let filteredValue: any = e.target.value.replace(',', '.');
-    console.log('replace');
-    console.log(filteredValue);
     setFieldValue('amount', filteredValue);
+    setFieldError('amount', undefined);
   };
 
   const amountOnBeforeInputHandler = (e: any) => {
@@ -180,13 +185,34 @@ const WithdrawBitcoinForm = () => {
     }
   };
 
+  const handleChangeFiled = (e: ChangeEvent<HTMLInputElement>) => {
+    setFieldValue(e.target.name, e.target.value);
+    setFieldError(e.target.name, undefined);
+  };
+
   const handlerClickSubmit = async () => {
     const curErrors = await validateForm();
     const curErrorsKeys = Object.keys(curErrors);
+
     if (curErrorsKeys.length) {
+      setErrors(curErrors);
       const el = document.getElementById(curErrorsKeys[0]);
       if (el) el.focus();
+      return;
     }
+
+    if (Number(mainAppStore.accounts.find((item) => item.isLive)?.bonus) > 0) {
+      setShowConfirm(true);
+    } else {
+      submitForm();
+    }
+  };
+
+  const handleConfirm = (confirm: boolean) => {
+    if (confirm) {
+      submitForm();
+    }
+    setShowConfirm(false);
   };
 
   useEffect(() => {
@@ -196,6 +222,15 @@ const WithdrawBitcoinForm = () => {
 
   return (
     <WithdrawContainer backBtn={Page.WITHDRAW_LIST}>
+      {showConfirm && (
+        <Modal>
+          <ConfirmationPopup confirmAction={handleConfirm}>
+            {t(
+              'When you withdraw your funds, the bonus will be deducted from your account.'
+            )}
+          </ConfirmationPopup>
+        </Modal>
+      )}
       <CustomForm noValidate onSubmit={handleSubmit}>
         <FlexContainer
           flexDirection="column"
@@ -203,11 +238,7 @@ const WithdrawBitcoinForm = () => {
           justifyContent="space-between"
         >
           <FlexContainer flexDirection="column">
-            <FlexContainer
-              flexDirection="column"
-              width="100%"
-              marginBottom="12px"
-            >
+            <FlexContainer flexDirection="column" width="100%">
               <InputWrap
                 flexDirection="column"
                 width="100%"
@@ -215,7 +246,7 @@ const WithdrawBitcoinForm = () => {
                 padding="12px 16px"
                 position="relative"
                 marginBottom="4px"
-                hasError={!!(touched.amount && errors.amount)}
+                hasError={!!errors.amount}
               >
                 <FlexContainer
                   position="absolute"
@@ -243,48 +274,32 @@ const WithdrawBitcoinForm = () => {
                   onChange={handleChangeAmount}
                 />
               </InputWrap>
-              <FlexContainer marginBottom="12px" padding="0 16px">
-                {touched.amount && errors.amount ? (
+              {errors.amount && (
+                <FlexContainer marginBottom="12px" padding="0 16px">
                   <PrimaryTextSpan fontSize="11px" color={Colors.RED}>
                     {errors.amount}
                   </PrimaryTextSpan>
-                ) : (
-                  <Observer>
-                    {() => (
-                      <PrimaryTextSpan
-                        fontSize="11px"
-                        color="rgba(196, 196, 196, 0.5)"
-                      >
-                        {t('Available')}&nbsp;
-                        {
-                          mainAppStore.accounts.find((acc) => acc.isLive)
-                            ?.symbol
-                        }
-                        {mainAppStore.accounts
-                          .find((acc) => acc.isLive)
-                          ?.balance.toFixed(2)}
-                      </PrimaryTextSpan>
-                    )}
-                  </Observer>
-                )}
-              </FlexContainer>
+                </FlexContainer>
+              )}
             </FlexContainer>
             <FlexContainer>
               <InputField
                 name="bitcoinAdress"
                 id="bitcoinAdress"
-                onChange={handleChange}
+                onChange={handleChangeFiled}
                 value={values.bitcoinAdress}
                 type="text"
                 placeholder={t('Bitcoin Address')}
-                hasError={!!(touched.bitcoinAdress && errors.bitcoinAdress)}
+                hasError={!!errors.bitcoinAdress}
                 errorText={errors.bitcoinAdress}
               />
             </FlexContainer>
+
+            <WithdrawAvailableBalanceInfo />
           </FlexContainer>
           <FlexContainer padding="16px" width="100%">
             <PrimaryButton
-              type="submit"
+              type="button"
               onClick={handlerClickSubmit}
               width="100%"
               disabled={

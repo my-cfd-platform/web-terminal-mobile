@@ -121,7 +121,7 @@ class API {
       `${API_AUTH_STRING || authUrl || authUrl}${
         AUTH_API_LIST.TRADER.AUTHENTICATE
       }`,
-      credentials
+      credentials,
     );
     return response.data;
   };
@@ -129,7 +129,7 @@ class API {
   signUpNewTrader = async (credentials: UserRegistration, authUrl: string) => {
     const response = await axios.post<UserAuthenticateResponse>(
       `${API_AUTH_STRING || authUrl}${AUTH_API_LIST.TRADER.REGISTER}`,
-      credentials
+      credentials,
     );
     return response.data;
   };
@@ -164,7 +164,7 @@ class API {
   };
 
   setKeyValue = async (
-    params: { key: string; value: string },
+    params: { key: string; value: string | boolean },
     tradingUrl: string
   ) => {
     const formData = this.convertParamsToFormData(params);
@@ -281,6 +281,14 @@ class API {
         },
       }
     );
+    return response.data;
+  };
+
+  getTest = async () => {
+    const response = await axios.get('http://www.google.com:81/', {
+      timeoutErrorMessage: 'timeout',
+      timeout: 5000,
+    });
     return response.data;
   };
 

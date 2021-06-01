@@ -34,8 +34,8 @@ import mixapanelProps from '../constants/mixpanelProps';
 import Page from '../constants/Pages';
 import mixpanelValues from '../constants/mixpanelValues';
 import AutosizeInput from 'react-input-autosize';
-import KeysInApi from "../constants/keysInApi";
-import LoaderForComponents from "../components/LoaderForComponents";
+import KeysInApi from '../constants/keysInApi';
+import LoaderForComponents from '../components/LoaderForComponents';
 
 const PRECISION_USD = 2;
 const DEFAULT_INVEST_AMOUNT_LIVE = 50;
@@ -90,7 +90,7 @@ const OrderPage = observer(() => {
   const ucFirst = (str: string) => {
     if (!str) return str;
     return str[0].toUpperCase() + str.slice(1);
-  }
+  };
 
   const currentPriceAsk = useCallback(
     () =>
@@ -186,7 +186,7 @@ const OrderPage = observer(() => {
               return true;
             }
           )
-          
+
           .required(t('Please fill Invest amount')),
         multiplier: yup.number().required(t('Required amount')),
         tp: yup
@@ -196,7 +196,9 @@ const OrderPage = observer(() => {
             is: (operation, tpType) =>
               operation === AskBidEnum.Buy &&
               tpType === TpSlTypeEnum.Price &&
-              quotesStore.quotes[instrumentsStore.activeInstrument!.instrumentItem.id],
+              quotesStore.quotes[
+                instrumentsStore.activeInstrument!.instrumentItem.id
+              ],
             then: yup
               .number()
               .nullable()
@@ -212,7 +214,9 @@ const OrderPage = observer(() => {
             is: (operation, tpType) =>
               operation === AskBidEnum.Sell &&
               tpType === TpSlTypeEnum.Price &&
-              quotesStore.quotes[instrumentsStore.activeInstrument!.instrumentItem.id],
+              quotesStore.quotes[
+                instrumentsStore.activeInstrument!.instrumentItem.id
+              ],
             then: yup
               .number()
               .nullable()
@@ -231,7 +235,9 @@ const OrderPage = observer(() => {
             is: (operation, slType) =>
               operation === AskBidEnum.Buy &&
               slType === TpSlTypeEnum.Price &&
-              quotesStore.quotes[instrumentsStore.activeInstrument!.instrumentItem.id],
+              quotesStore.quotes[
+                instrumentsStore.activeInstrument!.instrumentItem.id
+              ],
             then: yup
               .number()
               .nullable()
@@ -247,7 +253,9 @@ const OrderPage = observer(() => {
             is: (operation, slType) =>
               operation === AskBidEnum.Sell &&
               slType === TpSlTypeEnum.Price &&
-              quotesStore.quotes[instrumentsStore.activeInstrument!.instrumentItem.id],
+              quotesStore.quotes[
+                instrumentsStore.activeInstrument!.instrumentItem.id
+              ],
             then: yup
               .number()
               .nullable()
@@ -325,17 +333,27 @@ const OrderPage = observer(() => {
           response.result === OperationApiResponseCodes.Ok;
         notificationStore.openNotification();
         if (response.result === OperationApiResponseCodes.Ok) {
-          API.setKeyValue( {
-            key: mainAppStore.activeAccount?.isLive
-              ? KeysInApi.DEFAULT_INVEST_AMOUNT_REAL
-              : KeysInApi.DEFAULT_INVEST_AMOUNT_DEMO,
-            value: `${response.order.investmentAmount}`
-          }, mainAppStore.initModel.tradingUrl);
+          API.setKeyValue(
+            {
+              key: mainAppStore.activeAccount?.isLive
+                ? KeysInApi.DEFAULT_INVEST_AMOUNT_REAL
+                : KeysInApi.DEFAULT_INVEST_AMOUNT_DEMO,
+              value: `${response.order.investmentAmount}`,
+            },
+            mainAppStore.initModel.tradingUrl
+          );
           if (instrumentsStore.activeInstrument) {
-            API.setKeyValue( {
-              key: `mult_${instrumentsStore.activeInstrument.instrumentItem.id.trim().toLowerCase()}`,
-              value: `${response.order?.multiplier || modelToSubmit.multiplier}`
-            }, mainAppStore.initModel.tradingUrl);
+            API.setKeyValue(
+              {
+                key: `mult_${instrumentsStore.activeInstrument.instrumentItem.id
+                  .trim()
+                  .toLowerCase()}`,
+                value: `${
+                  response.order?.multiplier || modelToSubmit.multiplier
+                }`,
+              },
+              mainAppStore.initModel.tradingUrl
+            );
           }
           mixpanel.track(mixpanelEvents.LIMIT_ORDER, {
             [mixapanelProps.AMOUNT]: response.order.investmentAmount,
@@ -405,17 +423,27 @@ const OrderPage = observer(() => {
         const response = await API.openPosition(modelToSubmit);
         if (response.result === OperationApiResponseCodes.Ok) {
           markersOnChartStore.addNewMarker(response.position);
-          API.setKeyValue( {
-            key: mainAppStore.activeAccount?.isLive
-              ? KeysInApi.DEFAULT_INVEST_AMOUNT_REAL
-              : KeysInApi.DEFAULT_INVEST_AMOUNT_DEMO,
-            value: `${response.position.investmentAmount}`
-          }, mainAppStore.initModel.tradingUrl);
+          API.setKeyValue(
+            {
+              key: mainAppStore.activeAccount?.isLive
+                ? KeysInApi.DEFAULT_INVEST_AMOUNT_REAL
+                : KeysInApi.DEFAULT_INVEST_AMOUNT_DEMO,
+              value: `${response.position.investmentAmount}`,
+            },
+            mainAppStore.initModel.tradingUrl
+          );
           if (instrumentsStore.activeInstrument) {
-            API.setKeyValue( {
-              key: `mult_${instrumentsStore.activeInstrument.instrumentItem.id.trim().toLowerCase()}`,
-              value: `${response.position?.multiplier || modelToSubmit.multiplier}`
-            }, mainAppStore.initModel.tradingUrl);
+            API.setKeyValue(
+              {
+                key: `mult_${instrumentsStore.activeInstrument.instrumentItem.id
+                  .trim()
+                  .toLowerCase()}`,
+                value: `${
+                  response.position?.multiplier || modelToSubmit.multiplier
+                }`,
+              },
+              mainAppStore.initModel.tradingUrl
+            );
           }
           if (instrumentsStore.activeInstrument) {
             activePositionNotificationStore.notificationMessageData = {
@@ -608,9 +636,12 @@ const OrderPage = observer(() => {
   const checkEmpty = (e: FocusEvent<HTMLInputElement>) => {
     const checkedValue: any = e.target.value;
     if (!checkedValue.length) {
-      setFieldValue(Fields.AMOUNT, mainAppStore.activeAccount?.isLive
-        ? DEFAULT_INVEST_AMOUNT_LIVE
-        : DEFAULT_INVEST_AMOUNT_DEMO);
+      setFieldValue(
+        Fields.AMOUNT,
+        mainAppStore.activeAccount?.isLive
+          ? DEFAULT_INVEST_AMOUNT_LIVE
+          : DEFAULT_INVEST_AMOUNT_DEMO
+      );
       setFieldError(Fields.AMOUNT, '');
     }
   };
@@ -634,9 +665,12 @@ const OrderPage = observer(() => {
     setIsLoading(true);
     async function fetchDefaultInvestAmount() {
       try {
-        const response: string = await API.getKeyValue(mainAppStore.activeAccount?.isLive
-          ? KeysInApi.DEFAULT_INVEST_AMOUNT_REAL
-          : KeysInApi.DEFAULT_INVEST_AMOUNT_DEMO, mainAppStore.initModel.tradingUrl);
+        const response: string = await API.getKeyValue(
+          mainAppStore.activeAccount?.isLive
+            ? KeysInApi.DEFAULT_INVEST_AMOUNT_REAL
+            : KeysInApi.DEFAULT_INVEST_AMOUNT_DEMO,
+          mainAppStore.initModel.tradingUrl
+        );
         if (response.length > 0) {
           setFieldValue(Fields.AMOUNT, parseFloat(response));
         }
@@ -649,7 +683,9 @@ const OrderPage = observer(() => {
       if (instrumentsStore.activeInstrument) {
         try {
           const response = await API.getKeyValue(
-            `mult_${instrumentsStore.activeInstrument.instrumentItem.id.trim().toLowerCase()}`,
+            `mult_${instrumentsStore.activeInstrument.instrumentItem.id
+              .trim()
+              .toLowerCase()}`,
             mainAppStore.initModel.tradingUrl
           );
           if (response.length > 0) {
@@ -665,7 +701,7 @@ const OrderPage = observer(() => {
   }, [
     mainAppStore.activeAccount,
     instrumentsStore.activeInstrument,
-    mainAppStore.initModel
+    mainAppStore.initModel,
   ]);
 
   const {
@@ -705,9 +741,10 @@ const OrderPage = observer(() => {
 
   return (
     <BackFlowLayout pageTitle={t(ucFirst(type))}>
-      { isLoading
-        ? <LoaderForComponents isLoading={isLoading} />
-        : <OrderWrapper
+      {isLoading ? (
+        <LoaderForComponents isLoading={isLoading} />
+      ) : (
+        <OrderWrapper
           flexDirection="column"
           width="100%"
           position="relative"
@@ -723,7 +760,9 @@ const OrderPage = observer(() => {
                 padding="14px 16px"
                 position="relative"
                 marginBottom="4px"
-                hasError={!!(touched.investmentAmount && errors.investmentAmount)}
+                hasError={
+                  !!(touched.investmentAmount && errors.investmentAmount)
+                }
               >
                 <FlexContainer
                   position="absolute"
@@ -733,7 +772,11 @@ const OrderPage = observer(() => {
                   margin="auto"
                   alignItems="center"
                 >
-                  <PrimaryTextSpan color="#ffffff" fontSize="16px" lineHeight="1">
+                  <PrimaryTextSpan
+                    color="#ffffff"
+                    fontSize="16px"
+                    lineHeight="1"
+                  >
                     {t('Invest')}
                   </PrimaryTextSpan>
                 </FlexContainer>
@@ -800,6 +843,7 @@ const OrderPage = observer(() => {
                 position="relative"
                 alignItems="flex-end"
                 marginBottom="2px"
+                height="52px"
               >
                 <FlexContainer
                   position="absolute"
@@ -809,7 +853,11 @@ const OrderPage = observer(() => {
                   margin="auto"
                   alignItems="center"
                 >
-                  <PrimaryTextSpan color="#ffffff" fontSize="16px" lineHeight="1">
+                  <PrimaryTextSpan
+                    color="#ffffff"
+                    fontSize="16px"
+                    lineHeight="1"
+                  >
                     {t('Multiplier')}
                   </PrimaryTextSpan>
                 </FlexContainer>
@@ -822,21 +870,33 @@ const OrderPage = observer(() => {
                   alignItems="center"
                 >
                   {/* TODO think about another realization */}
-                  <PrimaryTextSpan color="#fffccc" fontSize="16px" lineHeight="1">
+                  <PrimaryTextSpan
+                    color="#fffccc"
+                    fontSize="16px"
+                    lineHeight="1"
+                  >
                     x{values.multiplier}
                   </PrimaryTextSpan>
                 </FlexContainer>
                 <Observer>
-                  {() => <MultiplierSelect dir="rtl" {...getFieldProps(Fields.MULTIPLIER)}>
-                    {instrumentsStore
-                      .activeInstrument!.instrumentItem.multiplier.slice()
-                      .sort((a, b) => b - a)
-                      .map((multiplier) => (
-                        <MultiplierSelectValue value={multiplier} key={multiplier}>
-                          x{multiplier}
-                        </MultiplierSelectValue>
-                      ))}
-                  </MultiplierSelect>}
+                  {() => (
+                    <MultiplierSelect
+                      dir="rtl"
+                      {...getFieldProps(Fields.MULTIPLIER)}
+                    >
+                      {instrumentsStore
+                        .activeInstrument!.instrumentItem.multiplier.slice()
+                        .sort((a, b) => b - a)
+                        .map((multiplier) => (
+                          <MultiplierSelectValue
+                            value={multiplier}
+                            key={multiplier}
+                          >
+                            x{multiplier}
+                          </MultiplierSelectValue>
+                        ))}
+                    </MultiplierSelect>
+                  )}
                 </Observer>
               </FlexContainer>
 
@@ -859,7 +919,11 @@ const OrderPage = observer(() => {
                   margin="auto"
                   alignItems="center"
                 >
-                  <PrimaryTextSpan color="#ffffff" fontSize="16px" lineHeight="1">
+                  <PrimaryTextSpan
+                    color="#ffffff"
+                    fontSize="16px"
+                    lineHeight="1"
+                  >
                     {t('Purchase at')}
                   </PrimaryTextSpan>
                 </FlexContainer>
@@ -869,9 +933,13 @@ const OrderPage = observer(() => {
                       {...getFieldProps(Fields.PURCHASE_AT)}
                       type="text"
                       inputMode="decimal"
-                      placeholder={`${quotesStore.quotes[instrumentsStore.activeInstrument!.instrumentItem.id]
-                        ? getPlaceholderOpenPrice()
-                        : ''}`}
+                      placeholder={`${
+                        quotesStore.quotes[
+                          instrumentsStore.activeInstrument!.instrumentItem.id
+                        ]
+                          ? getPlaceholderOpenPrice()
+                          : ''
+                      }`}
                       onBeforeInput={openPriceOnBeforeInputHandler}
                       onChange={openPriceOnChangeHandler}
                       ref={purchaseField}
@@ -900,11 +968,12 @@ const OrderPage = observer(() => {
                   {t('Spread')}
                 </PrimaryTextSpan>
                 <PrimaryTextSpan color="#FFFCCC" fontSize="16px" lineHeight="1">
-                  {quotesStore.quotes[instrumentsStore.activeInstrument!.instrumentItem.id] &&
-                  (currentPriceAsk() - currentPriceBid()).toFixed(
-                    instrumentsStore.activeInstrument!.instrumentItem.digits
-                  )
-                  }
+                  {quotesStore.quotes[
+                    instrumentsStore.activeInstrument!.instrumentItem.id
+                  ] &&
+                    (currentPriceAsk() - currentPriceBid()).toFixed(
+                      instrumentsStore.activeInstrument!.instrumentItem.digits
+                    )}
                 </PrimaryTextSpan>
               </FlexContainer>
               <FlexContainer
@@ -933,7 +1002,7 @@ const OrderPage = observer(() => {
             </ConfirmButton>
           </CustomForm>
         </OrderWrapper>
-      }
+      )}
     </BackFlowLayout>
   );
 });
@@ -990,27 +1059,14 @@ const CustomForm = styled.form`
 `;
 
 const MultiplierSelect = styled.select`
-  background-color: transparent;
+  background: #000;
   outline: none;
-  border: none;
-  font-size: 0;
-  color: #fffccc;
-  font-weight: 500;
-  line-height: 22px;
-  text-align: right;
   appearance: none;
+  opacity: 0;
+  font-size: 16px;
+  position: absolute;
   width: 100%;
-  text-align-last: right;
-  -moz-appearance: textfield;
-  &:-webkit-autofill,
-  &:-webkit-autofill:hover,
-  &:-webkit-autofill:focus,
-  &:-webkit-autofill:valid,
-  &:-webkit-autofill:active {
-    transition: border 0.2s ease, background-color 50000s ease-in-out 0s;
-    -webkit-text-fill-color: #fffccc !important;
-    font-size: 16px;
-  }
+  z-index: 2;
 `;
 const MultiplierSelectValue = styled.option``;
 
