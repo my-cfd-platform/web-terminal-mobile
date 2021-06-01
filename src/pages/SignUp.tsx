@@ -98,7 +98,8 @@ const SignUp = () => {
                       apiResponseCodeMessages[result],
                     [mixapanelProps.EMAIL_FAILED]: values.email,
                   });
-
+                } else {
+                  
                   API.setKeyValue(
                     {
                       key: KeysInApi.SHOW_ONBOARDING,
@@ -106,8 +107,7 @@ const SignUp = () => {
                     },
                     mainAppStore.initModel.tradingUrl
                   );
-                  
-                } else {
+
                   mainAppStore.setSignUpFlag(true);
                   mixpanel.track(mixpanelEvents.SIGN_UP, {
                     [mixapanelProps.BRAND_NAME]: mainAppStore.initModel.brandName.toLowerCase(),
