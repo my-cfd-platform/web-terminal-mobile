@@ -129,6 +129,7 @@ const Onboarding = observer(() => {
       });
       mainAppStore.onboardingJustClosed = true;
       mainAppStore.addTriggerDissableOnboarding();
+      mainAppStore.isOnboarding = false;
       push(Page.DASHBOARD);
     }
   };
@@ -152,8 +153,8 @@ const Onboarding = observer(() => {
           [mixapanelProps.ONBOARDING_VALUE]: `demo${actualStep}`,
         });
         mainAppStore.addTriggerDissableOnboarding();
+        mainAppStore.isOnboarding = false;
         push(Page.DASHBOARD);
-        mainAppStore.isDemoRealPopup = false;
       } catch (error) {
         badRequestPopupStore.openModal();
         badRequestPopupStore.setMessage(error);
@@ -177,12 +178,12 @@ const Onboarding = observer(() => {
         });
         mainAppStore.setActiveAccount(acc);
         mainAppStore.addTriggerDissableOnboarding();
+        mainAppStore.isOnboarding = false;
         mainAppStore.isLoading = true;
         mixpanel.track(mixpanelEvents.ONBOARDING, {
           [mixapanelProps.ONBOARDING_VALUE]: `real${actualStep}`,
         });
         window.location.href = `${API_DEPOSIT_STRING}/?${parsedParams}`;
-        mainAppStore.isDemoRealPopup = false;
       } catch (error) {
         badRequestPopupStore.openModal();
         badRequestPopupStore.setMessage(error);
