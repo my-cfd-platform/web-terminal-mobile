@@ -124,12 +124,17 @@ const Onboarding = observer(() => {
       });
       getInfoByStep(actualStepInfo?.data.totalSteps);
     } else {
+      
       mixpanel.track(mixpanelEvents.ONBOARDING, {
         [mixapanelProps.ONBOARDING_VALUE]: `close${actualStep}`,
       });
       mainAppStore.onboardingJustClosed = true;
       mainAppStore.addTriggerDissableOnboarding();
       mainAppStore.isOnboarding = false;
+      const acc = mainAppStore.accounts.find((item) => !item.isLive);
+      if (acc) {
+        mainAppStore.setActiveAccount(acc);
+      }
       push(Page.DASHBOARD);
     }
   };
@@ -138,13 +143,6 @@ const Onboarding = observer(() => {
     const acc = mainAppStore.accounts.find((item) => !item.isLive);
     if (acc) {
       try {
-        await API.setKeyValue(
-          {
-            key: KeysInApi.ACTIVE_ACCOUNT_ID,
-            value: acc.id,
-          },
-          mainAppStore.initModel.tradingUrl
-        );
         mainAppStore.activeSession?.send(Topics.SET_ACTIVE_ACCOUNT, {
           [Fields.ACCOUNT_ID]: acc.id,
         });
