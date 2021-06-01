@@ -23,20 +23,19 @@ import styled from '@emotion/styled';
 import { keyframes } from '@emotion/core';
 import { LOCAL_STORAGE_SKIPPED_ONBOARDING } from '../constants/global';
 import { observer } from 'mobx-react-lite';
+import { OnBoardingResponseEnum } from '../enums/OnBoardingRsponseEnum';
 
 const Onboarding = observer(() => {
   const { t } = useTranslation();
   const { push } = useHistory();
-  const {
-    badRequestPopupStore,
-    mainAppStore,
-    userProfileStore,
-  } = useStores();
+  const { badRequestPopupStore, mainAppStore, userProfileStore } = useStores();
 
   const wrapperRef = useRef<HTMLDivElement>(document.createElement('div'));
   const [actualStep, setActualStep] = useState<number>(1);
   const [loading, setLoading] = useState<boolean>(false);
-  const [actualStepInfo, setActualStepInfo] = useState<OnBoardingInfo | null>(null);
+  const [actualStepInfo, setActualStepInfo] = useState<OnBoardingInfo | null>(
+    null
+  );
   const [parsedParams, setParsedParams] = useState('');
   const urlParams = new URLSearchParams();
 
@@ -62,23 +61,31 @@ const Onboarding = observer(() => {
       animationData: JSON.parse(actualStepInfo?.data.lottieJson || ''),
       rendererSettings: {
         preserveAspectRatio: 'xMidYMid slice',
-        clearCanvas: false
-      }
+        clearCanvas: false,
+      },
     };
   }, [actualStepInfo]);
 
   const getInfoByStep = async (step: number) => {
     try {
-      const response = await API.getOnBoardingInfoByStep(step, 2, mainAppStore.initModel.miscUrl);
-      if (response.responseCode === 0) {
+      const response = await API.getOnBoardingInfoByStep(
+        step,
+        2,
+        mainAppStore.initModel.miscUrl
+      );
+      if (response.responseCode === OnBoardingResponseEnum.Ok) {
         setActualStepInfo(null);
         setActualStepInfo(response);
         setActualStep(step);
         setLoading(false);
       } else {
-       push(Page.DASHBOARD);
+        mainAppStore.isOnboarding = false;
+        mainAppStore.isDemoRealPopup = true;
+        push(Page.DASHBOARD);
       }
     } catch (error) {
+      mainAppStore.isOnboarding = false;
+      mainAppStore.isDemoRealPopup = true;
       push(Page.DASHBOARD);
     }
   };
@@ -96,18 +103,18 @@ const Onboarding = observer(() => {
       actualStepInfo?.data.totalSteps &&
       actualStepInfo?.data.totalSteps !== actualStep
     ) {
-      const storageCheck = localStorage.getItem(LOCAL_STORAGE_SKIPPED_ONBOARDING);
-      const neededId = mainAppStore
-        .accounts
-        ?.find((account) => !account.isLive)?.id;
-      const alreadySkipped = (storageCheck !== null)
-        ? JSON.parse(storageCheck)
-        : [];
+      const storageCheck = localStorage.getItem(
+        LOCAL_STORAGE_SKIPPED_ONBOARDING
+      );
+      const neededId = mainAppStore.accounts?.find((account) => !account.isLive)
+        ?.id;
+      const alreadySkipped =
+        storageCheck !== null ? JSON.parse(storageCheck) : [];
       alreadySkipped.push(neededId);
       mainAppStore.activeAccountId = neededId || '';
-      mainAppStore.activeAccount = mainAppStore
-        .accounts
-        ?.find((account) => !account.isLive);
+      mainAppStore.activeAccount = mainAppStore.accounts?.find(
+        (account) => !account.isLive
+      );
       localStorage.setItem(
         LOCAL_STORAGE_SKIPPED_ONBOARDING,
         JSON.stringify(alreadySkipped)
@@ -121,6 +128,7 @@ const Onboarding = observer(() => {
         [mixapanelProps.ONBOARDING_VALUE]: `close${actualStep}`,
       });
       mainAppStore.onboardingJustClosed = true;
+      mainAppStore.addTriggerDissableOnboarding();
       push(Page.DASHBOARD);
     }
   };
@@ -143,6 +151,7 @@ const Onboarding = observer(() => {
         mixpanel.track(mixpanelEvents.ONBOARDING, {
           [mixapanelProps.ONBOARDING_VALUE]: `demo${actualStep}`,
         });
+        mainAppStore.addTriggerDissableOnboarding();
         push(Page.DASHBOARD);
         mainAppStore.isDemoRealPopup = false;
       } catch (error) {
@@ -167,6 +176,7 @@ const Onboarding = observer(() => {
           [Fields.ACCOUNT_ID]: acc.id,
         });
         mainAppStore.setActiveAccount(acc);
+        mainAppStore.addTriggerDissableOnboarding();
         mainAppStore.isLoading = true;
         mixpanel.track(mixpanelEvents.ONBOARDING, {
           [mixapanelProps.ONBOARDING_VALUE]: `real${actualStep}`,
@@ -178,7 +188,7 @@ const Onboarding = observer(() => {
         badRequestPopupStore.setMessage(error);
       }
     }
-  }
+  };
 
   const actionByType = (type: ButtonActionType) => {
     switch (type) {
@@ -199,17 +209,15 @@ const Onboarding = observer(() => {
 
   useEffect(() => {
     const storageCheck = localStorage.getItem(LOCAL_STORAGE_SKIPPED_ONBOARDING);
-    const neededId = mainAppStore
-      .accounts
-      ?.find((account) => !account.isLive)?.id;
-    const alreadySkipped = (storageCheck !== null)
-      ? JSON.parse(storageCheck)
-      : [];
+    const neededId = mainAppStore.accounts?.find((account) => !account.isLive)
+      ?.id;
+    const alreadySkipped =
+      storageCheck !== null ? JSON.parse(storageCheck) : [];
     if (alreadySkipped.includes(neededId)) {
       mainAppStore.activeAccountId = neededId || '';
-      mainAppStore.activeAccount = mainAppStore
-        .accounts
-        ?.find((account) => !account.isLive);
+      mainAppStore.activeAccount = mainAppStore.accounts?.find(
+        (account) => !account.isLive
+      );
       push(Page.DASHBOARD);
     }
   }, []);
@@ -221,16 +229,24 @@ const Onboarding = observer(() => {
     });
     const getInfoFirstStep = async () => {
       try {
-        const response = await API.getOnBoardingInfoByStep(1, 2, mainAppStore.initModel.miscUrl);
-        if (response.responseCode === 0 && !cleanupFunction) {
+        const response = await API.getOnBoardingInfoByStep(
+          1,
+          2,
+          mainAppStore.initModel.miscUrl
+        );
+        if (response.responseCode === OnBoardingResponseEnum.Ok && !cleanupFunction) {
           setActualStepInfo(null);
           setActualStepInfo(response);
           setActualStep(1);
           setLoading(false);
         } else {
+          mainAppStore.isOnboarding = false;
+          mainAppStore.isDemoRealPopup = true;
           push(Page.DASHBOARD);
         }
       } catch (error) {
+        mainAppStore.isOnboarding = false;
+        mainAppStore.isDemoRealPopup = true;
         push(Page.DASHBOARD);
       }
     };
@@ -247,14 +263,18 @@ const Onboarding = observer(() => {
   }, []);
 
   if (loading || actualStepInfo === null) {
-    return <LoaderForComponents isLoading={loading || actualStepInfo === null} />;
+    return (
+      <LoaderForComponents isLoading={loading || actualStepInfo === null} />
+    );
   }
 
   return (
     <BackFlowLayout
       onBoarding={true}
       type="close"
-      pageTitle={`${actualStep} / ${actualStepInfo?.data.totalSteps} ${t('steps')}`}
+      pageTitle={`${actualStep} / ${actualStepInfo?.data.totalSteps} ${t(
+        'steps'
+      )}`}
       handleGoBack={closeOnBoarding}
     >
       <FlexContainer
@@ -268,9 +288,9 @@ const Onboarding = observer(() => {
           flexDirection="column"
           width="100%"
           onClick={
-            actualStepInfo?.data.fullScreen ?
-              handleChangeStep(actualStep + 1) :
-              handleClickLottie
+            actualStepInfo?.data.fullScreen
+              ? handleChangeStep(actualStep + 1)
+              : handleClickLottie
           }
         >
           <Lottie
@@ -280,11 +300,8 @@ const Onboarding = observer(() => {
             isClickToPauseDisabled={true}
           />
         </FlexContainer>
-        {!actualStepInfo?.data.fullScreen &&
-          <BottomWrapper
-            justifyContent="center"
-            flexDirection="column"
-          >
+        {!actualStepInfo?.data.fullScreen && (
+          <BottomWrapper justifyContent="center" flexDirection="column">
             <FlexContainer
               width="100%"
               alignItems="center"
@@ -294,52 +311,58 @@ const Onboarding = observer(() => {
               position="relative"
               margin="-200px 0 0 0"
             >
-              {actualStepInfo?.data.title && <PrimaryTextSpan
-                fontSize="24px"
-                color="#ffffff"
-                marginBottom="16px"
-                textAlign="center"
-              >
-                {actualStepInfo?.data.title}
-              </PrimaryTextSpan>}
-              {actualStepInfo?.data.description && <PrimaryTextSpan
-                fontSize="16px"
-                color="rgba(235, 235, 245, 0.6)"
-                textAlign="center"
-              >
-                {actualStepInfo?.data.description}
-              </PrimaryTextSpan>}
+              {actualStepInfo?.data.title && (
+                <PrimaryTextSpan
+                  fontSize="24px"
+                  color="#ffffff"
+                  marginBottom="16px"
+                  textAlign="center"
+                >
+                  {actualStepInfo?.data.title}
+                </PrimaryTextSpan>
+              )}
+              {actualStepInfo?.data.description && (
+                <PrimaryTextSpan
+                  fontSize="16px"
+                  color="rgba(235, 235, 245, 0.6)"
+                  textAlign="center"
+                >
+                  {actualStepInfo?.data.description}
+                </PrimaryTextSpan>
+              )}
             </FlexContainer>
             <FlexContainer
-                width="100%"
-                alignItems="center"
-                justifyContent="center"
-                padding="0 16px 40px"
-                flexDirection="column"
+              width="100%"
+              alignItems="center"
+              justifyContent="center"
+              padding="0 16px 40px"
+              flexDirection="column"
             >
-              {actualStepInfo?.data.buttons.map((button) => <OnboardingButton
-                padding="12px"
-                type="button"
-                width="100%"
-                onClick={actionByType(button.action)}
-                key={`${button.action}_${actualStep}`}
-                isDemo={button.action === ButtonActionType.Demo}
-              >
-                <PrimaryTextSpan
-                  color={
-                    button.action === ButtonActionType.Demo ?
-                      '#ffffff' :
-                      Colors.BLACK
-                  }
-                  fontWeight="bold"
-                  fontSize="16px"
+              {actualStepInfo?.data.buttons.map((button) => (
+                <OnboardingButton
+                  padding="12px"
+                  type="button"
+                  width="100%"
+                  onClick={actionByType(button.action)}
+                  key={`${button.action}_${actualStep}`}
+                  isDemo={button.action === ButtonActionType.Demo}
                 >
-                  {button.text}
-                </PrimaryTextSpan>
-              </OnboardingButton>)}
+                  <PrimaryTextSpan
+                    color={
+                      button.action === ButtonActionType.Demo
+                        ? '#ffffff'
+                        : Colors.BLACK
+                    }
+                    fontWeight="bold"
+                    fontSize="16px"
+                  >
+                    {button.text}
+                  </PrimaryTextSpan>
+                </OnboardingButton>
+              ))}
             </FlexContainer>
           </BottomWrapper>
-        }
+        )}
       </FlexContainer>
     </BackFlowLayout>
   );
@@ -347,22 +370,20 @@ const Onboarding = observer(() => {
 
 export default Onboarding;
 
-const translateAnimationIn = keyframes`
-    0% {
-      transform: translateY(150px);
-      opacity: 0;
-    }
-    
-    50% {
-      transform: translateY(150px);
-      opacity: 0;
-    }
-    
-    100% {
-      transform: translateY(0);
-      opacity: 1;
-    }
-`;
+const translateAnimationIn = keyframes(`
+  0% {
+    transform: translateY(150px);
+    opacity: 0;
+  }
+  50% {
+    transform: translateY(150px);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+`);
 
 const buttonAnimation = keyframes`
     from {

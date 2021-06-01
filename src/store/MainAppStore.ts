@@ -45,6 +45,7 @@ import { PendingOrderWSDTO } from '../types/PendingOrdersTypes';
 import { BidAskModelWSDTO } from '../types/BidAsk';
 import accountVerifySteps from '../constants/accountVerifySteps';
 import { BrandEnum } from '../constants/brandingLinksTranslate';
+import { logger } from '../helpers/ConsoleLoggerTool';
 
 interface MainAppStoreProps {
   token: string;
@@ -369,9 +370,11 @@ export class MainAppStore implements MainAppStoreProps {
       Topics.UPDATE_ACTIVE_POSITION,
       (response: ResponseFromWebsocket<PositionModelWSDTO>) => {
         if (response.accountId === this.activeAccountId) {
-          this.rootStore.quotesStore.setActivePositions(this.rootStore.quotesStore.activePositions.map(
-            (item) => (item.id === response.data.id ? response.data : item)
-          ));
+          this.rootStore.quotesStore.setActivePositions(
+            this.rootStore.quotesStore.activePositions.map((item) =>
+              item.id === response.data.id ? response.data : item
+            )
+          );
         }
       }
     );
@@ -400,15 +403,15 @@ export class MainAppStore implements MainAppStoreProps {
     );
   };
 
-  @action 
+  @action
   openAccountSwitcher = () => {
     this.showAccountSwitcher = true;
-  }
+  };
 
-  @action 
+  @action
   closeAccountSwitcher = () => {
     this.showAccountSwitcher = false;
-  }
+  };
 
   @action
   setSignUpFlag = (value: boolean) => {
@@ -434,6 +437,33 @@ export class MainAppStore implements MainAppStoreProps {
     }
   };
 
+  @action
+  addTriggerShowOnboarding = async () => {
+    try {
+      API.setKeyValue(
+        {
+          key: KeysInApi.SHOW_ONBOARDING,
+          value: true,
+        },
+        this.initModel.tradingUrl
+      );
+    } catch (error) {}
+  };
+
+  @action
+  addTriggerDissableOnboarding = async () => {
+    this.isOnboarding = false;
+    try {
+      API.setKeyValue(
+        {
+          key: KeysInApi.SHOW_ONBOARDING,
+          value: false,
+        },
+        this.initModel.tradingUrl
+      );
+    } catch (error) {}
+  };
+
   postRefreshToken = async () => {
     const refreshToken = `${this.refreshToken}`;
     try {
@@ -452,15 +482,28 @@ export class MainAppStore implements MainAppStoreProps {
     }
   };
 
-  getActiveAccount = async () => {
+  @action
+  checkOnboardingShow = async () => {
     try {
-      const activeAccountId = await API.getKeyValue(
-        KeysInApi.ACTIVE_ACCOUNT_ID,
+      //
+      const onBoardingKey = await API.getKeyValue(
+        KeysInApi.SHOW_ONBOARDING,
         this.initModel.tradingUrl
       );
+      const showOnboarding = onBoardingKey === 'true';
+      if (showOnboarding) {
+        this.isOnboarding = true;
+      }
+      //
+    } catch (error) {}
+  };
 
-      const showOnboarding = await API.getKeyValue(
-        KeysInApi.SHOW_ONBOARDING,
+  getActiveAccount = async () => {
+    try {
+      await this.checkOnboardingShow();
+
+      const activeAccountId = await API.getKeyValue(
+        KeysInApi.ACTIVE_ACCOUNT_ID,
         this.initModel.tradingUrl
       );
 
@@ -469,20 +512,17 @@ export class MainAppStore implements MainAppStoreProps {
         this.initModel.tradingUrl
       );
 
-      console.log('showOnboarding ', showOnboarding)
-
-
-      if (activeAccountTarget === "facebook") {
+      if (activeAccountTarget === 'facebook') {
         this.isPromoAccount = true;
         localStorage.setItem(LOCAL_TARGET, activeAccountTarget);
       } else {
         localStorage.setItem(LOCAL_TARGET, '');
       }
-      
 
-      const activeAccount = this.accounts.find(
-        (item) => item.id === activeAccountId
-      );
+      const activeAccount =
+        this.accounts.find((acc) => acc.id === activeAccountId) ||
+        this.accounts.find((acc) => !acc.isLive);
+
       if (activeAccount) {
         this.activeSession?.send(Topics.SET_ACTIVE_ACCOUNT, {
           [Fields.ACCOUNT_ID]: activeAccount.id,
@@ -490,7 +530,6 @@ export class MainAppStore implements MainAppStoreProps {
         this.activeAccount = activeAccount;
         this.activeAccountId = activeAccount.id;
       } else {
-        this.isDemoRealPopup = true;
         this.isLoading = false;
       }
       this.isInitLoading = false;
@@ -645,7 +684,7 @@ export class MainAppStore implements MainAppStoreProps {
   @action
   setLoading = (on: boolean) => {
     this.isLoading = on;
-  }
+  };
 
   @action
   setParamsAsset = (params: string | null) => {
@@ -704,7 +743,7 @@ export class MainAppStore implements MainAppStoreProps {
 
   @computed
   get realAcc() {
-    return this.accounts.find(acc => acc.isLive)
+    return this.accounts.find((acc) => acc.isLive);
   }
 
   @computed
