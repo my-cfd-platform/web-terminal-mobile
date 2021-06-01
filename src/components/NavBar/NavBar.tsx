@@ -88,17 +88,15 @@ const NavBar = observer(() => {
       <AccountLabel />
       <AccountsSwitchLink />
       {!mainAppStore.isPromoAccount && (
-        <>
-          <DepositLink
-            onClick={() =>
-              redirectWithUpdateRefreshToken(API_DEPOSIT_STRING, parsedParams)
-            }
-          >
-            {t('Deposit')}
-          </DepositLink>
-          <AccountSwitcher show={mainAppStore.showAccountSwitcher} />
-        </>
+        <DepositLink
+          onClick={() =>
+            redirectWithUpdateRefreshToken(API_DEPOSIT_STRING, parsedParams)
+          }
+        >
+          {t('Deposit')}
+        </DepositLink>
       )}
+      <AccountSwitcher show={mainAppStore.showAccountSwitcher} />
     </FlexContainer>
   );
 });
