@@ -87,7 +87,7 @@ const NavBar = observer(() => {
     >
       <AccountLabel />
       <AccountsSwitchLink />
-      {mainAppStore.isPromoAccount && (
+      {!mainAppStore.isPromoAccount && (
         <>
           <DepositLink
             onClick={() =>
