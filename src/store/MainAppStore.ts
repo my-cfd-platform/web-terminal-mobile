@@ -555,6 +555,8 @@ export class MainAppStore implements MainAppStoreProps {
       },
       this.initModel.tradingUrl
     );
+
+    this.handleInitConnection()
   };
 
   @action
