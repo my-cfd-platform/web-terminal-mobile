@@ -100,13 +100,12 @@ const SignUp = () => {
                   });
                 } else {
                   
-                  mainAppStore.addTriggerShowOnboarding();
-
                   mainAppStore.setSignUpFlag(true);
                   mixpanel.track(mixpanelEvents.SIGN_UP, {
                     [mixapanelProps.BRAND_NAME]: mainAppStore.initModel.brandName.toLowerCase(),
                   });
-                  mainAppStore.isDemoRealPopup = true;
+                  mainAppStore.addTriggerShowOnboarding();
+                  mainAppStore.isOnboarding = true;
                   push(Page.DASHBOARD);
                 }
               } catch (error) {
