@@ -28,6 +28,8 @@ import { useTranslation } from 'react-i18next';
 import LoaderForComponents from '../components/LoaderForComponents';
 import { Observer } from 'mobx-react-lite';
 import { brandingLinksTranslate } from '../constants/brandingLinksTranslate';
+import API from '../helpers/API';
+import KeysInApi from '../constants/keysInApi';
 
 const SignUp = () => {
   const { push } = useHistory();
@@ -96,6 +98,15 @@ const SignUp = () => {
                       apiResponseCodeMessages[result],
                     [mixapanelProps.EMAIL_FAILED]: values.email,
                   });
+
+                  API.setKeyValue(
+                    {
+                      key: KeysInApi.SHOW_ONBOARDING,
+                      value: true,
+                    },
+                    mainAppStore.initModel.tradingUrl
+                  );
+                  
                 } else {
                   mainAppStore.setSignUpFlag(true);
                   mixpanel.track(mixpanelEvents.SIGN_UP, {

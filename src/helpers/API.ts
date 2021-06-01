@@ -164,7 +164,7 @@ class API {
   };
 
   setKeyValue = async (
-    params: { key: string; value: string },
+    params: { key: string; value: string | boolean },
     tradingUrl: string
   ) => {
     const formData = this.convertParamsToFormData(params);

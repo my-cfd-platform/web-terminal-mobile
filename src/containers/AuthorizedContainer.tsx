@@ -169,7 +169,7 @@ const AuthorizedContainer: FC = observer(({ children }) => {
   ]);
 
   useEffect(() => {
-    if (mainAppStore.isDemoRealPopup && !mainAppStore.isVerification && !mainAppStore.isPromoAccount) {
+    if (mainAppStore.isOnboarding && !mainAppStore.isDemoRealPopup && !mainAppStore.isVerification && !mainAppStore.isPromoAccount) {
       push(Page.ONBOARDING);
     }
   }, [
@@ -214,11 +214,11 @@ const AuthorizedContainer: FC = observer(({ children }) => {
         {() => <>{serverErrorPopupStore.isActive && <ServerErrorPopup />}</>}
       </Observer>
       <Observer>{() => <NetworkErrorPopup></NetworkErrorPopup>}</Observer>
-      {/*<Observer>*/}
-      {/*  {() => (*/}
-      {/*    <>{(mainAppStore.isDemoRealPopup && !mainAppStore.isVerification) && <DemoRealPopup></DemoRealPopup>}</>*/}
-      {/*  )}*/}
-      {/*</Observer>*/}
+      <Observer>
+       {() => (
+         <>{(mainAppStore.isDemoRealPopup && !mainAppStore.isVerification && !mainAppStore.isPromoAccount) && <DemoRealPopup></DemoRealPopup>}</>
+       )}
+      </Observer>
       {showNavbarAndNav && <NavBar />}
       <FlexContainer
         height={

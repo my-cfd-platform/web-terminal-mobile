@@ -7,6 +7,7 @@ const KeysInApi = {
   PHONE_VERIFICATION: 'pv',
   DEFAULT_INVEST_AMOUNT_REAL: 'dia_l',
   DEFAULT_INVEST_AMOUNT_DEMO: 'dia_d',
+  SHOW_ONBOARDING: 'Onboarding',
 };
 
 Object.freeze(KeysInApi);

@@ -60,6 +60,7 @@ interface MainAppStoreProps {
   setActiveAccount: (acc: AccountModelWebSocketDTO) => void;
   profileStatus: PersonalDataKYCEnum;
   isDemoRealPopup: boolean;
+  isOnboarding: boolean;
   signalRReconnectTimeOut: string;
   initModel: InitModel;
   lang: CountriesEnum;
@@ -103,6 +104,7 @@ export class MainAppStore implements MainAppStoreProps {
   @observable isLoading = false;
   @observable isInitLoading = true;
   @observable isDemoRealPopup = false;
+  @observable isOnboarding = false;
   @observable isAuthorized = true;
   @observable activeSession?: HubConnection;
   @observable activeAccount?: AccountModelWebSocketDTO;
@@ -457,10 +459,19 @@ export class MainAppStore implements MainAppStoreProps {
         this.initModel.tradingUrl
       );
 
+      const showOnboarding = await API.getKeyValue(
+        KeysInApi.SHOW_ONBOARDING,
+        this.initModel.tradingUrl
+      );
+
       const activeAccountTarget = await API.getKeyValue(
         KeysInApi.ACTIVE_ACCOUNT_TARGET,
         this.initModel.tradingUrl
       );
+
+      console.log('showOnboarding ', showOnboarding)
+
+
       if (activeAccountTarget === "facebook") {
         this.isPromoAccount = true;
         localStorage.setItem(LOCAL_TARGET, activeAccountTarget);
