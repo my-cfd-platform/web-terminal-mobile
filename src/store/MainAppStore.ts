@@ -527,11 +527,12 @@ export class MainAppStore implements MainAppStoreProps {
         this.activeSession?.send(Topics.SET_ACTIVE_ACCOUNT, {
           [Fields.ACCOUNT_ID]: activeAccount.id,
         });
-        this.activeAccount = activeAccount;
-        this.activeAccountId = activeAccount.id;
-      } else {
-        this.isLoading = false;
+        if (this.activeAccountId !== activeAccount.id) {
+          this.setActiveAccountId(activeAccount.id);
+        }
       }
+
+      this.isLoading = false;
       this.isInitLoading = false;
     } catch (error) {
       this.isLoading = false;
@@ -541,9 +542,14 @@ export class MainAppStore implements MainAppStoreProps {
   };
 
   @action
+  setActiveAccountId = (activeAccountId: AccountModelWebSocketDTO['id']) => {
+    this.activeAccountId = activeAccountId;
+  };
+
+  @action
   setActiveAccount = (account: AccountModelWebSocketDTO) => {
     this.activeAccount = account;
-    this.activeAccountId = account.id;
+    this.setActiveAccountId(account.id);
     // TODO: think how remove crutch
     this.rootStore.historyStore.positionsHistoryReport.positionsHistory = [];
     this.rootStore.tradingViewStore.tradingWidget = undefined;
@@ -555,8 +561,6 @@ export class MainAppStore implements MainAppStoreProps {
       },
       this.initModel.tradingUrl
     );
-
-    this.handleInitConnection()
   };
 
   @action
