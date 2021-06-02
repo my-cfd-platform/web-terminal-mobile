@@ -47,7 +47,7 @@ const API_LIST = {
     CANCEL: '/withdrawal/cancel'
   },
   ONBOARDING: {
-    STEPS: '/api/v1/OnboardingSteps'
+    STEPS: '/v1/OnboardingSteps'
   }
 };
 
