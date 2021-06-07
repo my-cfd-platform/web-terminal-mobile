@@ -29,8 +29,9 @@ interface PrimaryTextType {
   overflow?: 'hidden';
   width?: string;
   maxWidth?: string;
-  wordBreak?: string;
+  wordBreak?: "normal" | "break-all" | "keep-all" | "break-word";
 }
+
 
 export const PrimaryTextSpan = styled.span<PrimaryTextType>`
   font-style: ${(props) => props.fontStyle};
