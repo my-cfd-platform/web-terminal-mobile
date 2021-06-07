@@ -29,6 +29,7 @@ interface PrimaryTextType {
   overflow?: 'hidden';
   width?: string;
   maxWidth?: string;
+  wordBreak?: string;
 }
 
 export const PrimaryTextSpan = styled.span<PrimaryTextType>`
@@ -46,6 +47,7 @@ export const PrimaryTextSpan = styled.span<PrimaryTextType>`
   text-overflow: ${(props) => props.textOverflow};
   overflow: ${(props) => props.overflow};
   max-width: ${(props) => props.maxWidth};
+  word-break: ${props => props.wordBreak};
 `;
 
 export const PrimaryTextParagraph = styled.p<PrimaryTextType>`
