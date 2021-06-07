@@ -3,6 +3,7 @@ import { OperationApiResponseCodes } from '../enums/OperationApiResponseCodes';
 import apiResponseCodeMessages from '../constants/apiResponseCodeMessages';
 import { MainAppStore } from '../store/MainAppStore';
 import RequestHeaders from '../constants/headers';
+import API_LIST from '../helpers/apiList';
 
 const injectInerceptors = (mainAppStore: MainAppStore) => {
   // for multiple requests
@@ -68,6 +69,9 @@ const injectInerceptors = (mainAppStore: MainAppStore) => {
       switch (error.response?.status) {
         case 400:
         case 500:
+          if (error.response?.config?.url.includes(API_LIST.ONBOARDING.STEPS)) {
+            break;
+          }
           function requestAgain() {
             axios.request(error.config);
             if (!mainAppStore.rootStore.serverErrorPopupStore.isActive) {
