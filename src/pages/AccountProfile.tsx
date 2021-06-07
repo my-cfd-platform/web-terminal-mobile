@@ -63,7 +63,8 @@ const AccountProfile = observer(() => {
     <FlexContainer flexDirection="column" minHeight="600px">
       <AchievementStatusLabel />
       <FlexContainer padding="16px" marginBottom="24px">
-        <UserPhoto
+       <FlexContainer width="64px">
+       <UserPhoto
           alignItems="center"
           justifyContent="center"
           width="48px"
@@ -79,6 +80,7 @@ const AccountProfile = observer(() => {
             height="26px"
           />
         </UserPhoto>
+       </FlexContainer>
 
         <FlexContainer flexDirection="column" justifyContent="center">
           <Observer>
@@ -89,6 +91,7 @@ const AccountProfile = observer(() => {
                   fontSize="16px"
                   fontWeight={500}
                   marginBottom="6px"
+                  wordBreak="break-word"
                 >
                   {`${userProfileStore.userProfile?.firstName ? userProfileStore.userProfile?.firstName : ""} ${userProfileStore.userProfile?.lastName ? userProfileStore.userProfile?.lastName : ""}`}
                 </PrimaryTextSpan>
@@ -96,6 +99,7 @@ const AccountProfile = observer(() => {
                   color="rgba(255, 255, 255, 0.4)"
                   fontSize="13px"
                   fontWeight={500}
+                  wordBreak="break-word"
                 >
                   {userProfileStore.userProfile?.email}
                 </PrimaryTextSpan>
