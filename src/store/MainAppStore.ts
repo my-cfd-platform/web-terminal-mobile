@@ -533,6 +533,8 @@ export class MainAppStore implements MainAppStoreProps {
         }
       }
 
+      this.activeAccount = activeAccount;
+
       this.isLoading = false;
       this.isInitLoading = false;
     } catch (error) {
@@ -760,6 +762,7 @@ export class MainAppStore implements MainAppStoreProps {
       return this.accounts.filter((acc) => !acc.isLive);
     }
 
+    console.log(this.activeAccount?.id)
     return this.accounts.reduce(
       (acc, prev) =>
         prev.id === this.activeAccount?.id ? [prev, ...acc] : [...acc, prev],
