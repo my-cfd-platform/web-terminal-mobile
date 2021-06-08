@@ -63,26 +63,30 @@ const AccountProfile = observer(() => {
     <FlexContainer flexDirection="column" minHeight="600px">
       <AchievementStatusLabel />
       <FlexContainer padding="16px" marginBottom="24px">
-       <FlexContainer width="64px">
-       <UserPhoto
-          alignItems="center"
-          justifyContent="center"
-          width="48px"
-          height="48px"
-          borderRadius="50%"
-          backgroundColor="#77797D"
-          marginRight="16px"
-        >
-          <SvgIcon
-            {...UserIcon}
-            fillColor="rgba(196, 196, 196, 0.5)"
-            width="26px"
-            height="26px"
-          />
-        </UserPhoto>
-       </FlexContainer>
+        <FlexContainer width="64px">
+          <UserPhoto
+            alignItems="center"
+            justifyContent="center"
+            width="48px"
+            height="48px"
+            borderRadius="50%"
+            backgroundColor="#77797D"
+            marginRight="16px"
+          >
+            <SvgIcon
+              {...UserIcon}
+              fillColor="rgba(196, 196, 196, 0.5)"
+              width="26px"
+              height="26px"
+            />
+          </UserPhoto>
+        </FlexContainer>
 
-        <FlexContainer flexDirection="column" justifyContent="center">
+        <FlexContainer
+          flexDirection="column"
+          justifyContent="center"
+          width="calc(100% - 64px)"
+        >
           <Observer>
             {() => (
               <>
@@ -93,13 +97,23 @@ const AccountProfile = observer(() => {
                   marginBottom="6px"
                   wordBreak="break-word"
                 >
-                  {`${userProfileStore.userProfile?.firstName ? userProfileStore.userProfile?.firstName : ""} ${userProfileStore.userProfile?.lastName ? userProfileStore.userProfile?.lastName : ""}`}
+                  {`${
+                    userProfileStore.userProfile?.firstName
+                      ? userProfileStore.userProfile?.firstName
+                      : ''
+                  } ${
+                    userProfileStore.userProfile?.lastName
+                      ? userProfileStore.userProfile?.lastName
+                      : ''
+                  }`}
                 </PrimaryTextSpan>
                 <PrimaryTextSpan
                   color="rgba(255, 255, 255, 0.4)"
                   fontSize="13px"
                   fontWeight={500}
-                  wordBreak="break-word"
+                  textOverflow="ellipsis"
+                  overflow="hidden"
+                  title={userProfileStore.userProfile?.email}
                 >
                   {userProfileStore.userProfile?.email}
                 </PrimaryTextSpan>
