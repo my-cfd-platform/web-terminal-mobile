@@ -108,7 +108,7 @@ const PhoneVerification: FC = () => {
     }
     fetchCountries();
     return () => {
-      cleanupFunction = true
+      cleanupFunction = true;
     };
   }, []);
 
@@ -271,6 +271,12 @@ const PhoneInputWrapper = styled(FlexContainer)`
   position: relative;
   input {
     text-align: right;
+    
+    &:-webkit-autofill,
+    &:-webkit-autofill:hover,
+    &:-webkit-autofill:focus {
+      text-align: left;
+    }
   }
 `;
 
