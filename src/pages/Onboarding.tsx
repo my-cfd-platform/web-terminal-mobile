@@ -221,11 +221,26 @@ const Onboarding = observer(() => {
     }
   }, []);
 
+  
+
+
+  const isOnboardingAvailable = async (callback: any) => {
+    //
+    const isAvailable = await mainAppStore.checkOnboardingShow();
+    if (!isAvailable) {
+      push(Page.DASHBOARD);
+    } else {
+      // init OB
+      callback();
+      mixpanel.track(mixpanelEvents.ONBOARDING, {
+        [mixapanelProps.ONBOARDING_VALUE]: 'start1',
+      });
+      //
+    }
+  };
+
   useEffect(() => {
     let cleanupFunction = false;
-    mixpanel.track(mixpanelEvents.ONBOARDING, {
-      [mixapanelProps.ONBOARDING_VALUE]: 'start1',
-    });
     const getInfoFirstStep = async () => {
       try {
         const response = await API.getOnBoardingInfoByStep(
@@ -249,7 +264,8 @@ const Onboarding = observer(() => {
         push(Page.DASHBOARD);
       }
     };
-    getInfoFirstStep();
+    isOnboardingAvailable(getInfoFirstStep);
+    
     return () => {
       cleanupFunction = true;
       const useAccount = mainAppStore.accounts.find(
@@ -260,6 +276,7 @@ const Onboarding = observer(() => {
       }
     };
   }, []);
+
 
   if (loading || actualStepInfo === null) {
     return (

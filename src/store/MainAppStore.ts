@@ -494,6 +494,7 @@ export class MainAppStore implements MainAppStoreProps {
       if (showOnboarding) {
         this.isOnboarding = true;
       }
+      return showOnboarding;
       //
     } catch (error) {}
   };
