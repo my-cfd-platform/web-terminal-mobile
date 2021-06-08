@@ -656,6 +656,7 @@ export class MainAppStore implements MainAppStoreProps {
     delete Axios.defaults.headers[RequestHeaders.AUTHORIZATION];
     this.activeAccount = undefined;
     this.activeAccountId = '';
+    this.accounts = [];
     this.rootStore.withdrawalStore.clearStore();
     this.balanceWas = 0;
     if (this.activeAccount) {

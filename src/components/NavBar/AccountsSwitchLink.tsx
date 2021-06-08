@@ -12,19 +12,22 @@ import { moneyFormat } from '../../helpers/moneyFormat';
 const AccountsSwitchLink = observer(() => {
   const { mainAppStore } = useStores();
   const [balance, setBalance] = useState<number>(mainAppStore.balanceWas);
+  const [closedComponent, setClosedComponent] = useState<boolean>(false);
 
   const animateValue = (start: number, end: number) => {
-    let startTimestamp: number | null = null;
-    const step = (timestamp: number) => {
-      if (!startTimestamp) startTimestamp = timestamp;
-      const progress = Math.min((timestamp - startTimestamp) / 2000, 1);
-      setBalance(progress * (end - start) + start);
-      if (progress < 1) {
-        window.requestAnimationFrame(step);
-      }
-    };
-    window.requestAnimationFrame(step);
-    mainAppStore.balanceWas = end;
+    if (!closedComponent) {
+      let startTimestamp: number | null = null;
+      const step = (timestamp: number) => {
+        if (!startTimestamp) startTimestamp = timestamp;
+        const progress = Math.min((timestamp - startTimestamp) / 2000, 1);
+        setBalance(progress * (end - start) + start);
+        if (progress < 1) {
+          window.requestAnimationFrame(step);
+        }
+      };
+      window.requestAnimationFrame(step);
+      mainAppStore.balanceWas = end;
+    }
   };
 
   const handleOpenAccounts = () => () => {
@@ -32,19 +35,26 @@ const AccountsSwitchLink = observer(() => {
   }
 
   useEffect(() => {
+    let cleanupFunction = false;
     if (mainAppStore.accounts) {
       const newBalance = mainAppStore.accounts.find(
         (item) => item.id === mainAppStore.activeAccountId
       )?.balance || 0;
-      if (newBalance !== balance && balance !== 0) {
-        animateValue(
-          balance,
-          newBalance
-        );
-      } else {
-        mainAppStore.balanceWas = newBalance;
-        setBalance(newBalance);
+      if (!cleanupFunction) {
+        if (newBalance !== balance && balance !== 0) {
+          animateValue(
+            balance,
+            newBalance
+          );
+        } else {
+          mainAppStore.balanceWas = newBalance;
+          setBalance(newBalance);
+        }
       }
+      return () => {
+        setClosedComponent(true);
+        cleanupFunction = true;
+      };
     }
   }, [mainAppStore.activeAccountId, mainAppStore.accounts]);
 
