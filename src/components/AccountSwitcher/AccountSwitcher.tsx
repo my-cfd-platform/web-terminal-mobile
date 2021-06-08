@@ -97,6 +97,7 @@ const AccountSwitcher = observer(({ show }: IAccountSwitcherProps) => {
                 items={1}
                 stagePadding={44}
                 margin={16}
+                nav={true}
               >
                 {mainAppStore.sortedAccounts.map((acc) => (
                   <AccountSwitchItem
