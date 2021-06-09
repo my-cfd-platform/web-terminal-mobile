@@ -457,5 +457,11 @@
     "FAQ_M": "https://www.monfex.com/es/faq",
     "Thank you for your transaction": "Gracias por tu transacción",
     "Please note, that it is now being processed and it might take up to 2 business days": "Tenga en cuenta que ahora se está procesando y puede demorar hasta 2 días laborales",
-    "You will receive an update to your e-mail": "Vas a recibir una actualización en tu correo electrónico"
+    "You will receive an update to your e-mail": "Vas a recibir una actualización en tu correo electrónico",
+    "There is no possibility of withdrawing bonus. But this is an extra amount on your account and when you make a profit with them, this is something you can withdraw.": "No hay posibilidad de retirar el bono. Pero esta es una cantidad adicional en tu cuenta y cuando obtengas una ganancia con ella, esto es algo que puedes retirar.",
+    "Bonus": "Bono",
+    "When you withdraw your funds, the bonus will be deducted from your account.": "Cuando retires tus fondos, el bono se deducirá de tu cuenta.",
+    "Invested": "Invertido",
+    "Select account": "Seleccionar cuenta",
+    "Withdrawable": "Retirable"
 }

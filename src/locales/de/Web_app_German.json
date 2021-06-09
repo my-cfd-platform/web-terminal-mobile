@@ -457,5 +457,11 @@
     "FAQ_M": "https://www.monfex.com/de/faq",
     "Thank you for your transaction": "Vielen Dank für Ihre Transaktion",
     "Please note, that it is now being processed and it might take up to 2 business days": "Bitte beachten Sie, die Bearbeitung kann bis zu 2 Werktagen in Anspruch nehmen",
-    "You will receive an update to your e-mail": "Sie erhalten ein Update auf Ihre E-Mail"
+    "You will receive an update to your e-mail": "Sie erhalten ein Update auf Ihre E-Mail",
+    "There is no possibility of withdrawing bonus. But this is an extra amount on your account and when you make a profit with them, this is something you can withdraw.": "Es gibt keine Möglichkeit, den Bonus abzuheben. Aber dies ist ein zusätzlicher Betrag auf Ihrem Konto. Die Profite, die Sie mit Bonusgeld machen, können Sie jederzeit abheben.",
+    "Bonus": "Bonus",
+    "When you withdraw your funds, the bonus will be deducted from your account.": "Wenn Sie Ihr Geld abheben, wird der Bonus von Ihrem Konto abgezogen.",
+    "Invested": "Investiert",
+    "Select account": "Konto auswählen",
+    "Withdrawable": "Auszahlung"
 }
