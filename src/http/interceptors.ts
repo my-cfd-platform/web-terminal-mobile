@@ -3,6 +3,11 @@ import { OperationApiResponseCodes } from '../enums/OperationApiResponseCodes';
 import apiResponseCodeMessages from '../constants/apiResponseCodeMessages';
 import { MainAppStore } from '../store/MainAppStore';
 import RequestHeaders from '../constants/headers';
+import { DebugTypes } from '../types/DebugTypes';
+import debugLevel from '../constants/debugConstants';
+import { getProcessId } from '../helpers/getProcessId';
+import API from '../helpers/API';
+import { getCircularReplacer } from '../helpers/getCircularReplacer';
 
 const injectInerceptors = (mainAppStore: MainAppStore) => {
   // for multiple requests
@@ -67,7 +72,26 @@ const injectInerceptors = (mainAppStore: MainAppStore) => {
 
       switch (error.response?.status) {
         case 400:
+          if (mainAppStore.isAuthorized) {
+            const params: DebugTypes = {
+              level: debugLevel.TRANSPORT,
+              processId: getProcessId(),
+              message: error.response?.message || 'unknown error',
+              jsonLogObject: JSON.stringify(mainAppStore.rootStore, getCircularReplacer()),
+            };
+            API.postDebug(params, API_STRING);
+          }
+          break;
         case 500:
+          if (mainAppStore.isAuthorized) {
+            const params: DebugTypes = {
+              level: debugLevel.TRANSPORT,
+              processId: getProcessId(),
+              message: error.response?.message || 'unknown error',
+              jsonLogObject: JSON.stringify(mainAppStore.rootStore, getCircularReplacer()),
+            };
+            API.postDebug(params, API_STRING);
+          }
           function requestAgain() {
             axios.request(error.config);
             if (!mainAppStore.rootStore.serverErrorPopupStore.isActive) {
@@ -124,6 +148,15 @@ const injectInerceptors = (mainAppStore: MainAppStore) => {
           break;
 
         case 403: {
+          if (mainAppStore.isAuthorized) {
+            const params: DebugTypes = {
+              level: debugLevel.TRANSPORT,
+              processId: getProcessId(),
+              message: error?.message || 'unknown error',
+              jsonLogObject: JSON.stringify(mainAppStore.rootStore, getCircularReplacer()),
+            };
+            API.postDebug(params, API_STRING);
+          }
           failedQueue.forEach((prom) => {
             prom.reject();
           });

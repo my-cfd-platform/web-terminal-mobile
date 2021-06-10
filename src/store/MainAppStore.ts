@@ -44,6 +44,10 @@ import { PendingOrderWSDTO } from '../types/PendingOrdersTypes';
 import { BidAskModelWSDTO } from '../types/BidAsk';
 import accountVerifySteps from '../constants/accountVerifySteps';
 import { BrandEnum } from '../constants/brandingLinksTranslate';
+import debugLevel from '../constants/debugConstants';
+import { getProcessId } from '../helpers/getProcessId';
+import { DebugTypes } from '../types/DebugTypes';
+import { getCircularReplacer } from '../helpers/getCircularReplacer';
 
 interface MainAppStoreProps {
   token: string;
@@ -288,6 +292,16 @@ export class MainAppStore implements MainAppStoreProps {
           window.location.reload();
           return;
         }
+      }
+
+      if (this.isAuthorized) {
+        const params: DebugTypes = {
+          level: debugLevel.TRANSPORT,
+          processId: getProcessId(),
+          message: error?.message || 'unknown error',
+          jsonLogObject: JSON.stringify(this.rootStore, getCircularReplacer()),
+        };
+        API.postDebug(params, API_STRING);
       }
 
       this.socketError = true;

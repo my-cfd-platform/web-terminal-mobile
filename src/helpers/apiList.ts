@@ -41,6 +41,9 @@ const API_LIST = {
   INIT: {
     GET: '/init/',
   },
+  DEBUG: {
+    POST: '/api/Debug/ClientLog',
+  },
   WITHWRAWAL: {
     CREATE: '/withdrawal/create',
     HISTORY: '/withdrawal/history',

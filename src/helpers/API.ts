@@ -58,6 +58,7 @@ import {
 import { ListForEN } from '../constants/listOfLanguages';
 import { PendingOrderResponseDTO } from '../types/PendingOrdersTypes';
 import { BrandEnum } from '../constants/brandingLinksTranslate';
+import { DebugResponse, DebugTypes } from '../types/DebugTypes';
 
 class API {
   convertParamsToFormData = (params: { [key: string]: any }) => {
@@ -477,6 +478,14 @@ class API {
   postLpLoginToken = async (params: LpLoginParams, authUrl: string) => {
     const response = await axios.post<UserAuthenticateResponse>(
       `${API_AUTH_STRING || authUrl}${AUTH_API_LIST.TRADER.LP_LOGIN}`,
+      params
+    );
+    return response.data;
+  };
+
+  postDebug = async (params: DebugTypes, apiUrl: string) => {
+    const response = await axios.post<DebugResponse>(
+      `${API_STRING || apiUrl}${API_LIST.DEBUG.POST}`,
       params
     );
     return response.data;

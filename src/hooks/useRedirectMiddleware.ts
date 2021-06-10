@@ -1,6 +1,11 @@
 import { useStores } from './useStores';
 import { push } from "mixpanel-browser";
-import { useHistory } from "react-router-dom";
+import { useHistory } from 'react-router-dom';
+import { DebugTypes } from '../types/DebugTypes';
+import debugLevel from '../constants/debugConstants';
+import { getProcessId } from '../helpers/getProcessId';
+import { getCircularReplacer } from '../helpers/getCircularReplacer';
+import API from '../helpers/API';
 
 const useRedirectMiddleware = () => {
   const { mainAppStore } = useStores();
@@ -10,6 +15,20 @@ const useRedirectMiddleware = () => {
     params: url params string include 'token' that will be update
   */
   const redirectWithUpdateRefreshToken = (link: string, params: string) => {
+    const unparsedParams = JSON.parse('{"' + decodeURI(
+      params.replace(/&/g, "\",\"")
+        .replace(/=/g,"\":\"")
+    ) + '"}');
+    const arrayOfParams = Object.values(unparsedParams);
+    if (arrayOfParams.some((item) => !item)) {
+      const params: DebugTypes = {
+        level: debugLevel.DATAFLOW,
+        processId: getProcessId(),
+        message: 'something empty in object',
+        jsonLogObject: JSON.stringify(mainAppStore.rootStore, getCircularReplacer()),
+      };
+      API.postDebug(params, API_STRING);
+    }
     mainAppStore.postRefreshToken().finally(() => {
       let searchParams = new URLSearchParams(params);
       searchParams.set("token", mainAppStore.token);
