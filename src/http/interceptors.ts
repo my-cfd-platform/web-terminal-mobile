@@ -61,6 +61,9 @@ const injectInerceptors = (mainAppStore: MainAppStore) => {
     },
 
     async function (error) {
+      if (error.response?.config.url.includes('Debug')) {
+        return false;
+      }
       if (!error.response?.status) {
         mainAppStore.rootStore.badRequestPopupStore.setRecconect();
         setTimeout(() => {
