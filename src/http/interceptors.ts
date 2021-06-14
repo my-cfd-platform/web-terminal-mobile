@@ -8,6 +8,7 @@ import debugLevel from '../constants/debugConstants';
 import { getProcessId } from '../helpers/getProcessId';
 import API from '../helpers/API';
 import { getCircularReplacer } from '../helpers/getCircularReplacer';
+import { getStatesSnapshot } from '../helpers/getStatesSnapshot';
 
 const injectInerceptors = (mainAppStore: MainAppStore) => {
   // for multiple requests
@@ -68,30 +69,25 @@ const injectInerceptors = (mainAppStore: MainAppStore) => {
         }, +mainAppStore.connectTimeOut);
       }
 
+      if (mainAppStore.isAuthorized && error.response?.status !== 401) {
+        const jsonLogObject = {
+          error: JSON.stringify(error),
+          snapShot: JSON.stringify(getStatesSnapshot(mainAppStore), getCircularReplacer())
+        };
+        const params: DebugTypes = {
+          level: debugLevel.TRANSPORT,
+          processId: getProcessId(),
+          message: error.response?.statusText || 'unknown error',
+          jsonLogObject: JSON.stringify(jsonLogObject)
+        };
+        API.postDebug(params, API_STRING);
+      }
+
       const originalRequest = error.config;
 
       switch (error.response?.status) {
         case 400:
-          if (mainAppStore.isAuthorized) {
-            const params: DebugTypes = {
-              level: debugLevel.TRANSPORT,
-              processId: getProcessId(),
-              message: error.response?.message || 'unknown error',
-              jsonLogObject: JSON.stringify(mainAppStore.rootStore, getCircularReplacer()),
-            };
-            API.postDebug(params, API_STRING);
-          }
-          break;
         case 500:
-          if (mainAppStore.isAuthorized) {
-            const params: DebugTypes = {
-              level: debugLevel.TRANSPORT,
-              processId: getProcessId(),
-              message: error.response?.message || 'unknown error',
-              jsonLogObject: JSON.stringify(mainAppStore.rootStore, getCircularReplacer()),
-            };
-            API.postDebug(params, API_STRING);
-          }
           function requestAgain() {
             axios.request(error.config);
             if (!mainAppStore.rootStore.serverErrorPopupStore.isActive) {
@@ -148,15 +144,6 @@ const injectInerceptors = (mainAppStore: MainAppStore) => {
           break;
 
         case 403: {
-          if (mainAppStore.isAuthorized) {
-            const params: DebugTypes = {
-              level: debugLevel.TRANSPORT,
-              processId: getProcessId(),
-              message: error?.message || 'unknown error',
-              jsonLogObject: JSON.stringify(mainAppStore.rootStore, getCircularReplacer()),
-            };
-            API.postDebug(params, API_STRING);
-          }
           failedQueue.forEach((prom) => {
             prom.reject();
           });

@@ -6,6 +6,7 @@ import debugLevel from '../constants/debugConstants';
 import { getProcessId } from '../helpers/getProcessId';
 import { getCircularReplacer } from '../helpers/getCircularReplacer';
 import API from '../helpers/API';
+import { getStatesSnapshot } from '../helpers/getStatesSnapshot';
 
 const useRedirectMiddleware = () => {
   const { mainAppStore } = useStores();
@@ -21,11 +22,16 @@ const useRedirectMiddleware = () => {
     ) + '"}');
     const arrayOfParams = Object.values(unparsedParams);
     if (arrayOfParams.some((item) => !item)) {
+      const jsonLogObject = {
+        error: 'redirect error',
+        arrayOfParams: arrayOfParams,
+        snapShot: JSON.stringify(getStatesSnapshot(mainAppStore), getCircularReplacer()),
+      };
       const params: DebugTypes = {
         level: debugLevel.DATAFLOW,
         processId: getProcessId(),
         message: 'something empty in object',
-        jsonLogObject: JSON.stringify(mainAppStore.rootStore, getCircularReplacer()),
+        jsonLogObject: JSON.stringify(jsonLogObject)
       };
       API.postDebug(params, API_STRING);
     }
