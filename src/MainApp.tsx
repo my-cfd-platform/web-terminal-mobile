@@ -135,7 +135,7 @@ const MainApp: FC = () => {
           src={`https://www.google.com/recaptcha/api.js?render=${mainAppStore.initModel.recaptchaToken}`}
         ></script>
 
-        {!isPromoAccountView && (
+        {!isPromoAccountView() && (
           <meta
             name="apple-itunes-app"
             content={`app-id=${
@@ -143,10 +143,12 @@ const MainApp: FC = () => {
             }`}
           />
         )}
-        {!isPromoAccountView && (
+        {!isPromoAccountView() && (
           <meta
             name="google-play-app"
-            content={`app-id=${mainAppStore.initModel.androidAppId}`}
+            content={`app-id=${
+              IS_LOCAL ? 'com.monfex.trade' : mainAppStore.initModel.androidAppId
+            }`}
           />
         )}
 
@@ -179,7 +181,7 @@ const MainApp: FC = () => {
                 ignoreIosVersion={true}
                 url={{
                   ios: IS_LOCAL ? 'asd' : mainAppStore.initModel.iosAppLink,
-                  android: mainAppStore.initModel.androidAppLink,
+                  android: IS_LOCAL ? 'asd' : mainAppStore.initModel.androidAppLink,
                 }}
               />
             )}

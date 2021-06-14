@@ -95,6 +95,9 @@ const Onboarding = observer(() => {
   };
 
   const handleChangeStep = (nextStep: number) => () => {
+    mixpanel.track(mixpanelEvents.ONBOARDING, {
+      [mixapanelProps.ONBOARDING_VALUE]: mixpanelEventByStep(),
+    });
     getInfoByStep(nextStep);
   };
 
@@ -122,6 +125,7 @@ const Onboarding = observer(() => {
       mixpanel.track(mixpanelEvents.ONBOARDING, {
         [mixapanelProps.ONBOARDING_VALUE]: `close${actualStep}`,
       });
+      setActualStep(actualStepInfo?.data.totalSteps);
       getInfoByStep(actualStepInfo?.data.totalSteps);
     } else {
       
@@ -202,9 +206,25 @@ const Onboarding = observer(() => {
     }
   };
 
+  const mixpanelEventByStep = () => {
+    switch (actualStep) {
+      case 1:
+        return 'start1';
+      case 5:
+        return 'buy5';
+      case 6:
+        return 'sell6';
+      case 7:
+        return 'withdraw7';
+      default:
+        return `next${actualStep}`;
+    }
+  };
+
   const getActualWidth = useCallback(() => {
     return wrapperRef.current?.offsetWidth || 375;
   }, [wrapperRef]);
+
 
   useEffect(() => {
     const storageCheck = localStorage.getItem(LOCAL_STORAGE_SKIPPED_ONBOARDING);
@@ -223,9 +243,6 @@ const Onboarding = observer(() => {
 
   useEffect(() => {
     let cleanupFunction = false;
-    mixpanel.track(mixpanelEvents.ONBOARDING, {
-      [mixapanelProps.ONBOARDING_VALUE]: 'start1',
-    });
     const getInfoFirstStep = async () => {
       try {
         const response = await API.getOnBoardingInfoByStep(
