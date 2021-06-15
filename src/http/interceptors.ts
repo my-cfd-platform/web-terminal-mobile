@@ -61,17 +61,6 @@ const injectInerceptors = (mainAppStore: MainAppStore) => {
     },
 
     async function (error) {
-      if (error.response?.config.url.includes('Debug')) {
-        return false;
-      }
-      if (!error.response?.status) {
-        mainAppStore.rootStore.badRequestPopupStore.setRecconect();
-        setTimeout(() => {
-          axios.request(error.config);
-          mainAppStore.rootStore.badRequestPopupStore.stopRecconect();
-        }, +mainAppStore.connectTimeOut);
-      }
-
       if (mainAppStore.isAuthorized && error.response?.status !== 401) {
         const jsonLogObject = {
           error: JSON.stringify(error),
@@ -84,6 +73,16 @@ const injectInerceptors = (mainAppStore: MainAppStore) => {
           jsonLogObject: JSON.stringify(jsonLogObject)
         };
         API.postDebug(params, API_STRING);
+      }
+      if (error.response?.config.url.includes('Debug')) {
+        return false;
+      }
+      if (!error.response?.status) {
+        mainAppStore.rootStore.badRequestPopupStore.setRecconect();
+        setTimeout(() => {
+          axios.request(error.config);
+          mainAppStore.rootStore.badRequestPopupStore.stopRecconect();
+        }, +mainAppStore.connectTimeOut);
       }
 
       const originalRequest = error.config;
