@@ -124,6 +124,7 @@ const NotificationWrapper = styled(FlexContainer)<{
 }>`
   width: 100%;
   max-width: 400px;
+  z-index: 9999;
   animation: ${(props) =>
       props.show ? translateAnimationIn : translateAnimationOut}
     0.5s ease;
