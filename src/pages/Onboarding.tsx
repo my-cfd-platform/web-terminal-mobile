@@ -252,9 +252,6 @@ const Onboarding = observer(() => {
     } else {
       // init OB
       callback();
-      mixpanel.track(mixpanelEvents.ONBOARDING, {
-        [mixapanelProps.ONBOARDING_VALUE]: 'start1',
-      });
       //
     }
   };

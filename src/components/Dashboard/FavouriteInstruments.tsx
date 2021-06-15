@@ -28,7 +28,7 @@ const FavouriteInstruments = observer(() => {
     );
     try {
       const response = await API.postFavoriteInstrumets({
-        accountId: mainAppStore.activeAccount!.id,
+        accountId: mainAppStore.activeAccount?.id || mainAppStore!.activeAccountId,
         type: mainAppStore.activeAccount!.isLive
           ? AccountTypeEnum.Live
           : AccountTypeEnum.Demo,

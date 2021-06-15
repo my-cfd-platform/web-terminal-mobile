@@ -170,7 +170,8 @@ const AuthorizedContainer: FC = observer(({ children }) => {
       mainAppStore.isOnboarding &&
       !mainAppStore.isDemoRealPopup &&
       !mainAppStore.isVerification &&
-      !mainAppStore.isPromoAccount
+      !mainAppStore.isPromoAccount &&
+      !waitingData
     ) {
       push(Page.ONBOARDING);
     }
@@ -178,6 +179,8 @@ const AuthorizedContainer: FC = observer(({ children }) => {
     mainAppStore.isDemoRealPopup,
     mainAppStore.isOnboarding,
     mainAppStore.isVerification,
+    mainAppStore.isPromoAccount,
+    waitingData
   ]);
 
   useEffect(() => {
