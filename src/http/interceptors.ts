@@ -9,6 +9,7 @@ import { getProcessId } from '../helpers/getProcessId';
 import API from '../helpers/API';
 import { getCircularReplacer } from '../helpers/getCircularReplacer';
 import { getStatesSnapshot } from '../helpers/getStatesSnapshot';
+import API_LIST from '../helpers/apiList';
 
 const injectInerceptors = (mainAppStore: MainAppStore) => {
   // for multiple requests
@@ -61,6 +62,9 @@ const injectInerceptors = (mainAppStore: MainAppStore) => {
     },
 
     async function (error) {
+      if (error.response?.config?.url.includes(API_LIST.DEBUG.POST)) {
+        return await Promise.reject(error);
+      }
       if (mainAppStore.isAuthorized && error.response?.status !== 401) {
         const jsonLogObject = {
           error: JSON.stringify(error),
@@ -73,9 +77,6 @@ const injectInerceptors = (mainAppStore: MainAppStore) => {
           jsonLogObject: JSON.stringify(jsonLogObject)
         };
         API.postDebug(params, API_STRING);
-      }
-      if (error.response?.config.url.includes('Debug')) {
-        return false;
       }
       if (!error.response?.status) {
         mainAppStore.rootStore.badRequestPopupStore.setRecconect();
