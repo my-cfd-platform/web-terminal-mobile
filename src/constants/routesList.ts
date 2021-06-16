@@ -90,13 +90,6 @@ const routesList = [
     layoutType: RouteLayoutType.Authorized,
   },
   {
-    component: AccountsPage,
-    path: Page.ACCOUNTS_SWITCH,
-    exact: true,
-    strict: true,
-    layoutType: RouteLayoutType.Authorized,
-  },
-  {
     component: Markets,
     path: Page.MARKETS,
     exact: true,

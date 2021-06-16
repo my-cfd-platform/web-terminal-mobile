@@ -1,7 +1,7 @@
 import React, { FC } from 'react';
 import routesList, { RouteLayoutType } from '../constants/routesList';
 import RouteWrapper from '../components/RouteWrapper';
-import { useLocation, matchPath, Switch } from 'react-router-dom';
+import { useLocation, matchPath, Switch, useHistory } from 'react-router-dom';
 import { FlexContainer } from '../styles/FlexContainer';
 import { useStores } from '../hooks/useStores';
 import LoaderFullscreen from '../components/LoaderFullscreen';
@@ -9,9 +9,11 @@ import { Observer } from 'mobx-react-lite';
 import AuthorizedContainer from '../containers/AuthorizedContainer';
 import SignFlowLayout from '../components/SignFlowLayout';
 import NetworkErrorPopup from '../components/NetworkErrorPopup';
+import Page from '../constants/Pages';
 
 const RoutingLayout: FC = () => {
   const location = useLocation();
+  const { push } = useHistory();
   const { mainAppStore, serverErrorPopupStore } = useStores();
 
   const allRoutes = routesList.map((route) => (
@@ -26,6 +28,8 @@ const RoutingLayout: FC = () => {
 
   if (currentRoute) {
     layoutType = currentRoute.layoutType;
+  } else {
+    push(Page.DASHBOARD)
   }
 
   switch (layoutType) {

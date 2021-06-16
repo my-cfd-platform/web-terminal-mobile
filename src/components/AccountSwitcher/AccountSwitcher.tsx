@@ -20,7 +20,7 @@ import { FULL_VH } from '../../constants/global';
 interface IAccountSwitcherProps {
   show: boolean;
 }
-const AccountSwitcher = observer(({ show }: IAccountSwitcherProps) => {
+const AccountSwitcher = ({ show }: IAccountSwitcherProps) => {
   const {
     mainAppStore,
     notificationStore,
@@ -90,32 +90,28 @@ const AccountSwitcher = observer(({ show }: IAccountSwitcherProps) => {
           onAnimationEnd={onAnimationEnd}
           width="100vw"
         >
-          <Observer>
-            {() => (
-              <OwlCarousel
-                className="owl-theme"
-                items={1}
-                stagePadding={44}
-                margin={16}
-                nav={true}
-              >
-                {mainAppStore.sortedAccounts.map((acc) => (
-                  <AccountSwitchItem
-                    className="item"
-                    key={acc.id}
-                    onSwitch={handleSwitch}
-                    account={acc}
-                    isActive={mainAppStore.activeAccountId === acc.id}
-                  />
-                ))}
-              </OwlCarousel>
-            )}
-          </Observer>
+          <OwlCarousel
+            className="owl-theme"
+            items={1}
+            stagePadding={44}
+            margin={16}
+            nav={true}
+          >
+            {mainAppStore.sortedAccounts.map((acc) => (
+              <AccountSwitchItem
+                className="item"
+                key={acc.id}
+                onSwitch={handleSwitch}
+                account={acc}
+                isActive={mainAppStore.activeAccountId === acc.id}
+              />
+            ))}
+          </OwlCarousel>
         </AccountSlider>
       </Wrapper>
     </Modal>
   );
-});
+};
 
 export default AccountSwitcher;
 
