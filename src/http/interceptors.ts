@@ -66,14 +66,20 @@ const injectInerceptors = (mainAppStore: MainAppStore) => {
         return await Promise.reject(error);
       }
       if (mainAppStore.isAuthorized && error.response?.status !== 401) {
+        const objectToSend = {
+          message: error.message,
+          name: error.name,
+          stack: error.stack,
+          status: error.response?.status
+        };
         const jsonLogObject = {
-          error: JSON.stringify(error),
+          error: JSON.stringify(objectToSend),
           snapShot: JSON.stringify(getStatesSnapshot(mainAppStore), getCircularReplacer())
         };
         const params: DebugTypes = {
           level: debugLevel.TRANSPORT,
           processId: getProcessId(),
-          message: error.response?.statusText || 'unknown error',
+          message: error.response?.statusText || error?.message || 'unknown error',
           jsonLogObject: JSON.stringify(jsonLogObject)
         };
         API.postDebug(params, API_STRING);

@@ -296,8 +296,13 @@ export class MainAppStore implements MainAppStoreProps {
       }
 
       if (this.isAuthorized) {
+        const objectToSend = {
+          message: error?.message,
+          name: error?.name,
+          stack: error?.stack,
+        };
         const jsonLogObject = {
-          error: JSON.stringify(error),
+          error: JSON.stringify(objectToSend),
           snapShot: JSON.stringify(getStatesSnapshot(this), getCircularReplacer())
         };
         const params: DebugTypes = {

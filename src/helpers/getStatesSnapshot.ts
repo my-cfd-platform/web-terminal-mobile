@@ -1,7 +1,6 @@
 export const getStatesSnapshot = (mainAppStore: any) => {
     const allStates = {
         mainAppStore: {
-            initModel: mainAppStore.initModel,
             accounts: mainAppStore.accounts,
             profileStatus: mainAppStore.profileStatus,
         },
