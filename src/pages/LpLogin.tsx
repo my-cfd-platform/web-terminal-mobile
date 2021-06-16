@@ -22,6 +22,7 @@ const LpLogin = observer(() => {
 
   useEffect(() => {
     async function fetchLpLogin() {
+      mainAppStore.signOut();
       try {
         const response = await mainAppStore.signInLpLogin({
           token: token || '',
@@ -48,6 +49,7 @@ const LpLogin = observer(() => {
         push(Page.SIGN_IN);
       }
     }
+    
     fetchLpLogin();
     if (lang) {
       i18n.changeLanguage(lang);
