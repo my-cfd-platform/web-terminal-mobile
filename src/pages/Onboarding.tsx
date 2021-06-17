@@ -241,9 +241,6 @@ const Onboarding = observer(() => {
     }
   }, []);
 
-  
-
-
   const isOnboardingAvailable = async (callback: any) => {
     //
     const isAvailable = await mainAppStore.checkOnboardingShow();
@@ -251,6 +248,9 @@ const Onboarding = observer(() => {
       push(Page.DASHBOARD);
     } else {
       // init OB
+      mixpanel.track(mixpanelEvents.ONBOARDING, {
+        [mixapanelProps.ONBOARDING_VALUE]: 'start1',
+      });
       callback();
       //
     }

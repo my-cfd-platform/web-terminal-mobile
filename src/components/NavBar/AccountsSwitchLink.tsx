@@ -32,7 +32,7 @@ const AccountsSwitchLink = observer(() => {
 
   const handleOpenAccounts = () => () => {
     mainAppStore.openAccountSwitcher();
-  }
+  };
 
   useEffect(() => {
     let cleanupFunction = false;
@@ -51,12 +51,17 @@ const AccountsSwitchLink = observer(() => {
           setBalance(newBalance);
         }
       }
-      return () => {
-        setClosedComponent(true);
-        cleanupFunction = true;
-      };
     }
+    return () => {
+      cleanupFunction = true;
+    };
   }, [mainAppStore.activeAccountId, mainAppStore.accounts]);
+
+  useEffect(() => {
+    return () => {
+      setClosedComponent(true);
+    };
+  }, []);
 
   return (
     <AccountSwitch onClick={handleOpenAccounts()}>
