@@ -2,7 +2,7 @@ import { useStores } from './useStores';
 import { push } from "mixpanel-browser";
 import { useHistory } from 'react-router-dom';
 import { DebugTypes } from '../types/DebugTypes';
-import debugLevel from '../constants/debugConstants';
+import { debugLevel } from '../constants/debugConstants';
 import { getProcessId } from '../helpers/getProcessId';
 import { getCircularReplacer } from '../helpers/getCircularReplacer';
 import API from '../helpers/API';

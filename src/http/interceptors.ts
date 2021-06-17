@@ -4,7 +4,10 @@ import apiResponseCodeMessages from '../constants/apiResponseCodeMessages';
 import { MainAppStore } from '../store/MainAppStore';
 import RequestHeaders from '../constants/headers';
 import { DebugTypes } from '../types/DebugTypes';
-import debugLevel from '../constants/debugConstants';
+import {
+  debugLevel,
+  doNotSendRequest
+} from '../constants/debugConstants';
 import { getProcessId } from '../helpers/getProcessId';
 import API from '../helpers/API';
 import { getCircularReplacer } from '../helpers/getCircularReplacer';
@@ -65,7 +68,7 @@ const injectInerceptors = (mainAppStore: MainAppStore) => {
       if (error.response?.config?.url.includes(API_LIST.DEBUG.POST)) {
         return await Promise.reject(error);
       }
-      if (mainAppStore.isAuthorized && error.response?.status !== 401) {
+      if (mainAppStore.isAuthorized && !doNotSendRequest.includes(error.response?.status)) {
         const objectToSend = {
           message: error.message,
           name: error.name,

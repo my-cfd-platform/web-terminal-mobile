@@ -44,7 +44,7 @@ import { PendingOrderWSDTO } from '../types/PendingOrdersTypes';
 import { BidAskModelWSDTO } from '../types/BidAsk';
 import accountVerifySteps from '../constants/accountVerifySteps';
 import { BrandEnum } from '../constants/brandingLinksTranslate';
-import debugLevel from '../constants/debugConstants';
+import { debugLevel } from '../constants/debugConstants';
 import { getProcessId } from '../helpers/getProcessId';
 import { DebugTypes } from '../types/DebugTypes';
 import { getCircularReplacer } from '../helpers/getCircularReplacer';
