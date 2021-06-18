@@ -189,7 +189,7 @@ export class MainAppStore implements MainAppStoreProps {
         this.initModel.tradingUrl &&
         config.url &&
         !config.url.includes('auth/')
-        // && !config.url.includes('misc')
+        && !config.url.includes('misc')
       ) {
         if (config.url.includes('://')) {
           const arrayOfSubpath = config.url.split('://')[1].split('/');
