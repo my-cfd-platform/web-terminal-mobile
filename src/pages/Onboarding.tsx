@@ -78,6 +78,11 @@ const Onboarding = observer(() => {
         setActualStepInfo(response);
         setActualStep(step);
         setLoading(false);
+        if (step === 1) {
+          mixpanel.track(mixpanelEvents.ONBOARDING, {
+            [mixapanelProps.ONBOARDING_VALUE]: 'start1',
+          });
+        }
       } else {
         mainAppStore.isOnboarding = false;
         mainAppStore.isDemoRealPopup = true;
@@ -248,9 +253,6 @@ const Onboarding = observer(() => {
       push(Page.DASHBOARD);
     } else {
       // init OB
-      mixpanel.track(mixpanelEvents.ONBOARDING, {
-        [mixapanelProps.ONBOARDING_VALUE]: 'start1',
-      });
       callback();
       //
     }
