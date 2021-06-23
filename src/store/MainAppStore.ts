@@ -517,6 +517,7 @@ export class MainAppStore implements MainAppStoreProps {
       const showOnboarding = onBoardingKey === 'true';
       if (showOnboarding) {
         this.isOnboarding = true;
+        this.isDemoRealPopup = false;
       }
       return showOnboarding;
       //
