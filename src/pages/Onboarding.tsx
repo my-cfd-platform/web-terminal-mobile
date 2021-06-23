@@ -111,21 +111,11 @@ const Onboarding = observer(() => {
       actualStepInfo?.data.totalSteps &&
       actualStepInfo?.data.totalSteps !== actualStep
     ) {
-      const storageCheck = localStorage.getItem(
-        LOCAL_STORAGE_SKIPPED_ONBOARDING
-      );
       const neededId = mainAppStore.accounts?.find((account) => !account.isLive)
         ?.id;
-      const alreadySkipped =
-        storageCheck !== null ? JSON.parse(storageCheck) : [];
-      alreadySkipped.push(neededId);
       mainAppStore.activeAccountId = neededId || '';
       mainAppStore.activeAccount = mainAppStore.accounts?.find(
         (account) => !account.isLive
-      );
-      localStorage.setItem(
-        LOCAL_STORAGE_SKIPPED_ONBOARDING,
-        JSON.stringify(alreadySkipped)
       );
       mixpanel.track(mixpanelEvents.ONBOARDING, {
         [mixapanelProps.ONBOARDING_VALUE]: `close${actualStep}`,
@@ -133,7 +123,6 @@ const Onboarding = observer(() => {
       setActualStep(actualStepInfo?.data.totalSteps);
       getInfoByStep(actualStepInfo?.data.totalSteps);
     } else {
-      
       mixpanel.track(mixpanelEvents.ONBOARDING, {
         [mixapanelProps.ONBOARDING_VALUE]: `close${actualStep}`,
       });
@@ -144,6 +133,18 @@ const Onboarding = observer(() => {
       if (acc) {
         mainAppStore.setActiveAccount(acc);
       }
+      const storageCheck = localStorage.getItem(
+        LOCAL_STORAGE_SKIPPED_ONBOARDING
+      );
+      const neededId = mainAppStore.accounts?.find((account) => !account.isLive)
+        ?.id;
+      const alreadySkipped =
+        storageCheck !== null ? JSON.parse(storageCheck) : [];
+      alreadySkipped.push(neededId);
+      localStorage.setItem(
+        LOCAL_STORAGE_SKIPPED_ONBOARDING,
+        JSON.stringify(alreadySkipped)
+      );
       push(Page.DASHBOARD);
     }
   };

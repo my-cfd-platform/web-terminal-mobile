@@ -36,31 +36,33 @@ const MainApp: FC = () => {
   }, [mainAppStore.promo, mainAppStore.isPromoAccount, mainAppStore.isInitLoading]);
 
   const fetchFavoriteInstruments = useCallback(async () => {
-    const accountType = mainAppStore.activeAccount?.isLive
-      ? AccountTypeEnum.Live
-      : AccountTypeEnum.Demo;
-    mainAppStore.setLoading(true);
-    try {
-      const response = await API.getFavoriteInstrumets({
-        type: accountType,
-        accountId: mainAppStore.activeAccountId,
-      });
-      instrumentsStore.setActiveInstrumentsIds(response.reverse());
+    if (mainAppStore.activeAccount) {
+      const accountType = mainAppStore.activeAccount?.isLive
+        ? AccountTypeEnum.Live
+        : AccountTypeEnum.Demo;
+      mainAppStore.setLoading(true);
+      try {
+        const response = await API.getFavoriteInstrumets({
+          type: accountType,
+          accountId: mainAppStore.activeAccountId,
+        });
+        instrumentsStore.setActiveInstrumentsIds(response.reverse());
 
-      // https://monfex.atlassian.net/browse/WEBT-475
-      // if app is reinitializing, we should wait widget first
+        // https://monfex.atlassian.net/browse/WEBT-475
+        // if app is reinitializing, we should wait widget first
 
-      if (!response.length) {
-        throw new Error(
-          t(apiResponseCodeMessages[OperationApiResponseCodes.TechnicalError])
-        );
+        if (!response.length) {
+          throw new Error(
+            t(apiResponseCodeMessages[OperationApiResponseCodes.TechnicalError])
+          );
+        }
+        await instrumentsStore.switchInstrument(response[response.length - 1]);
+        mainAppStore.setLoading(false);
+      } catch (error) {
+        mainAppStore.setLoading(false);
+        badRequestPopupStore.openModal();
+        badRequestPopupStore.setMessage(error);
       }
-      await instrumentsStore.switchInstrument(response[response.length - 1]);
-      mainAppStore.setLoading(false);
-    } catch (error) {
-      mainAppStore.setLoading(false);
-      badRequestPopupStore.openModal();
-      badRequestPopupStore.setMessage(error);
     }
   }, [
     instrumentsStore.activeInstrument,

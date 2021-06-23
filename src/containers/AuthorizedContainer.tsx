@@ -119,11 +119,15 @@ const AuthorizedContainer: FC = observer(({ children }) => {
               push(Page.PHONE_VERIFICATION);
             }
           }
-          setWaitingData(false);
+          setTimeout(() => {
+            setWaitingData(false);
+          }, 1000);
         }
       } catch (error) {
         if (!cleanupFunction) {
-          setWaitingData(false);
+          setTimeout(() => {
+            setWaitingData(false);
+          }, 1000);
         }
       }
     }
@@ -211,9 +215,13 @@ const AuthorizedContainer: FC = observer(({ children }) => {
       </Observer>
       <Observer>
         {() => (
-          <LoaderFullscreen
-            isLoading={mainAppStore.isLoading || waitingData}
-          ></LoaderFullscreen>
+          <>
+            {console.log('mainAppStore.isLoading', mainAppStore.isLoading)}
+            {console.log('waitingData', waitingData)}
+            <LoaderFullscreen
+              isLoading={mainAppStore.isLoading || waitingData}
+            ></LoaderFullscreen>
+          </>
         )}
       </Observer>
       <Observer>
