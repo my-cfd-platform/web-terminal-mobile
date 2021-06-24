@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useParams, useHistory } from 'react-router-dom';
+import { useParams, useHistory, useLocation } from 'react-router-dom';
 import { useStores } from '../hooks/useStores';
 import { OperationApiResponseCodes } from '../enums/OperationApiResponseCodes';
 import Page from '../constants/Pages';
@@ -7,6 +7,7 @@ import { useTranslation } from 'react-i18next';
 import API from '../helpers/API';
 import { getProcessId } from '../helpers/getProcessId';
 import { observer } from 'mobx-react-lite';
+import { CountriesEnum } from '../enums/CountriesEnum';
 
 interface QueryParams {
   lang: string;
@@ -19,6 +20,9 @@ const LpLogin = observer(() => {
   const { push } = useHistory();
   const { mainAppStore, userProfileStore } = useStores();
   const { i18n } = useTranslation();
+  const location = useLocation();
+
+  const pageParams = new URLSearchParams(location.search);
 
   useEffect(() => {
     async function fetchLpLogin() {
@@ -49,11 +53,15 @@ const LpLogin = observer(() => {
         push(Page.SIGN_IN);
       }
     }
-    
+
     fetchLpLogin();
-    if (lang) {
-      i18n.changeLanguage(lang);
-    }
+    const pageLang: CountriesEnum =
+      (pageParams.get('lang')?.toLowerCase() as CountriesEnum) ||
+      CountriesEnum.EN;
+
+    i18n.changeLanguage(pageLang);
+    mainAppStore.setLanguage(pageLang);
+
   }, []);
 
   useEffect(() => {
