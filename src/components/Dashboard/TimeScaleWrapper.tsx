@@ -23,12 +23,6 @@ const TimeScaleWrapper = observer(() => {
         : false;
       if (lastActive) {
         instrumentsStore.switchInstrument(lastActive);
-      } else {
-        instrumentsStore.switchInstrument(
-          instrumentsStore
-            .activeInstruments[instrumentsStore.activeInstruments.length - 1]
-            .instrumentItem.id
-        );
       }
       mainAppStore.setParamsAsset(null);
     }
