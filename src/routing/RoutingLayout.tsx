@@ -1,7 +1,7 @@
 import React, { FC } from 'react';
 import routesList, { RouteLayoutType } from '../constants/routesList';
 import RouteWrapper from '../components/RouteWrapper';
-import { useLocation, matchPath, Switch, useHistory } from 'react-router-dom';
+import { useLocation, matchPath, Switch, useHistory, Redirect } from 'react-router-dom';
 import { FlexContainer } from '../styles/FlexContainer';
 import { useStores } from '../hooks/useStores';
 import LoaderFullscreen from '../components/LoaderFullscreen';
@@ -36,6 +36,7 @@ const RoutingLayout: FC = () => {
     case RouteLayoutType.Authorized:
       return (
         <AuthorizedContainer>
+          {!location.search && <Redirect to={location.pathname.replace(/\/+$/, "")} />}
           <Observer>{() => <Switch>{allRoutes}</Switch>}</Observer>
         </AuthorizedContainer>
       );
@@ -43,6 +44,7 @@ const RoutingLayout: FC = () => {
     case RouteLayoutType.SignFlow:
       return (
         <SignFlowLayout>
+          {!location.search && <Redirect to={location.pathname.replace(/\/+$/, "")} />}
           <Observer>
             {() => (
               <>
@@ -59,6 +61,7 @@ const RoutingLayout: FC = () => {
     default:
       return (
         <FlexContainer height="100%" width="100%">
+          {!location.search && <Redirect to={location.pathname.replace(/\/+$/, "")} />}
           <Observer>
             {() => (
               <>{serverErrorPopupStore.isActive && <NetworkErrorPopup />}</>

@@ -45,6 +45,11 @@ import { PendingOrderWSDTO } from '../types/PendingOrdersTypes';
 import { BidAskModelWSDTO } from '../types/BidAsk';
 import accountVerifySteps from '../constants/accountVerifySteps';
 import { BrandEnum } from '../constants/brandingLinksTranslate';
+import { debugLevel } from '../constants/debugConstants';
+import { getProcessId } from '../helpers/getProcessId';
+import { DebugTypes } from '../types/DebugTypes';
+import { getCircularReplacer } from '../helpers/getCircularReplacer';
+import { getStatesSnapshot } from '../helpers/getStatesSnapshot';
 import { logger } from '../helpers/ConsoleLoggerTool';
 
 interface MainAppStoreProps {
@@ -183,8 +188,8 @@ export class MainAppStore implements MainAppStoreProps {
         IS_LIVE &&
         this.initModel.tradingUrl &&
         config.url &&
-        !config.url.includes('auth/') 
-        // && !config.url.includes('misc')
+        !config.url.includes('auth/')
+        && !config.url.includes('misc')
       ) {
         if (config.url.includes('://')) {
           const arrayOfSubpath = config.url.split('://')[1].split('/');
@@ -313,6 +318,25 @@ export class MainAppStore implements MainAppStoreProps {
           window.location.reload();
           return;
         }
+      }
+
+      if (this.isAuthorized) {
+        const objectToSend = {
+          message: error?.message,
+          name: error?.name,
+          stack: error?.stack,
+        };
+        const jsonLogObject = {
+          error: JSON.stringify(objectToSend),
+          snapShot: JSON.stringify(getStatesSnapshot(this), getCircularReplacer())
+        };
+        const params: DebugTypes = {
+          level: debugLevel.TRANSPORT,
+          processId: getProcessId(),
+          message: error?.message || 'unknown error',
+          jsonLogObject: JSON.stringify(jsonLogObject)
+        };
+        API.postDebug(params, API_STRING);
       }
 
       this.socketError = true;
@@ -493,6 +517,7 @@ export class MainAppStore implements MainAppStoreProps {
       const showOnboarding = onBoardingKey === 'true';
       if (showOnboarding) {
         this.isOnboarding = true;
+        this.isDemoRealPopup = false;
       }
       return showOnboarding;
       //

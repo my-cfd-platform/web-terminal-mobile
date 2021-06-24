@@ -58,6 +58,7 @@ import {
 import { ListForEN } from '../constants/listOfLanguages';
 import { PendingOrderResponseDTO } from '../types/PendingOrdersTypes';
 import { BrandEnum } from '../constants/brandingLinksTranslate';
+import { DebugResponse, DebugTypes } from '../types/DebugTypes';
 import { OnBoardingInfo } from '../types/OnBoardingTypes';
 
 class API {
@@ -493,8 +494,17 @@ class API {
   };
 
   getOnBoardingInfoByStep = async (stepNumber: number, deviceType: number, miscUrl: string) => {
+    const needToAdd = ((API_MISC_STRING || miscUrl).includes('/misc') || IS_LOCAL) ? '' : '/misc';
     const response = await axios.get<OnBoardingInfo>(
-      `${API_MISC_STRING || miscUrl}${API_LIST.ONBOARDING.STEPS}/${stepNumber}?deviceTypeId=${deviceType}`
+      `${API_MISC_STRING || miscUrl}${needToAdd}${API_LIST.ONBOARDING.STEPS}/${stepNumber}?deviceTypeId=${deviceType}`
+    );
+    return response.data;
+  };
+
+  postDebug = async (params: DebugTypes, apiUrl: string) => {
+    const response = await axios.post<DebugResponse>(
+      `${API_STRING || apiUrl}${API_LIST.DEBUG.POST}`,
+      params
     );
     return response.data;
   };

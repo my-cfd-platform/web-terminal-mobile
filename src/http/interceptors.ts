@@ -4,6 +4,15 @@ import apiResponseCodeMessages from '../constants/apiResponseCodeMessages';
 import { MainAppStore } from '../store/MainAppStore';
 import RequestHeaders from '../constants/headers';
 import API_LIST from '../helpers/apiList';
+import { DebugTypes } from '../types/DebugTypes';
+import {
+  debugLevel,
+  doNotSendRequest
+} from '../constants/debugConstants';
+import { getProcessId } from '../helpers/getProcessId';
+import API from '../helpers/API';
+import { getCircularReplacer } from '../helpers/getCircularReplacer';
+import { getStatesSnapshot } from '../helpers/getStatesSnapshot';
 
 const injectInerceptors = (mainAppStore: MainAppStore) => {
   // for multiple requests
@@ -56,6 +65,28 @@ const injectInerceptors = (mainAppStore: MainAppStore) => {
     },
 
     async function (error) {
+      if (error.response?.config?.url.includes(API_LIST.DEBUG.POST)) {
+        return await Promise.reject(error);
+      }
+      if (mainAppStore.isAuthorized && !doNotSendRequest.includes(error.response?.status)) {
+        const objectToSend = {
+          message: error.message,
+          name: error.name,
+          stack: error.stack,
+          status: error.response?.status
+        };
+        const jsonLogObject = {
+          error: JSON.stringify(objectToSend),
+          snapShot: JSON.stringify(getStatesSnapshot(mainAppStore), getCircularReplacer())
+        };
+        const params: DebugTypes = {
+          level: debugLevel.TRANSPORT,
+          processId: getProcessId(),
+          message: error.response?.statusText || error?.message || 'unknown error',
+          jsonLogObject: JSON.stringify(jsonLogObject)
+        };
+        API.postDebug(params, API_STRING);
+      }
       if (!error.response?.status) {
         mainAppStore.rootStore.badRequestPopupStore.setRecconect();
         setTimeout(() => {

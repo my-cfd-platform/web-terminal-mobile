@@ -1,5 +1,6 @@
 const pagesWithoutReload = [
-  '/account-verification'
+  '/account-verification',
+  '/onboarding'
 ];
 
 export default pagesWithoutReload;
