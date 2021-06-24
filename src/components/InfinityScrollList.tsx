@@ -32,7 +32,7 @@ const InfinityScrollList: FC<Props> = ({
     const options = {
       root: null, // window by default
       rootMargin: '0px',
-      threshold: 0.25,
+      threshold: 0,
     };
 
     const observer = new IntersectionObserver(loadMore, options);
@@ -50,7 +50,7 @@ const InfinityScrollList: FC<Props> = ({
   return (
     <>
       {children}
-      <FlexContainer ref={loaderRef}></FlexContainer>
+      <FlexContainer minHeight={'70px'} ref={loaderRef}></FlexContainer>
     </>
   );
 };

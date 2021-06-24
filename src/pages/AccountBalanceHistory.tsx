@@ -101,7 +101,7 @@ const AccountBalanceHistory = observer(() => {
         >
           {balanceHistoryReport.balanceHistory.map((item) => (
             <BalanceHistoryItem
-              key={item.createdAt}
+              key={`${item.createdAt}_${item.description.trim()}`}
               item={item}
               isActive={activeItemId === item.createdAt}
               handleClick={handleClick}
