@@ -33,6 +33,7 @@ const mixapanelProps = {
   DEMO_REAL_FUNDS: 'DemoRealFunds',
   NUMBER_OF_POSITIONS: 'Number of positions',
   ONBOARDING_VALUE: 'Onboarding1',
+  REQUEST_URL: 'Request url',
 };
 
 Object.freeze(mixapanelProps);

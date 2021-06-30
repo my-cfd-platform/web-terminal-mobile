@@ -5,14 +5,21 @@ import { MainAppStore } from '../store/MainAppStore';
 import RequestHeaders from '../constants/headers';
 import API_LIST from '../helpers/apiList';
 import { DebugTypes } from '../types/DebugTypes';
-import {
-  debugLevel,
-  doNotSendRequest
-} from '../constants/debugConstants';
+import { debugLevel, doNotSendRequest } from '../constants/debugConstants';
 import { getProcessId } from '../helpers/getProcessId';
 import API from '../helpers/API';
 import { getCircularReplacer } from '../helpers/getCircularReplacer';
 import { getStatesSnapshot } from '../helpers/getStatesSnapshot';
+import requestOptions from '../constants/requestOptions';
+import mixpanelEvents from '../constants/mixpanelEvents';
+import mixapanelProps from '../constants/mixpanelProps';
+import mixpanel from 'mixpanel-browser';
+
+const repeatRequest = (error: any, mainAppStore: MainAppStore) => {
+  setTimeout(() => {
+    axios.request(error.config);
+  }, +mainAppStore.connectTimeOut);
+};
 
 const injectInerceptors = (mainAppStore: MainAppStore) => {
   // for multiple requests
@@ -65,55 +72,92 @@ const injectInerceptors = (mainAppStore: MainAppStore) => {
     },
 
     async function (error) {
-      if (error.response?.config?.url.includes(API_LIST.DEBUG.POST)) {
+      if (
+        error.response?.config?.url.includes(API_LIST.DEBUG.POST) ||
+        error.response?.config?.url.includes(API_LIST.ONBOARDING.STEPS)
+      ) {
         return await Promise.reject(error);
       }
-      if (mainAppStore.isAuthorized && !doNotSendRequest.includes(error.response?.status)) {
+
+      // logger
+      if (
+        mainAppStore.isAuthorized &&
+        !doNotSendRequest.includes(error.response?.status)
+      ) {
         const objectToSend = {
           message: error.message,
           name: error.name,
           stack: error.stack,
-          status: error.response?.status
+          status: error.response?.status,
         };
         const jsonLogObject = {
           error: JSON.stringify(objectToSend),
-          snapShot: JSON.stringify(getStatesSnapshot(mainAppStore), getCircularReplacer())
+          snapShot: JSON.stringify(
+            getStatesSnapshot(mainAppStore),
+            getCircularReplacer()
+          ),
         };
         const params: DebugTypes = {
           level: debugLevel.TRANSPORT,
           processId: getProcessId(),
-          message: error.response?.statusText || error?.message || 'unknown error',
-          jsonLogObject: JSON.stringify(jsonLogObject)
+          message:
+            error.response?.statusText || error?.message || 'unknown error',
+          jsonLogObject: JSON.stringify(jsonLogObject),
         };
         API.postDebug(params, API_STRING);
       }
-      if (!error.response?.status) {
-        mainAppStore.rootStore.badRequestPopupStore.setRecconect();
-        setTimeout(() => {
-          axios.request(error.config);
-          mainAppStore.rootStore.badRequestPopupStore.stopRecconect();
-        }, +mainAppStore.connectTimeOut);
+      // --- logger
+
+      let isTimeOutError = error.message === requestOptions.TIMEOUT;
+      let isReconnectedRequest =
+        JSON.parse(error.config.data).initBy === requestOptions.BACKGROUND;
+
+      const urlString = new URL(error.response?.config.url).href;
+
+      // mixpanel
+      if (isTimeOutError) {
+        mixpanel.track(mixpanelEvents.TIMEOUT, {
+          [mixapanelProps.REQUEST_URL]: urlString,
+        });
+      }
+
+      if (error.response?.status) {
+        if (error.response?.status.toString().includes('50')) {
+          mixpanel.track(mixpanelEvents.SERVER_ERROR_50X, {
+            [mixapanelProps.REQUEST_URL]: urlString,
+            [mixapanelProps.ERROR_TEXT]: error.response?.status,
+          });
+        }
+        if (error.response?.status.toString().includes('40')) {
+          mixpanel.track(mixpanelEvents.SERVER_ERROR_40X, {
+            [mixapanelProps.REQUEST_URL]: urlString,
+            [mixapanelProps.ERROR_TEXT]: error.response?.status,
+          });
+        }
+      }
+      // --- mixpanel
+
+      if (isTimeOutError && !isReconnectedRequest) {
+        mainAppStore.rootStore.notificationStore.setNotification(
+          'Timeout connection error'
+        );
+        mainAppStore.rootStore.notificationStore.isSuccessfull = false;
+        mainAppStore.rootStore.notificationStore.openNotification();
+      }
+
+      if (isTimeOutError && isReconnectedRequest) {
+        repeatRequest(error, mainAppStore);
+      }
+
+      if (!error.response?.status && !isTimeOutError && !isReconnectedRequest) {
+        mainAppStore.rootStore.notificationStore.setNotification(error.message);
+        mainAppStore.rootStore.notificationStore.isSuccessfull = false;
+        mainAppStore.rootStore.notificationStore.openNotification();
       }
 
       const originalRequest = error.config;
 
-      if (error.response?.config?.url.includes(API_LIST.ONBOARDING.STEPS)) {
-        return Promise.reject(error);
-      }
-
       switch (error.response?.status) {
-        case 400:
-        case 500:
-          function requestAgain() {
-            axios.request(error.config);
-            if (!mainAppStore.rootStore.serverErrorPopupStore.isActive) {
-              mainAppStore.rootStore.serverErrorPopupStore.openModal();
-            }
-          }
-          setTimeout(requestAgain, +mainAppStore.connectTimeOut);
-          mainAppStore.isLoading = false;
-          break;
-
         case 401:
           if (mainAppStore.refreshToken && !originalRequest._retry) {
             if (isRefreshing) {
@@ -164,6 +208,19 @@ const injectInerceptors = (mainAppStore: MainAppStore) => {
             prom.reject();
           });
           mainAppStore.signOut();
+          break;
+        }
+
+        case 500: {
+          if (isReconnectedRequest) {
+            repeatRequest(error, mainAppStore);
+            break;
+          }
+
+          mainAppStore.rootStore.badRequestPopupStore.setMessage(
+            error.response?.statusText || apiResponseCodeMessages[OperationApiResponseCodes.TechnicalError]
+          );
+          mainAppStore.rootStore.badRequestPopupStore.openModal();
           break;
         }
 
