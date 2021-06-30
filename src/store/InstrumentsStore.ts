@@ -196,14 +196,16 @@ export class InstrumentsStore implements ContextProps {
 
   // TODO: refactor, too heavy
   @action
-  switchInstrument = async (instrumentId: string) => {
+  switchInstrument = async (instrumentId: string, addToFavorites: boolean = true) => {
     const newActiveInstrument = this.instruments.find(
       (item) => item.instrumentItem.id === instrumentId
     );
 
     if (newActiveInstrument) {
       try {
-        await this.addActiveInstrumentId(instrumentId);
+        if (addToFavorites) {
+          await this.addActiveInstrumentId(instrumentId);
+        }
         this.activeInstrument = newActiveInstrument;
         if (this.rootStore.tradingViewStore.tradingWidget) {
           this.rootStore.tradingViewStore.tradingWidget

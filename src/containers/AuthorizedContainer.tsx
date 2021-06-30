@@ -216,7 +216,7 @@ const AuthorizedContainer: FC = observer(({ children }) => {
       <Observer>
         {() => (
           <LoaderFullscreen
-            isLoading={mainAppStore.isLoading || waitingData}
+            isLoading={mainAppStore.isLoading || waitingData || mainAppStore.dataLoading}
           ></LoaderFullscreen>
         )}
       </Observer>

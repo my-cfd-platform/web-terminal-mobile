@@ -75,6 +75,10 @@ interface MainAppStoreProps {
   isPromoAccount: boolean;
   promo: string;
   showAccountSwitcher: boolean;
+
+  connectTimeOut: number;
+
+  dataLoading: boolean;
 }
 
 // TODO: think about application initialization
@@ -123,7 +127,6 @@ export class MainAppStore implements MainAppStoreProps {
   @observable refreshToken = '';
   rootStore: RootStore;
   signalRReconnectTimeOut = '';
-  connectTimeOut = '';
   @observable socketError = false;
   @observable activeAccountId: string = '';
   @observable connectionSignalRTimer: NodeJS.Timeout | null = null;
@@ -135,7 +138,7 @@ export class MainAppStore implements MainAppStoreProps {
   @observable promo = '';
   @observable showAccountSwitcher: boolean = false;
   @observable onboardingJustClosed: boolean = false;
-
+  @observable connectTimeOut = 5000;
   websocketConnectionTries = 0;
 
   paramsAsset: string | null = null;
@@ -150,6 +153,8 @@ export class MainAppStore implements MainAppStoreProps {
   paramsSecurity: boolean = false;
   paramsBalanceHistory: boolean = false;
 
+  @observable dataLoading = false;
+
   constructor(rootStore: RootStore) {
     this.rootStore = rootStore;
     this.token = localStorage.getItem(LOCAL_STORAGE_TOKEN_KEY) || '';
@@ -157,7 +162,7 @@ export class MainAppStore implements MainAppStoreProps {
     this.refreshToken =
       localStorage.getItem(LOCAL_STORAGE_REFRESH_TOKEN_KEY) || '';
     Axios.defaults.headers[RequestHeaders.AUTHORIZATION] = this.token;
-
+    Axios.defaults.timeout = this.connectTimeOut || 5000;
     // @ts-ignore
     this.lang =
       localStorage.getItem(LOCAL_STORAGE_LANGUAGE) ||
@@ -336,7 +341,7 @@ export class MainAppStore implements MainAppStoreProps {
           message: error?.message || 'unknown error',
           jsonLogObject: JSON.stringify(jsonLogObject)
         };
-        API.postDebug(params, API_STRING);
+        API.postDebug(params);
       }
 
       this.socketError = true;
@@ -601,7 +606,7 @@ export class MainAppStore implements MainAppStoreProps {
       localStorage.setItem(LOCAL_IS_NEW_USER, 'true');
       this.isAuthorized = true;
       this.signalRReconnectTimeOut = response.data.reconnectTimeOut;
-      this.connectTimeOut = response.data.connectionTimeOut;
+      this.connectTimeOut = +response.data.connectionTimeOut;
       this.setTokenHandler(response.data.token);
       this.handleInitConnection(response.data.token);
       this.setRefreshToken(response.data.refreshToken);
@@ -702,6 +707,7 @@ export class MainAppStore implements MainAppStoreProps {
   setTokenHandler = (token: string) => {
     localStorage.setItem(LOCAL_STORAGE_TOKEN_KEY, token);
     Axios.defaults.headers[RequestHeaders.AUTHORIZATION] = token;
+    Axios.defaults.timeout = this.connectTimeOut || 5000;
     this.token = token;
   };
 
@@ -776,6 +782,11 @@ export class MainAppStore implements MainAppStoreProps {
     this.paramsBalanceHistory = params;
   };
 
+  @action 
+  setDataLoading = (on: boolean) => {
+    this.dataLoading = on;
+  }
+
   @computed
   get realAcc() {
     return this.accounts.find((acc) => acc.isLive);
@@ -787,7 +798,6 @@ export class MainAppStore implements MainAppStoreProps {
       return this.accounts.filter((acc) => !acc.isLive);
     }
 
-    console.log(this.activeAccount?.id)
     return this.accounts.reduce(
       (acc, prev) =>
         prev.id === this.activeAccount?.id ? [prev, ...acc] : [...acc, prev],

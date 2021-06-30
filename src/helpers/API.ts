@@ -568,9 +568,9 @@ class API {
     return response.data;
   };
 
-  postDebug = async (params: DebugTypes, apiUrl: string) => {
+  postDebug = async (params: DebugTypes) => {
     const response = await axios.post<DebugResponse>(
-      `${API_STRING || apiUrl}${API_LIST.DEBUG.POST}`,
+      `${API_STRING}${API_LIST.DEBUG.POST}`,
       params,
       this.backgroundRequestOptions
     );

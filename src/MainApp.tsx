@@ -33,14 +33,20 @@ const MainApp: FC = () => {
       (mainAppStore.promo !== 'facebook' || !mainAppStore.isDemoRealPopup) &&
       !mainAppStore.isInitLoading
     );
-  }, [mainAppStore.promo, mainAppStore.isPromoAccount, mainAppStore.isInitLoading]);
+  }, [
+    mainAppStore.promo,
+    mainAppStore.isPromoAccount,
+    mainAppStore.isInitLoading,
+  ]);
 
   const fetchFavoriteInstruments = useCallback(async () => {
     if (mainAppStore.activeAccount) {
+      mainAppStore.setDataLoading(true);
+      
       const accountType = mainAppStore.activeAccount?.isLive
         ? AccountTypeEnum.Live
         : AccountTypeEnum.Demo;
-      mainAppStore.setLoading(true);
+      
       try {
         const response = await API.getFavoriteInstrumets({
           type: accountType,
@@ -57,11 +63,16 @@ const MainApp: FC = () => {
           );
         }
         await instrumentsStore.switchInstrument(response[response.length - 1]);
-        mainAppStore.setLoading(false);
+        mainAppStore.setDataLoading(false);
       } catch (error) {
-        mainAppStore.setLoading(false);
-        badRequestPopupStore.openModal();
-        badRequestPopupStore.setMessage(error);
+        mainAppStore.setDataLoading(false);
+        instrumentsStore.setActiveInstrumentsIds([
+          instrumentsStore.instruments[0].instrumentItem.id,
+        ]);
+        instrumentsStore.switchInstrument(
+          instrumentsStore.instruments[0].instrumentItem.id,
+          false
+        );
       }
     }
   }, [
@@ -149,7 +160,9 @@ const MainApp: FC = () => {
           <meta
             name="google-play-app"
             content={`app-id=${
-              IS_LOCAL ? 'com.monfex.trade' : mainAppStore.initModel.androidAppId
+              IS_LOCAL
+                ? 'com.monfex.trade'
+                : mainAppStore.initModel.androidAppId
             }`}
           />
         )}
@@ -183,7 +196,9 @@ const MainApp: FC = () => {
                 ignoreIosVersion={true}
                 url={{
                   ios: IS_LOCAL ? 'asd' : mainAppStore.initModel.iosAppLink,
-                  android: IS_LOCAL ? 'asd' : mainAppStore.initModel.androidAppLink,
+                  android: IS_LOCAL
+                    ? 'asd'
+                    : mainAppStore.initModel.androidAppLink,
                 }}
               />
             )}

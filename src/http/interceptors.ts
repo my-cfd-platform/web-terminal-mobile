@@ -34,7 +34,6 @@ const injectInerceptors = (mainAppStore: MainAppStore) => {
         prom.resolve(token);
       }
     });
-
     failedQueue = [];
   };
 
@@ -42,16 +41,6 @@ const injectInerceptors = (mainAppStore: MainAppStore) => {
   axios.interceptors.response.use(
     function (config: AxiosResponse) {
       if (config.data.result === OperationApiResponseCodes.TechnicalError) {
-        axios.request(config.config);
-        if (!mainAppStore.rootStore.serverErrorPopupStore.isActive) {
-          mainAppStore.rootStore.serverErrorPopupStore.openModal();
-        }
-        setTimeout(() => {
-          axios.request(config.config);
-          if (!mainAppStore.rootStore.serverErrorPopupStore.isActive) {
-            mainAppStore.rootStore.serverErrorPopupStore.openModal();
-          }
-        }, +mainAppStore.connectTimeOut);
         return Promise.reject(
           apiResponseCodeMessages[OperationApiResponseCodes.TechnicalError]
         );
@@ -61,12 +50,6 @@ const injectInerceptors = (mainAppStore: MainAppStore) => {
         OperationApiResponseCodes.InvalidUserNameOrPassword
       ) {
         mainAppStore.signOut();
-      }
-
-      if (config.data.result === OperationApiResponseCodes.Ok) {
-        if (mainAppStore.rootStore.serverErrorPopupStore.isActive) {
-          mainAppStore.rootStore.serverErrorPopupStore.closeModal();
-        }
       }
       return config;
     },
@@ -104,16 +87,27 @@ const injectInerceptors = (mainAppStore: MainAppStore) => {
             error.response?.statusText || error?.message || 'unknown error',
           jsonLogObject: JSON.stringify(jsonLogObject),
         };
-        API.postDebug(params, API_STRING);
+        API.postDebug(params);
       }
       // --- logger
 
-      let isTimeOutError = error.message === requestOptions.TIMEOUT;
-      let isReconnectedRequest =
+      const isTimeOutError: boolean = error.message === requestOptions.TIMEOUT;
+      const isReconnectedRequest: boolean =
         JSON.parse(error.config.data).initBy === requestOptions.BACKGROUND;
 
-      const urlString = new URL(error.response?.config.url).href;
+      if (isTimeOutError && isReconnectedRequest) {
+        repeatRequest(error, mainAppStore);
+      }
 
+      if (isTimeOutError && !isReconnectedRequest) {
+        mainAppStore.rootStore.notificationStore.setNotification(
+          'Timeout connection error'
+        );
+        mainAppStore.rootStore.notificationStore.isSuccessfull = false;
+        mainAppStore.rootStore.notificationStore.openNotification();
+      }
+
+      const urlString = new URL(error?.config?.url).href;
       // mixpanel
       if (isTimeOutError) {
         mixpanel.track(mixpanelEvents.TIMEOUT, {
@@ -136,18 +130,6 @@ const injectInerceptors = (mainAppStore: MainAppStore) => {
         }
       }
       // --- mixpanel
-
-      if (isTimeOutError && !isReconnectedRequest) {
-        mainAppStore.rootStore.notificationStore.setNotification(
-          'Timeout connection error'
-        );
-        mainAppStore.rootStore.notificationStore.isSuccessfull = false;
-        mainAppStore.rootStore.notificationStore.openNotification();
-      }
-
-      if (isTimeOutError && isReconnectedRequest) {
-        repeatRequest(error, mainAppStore);
-      }
 
       if (!error.response?.status && !isTimeOutError && !isReconnectedRequest) {
         mainAppStore.rootStore.notificationStore.setNotification(error.message);
@@ -218,7 +200,8 @@ const injectInerceptors = (mainAppStore: MainAppStore) => {
           }
 
           mainAppStore.rootStore.badRequestPopupStore.setMessage(
-            error.response?.statusText || apiResponseCodeMessages[OperationApiResponseCodes.TechnicalError]
+            error.response?.statusText ||
+              apiResponseCodeMessages[OperationApiResponseCodes.TechnicalError]
           );
           mainAppStore.rootStore.badRequestPopupStore.openModal();
           break;

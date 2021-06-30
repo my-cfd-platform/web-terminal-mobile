@@ -21,14 +21,17 @@ const FavouriteInstruments = observer(() => {
       (id) => id === itemId
     );
     const newActiveInstrument =
-      instrumentsStore.activeInstrumentsIds[indexEl === 0 ? indexEl + 1 : indexEl - 1];
+      instrumentsStore.activeInstrumentsIds[
+        indexEl === 0 ? indexEl + 1 : indexEl - 1
+      ];
 
     const newInstruments = instrumentsStore.activeInstrumentsIds.filter(
       (id) => id !== itemId
     );
     try {
       const response = await API.postFavoriteInstrumets({
-        accountId: mainAppStore.activeAccount?.id || mainAppStore!.activeAccountId,
+        accountId:
+          mainAppStore.activeAccount?.id || mainAppStore!.activeAccountId,
         type: mainAppStore.activeAccount!.isLive
           ? AccountTypeEnum.Live
           : AccountTypeEnum.Demo,
@@ -39,10 +42,7 @@ const FavouriteInstruments = observer(() => {
       instrumentsStore.switchInstrument(
         newActiveInstrument || response[response.length - 1]
       );
-    } catch (error) {
-      badRequestPopupStore.openModal();
-      badRequestPopupStore.setMessage(error);
-    }
+    } catch (error) {}
   };
 
   const gotoMarkets = () => {

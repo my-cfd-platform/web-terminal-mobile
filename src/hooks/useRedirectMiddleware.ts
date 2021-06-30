@@ -32,7 +32,7 @@ const useRedirectMiddleware = () => {
         message: 'something empty in object',
         jsonLogObject: JSON.stringify(jsonLogObject)
       };
-      API.postDebug(params, API_STRING);
+      API.postDebug(params);
     }
     mainAppStore.postRefreshToken().finally(() => {
       let searchParams = new URLSearchParams(params);
