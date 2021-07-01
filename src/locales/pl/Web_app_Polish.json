@@ -463,5 +463,11 @@
     "When you withdraw your funds, the bonus will be deducted from your account.": "Kiedy wypłacisz swoje środki, bonus zostanie potrącony z Twojego konta.",
     "Invested": "Zainwestowano",
     "Select account": "Wybrać konto",
-    "Withdrawable": "Możliwość wypłaty"
+    "Withdrawable": "Możliwość wypłaty",
+    "AboutUs_M": "https://www.monfex.com/pl/why-us",
+    "AboutUs_AM": "https://allianzmarket.com/pl/about/",
+    "AboutUs_HP": "https://handelpro.com/about/",
+    "Support_AM": "https://allianzmarket.com/pl/contact-us/",
+    "Support_HP": "https://handelpro.com/contact-us/",
+    "Support_M": "https://www.monfex.com/pl/contact-us"
 }

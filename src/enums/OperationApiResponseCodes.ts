@@ -1,4 +1,5 @@
 export enum OperationApiResponseCodes {
+  CountryIsRestricted = -11,
   TooManyAttempts = -10,
   Expired = -9,
   SystemError,
