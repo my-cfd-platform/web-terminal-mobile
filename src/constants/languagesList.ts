@@ -1,3 +1,3 @@
 export const languagesList = [
-  'pl', 'en', 'de', 'es'
+  'pl', 'en', 'de', 'es', 'ru'
 ]
