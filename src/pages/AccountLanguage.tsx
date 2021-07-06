@@ -6,7 +6,13 @@ import Colors from '../constants/Colors';
 import { PrimaryButton } from '../styles/Buttons';
 import { ObjectKeys } from '../helpers/objectKeys';
 import { CountriesEnum } from '../enums/CountriesEnum';
-import { ListForEN, ListForPL, ListForES, ListForDE } from '../constants/listOfLanguages';
+import {
+  ListForEN,
+  ListForPL,
+  ListForES,
+  ListForDE,
+  ListForRU,
+} from '../constants/listOfLanguages';
 import { useStores } from '../hooks/useStores';
 import { useTranslation } from 'react-i18next';
 import styled from '@emotion/styled';
@@ -50,6 +56,13 @@ const AccountLanguage = () => {
           name: ListForDE[CountriesEnum.DE],
         });
         setList(ListForDE);
+        break;
+      case CountriesEnum.RU:
+        setActiveLanguage({
+          id: CountriesEnum.RU,
+          name: ListForRU[CountriesEnum.RU],
+        });
+        setList(ListForRU);
         break;
       default:
         break;
