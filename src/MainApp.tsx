@@ -66,9 +66,7 @@ const MainApp: FC = () => {
         mainAppStore.setDataLoading(false);
       } catch (error) {
         mainAppStore.setDataLoading(false);
-        instrumentsStore.setActiveInstrumentsIds([
-          instrumentsStore.instruments[0].instrumentItem.id,
-        ]);
+        instrumentsStore.setActiveInstrumentsIds(instrumentsStore.instruments.slice(0, 5).map(instr => instr.instrumentItem.id));
         instrumentsStore.switchInstrument(
           instrumentsStore.instruments[0].instrumentItem.id,
           false
