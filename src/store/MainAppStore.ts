@@ -50,7 +50,7 @@ import { getProcessId } from '../helpers/getProcessId';
 import { DebugTypes } from '../types/DebugTypes';
 import { getCircularReplacer } from '../helpers/getCircularReplacer';
 import { getStatesSnapshot } from '../helpers/getStatesSnapshot';
-import { logger } from '../helpers/ConsoleLoggerTool';
+
 
 interface MainAppStoreProps {
   token: string;
@@ -154,6 +154,7 @@ export class MainAppStore implements MainAppStoreProps {
   paramsBalanceHistory: boolean = false;
 
   @observable dataLoading = false;
+  @observable signalRReconectCounter = 0;
 
   constructor(rootStore: RootStore) {
     this.rootStore = rootStore;
@@ -225,6 +226,7 @@ export class MainAppStore implements MainAppStoreProps {
           await connection.send(Topics.INIT, token);
           this.isAuthorized = true;
           this.activeSession = connection;
+          this.pingPongConnection();
         } catch (error) {
           this.isAuthorized = false;
           this.isInitLoading = false;
@@ -430,7 +432,40 @@ export class MainAppStore implements MainAppStoreProps {
         });
       }
     );
+
+    connection.on(
+      Topics.PONG,
+      (response: ResponseFromWebsocket<any>) => {
+        if (response.now) {
+          this.signalRReconectCounter = 0;
+          this.rootStore.badRequestPopupStore.stopRecconect();
+        }
+      }
+    );
   };
+
+
+  @action
+  socketPing = () => {
+    this.activeSession?.send(Topics.PING);
+  }
+
+  @action 
+  pingPongConnection = () => {
+
+    if (this.signalRReconectCounter >= 2) {
+      this.rootStore.badRequestPopupStore.setRecconect();
+      this.handleInitConnection();
+      return 
+    }
+
+    this.socketPing();
+
+    setTimeout(() => {
+      this.signalRReconectCounter += 1;
+      this.pingPongConnection();
+    }, 3000);
+  }
 
   @action
   openAccountSwitcher = () => {

@@ -5,6 +5,7 @@ const Topics = {
   POSITION_CLOSED: 'positionclosed',
   UPDATE_ACCOUNT: 'updateaccount',
   INSTRUMENTS: 'instruments',
+  PING: 'ping',
   PONG: 'pong',
   GROUPS: 'groups',
   POSITIONS: 'positions',

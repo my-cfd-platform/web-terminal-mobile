@@ -21,6 +21,12 @@ const repeatRequest = (error: any, mainAppStore: MainAppStore) => {
   }, +mainAppStore.connectTimeOut);
 };
 
+const openNotification = (errorText: string, mainAppStore: MainAppStore) => {
+  mainAppStore.rootStore.notificationStore.setNotification(errorText);
+  mainAppStore.rootStore.notificationStore.isSuccessfull = false;
+  mainAppStore.rootStore.notificationStore.openNotification();
+};
+
 const injectInerceptors = (mainAppStore: MainAppStore) => {
   // for multiple requests
   let isRefreshing = false;
@@ -100,11 +106,7 @@ const injectInerceptors = (mainAppStore: MainAppStore) => {
       }
 
       if (isTimeOutError && !isReconnectedRequest) {
-        mainAppStore.rootStore.notificationStore.setNotification(
-          'Timeout connection error'
-        );
-        mainAppStore.rootStore.notificationStore.isSuccessfull = false;
-        mainAppStore.rootStore.notificationStore.openNotification();
+        openNotification('Timeout connection error', mainAppStore);
       }
 
       const urlString = new URL(error?.config?.url).href;
@@ -132,9 +134,7 @@ const injectInerceptors = (mainAppStore: MainAppStore) => {
       // --- mixpanel
 
       if (!error.response?.status && !isTimeOutError && !isReconnectedRequest) {
-        mainAppStore.rootStore.notificationStore.setNotification(error.message);
-        mainAppStore.rootStore.notificationStore.isSuccessfull = false;
-        mainAppStore.rootStore.notificationStore.openNotification();
+        openNotification(error.message, mainAppStore);
       }
 
       const originalRequest = error.config;
@@ -193,17 +193,20 @@ const injectInerceptors = (mainAppStore: MainAppStore) => {
           break;
         }
 
+        case 400:
         case 500: {
           if (isReconnectedRequest) {
             repeatRequest(error, mainAppStore);
-            break;
+          } else {
+            openNotification(
+              error.response?.statusText ||
+                apiResponseCodeMessages[
+                  OperationApiResponseCodes.TechnicalError
+                ],
+              mainAppStore
+            );
           }
 
-          mainAppStore.rootStore.badRequestPopupStore.setMessage(
-            error.response?.statusText ||
-              apiResponseCodeMessages[OperationApiResponseCodes.TechnicalError]
-          );
-          mainAppStore.rootStore.badRequestPopupStore.openModal();
           break;
         }
 
