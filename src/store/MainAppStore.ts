@@ -447,25 +447,32 @@ export class MainAppStore implements MainAppStoreProps {
 
   @action
   socketPing = () => {
-    this.activeSession?.send(Topics.PING);
-  }
-
-  @action 
-  pingPongConnection = () => {
-
-    if (this.signalRReconectCounter >= 2) {
-      this.rootStore.badRequestPopupStore.setRecconect();
-      this.handleInitConnection();
-      return 
+    if (this.activeSession) {
+      this.activeSession?.send(Topics.PING);
     }
+  };
 
-    this.socketPing();
+  @action
+  pingPongConnection = () => {
+    let timer: any;
 
-    setTimeout(() => {
-      this.signalRReconectCounter += 1;
-      this.pingPongConnection();
-    }, 3000);
-  }
+    if (this.activeSession) {
+      if (this.signalRReconectCounter >= 2) {
+        this.rootStore.badRequestPopupStore.setRecconect();
+        this.handleInitConnection();
+        return;
+      }
+  
+      this.socketPing();
+  
+      timer = setTimeout(() => {
+        this.signalRReconectCounter += 1;
+        this.pingPongConnection();
+      }, 3000);
+    } else {
+      clearTimeout(timer);
+    }
+  };
 
   @action
   openAccountSwitcher = () => {
