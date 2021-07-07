@@ -127,12 +127,12 @@ const NotificationActivePositionPopup: FC<Props> = observer(() => {
                 {Math.abs(
                   activePositionNotificationStore.notificationMessageData.equity
                 ).toFixed(2)}
-                &nbsp; (&nbsp;
+                &nbsp; (
                 {
                   activePositionNotificationStore.notificationMessageData
                     .percentPL
                 }
-                %&nbsp;)
+                %)
               </PrimaryTextSpan>
             </>
           ) : (

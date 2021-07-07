@@ -66,7 +66,7 @@ const ChartSetting = observer(() => {
   };
 
   return (
-    <BackFlowLayout pageTitle="Chart Settings">
+    <BackFlowLayout pageTitle={t('Chart Settings')}>
       <FlexContainer flexDirection="column" padding="0 16px">
         <FlexContainer marginBottom="16px">
           <PrimaryTextSpan

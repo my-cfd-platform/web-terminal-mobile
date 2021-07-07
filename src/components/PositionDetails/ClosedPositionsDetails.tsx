@@ -183,7 +183,7 @@ const ClosedPositionsDetails: FC<Props> = observer(({ positionId }) => {
             justifyContent="space-between"
           >
             <PrimaryTextSpan color="#fff" fontSize="16px">
-              {t('Overnight Fee')}
+              {t('Overnight fee')}
             </PrimaryTextSpan>
             <PrimaryTextSpan fontSize="16px">
               {getNumberSign(position.swap)}

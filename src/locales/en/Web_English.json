@@ -465,5 +465,12 @@
     "When you withdraw your funds, the bonus will be deducted from your account.": "When you withdraw your funds, the bonus will be deducted from your account.",
     "Invested": "Invested",
     "Select account": "Select account",
-    "Withdrawable": "Withdrawable"
+    "Withdrawable": "Withdrawable",
+    "Value": "Value",
+    "Add": "Add",
+    "Chart type": "Chart type",
+    "Time frame": "Time frame",
+    "Chart settings": "Chart settings",
+    "Position opened": "Position opened",
+    "Verification Required": "Verification Required"
 }
