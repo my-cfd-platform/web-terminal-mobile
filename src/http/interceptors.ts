@@ -138,6 +138,28 @@ const injectInerceptors = (mainAppStore: MainAppStore) => {
         openNotification(error.message, mainAppStore);
       }
 
+
+      if (error.response?.status) {
+        if (
+          (error.response?.status !== 401 &&
+            error.response?.status !== 403 &&
+            error.response?.status.toString().includes('40')) ||
+          error.response?.status.toString().includes('50')
+        ) {
+          if (isReconnectedRequest) {
+            repeatRequest(error, mainAppStore);
+          } else {
+            openNotification(
+              error.response?.statusText ||
+                apiResponseCodeMessages[
+                  OperationApiResponseCodes.TechnicalError
+                ],
+              mainAppStore
+            );
+          }
+        }
+      }
+
       const originalRequest = error.config;
 
       switch (error.response?.status) {
@@ -194,22 +216,6 @@ const injectInerceptors = (mainAppStore: MainAppStore) => {
           break;
         }
 
-        case 400:
-        case 500: {
-          if (isReconnectedRequest) {
-            repeatRequest(error, mainAppStore);
-          } else {
-            openNotification(
-              error.response?.statusText ||
-                apiResponseCodeMessages[
-                  OperationApiResponseCodes.TechnicalError
-                ],
-              mainAppStore
-            );
-          }
-
-          break;
-        }
 
         default:
           break;
