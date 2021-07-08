@@ -87,7 +87,7 @@
     "Demo": "Демо",
     "Image": "Фото",
     "Switch": "Переключить",
-    "at": "за",
+    "at": "по",
     "Opened": "Открыто",
     "Equity": "Капитал",
     "Overnight fee": "Перенос позиции на следующие сутки",
@@ -479,5 +479,8 @@
     "Time frame": "Временное ограничение",
     "Chart Settings": "Настройки графика",
     "Position opened": "Позиция открыта",
-    "Verification Required": "Требуется проверка"
+    "Verification Required": "Требуется проверка",
+    "Accounts Worldwide": "Аккаунтов по всему миру",
+    "Up to": "До",
+    "leverage": "кредитное плечо"
 }

@@ -81,18 +81,18 @@ const AccountAboutUs = observer(() => {
                   color="rgba(255,252,204,0.7)"
                   fontSize="11px"
                 >
-                  Accounts Worldwide
+                  {t('Accounts Worldwide')}
                 </PrimaryTextSpan>
               </FlexContainer>
 
               <FlexContainer alignItems="center" flexDirection="column">
-                <PrimaryTextSpan textAlign="center">Up to 500X</PrimaryTextSpan>
+                <PrimaryTextSpan textAlign="center">{t('Up to')} 500X</PrimaryTextSpan>
                 <PrimaryTextSpan
                   textAlign="center"
                   color="rgba(255,252,204,0.7)"
                   fontSize="11px"
                 >
-                  leverage
+                  {t('leverage')}
                 </PrimaryTextSpan>
               </FlexContainer>
               <FlexContainer alignItems="center" flexDirection="column">
@@ -102,7 +102,7 @@ const AccountAboutUs = observer(() => {
                   color="rgba(255,252,204,0.7)"
                   fontSize="11px"
                 >
-                  Commission
+                  {t('Commission')}
                 </PrimaryTextSpan>
               </FlexContainer>
             </FlexContainer>
