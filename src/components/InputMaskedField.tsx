@@ -44,6 +44,7 @@ const InputMaskedField: FC<InputFieldProps> = ({
   inputMode,
   onBeforeInput,
   mask,
+  name,
 }) => {
   return (
     <InputWrap>

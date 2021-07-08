@@ -228,8 +228,7 @@ const PhoneVerification: FC = () => {
                     id={Fields.PHONE}
                     hasError={!!(touched.phone && errors.phone)}
                     errorText={errors.phone}
-                    inputMode="tel"
-                    autoComplete="off"
+                    inputMode="tel" 
                   />
                 </PhoneInputWrapper>
               </FlexContainer>
