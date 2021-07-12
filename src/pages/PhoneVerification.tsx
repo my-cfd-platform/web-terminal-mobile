@@ -226,9 +226,18 @@ const PhoneVerification: FC = () => {
                     mask={dialMask}
                     {...getFieldProps(Fields.PHONE)}
                     id={Fields.PHONE}
+                    inputMode="tel"
+                    className="editable-phone-input"
+                  />
+                  <InputMaskedField
+                    mask={dialMask}
+                    {...getFieldProps(Fields.PHONE)}
+                    id={Fields.PHONE}
                     hasError={!!(touched.phone && errors.phone)}
                     errorText={errors.phone}
-                    inputMode="tel" 
+                    inputMode="tel"
+                    readOnly={true}
+                    autoComplete="off"
                   />
                 </PhoneInputWrapper>
               </FlexContainer>
@@ -271,6 +280,17 @@ const PhoneInputWrapper = styled(FlexContainer)`
   position: relative;
   input {
     text-align: right;
+  }
+  input.editable-phone-input {
+    text-align: left !important;
+    background: transparent;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 3;
+    width: 100%;
+    color: transparent;
+    border: none;
   }
 `;
 
