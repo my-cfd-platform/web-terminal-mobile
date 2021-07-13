@@ -14,6 +14,6 @@ export class ServerErrorPopupStore implements ContextProps {
 
   @action
   openModal = () => {
-    this.isActive = !this.isActive;
+    this.isActive = true;
   };
 }

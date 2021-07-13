@@ -138,7 +138,6 @@ const injectInerceptors = (mainAppStore: MainAppStore) => {
         openNotification(error.message, mainAppStore);
       }
 
-
       if (error.response?.status) {
         if (
           (error.response?.status !== 401 &&
@@ -149,13 +148,7 @@ const injectInerceptors = (mainAppStore: MainAppStore) => {
           if (isReconnectedRequest) {
             repeatRequest(error, mainAppStore);
           } else {
-            openNotification(
-              error.response?.statusText ||
-                apiResponseCodeMessages[
-                  OperationApiResponseCodes.TechnicalError
-                ],
-              mainAppStore
-            );
+            mainAppStore.rootStore.serverErrorPopupStore.openModal();
           }
         }
       }
@@ -215,7 +208,6 @@ const injectInerceptors = (mainAppStore: MainAppStore) => {
           mainAppStore.signOut();
           break;
         }
-
 
         default:
           break;
