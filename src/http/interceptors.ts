@@ -72,7 +72,8 @@ const injectInerceptors = (mainAppStore: MainAppStore) => {
       if (
         mainAppStore.isAuthorized &&
         !doNotSendRequest.includes(error.response?.status) &&
-        error.response?.status
+        (error.response?.status ||
+          error.config?.timeoutErrorMessage)
       ) {
         const objectToSend = {
           message: error.message,
