@@ -117,7 +117,7 @@ const NotificationPendingPositionPopup: FC<Props> = observer(() => {
               {Math.abs(
                   pendingPositionNotificationStore.notificationMessageData.investmentAmount
               ).toFixed(2)}
-              &nbsp; (at &nbsp;{
+              &nbsp; ({t('at')} &nbsp;{
                 pendingPositionNotificationStore.notificationMessageData.openPrice.toFixed(2)
               })
             </PrimaryTextSpan>
