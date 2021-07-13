@@ -115,27 +115,27 @@ export const ListForDE = {
 
 export const ListForRU = {
   [CountriesEnum.EN]: {
-    name: 'Английский',
+    name: 'English',
     originName: 'English',
     shortName: 'EN',
   },
   [CountriesEnum.PL]: {
-    name: 'Польский',
+    name: 'Polish',
     originName: 'Polski',
     shortName: 'PL',
   },
   [CountriesEnum.ES]: {
-    name: 'Испанский',
+    name: 'Spanish',
     originName: 'Español',
     shortName: 'ES',
   },
   [CountriesEnum.DE]: {
-    name: 'Немецкий',
+    name: 'German',
     originName: 'Deutsch',
     shortName: 'DE',
   },
   [CountriesEnum.RU]: {
-    name: 'Русский',
+    name: 'Russian',
     originName: 'Русский',
     shortName: 'RU',
   },

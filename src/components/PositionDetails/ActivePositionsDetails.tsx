@@ -250,7 +250,7 @@ const ActivePositionsDetails: FC<Props> = observer((props) => {
               justifyContent="space-between"
             >
               <PrimaryTextSpan color="#fff" fontSize="16px">
-                {t('Current Price')}
+                {t('Current price')}
               </PrimaryTextSpan>
               <PrimaryTextSpan fontSize="16px">
                 {quotesStore.quotes[position.instrument] && (
