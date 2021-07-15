@@ -15,12 +15,6 @@ import mixpanelEvents from '../constants/mixpanelEvents';
 import mixapanelProps from '../constants/mixpanelProps';
 import mixpanel from 'mixpanel-browser';
 
-const repeatRequest = (error: any, mainAppStore: MainAppStore) => {
-  setTimeout(() => {
-    axios.request(error.config);
-  }, +mainAppStore.connectTimeOut);
-};
-
 const openNotification = (errorText: string, mainAppStore: MainAppStore) => {
   mainAppStore.rootStore.notificationStore.setNotification(errorText);
   mainAppStore.rootStore.notificationStore.isSuccessfull = false;
@@ -31,6 +25,16 @@ const injectInerceptors = (mainAppStore: MainAppStore) => {
   // for multiple requests
   let isRefreshing = false;
   let failedQueue: any[] = [];
+
+  const getApiUrl = (url: string) => {
+    const urlString = new URL(url);
+    if (urlString.search) {
+      return urlString.href
+        .split(urlString.search)[0]
+        .split(urlString.origin)[1];
+    }
+    return urlString.href.split(urlString.origin)[1];
+  };
 
   const processQueue = (error: any, token: string | null = null) => {
     failedQueue.forEach((prom) => {
@@ -45,38 +49,45 @@ const injectInerceptors = (mainAppStore: MainAppStore) => {
 
   // TODO: research init flow
   axios.interceptors.response.use(
-    function (config: AxiosResponse) {
-      if (config.data.result === OperationApiResponseCodes.TechnicalError) {
-        return Promise.reject(
-          apiResponseCodeMessages[OperationApiResponseCodes.TechnicalError]
-        );
+    function (response: AxiosResponse) {
+      switch (response.data.result) {
+        case OperationApiResponseCodes.TechnicalError:
+          return Promise.reject(
+            apiResponseCodeMessages[OperationApiResponseCodes.TechnicalError]
+          );
+        case OperationApiResponseCodes.InvalidUserNameOrPassword:
+          mainAppStore.signOut();
+          break;
+        default:
+          break;
       }
-      if (
-        config.data.result ===
-        OperationApiResponseCodes.InvalidUserNameOrPassword
-      ) {
-        mainAppStore.signOut();
-      }
-      return config;
+      return response;
     },
 
     async function (error) {
-      console.log('error url: ', error.response?.config?.url);
-      console.log('is ignored Debug: ', error.response?.config?.url.includes(API_LIST.DEBUG.POST));
+      const excludeCheckErrorFlow = [
+        API_LIST.DEBUG.POST,
+        API_LIST.ONBOARDING.STEPS,
+      ];
 
-      if (
-        error.config?.url.includes(API_LIST.DEBUG.POST) ||
-        error.config?.url.includes(API_LIST.ONBOARDING.STEPS)
-      ) {
-        return await Promise.reject(error);
+      const requestUrl: string = error?.config?.url;
+      const originalRequest = error.config;
+
+      const repeatRequest = (callback: any) => {
+        setTimeout(() => {
+          callback(originalRequest);
+        }, +mainAppStore.connectTimeOut);
+      };
+
+     if (excludeCheckErrorFlow.includes(getApiUrl(requestUrl))) {
+        return Promise.reject(error);
       }
 
       // logger
       if (
         mainAppStore.isAuthorized &&
         !doNotSendRequest.includes(error.response?.status) &&
-        (error.response?.status ||
-          error.config?.timeoutErrorMessage)
+        (error.response?.status || error.config?.timeoutErrorMessage)
       ) {
         const objectToSend = {
           message: error.message,
@@ -107,7 +118,11 @@ const injectInerceptors = (mainAppStore: MainAppStore) => {
         JSON.parse(error.config.data).initBy === requestOptions.BACKGROUND;
 
       if (isTimeOutError && isReconnectedRequest) {
-        repeatRequest(error, mainAppStore);
+        return new Promise((resolve) => {
+          repeatRequest(() => {
+            resolve(axios(originalRequest));
+          });
+        });
       }
 
       if (isTimeOutError && !isReconnectedRequest) {
@@ -150,14 +165,16 @@ const injectInerceptors = (mainAppStore: MainAppStore) => {
           error.response?.status.toString().includes('50')
         ) {
           if (isReconnectedRequest) {
-            repeatRequest(error, mainAppStore);
+            return new Promise((resolve) => {
+              repeatRequest(() => {
+                resolve(axios(originalRequest));
+              });
+            });
           } else {
             mainAppStore.rootStore.serverErrorPopupStore.openModal();
           }
         }
       }
-
-      const originalRequest = error.config;
 
       switch (error.response?.status) {
         case 401:
