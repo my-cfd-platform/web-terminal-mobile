@@ -113,9 +113,22 @@ const injectInerceptors = (mainAppStore: MainAppStore) => {
       }
       // --- logger
 
+      // check for formData
+      let finalJSON = '';
+      if (typeof error.config.data === 'object') {
+        const dataObject = {};
+        error.config.data.forEach((value: any, key: any) => {
+          // @ts-ignore
+          dataObject[key] = value
+        });
+        finalJSON = JSON.stringify(dataObject);
+      } else {
+        finalJSON = error.config.data;
+      }
+
       const isTimeOutError: boolean = error.message === requestOptions.TIMEOUT;
       const isReconnectedRequest: boolean =
-        JSON.parse(error.config.data).initBy === requestOptions.BACKGROUND;
+        JSON.parse(finalJSON).initBy === requestOptions.BACKGROUND;
 
       if (isTimeOutError && isReconnectedRequest) {
         return new Promise((resolve) => {
