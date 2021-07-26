@@ -45,6 +45,7 @@ const AuthorizedContainer: FC = observer(({ children }) => {
     Page.ACCOUNT_BALANCE_HISTORY,
     Page.PHONE_VERIFICATION,
     Page.ONBOARDING,
+    Page.BONUS_FAQ,
   ]);
 
   const { push } = useHistory();
@@ -65,6 +66,7 @@ const AuthorizedContainer: FC = observer(({ children }) => {
     Page.ACCOUNT_VERIFICATION,
     Page.ACCOUNT_ABOUT_US,
     Page.ACCOUNTS_SWITCH,
+    Page.BONUS_FAQ,
   ]);
 
   const isHiddenPromoPage = hidenPromoPageList?.isExact;
