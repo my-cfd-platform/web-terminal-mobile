@@ -247,17 +247,6 @@ const Onboarding = observer(() => {
     }
   }, []);
 
-  const isOnboardingAvailable = async (callback: any) => {
-    //
-    const isAvailable = await mainAppStore.checkOnboardingShow();
-    if (!isAvailable) {
-      push(Page.DASHBOARD);
-    } else {
-      // init OB
-      callback();
-      //
-    }
-  };
 
   useEffect(() => {
     let cleanupFunction = false;
@@ -284,7 +273,7 @@ const Onboarding = observer(() => {
         push(Page.DASHBOARD);
       }
     };
-    isOnboardingAvailable(getInfoFirstStep);
+    getInfoFirstStep();
     
     return () => {
       cleanupFunction = true;
