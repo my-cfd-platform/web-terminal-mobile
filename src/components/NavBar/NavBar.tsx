@@ -10,6 +10,8 @@ import { useTranslation } from 'react-i18next';
 import useRedirectMiddleware from '../../hooks/useRedirectMiddleware';
 import { ButtonWithoutStyles } from '../../styles/ButtonWithoutStyles';
 import AccountSwitcher from '../AccountSwitcher/AccountSwitcher';
+import SvgIcon from '../SvgIcon';
+import IconGift from '../../assets/svg_no_compress/icon-deposit-gift.svg';
 
 const NavBar = observer(() => {
   const { mainAppStore, userProfileStore } = useStores();
@@ -82,20 +84,31 @@ const NavBar = observer(() => {
       width="100vw"
       position="relative"
       alignItems="center"
-      justifyContent="center"
+      justifyContent="space-between"
       height="48px"
+      padding="0 16px"
+      backgroundColor="#12151C"
     >
-      <AccountLabel />
-      <AccountsSwitchLink />
-      {!mainAppStore.isPromoAccount && (
-        <DepositLink
-          onClick={() =>
-            redirectWithUpdateRefreshToken(API_DEPOSIT_STRING, parsedParams)
-          }
-        >
-          {t('Deposit')}
-        </DepositLink>
-      )}
+      <FlexContainer flexDirection="row">
+        <AccountLabel />
+        <AccountsSwitchLink />
+      </FlexContainer>
+      <FlexContainer>
+        {!mainAppStore.isPromoAccount && (
+          <DepositLink
+            onClick={() =>
+              redirectWithUpdateRefreshToken(API_DEPOSIT_STRING, parsedParams)
+            }
+          >
+            <FlexContainer marginRight="4px">
+              <SvgIcon {...IconGift} />
+            </FlexContainer>
+
+            {t('Deposit')}
+          </DepositLink>
+        )}
+      </FlexContainer>
+
       <AccountSwitcher show={mainAppStore.showAccountSwitcher} />
     </FlexContainer>
   );
@@ -105,12 +118,9 @@ export default NavBar;
 
 const DepositLink = styled(ButtonWithoutStyles)`
   font-size: 16px;
-  line-height: 1.3;
-  padding: 4px 0;
   font-weight: 500;
   color: ${Colors.ACCENT_BLUE};
-  position: absolute;
-  top: 50%;
-  right: 16px;
-  transform: translateY(-50%);
+  display: flex;
+  flex-direction: row;
+  align-items: center;
 `;

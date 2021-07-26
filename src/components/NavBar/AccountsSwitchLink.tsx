@@ -7,7 +7,11 @@ import { Observer, observer } from 'mobx-react-lite';
 import DropDownArrov from '../../assets/svg/icon-dropdown.svg';
 import SvgIcon from '../SvgIcon';
 import { ButtonWithoutStyles } from '../../styles/ButtonWithoutStyles';
-import { moneyFormat } from '../../helpers/moneyFormat';
+import { moneyFormat, moneyFormatPart } from '../../helpers/moneyFormat';
+import {
+  getNumberSign,
+  getNumberSignNegative,
+} from '../../helpers/getNumberSign';
 
 const AccountsSwitchLink = observer(() => {
   const { mainAppStore } = useStores();
@@ -37,15 +41,13 @@ const AccountsSwitchLink = observer(() => {
   useEffect(() => {
     let cleanupFunction = false;
     if (mainAppStore.accounts) {
-      const newBalance = mainAppStore.accounts.find(
-        (item) => item.id === mainAppStore.activeAccountId
-      )?.balance || 0;
+      const newBalance =
+        mainAppStore.accounts.find(
+          (item) => item.id === mainAppStore.activeAccountId
+        )?.balance || 0;
       if (!cleanupFunction) {
         if (newBalance !== balance && balance !== 0) {
-          animateValue(
-            balance,
-            newBalance
-          );
+          animateValue(balance, newBalance);
         } else {
           mainAppStore.balanceWas = newBalance;
           setBalance(newBalance);
@@ -68,18 +70,28 @@ const AccountsSwitchLink = observer(() => {
       <Observer>
         {() => (
           <PrimaryTextSpan
-            color={mainAppStore.activeAccount?.isLive ? Colors.ACCENT : "#ffffff"}
+            color="#FFFCCC"
             fontSize="16px"
             fontWeight="bold"
             marginRight="8px"
             lineHeight="1"
           >
+            {getNumberSignNegative(balance)}
             {mainAppStore.activeAccount?.symbol}
-            {moneyFormat(balance)}
+            {moneyFormatPart(Math.abs(balance)).int}
+
+            <PrimaryTextSpan
+              color="#FFFCCC"
+              fontSize="12px"
+              fontWeight="bold"
+              lineHeight="1"
+            >
+              .{moneyFormatPart(Math.abs(balance)).decimal}
+            </PrimaryTextSpan>
           </PrimaryTextSpan>
         )}
       </Observer>
-      <SvgIcon {...DropDownArrov} fillColor="rgba(255, 255, 255, 0.4)"/>
+      <SvgIcon {...DropDownArrov} fillColor="rgba(255, 255, 255, 0.4)" />
     </AccountSwitch>
   );
 });
