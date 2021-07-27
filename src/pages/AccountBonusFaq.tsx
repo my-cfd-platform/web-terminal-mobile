@@ -10,7 +10,7 @@ const AccountBonusFaq = observer(() => {
   const { t } = useTranslation();
 
   return (
-    <BackFlowLayout backLink={Page.ACCOUNT_PROFILE} pageTitle={t('About us')}>
+    <BackFlowLayout backLink={Page.ACCOUNT_PROFILE} pageTitle={t('Bonus FAQ')}>
       <FlexContainer flexDirection="column" width="100%" padding="16px">
         <FlexContainer flexDirection="column" marginBottom="32px">
           <PrimaryTextSpan
