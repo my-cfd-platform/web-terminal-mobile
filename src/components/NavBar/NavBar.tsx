@@ -12,6 +12,8 @@ import { ButtonWithoutStyles } from '../../styles/ButtonWithoutStyles';
 import AccountSwitcher from '../AccountSwitcher/AccountSwitcher';
 import SvgIcon from '../SvgIcon';
 import IconGift from '../../assets/svg_no_compress/icon-deposit-gift.svg';
+import PopupContainer from '../../containers/PopupContainer';
+import BonusPopup from '../BonusPopup';
 
 const NavBar = observer(() => {
   const { mainAppStore, userProfileStore } = useStores();
@@ -110,6 +112,8 @@ const NavBar = observer(() => {
       </FlexContainer>
 
       <AccountSwitcher show={mainAppStore.showAccountSwitcher} />
+
+      <BonusPopup />
     </FlexContainer>
   );
 });

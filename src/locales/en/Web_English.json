@@ -493,5 +493,13 @@
     "Example: If a trader deposited $100 in real funds to the account, and gets a $30 bonus fund, the account balance will be: $100 (own money) + $30 (bonus) = $130. A trader can use $130 for trading by depositing only $100. All the profits a trader makes will belong to him/her.": "Example: If a trader deposited $100 in real funds to the account, and gets a $30 bonus fund, the account balance will be: $100 (own money) + $30 (bonus) = $130. A trader can use $130 for trading by depositing only $100. All the profits a trader makes will belong to him/her.",
     "A “bonus” cannot be lost until there is a balance on the account.": "A “bonus” cannot be lost until there is a balance on the account.",
     "Can I withdraw my bonus money?": "Can I withdraw my bonus money?",
-    "Bonuses will be automatically deducted if you apply to make a withdrawal.": "Bonuses will be automatically deducted if you apply to make a withdrawal."
+    "Bonuses will be automatically deducted if you apply to make a withdrawal.": "Bonuses will be automatically deducted if you apply to make a withdrawal.",
+    "Get Bonus": "Get Bonus",
+    "Skip bonus": "Skip bonus",
+    "The deposit added to your account as a gift.": "The deposit added to your account as a gift.",
+    "All profits made are yours to keep.": "All profits made are yours to keep.",
+    "All details about": "All details about",
+    "Bonus Rules": "Bonus Rules",
+    "Get": "Get",
+    "bonus": "bonus"
 }
