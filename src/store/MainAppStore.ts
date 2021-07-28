@@ -158,15 +158,16 @@ export class MainAppStore implements MainAppStoreProps {
       localStorage.getItem(LOCAL_STORAGE_REFRESH_TOKEN_KEY) || '';
     Axios.defaults.headers[RequestHeaders.AUTHORIZATION] = this.token;
 
-    // @ts-ignore
-    this.lang =
-      localStorage.getItem(LOCAL_STORAGE_LANGUAGE) ||
+    const newLang = localStorage.getItem(LOCAL_STORAGE_LANGUAGE) ||
       (window.navigator.language &&
       languagesList.includes(
         window.navigator.language.slice(0, 2).toLowerCase()
       )
         ? window.navigator.language.slice(0, 2).toLowerCase()
         : CountriesEnum.EN);
+    // @ts-ignore
+    this.lang = newLang;
+    document.querySelector('html')?.setAttribute('lang', newLang);
     injectInerceptors(this);
   }
 
@@ -713,6 +714,7 @@ export class MainAppStore implements MainAppStoreProps {
   @action
   setLanguage = (newLang: CountriesEnum) => {
     localStorage.setItem(LOCAL_STORAGE_LANGUAGE, newLang);
+    document.querySelector('html')?.setAttribute('lang', newLang);
     this.lang = newLang;
   };
 
