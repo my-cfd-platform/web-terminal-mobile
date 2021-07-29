@@ -1,0 +1,29 @@
+.account-switch-slider .owl-stage {
+  padding-left: 0px !important;
+}
+
+.account-switch-slider .owl-theme .owl-dots .owl-dot,
+.account-switch-slider .owl-theme .owl-dots .owl-dot.active {
+  outline: none;
+  border: none;
+}
+.account-switch-slider .owl-theme .owl-dots .owl-dot span {
+  background: rgba(255, 255, 255, 0.3);
+}
+.account-switch-slider .owl-theme .owl-dots .owl-dot.active span,
+.owl-theme .owl-dots .owl-dot:hover span {
+  background: #ffffff;
+}
+
+.account-switch-slider .owl-theme .owl-nav {
+  margin: 0;
+  padding: 0;
+  position: absolute;
+  width: 60px;
+  top: 50%;
+  right: 0;
+  height: 390px;
+  transform: translateY(-50%);
+  display: flex;
+  justify-content: flex-end;
+}

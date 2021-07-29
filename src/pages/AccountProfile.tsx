@@ -28,6 +28,7 @@ import mixpanelEvents from '../constants/mixpanelEvents';
 import mixapanelProps from '../constants/mixpanelProps';
 import useRedirectMiddleware from '../hooks/useRedirectMiddleware';
 import { CountriesEnum } from '../enums/CountriesEnum';
+import AccProfileCarousel from '../components/AccProfileCarousel/AccProfileCarousel';
 
 const AccountProfile = observer(() => {
   const { mainAppStore, userProfileStore } = useStores();
@@ -62,7 +63,7 @@ const AccountProfile = observer(() => {
     // TODO: Refactor Safari
     <FlexContainer flexDirection="column" minHeight="600px">
       <AchievementStatusLabel />
-      <FlexContainer padding="16px" marginBottom="24px">
+      <FlexContainer padding="16px" marginBottom="16px">
         <FlexContainer width="64px">
           <UserPhoto
             alignItems="center"
@@ -122,6 +123,8 @@ const AccountProfile = observer(() => {
           </Observer>
         </FlexContainer>
       </FlexContainer>
+
+      <AccProfileCarousel />
 
       {!mainAppStore.isPromoAccount &&
         userProfileStore.userProfile?.kyc ===

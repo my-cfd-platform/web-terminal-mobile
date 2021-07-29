@@ -63,7 +63,7 @@ const Portfolio = observer(() => {
   return (
     <>
       <FlexContainer
-        padding="0 16px"
+        padding="20px 16px 0"
         flexDirection="column"
         position="relative"
         marginBottom="32px"
@@ -72,7 +72,7 @@ const Portfolio = observer(() => {
         <FlexContainer
           justifyContent="space-between"
           alignItems="center"
-          marginBottom="12px"
+          marginBottom="20px"
         >
           <PrimaryTextSpan
             color="#ffffff"

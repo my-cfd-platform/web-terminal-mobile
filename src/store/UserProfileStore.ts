@@ -6,6 +6,7 @@ interface ContextProps {
   userProfile: PersonalDataDTO | null;
   userProfileId: string;
   loadingBonus: boolean;
+  isBonus: boolean;
 }
 
 export class UserProfileStore implements ContextProps {
@@ -13,6 +14,8 @@ export class UserProfileStore implements ContextProps {
   @observable userProfileId: string = '';
 
   @observable loadingBonus = false;
+  @observable isBonusPopup = false;
+  @observable isBonus = false;
 
   @action
   setUser = (userData: PersonalDataDTO) => {
@@ -21,9 +24,19 @@ export class UserProfileStore implements ContextProps {
   };
 
   @action
+  setUserIsBonus = () => (this.isBonus = true);
+  @action
+  setUserNotIsBonus = () => (this.isBonus = false);
+
+  @action
   setBonusLoading = () => (this.loadingBonus = true);
   @action
   stopBonusLoading = () => (this.loadingBonus = false);
+
+  @action
+  showBonusPopup = () => (this.isBonusPopup = true);
+  @action
+  hideBonusPopup = () => (this.isBonusPopup = false);
 
   @action
   getUserBonus = async (miscUrl: string) => {

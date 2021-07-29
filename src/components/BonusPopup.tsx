@@ -12,8 +12,10 @@ import { PrimaryTextParagraph, PrimaryTextSpan } from '../styles/TextsElements';
 
 import BonusGift from '../assets/images/bonus-gift.png';
 import * as animationData from '../assets/lotties/confettie-animation.json';
+import { useStores } from '../hooks/useStores';
 const BonusPopup = () => {
   const { t } = useTranslation();
+  const { userProfileStore } = useStores();
 
   const getLottieOptions = () => {
     return {
@@ -28,8 +30,10 @@ const BonusPopup = () => {
     };
   };
 
+  const handleCloseBonusPopup = () => () => userProfileStore.hideBonusPopup();
+
   return (
-    <PopupContainer title={t('Bonus')} onClose={() => console.log('close')}>
+    <PopupContainer title={t('Bonus')} onClose={handleCloseBonusPopup()}>
       <FlexContainer
         flexDirection="column"
         height="100%"
@@ -102,8 +106,9 @@ const BonusPopup = () => {
                 fontSize="16px"
                 color="#1C1F26"
                 fontWeight="bold"
+                textTransform="capitalize"
               >
-                {t('Get Bonus')}
+                {t('Get bonus')}
               </PrimaryTextSpan>
             </PrimaryButton>
           </FlexContainer>

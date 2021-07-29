@@ -494,12 +494,15 @@
     "A “bonus” cannot be lost until there is a balance on the account.": "A “bonus” cannot be lost until there is a balance on the account.",
     "Can I withdraw my bonus money?": "Can I withdraw my bonus money?",
     "Bonuses will be automatically deducted if you apply to make a withdrawal.": "Bonuses will be automatically deducted if you apply to make a withdrawal.",
-    "Get Bonus": "Get Bonus",
+    "Get bonus": "Get bonus",
     "Skip bonus": "Skip bonus",
     "The deposit added to your account as a gift.": "The deposit added to your account as a gift.",
     "All profits made are yours to keep.": "All profits made are yours to keep.",
     "All details about": "All details about",
     "Bonus Rules": "Bonus Rules",
     "Get": "Get",
-    "bonus": "bonus"
+    "bonus": "bonus",
+    "Onboarding guide": "Onboarding guide",
+    "Learn how to start trading": "Learn how to start trading"
+    
 }

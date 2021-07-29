@@ -20,6 +20,7 @@ const AccountLabel = observer(() => {
           fontWeight={500}
           fontSize="16px"
           textTransform="uppercase"
+          marginRight="14px"
         >
           {t('Demo')}
         </PrimaryTextSpan>

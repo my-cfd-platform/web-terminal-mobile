@@ -113,7 +113,7 @@ const NavBar = observer(() => {
 
       <AccountSwitcher show={mainAppStore.showAccountSwitcher} />
 
-      {/* <BonusPopup /> */}
+      {userProfileStore.isBonusPopup && <BonusPopup />}
     </FlexContainer>
   );
 });
