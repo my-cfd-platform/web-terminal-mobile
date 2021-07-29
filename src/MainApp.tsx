@@ -25,7 +25,7 @@ const DAYS_HIDDEN = IS_LIVE ? 30 : 1;
 const DAYS_VIEW_HIDDEN = IS_LIVE ? 90 : 1;
 
 const MainApp: FC = () => {
-  const { mainAppStore, instrumentsStore, badRequestPopupStore } = useStores();
+  const { mainAppStore, instrumentsStore, userProfileStore } = useStores();
   const { t, i18n } = useTranslation();
 
   const isPromoAccountView = useCallback(() => {
@@ -83,6 +83,10 @@ const MainApp: FC = () => {
 
   useEffect(() => {
     mainAppStore.handleInitConnection();
+
+    if (mainAppStore.isAuthorized) {
+      userProfileStore.getUserBonus(mainAppStore.initModel.miscUrl);
+    }
   }, [mainAppStore.isAuthorized]);
 
   useEffect(() => {

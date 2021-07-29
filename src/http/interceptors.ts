@@ -68,6 +68,7 @@ const injectInerceptors = (mainAppStore: MainAppStore) => {
       const excludeCheckErrorFlow = [
         API_LIST.DEBUG.POST,
         API_LIST.ONBOARDING.STEPS,
+        API_LIST.WELCOME_BONUS.GET
       ];
 
       const requestUrl: string = error?.config?.url;

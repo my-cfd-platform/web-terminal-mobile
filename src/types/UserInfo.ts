@@ -1,3 +1,4 @@
+import { WelcomeBonusResponseEnum } from './../enums/WelcomeBonusResponseEnum';
 import { OperationApiResponseCodes } from '../enums/OperationApiResponseCodes';
 
 export interface UserAuthenticate {
@@ -49,4 +50,22 @@ export interface UserAuthenticateResponse {
 
 export interface LpLoginParams {
   token: string;
+}
+
+export interface IWelcomeBonus {
+  welcomeBonus: {
+    ftdFrom: number;
+    maxBonusAmount: number;
+  };
+  welcomeBonusExpirations: [
+    {
+      bonusPercentageFromFtd: number;
+      expirationDateUtc: number;
+    }
+  ];
+}
+
+export interface IWelcomeBonusDTO {
+  responseCode: WelcomeBonusResponseEnum;
+  data: IWelcomeBonus;
 }
