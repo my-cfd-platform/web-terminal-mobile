@@ -83,10 +83,6 @@ const MainApp: FC = () => {
 
   useEffect(() => {
     mainAppStore.handleInitConnection();
-
-    if (mainAppStore.isAuthorized) {
-      // userProfileStore.getUserBonus(mainAppStore.initModel.miscUrl);
-    }
   }, [mainAppStore.isAuthorized]);
 
   useEffect(() => {

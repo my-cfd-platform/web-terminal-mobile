@@ -61,7 +61,7 @@ const AccountProfile = observer(() => {
 
   return (
     // TODO: Refactor Safari
-    <FlexContainer flexDirection="column" minHeight="600px">
+    <FlexContainer flexDirection="column" minHeight="600px" overflow="auto">
       <AchievementStatusLabel />
       <FlexContainer padding="16px" marginBottom="16px">
         <FlexContainer width="64px">
@@ -252,7 +252,7 @@ const AccountProfile = observer(() => {
 
       <FlexContainer
         flexDirection="column"
-        marginBottom="24px"
+        marginBottom="36px"
         backgroundColor="rgb(28, 31, 38)"
       >
         <FlexContainer padding="0 16px" marginBottom="8px">

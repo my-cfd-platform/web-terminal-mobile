@@ -54,18 +54,18 @@ export interface LpLoginParams {
 
 export interface IWelcomeBonus {
   welcomeBonus: {
-    ftdFrom: number;
-    maxBonusAmount: number;
-  };
+    ftdFrom: number,
+    maxBonusAmount: number,
+  },
   welcomeBonusExpirations: [
     {
-      bonusPercentageFromFtd: number;
-      expirationDateUtc: number;
+      bonusPercentageFromFtd: number,
+      expirationDateUtc: number,
     }
-  ];
+  ]
 }
 
 export interface IWelcomeBonusDTO {
-  responseCode: WelcomeBonusResponseEnum;
-  data: IWelcomeBonus;
+  responseCode: WelcomeBonusResponseEnum,
+  data: IWelcomeBonus
 }

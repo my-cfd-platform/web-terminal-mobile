@@ -81,6 +81,10 @@ const NavBar = observer(() => {
     mainAppStore.promo,
   ]);
 
+  useEffect(() => {
+    userProfileStore.getUserBonus(mainAppStore.initModel.miscUrl);
+  }, [])
+
   return (
     <FlexContainer
       width="100vw"

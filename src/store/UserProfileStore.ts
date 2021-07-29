@@ -1,4 +1,5 @@
 import { observable, action } from 'mobx';
+import { WelcomeBonusResponseEnum } from '../enums/WelcomeBonusResponseEnum';
 import API from '../helpers/API';
 import { PersonalDataDTO } from '../types/PersonalDataTypes';
 
@@ -7,6 +8,8 @@ interface ContextProps {
   userProfileId: string;
   loadingBonus: boolean;
   isBonus: boolean;
+  bonusPercent: number;
+  bonusExpirationDate: number;
 }
 
 export class UserProfileStore implements ContextProps {
@@ -16,6 +19,9 @@ export class UserProfileStore implements ContextProps {
   @observable loadingBonus = false;
   @observable isBonusPopup = false;
   @observable isBonus = false;
+
+  @observable bonusPercent = 0;
+  @observable bonusExpirationDate = 0;
 
   @action
   setUser = (userData: PersonalDataDTO) => {
@@ -43,6 +49,13 @@ export class UserProfileStore implements ContextProps {
     this.setBonusLoading();
     try {
       const response = await API.getUserBonus(miscUrl);
+
+      if (response.responseCode === WelcomeBonusResponseEnum.Ok) {
+        this.bonusPercent = response.data.welcomeBonusExpirations[0].bonusPercentageFromFtd;
+        this.bonusExpirationDate = response.data.welcomeBonusExpirations[0].expirationDateUtc;
+        this.setUserIsBonus();
+      }
+
       console.log(response);
       this.stopBonusLoading();
     } catch (error) {

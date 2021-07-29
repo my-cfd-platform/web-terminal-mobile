@@ -13,6 +13,7 @@ import { PrimaryTextParagraph, PrimaryTextSpan } from '../styles/TextsElements';
 import BonusGift from '../assets/images/bonus-gift.png';
 import * as animationData from '../assets/lotties/confettie-animation.json';
 import { useStores } from '../hooks/useStores';
+import EventBonusTimer from './EventBonusTimer';
 const BonusPopup = () => {
   const { t } = useTranslation();
   const { userProfileStore } = useStores();
@@ -81,7 +82,7 @@ const BonusPopup = () => {
             textAlign="center"
             marginBottom="20px"
           >
-            Only 2 days 19 hours left
+            <EventBonusTimer />
           </PrimaryTextParagraph>
 
           <PrimaryTextParagraph

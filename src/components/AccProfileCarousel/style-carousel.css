@@ -1,21 +1,18 @@
-.account-switch-slider .owl-stage {
-  padding-left: 0px !important;
-}
 
-.account-switch-slider .owl-theme .owl-dots .owl-dot,
-.account-switch-slider .owl-theme .owl-dots .owl-dot.active {
-  outline: none;
+.bonus-slider .owl-theme .owl-dots .owl-dot,
+.bonus-slider .owl-theme .owl-dots .owl-dot.active {
+  outline: none !important;
   border: none;
 }
-.account-switch-slider .owl-theme .owl-dots .owl-dot span {
+.bonus-slider .owl-theme .owl-dots .owl-dot span {
   background: rgba(255, 255, 255, 0.3);
 }
-.account-switch-slider .owl-theme .owl-dots .owl-dot.active span,
+.bonus-slider .owl-theme .owl-dots .owl-dot.active span,
 .owl-theme .owl-dots .owl-dot:hover span {
   background: #ffffff;
 }
 
-.account-switch-slider .owl-theme .owl-nav {
+.bonus-slider .owl-theme .owl-nav {
   margin: 0;
   padding: 0;
   position: absolute;

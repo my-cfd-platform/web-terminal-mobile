@@ -1,17 +1,22 @@
 import styled from '@emotion/styled';
-import React from 'react';
+import { observer } from 'mobx-react-lite';
+import moment from 'moment';
+import React, { useState } from 'react';
+import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useStores } from '../../hooks/useStores';
 import { ButtonWithoutStyles } from '../../styles/ButtonWithoutStyles';
 import { FlexContainer } from '../../styles/FlexContainer';
 import { PrimaryTextSpan } from '../../styles/TextsElements';
+import EventBonusTimer from '../EventBonusTimer';
 
-const BonusBanner = () => {
+const BonusBanner = observer(() => {
   const { t } = useTranslation();
 
   const { userProfileStore } = useStores();
 
   const handleShowBonusPopup = () => () => userProfileStore.showBonusPopup();
+
 
   return (
     <BannerBtn onClick={handleShowBonusPopup()}>
@@ -32,8 +37,8 @@ const BonusBanner = () => {
           borderRadius="4px"
           height="100%"
         >
-          <PrimaryTextSpan fontSize="24px" color="#1C1F26" fontWeight="bold">
-            +30%
+          <PrimaryTextSpan fontSize="22px" color="#1C1F26" fontWeight="bold">
+            {`+${userProfileStore.bonusPercent}%`}
           </PrimaryTextSpan>
         </FlexContainer>
 
@@ -58,13 +63,13 @@ const BonusBanner = () => {
             lineHeight="17px"
             textAlign="left"
           >
-            Only 2 days 19 hours left
+            <EventBonusTimer />
           </PrimaryTextSpan>
         </FlexContainer>
       </FlexContainer>
     </BannerBtn>
   );
-};
+});
 
 export default BonusBanner;
 

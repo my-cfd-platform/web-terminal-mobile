@@ -10,8 +10,8 @@ import './style-carousel.css';
 
 const AccProfileCarousel = () => {
   return (
-    <FlexContainer marginBottom="16px" width="100%" padding="0 8px">
-      <OwlCarousel className="owl-theme" items={1} stagePadding={8} margin={4}>
+    <FlexContainer marginBottom="16px" width="100%" padding="0 8px" className="bonus-slider">
+      <OwlCarousel className="owl-theme" items={1} stagePadding={8} margin={4} nav={false} navText={['', '']}>
         <BonusBanner />
         <OnBoardingBanner />
       </OwlCarousel>
