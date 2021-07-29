@@ -10,7 +10,7 @@ const News = () => {
   const { t } = useTranslation();
 
   return (
-    <FlexContainer flexDirection="column" minHeight={`calc(${FULL_VH} - 228px)`}>
+    <FlexContainer flexDirection="column" minHeight={`calc(${FULL_VH} - 228px)`} padding="20px 0 0 0">
       <FlexContainer
         padding="0 16px"
         alignItems="center"

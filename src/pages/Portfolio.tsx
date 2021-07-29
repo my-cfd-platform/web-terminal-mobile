@@ -63,7 +63,7 @@ const Portfolio = observer(() => {
   return (
     <>
       <FlexContainer
-        padding="20px 16px 0"
+        padding="16px 16px 0"
         flexDirection="column"
         position="relative"
         marginBottom="32px"

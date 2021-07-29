@@ -124,7 +124,7 @@ const AccountProfile = observer(() => {
         </FlexContainer>
       </FlexContainer>
 
-      <AccProfileCarousel />
+      {userProfileStore.isBonus && <AccProfileCarousel />}
 
       {!mainAppStore.isPromoAccount &&
         userProfileStore.userProfile?.kyc ===

@@ -102,9 +102,11 @@ const NavBar = observer(() => {
               redirectWithUpdateRefreshToken(API_DEPOSIT_STRING, parsedParams)
             }
           >
-            <FlexContainer marginRight="4px">
-              <SvgIcon {...IconGift} />
-            </FlexContainer>
+            {userProfileStore.isBonus && (
+              <FlexContainer marginRight="4px">
+                <SvgIcon {...IconGift} />
+              </FlexContainer>
+            )}
 
             {t('Deposit')}
           </DepositLink>
