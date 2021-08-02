@@ -121,13 +121,13 @@ const AuthorizedContainer: FC = observer(({ children }) => {
           }
           setTimeout(() => {
             setWaitingData(false);
-          }, 2000);
+          }, 4000);
         }
       } catch (error) {
         if (!cleanupFunction) {
           setTimeout(() => {
             setWaitingData(false);
-          }, 2000);
+          }, 4000);
         }
       }
     }
