@@ -234,6 +234,7 @@ const Onboarding = observer(() => {
   const isOnboardingAvailable = async (callback: any) => {
     //
     const isAvailable = await mainAppStore.checkOnboardingShow();
+    console.log('isOnboardingAvailable', isOnboardingAvailable);
     if (!isAvailable) {
       push(Page.DASHBOARD);
     } else {
