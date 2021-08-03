@@ -43,7 +43,15 @@ const LpLogin = observer(() => {
               break;
 
             default:
-              push(Page.DASHBOARD);
+              const showOnBoarding = await mainAppStore.checkOnboardingShowLPLogin();
+              if (showOnBoarding) {
+                await mainAppStore.addTriggerShowOnboarding();
+                setTimeout(() => {
+                  push(Page.ONBOARDING);
+                }, 500);
+              } else {
+                push(Page.DASHBOARD);
+              }
               break;
           }
         } else {
