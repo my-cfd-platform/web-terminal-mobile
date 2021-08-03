@@ -159,7 +159,8 @@ export class MainAppStore implements MainAppStoreProps {
       localStorage.getItem(LOCAL_STORAGE_REFRESH_TOKEN_KEY) || '';
     Axios.defaults.headers[RequestHeaders.AUTHORIZATION] = this.token;
 
-    const newLang = localStorage.getItem(LOCAL_STORAGE_LANGUAGE) ||
+    const newLang =
+      localStorage.getItem(LOCAL_STORAGE_LANGUAGE) ||
       (window.navigator.language &&
       languagesList.includes(
         window.navigator.language.slice(0, 2).toLowerCase()
@@ -190,8 +191,8 @@ export class MainAppStore implements MainAppStoreProps {
         IS_LIVE &&
         this.initModel.tradingUrl &&
         config.url &&
-        !config.url.includes('auth/')
-        && !config.url.includes('misc')
+        !config.url.includes('auth/') &&
+        !config.url.includes('misc')
       ) {
         if (config.url.includes('://')) {
           const arrayOfSubpath = config.url.split('://')[1].split('/');
@@ -330,13 +331,16 @@ export class MainAppStore implements MainAppStoreProps {
         };
         const jsonLogObject = {
           error: JSON.stringify(objectToSend),
-          snapShot: JSON.stringify(getStatesSnapshot(this), getCircularReplacer())
+          snapShot: JSON.stringify(
+            getStatesSnapshot(this),
+            getCircularReplacer()
+          ),
         };
         const params: DebugTypes = {
           level: debugLevel.TRANSPORT,
           processId: getProcessId(),
           message: error?.message || 'unknown error',
-          jsonLogObject: JSON.stringify(jsonLogObject)
+          jsonLogObject: JSON.stringify(jsonLogObject),
         };
         API.postDebug(params, API_STRING);
       }
@@ -509,6 +513,25 @@ export class MainAppStore implements MainAppStoreProps {
   };
 
   @action
+  checkOnboardingShowLPLogin = async () => {
+    try {
+      //
+      const onBoardingKey = await API.getKeyValue(
+        KeysInApi.SHOW_ONBOARDING,
+        this.initModel.tradingUrl
+      );
+      const showOnboarding = onBoardingKey !== 'false';
+      if (showOnboarding) {
+        this.isOnboarding = true;
+      }
+      return showOnboarding;
+      //
+    } catch (error) {
+      return false;
+    }
+  };
+
+  @action
   checkOnboardingShow = async () => {
     try {
       //
@@ -623,6 +646,10 @@ export class MainAppStore implements MainAppStoreProps {
 
   @action
   signInLpLogin = async (params: LpLoginParams) => {
+
+    if (this.isAuthorized) {
+      this.signOut();
+    }
     const response = await API.postLpLoginToken(params, this.initModel.authUrl);
 
     if (response.result === OperationApiResponseCodes.Ok) {
@@ -790,7 +817,7 @@ export class MainAppStore implements MainAppStoreProps {
       return this.accounts.filter((acc) => !acc.isLive);
     }
 
-    console.log(this.activeAccount?.id)
+    console.log(this.activeAccount?.id);
     return this.accounts.reduce(
       (acc, prev) =>
         prev.id === this.activeAccount?.id ? [prev, ...acc] : [...acc, prev],
