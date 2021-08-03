@@ -84,11 +84,13 @@ const Onboarding = observer(() => {
           });
         }
       } else {
+        console.log('trouble here');
         mainAppStore.isOnboarding = false;
         mainAppStore.isDemoRealPopup = true;
         push(Page.DASHBOARD);
       }
     } catch (error) {
+      console.log('trouble there');
       mainAppStore.isOnboarding = false;
       mainAppStore.isDemoRealPopup = true;
       push(Page.DASHBOARD);
@@ -231,22 +233,6 @@ const Onboarding = observer(() => {
     return wrapperRef.current?.offsetWidth || 375;
   }, [wrapperRef]);
 
-
-  useEffect(() => {
-    const storageCheck = localStorage.getItem(LOCAL_STORAGE_SKIPPED_ONBOARDING);
-    const neededId = mainAppStore.accounts?.find((account) => !account.isLive)
-      ?.id;
-    const alreadySkipped =
-      storageCheck !== null ? JSON.parse(storageCheck) : [];
-    if (alreadySkipped.includes(neededId)) {
-      mainAppStore.activeAccountId = neededId || '';
-      mainAppStore.activeAccount = mainAppStore.accounts?.find(
-        (account) => !account.isLive
-      );
-      push(Page.DASHBOARD);
-    }
-  }, []);
-
   const isOnboardingAvailable = async (callback: any) => {
     //
     const isAvailable = await mainAppStore.checkOnboardingShow();
@@ -268,17 +254,21 @@ const Onboarding = observer(() => {
           2,
           mainAppStore.initModel.miscUrl
         );
+        console.log('cleanupFunction', cleanupFunction);
         if (response.responseCode === OnBoardingResponseEnum.Ok && !cleanupFunction) {
+          console.log('its okey');
           setActualStepInfo(null);
           setActualStepInfo(response);
           setActualStep(1);
           setLoading(false);
         } else {
+          console.log('not okey');
           mainAppStore.isOnboarding = false;
           mainAppStore.isDemoRealPopup = true;
           push(Page.DASHBOARD);
         }
       } catch (error) {
+        console.log('not okey API');
         mainAppStore.isOnboarding = false;
         mainAppStore.isDemoRealPopup = true;
         push(Page.DASHBOARD);
