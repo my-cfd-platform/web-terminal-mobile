@@ -86,11 +86,13 @@ const Onboarding = observer(() => {
       } else {
         mainAppStore.isOnboarding = false;
         mainAppStore.isDemoRealPopup = true;
+        console.log('ok api skip');
         push(Page.DASHBOARD);
       }
     } catch (error) {
       mainAppStore.isOnboarding = false;
       mainAppStore.isDemoRealPopup = true;
+      console.log('api skip');
       push(Page.DASHBOARD);
     }
   };
@@ -145,6 +147,7 @@ const Onboarding = observer(() => {
         LOCAL_STORAGE_SKIPPED_ONBOARDING,
         JSON.stringify(alreadySkipped)
       );
+      console.log('close skip');
       push(Page.DASHBOARD);
     }
   };
@@ -162,6 +165,7 @@ const Onboarding = observer(() => {
         });
         mainAppStore.addTriggerDissableOnboarding();
         mainAppStore.isOnboarding = false;
+        console.log('selectDemo skip');
         push(Page.DASHBOARD);
       } catch (error) {
         badRequestPopupStore.openModal();
@@ -236,6 +240,7 @@ const Onboarding = observer(() => {
     const isAvailable = await mainAppStore.checkOnboardingShow();
     console.log('isOnboardingAvailable', isAvailable);
     if (!isAvailable) {
+      console.log('isOnboardingAvailable skip');
       push(Page.DASHBOARD);
     } else {
       // init OB

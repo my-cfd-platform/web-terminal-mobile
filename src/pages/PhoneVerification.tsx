@@ -89,8 +89,9 @@ const PhoneVerification: FC = () => {
         });
       }
       mainAppStore.isVerification = false;
-      mainAppStore.isLoading = true;
-      push(Page.DASHBOARD);
+      setTimeout(() => {
+        push(Page.ONBOARDING);
+      });
     } catch (error) {}
   };
 
