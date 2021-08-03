@@ -91,7 +91,11 @@ const PhoneVerification: FC = () => {
       mainAppStore.isVerification = false;
       mainAppStore.closedOnVerification = true;
       mainAppStore.isLoading = true;
-      push(Page.DASHBOARD);
+      if (mainAppStore.isOnboarding) {
+        push(Page.DASHBOARD);
+      } else {
+        push(Page.ONBOARDING);
+      }
     } catch (error) {}
   };
 

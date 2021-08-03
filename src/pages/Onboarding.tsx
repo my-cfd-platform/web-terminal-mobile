@@ -84,13 +84,11 @@ const Onboarding = observer(() => {
           });
         }
       } else {
-        console.log('trouble here');
         mainAppStore.isOnboarding = false;
         mainAppStore.isDemoRealPopup = true;
         push(Page.DASHBOARD);
       }
     } catch (error) {
-      console.log('trouble there');
       mainAppStore.isOnboarding = false;
       mainAppStore.isDemoRealPopup = true;
       push(Page.DASHBOARD);
