@@ -51,6 +51,13 @@ const Dashboard: FC = observer(() => {
     mainAppStore.onboardingJustClosed
   ]);
 
+  useEffect(() => {
+    if (mainAppStore.closedOnVerification) {
+      mainAppStore.isLoading = false;
+      mainAppStore.closedOnVerification = false;
+    }
+  }, [mainAppStore.closedOnVerification]);
+
   const handleClickBuy = () => {
     push(
       `${Page.ORDER_MAIN}/buy/${instrumentsStore.activeInstrument?.instrumentItem.id}`
