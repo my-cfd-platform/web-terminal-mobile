@@ -37,26 +37,19 @@ const Dashboard: FC = observer(() => {
   ]);
 
   useEffect(() => {
-    // if (
-    //   instrumentsStore.activeInstruments.length &&
-    //   mainAppStore.onboardingJustClosed
-    // ) {
-    //   instrumentsStore.switchInstrument(
-    //     instrumentsStore.activeInstruments[0].instrumentItem.id
-    //   );
-    //   mainAppStore.onboardingJustClosed = false;
-    // }
+    if (
+      instrumentsStore.activeInstruments.length &&
+      mainAppStore.onboardingJustClosed
+    ) {
+      instrumentsStore.switchInstrument(
+        instrumentsStore.activeInstruments[0].instrumentItem.id
+      );
+      mainAppStore.onboardingJustClosed = false;
+    }
   }, [
     instrumentsStore.activeInstruments,
     mainAppStore.onboardingJustClosed
   ]);
-
-  useEffect(() => {
-    if (mainAppStore.closedOnVerification) {
-      mainAppStore.isLoading = false;
-      mainAppStore.closedOnVerification = false;
-    }
-  }, [mainAppStore.closedOnVerification]);
 
   const handleClickBuy = () => {
     push(

@@ -149,7 +149,6 @@ export class MainAppStore implements MainAppStoreProps {
   paramsWithdraw: boolean = false;
   paramsSecurity: boolean = false;
   paramsBalanceHistory: boolean = false;
-  closedOnVerification: boolean = false;
 
   constructor(rootStore: RootStore) {
     this.rootStore = rootStore;
