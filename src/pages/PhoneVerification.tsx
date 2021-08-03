@@ -90,11 +90,7 @@ const PhoneVerification: FC = () => {
       }
       mainAppStore.isVerification = false;
       mainAppStore.isLoading = true;
-      if (mainAppStore.isOnboarding) {
-        push(Page.DASHBOARD);
-      } else {
-        push(Page.ONBOARDING);
-      }
+      push(Page.DASHBOARD);
     } catch (error) {}
   };
 

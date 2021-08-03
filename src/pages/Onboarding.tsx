@@ -234,7 +234,7 @@ const Onboarding = observer(() => {
   const isOnboardingAvailable = async (callback: any) => {
     //
     const isAvailable = await mainAppStore.checkOnboardingShow();
-    console.log('isOnboardingAvailable', isOnboardingAvailable);
+    console.log('isOnboardingAvailable', isAvailable);
     if (!isAvailable) {
       push(Page.DASHBOARD);
     } else {
@@ -254,7 +254,7 @@ const Onboarding = observer(() => {
           mainAppStore.initModel.miscUrl
         );
         console.log('cleanupFunction', cleanupFunction);
-        if (response.responseCode === OnBoardingResponseEnum.Ok && !cleanupFunction) {
+        if (response.responseCode === OnBoardingResponseEnum.Ok) {
           console.log('its okey');
           setActualStepInfo(null);
           setActualStepInfo(response);
