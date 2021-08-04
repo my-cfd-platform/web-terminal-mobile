@@ -231,22 +231,6 @@ const Onboarding = observer(() => {
     return wrapperRef.current?.offsetWidth || 375;
   }, [wrapperRef]);
 
-
-  useEffect(() => {
-    const storageCheck = localStorage.getItem(LOCAL_STORAGE_SKIPPED_ONBOARDING);
-    const neededId = mainAppStore.accounts?.find((account) => !account.isLive)
-      ?.id;
-    const alreadySkipped =
-      storageCheck !== null ? JSON.parse(storageCheck) : [];
-    if (alreadySkipped.includes(neededId)) {
-      mainAppStore.activeAccountId = neededId || '';
-      mainAppStore.activeAccount = mainAppStore.accounts?.find(
-        (account) => !account.isLive
-      );
-      push(Page.DASHBOARD);
-    }
-  }, []);
-
   const isOnboardingAvailable = async (callback: any) => {
     //
     const isAvailable = await mainAppStore.checkOnboardingShow();
@@ -268,7 +252,7 @@ const Onboarding = observer(() => {
           2,
           mainAppStore.initModel.miscUrl
         );
-        if (response.responseCode === OnBoardingResponseEnum.Ok && !cleanupFunction) {
+        if (response.responseCode === OnBoardingResponseEnum.Ok) {
           setActualStepInfo(null);
           setActualStepInfo(response);
           setActualStep(1);
