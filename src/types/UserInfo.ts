@@ -52,20 +52,19 @@ export interface LpLoginParams {
   token: string;
 }
 
+export interface IWelcomeBonusExpirations {
+  bonusPercentageFromFtd: number;
+  expirationDateUtc: number;
+}
 export interface IWelcomeBonus {
   welcomeBonus: {
-    ftdFrom: number,
-    maxBonusAmount: number,
-  },
-  welcomeBonusExpirations: [
-    {
-      bonusPercentageFromFtd: number,
-      expirationDateUtc: number,
-    }
-  ]
+    ftdFrom: number;
+    maxBonusAmount: number;
+  };
+  welcomeBonusExpirations: IWelcomeBonusExpirations[];
 }
 
 export interface IWelcomeBonusDTO {
-  responseCode: WelcomeBonusResponseEnum,
-  data: IWelcomeBonus
+  responseCode: WelcomeBonusResponseEnum;
+  data: IWelcomeBonus;
 }

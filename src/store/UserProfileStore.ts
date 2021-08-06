@@ -1,7 +1,9 @@
+import { IWelcomeBonusExpirations } from './../types/UserInfo';
 import { observable, action } from 'mobx';
 import { WelcomeBonusResponseEnum } from '../enums/WelcomeBonusResponseEnum';
 import API from '../helpers/API';
 import { PersonalDataDTO } from '../types/PersonalDataTypes';
+import moment from 'moment';
 
 interface ContextProps {
   userProfile: PersonalDataDTO | null;
@@ -51,12 +53,26 @@ export class UserProfileStore implements ContextProps {
       const response = await API.getUserBonus(miscUrl);
 
       if (response.responseCode === WelcomeBonusResponseEnum.Ok) {
-        this.bonusPercent = response.data.welcomeBonusExpirations[0].bonusPercentageFromFtd;
-        this.bonusExpirationDate = response.data.welcomeBonusExpirations[0].expirationDateUtc;
+        const currentDate = moment().unix();
+
+        const bonusInfo =
+          response.data.welcomeBonusExpirations
+            .sort(
+              (a: IWelcomeBonusExpirations, b: IWelcomeBonusExpirations) =>
+                a.expirationDateUtc - b.expirationDateUtc
+            )
+            .find(
+              (data: IWelcomeBonusExpirations) =>
+                data.expirationDateUtc > currentDate
+            ) || response.data.welcomeBonusExpirations[0];
+
+        this.bonusPercent = bonusInfo.bonusPercentageFromFtd;
+        this.bonusExpirationDate = bonusInfo.expirationDateUtc;
         this.setUserIsBonus();
+      } else {
+        this.setUserNotIsBonus();
       }
 
-      console.log(response);
       this.stopBonusLoading();
     } catch (error) {
       this.stopBonusLoading();

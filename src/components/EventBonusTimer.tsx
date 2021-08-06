@@ -7,7 +7,7 @@ import { useStores } from '../hooks/useStores';
 const EventBonusTimer = observer(() => {
   let timerInterval: any;
 
-  const { userProfileStore } = useStores();
+  const { userProfileStore, mainAppStore } = useStores();
   const { t } = useTranslation();
 
   const [timeLeft, setTimeLeft] = useState('');
@@ -21,6 +21,11 @@ const EventBonusTimer = observer(() => {
     timerInterval = setInterval(function () {
       currentTime = moment().unix();
       duration = moment.duration(duration - interval, 'milliseconds');
+
+      // update bonus info if exp
+      if (currentTime >= eventTime) {
+        userProfileStore.getUserBonus(mainAppStore.initModel.miscUrl);
+      }
 
       if (duration.days() > 0) {
         setTimeLeft(
