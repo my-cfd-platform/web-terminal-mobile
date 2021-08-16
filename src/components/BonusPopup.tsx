@@ -1,6 +1,6 @@
 import styled from '@emotion/styled';
 import React from 'react';
-import { useTranslation } from 'react-i18next';
+import { composeInitialProps, useTranslation } from 'react-i18next';
 import Lottie from 'react-lottie';
 import { Link } from 'react-router-dom';
 import Page from '../constants/Pages';
@@ -14,7 +14,12 @@ import BonusGift from '../assets/images/bonus-gift.png';
 import * as animationData from '../assets/lotties/confettie-animation.json';
 import { useStores } from '../hooks/useStores';
 import EventBonusTimer from './EventBonusTimer';
-const BonusPopup = () => {
+import { FC } from 'react';
+
+interface Props {
+  handleDeposit: (useBonus: boolean) => void;
+}
+const BonusPopup: FC<Props> = ({ handleDeposit }) => {
   const { t } = useTranslation();
   const { userProfileStore } = useStores();
 
@@ -32,6 +37,10 @@ const BonusPopup = () => {
   };
 
   const handleCloseBonusPopup = () => () => userProfileStore.hideBonusPopup();
+
+  const handleClickOpenDeposit = (useBonus: boolean) => () => {
+    handleDeposit(useBonus);
+  }
 
   return (
     <PopupContainer title={t('Bonus')} onClose={handleCloseBonusPopup()}>
@@ -102,7 +111,7 @@ const BonusPopup = () => {
 
           {/*  */}
           <FlexContainer marginBottom="20px">
-            <PrimaryButton width="100%">
+            <PrimaryButton width="100%" onClick={handleClickOpenDeposit(true)}>
               <PrimaryTextSpan
                 fontSize="16px"
                 color="#1C1F26"
@@ -119,7 +128,7 @@ const BonusPopup = () => {
             width="100%"
             justifyContent="center"
           >
-            <ButtonWithoutStyles>
+            <ButtonWithoutStyles onClick={handleClickOpenDeposit(false)}>
               <PrimaryTextSpan fontSize="16px" color="#ffffff" fontWeight={500}>
                 {t('Skip bonus')}
               </PrimaryTextSpan>

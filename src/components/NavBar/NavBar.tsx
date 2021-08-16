@@ -14,6 +14,7 @@ import SvgIcon from '../SvgIcon';
 import IconGift from '../../assets/svg_no_compress/icon-deposit-gift.svg';
 import PopupContainer from '../../containers/PopupContainer';
 import BonusPopup from '../BonusPopup';
+import { useCallback } from 'react';
 
 const NavBar = observer(() => {
   const { mainAppStore, userProfileStore } = useStores();
@@ -81,9 +82,35 @@ const NavBar = observer(() => {
     mainAppStore.promo,
   ]);
 
+  const handleOpenDeposit = useCallback(
+    (useBonus: boolean) => {
+      const newUrlParams = new URLSearchParams(parsedParams);
+
+      newUrlParams.set('useBonus', `${useBonus}`);
+      newUrlParams.set('expBonus', `${userProfileStore.bonusExpirationDate}`);
+      newUrlParams.set('amountBonus', `${userProfileStore.bonusPercent}`);
+
+      const newParsedParams = newUrlParams.toString();
+      mainAppStore.setParamsDeposit(false);
+      return redirectWithUpdateRefreshToken(
+        API_DEPOSIT_STRING,
+        newParsedParams
+      );
+    },
+    [parsedParams, userProfileStore]
+  );
+
+  const handleClickDeposit = useCallback(() => {
+    if (userProfileStore.isBonus) {
+      userProfileStore.showBonusPopup();
+    } else {
+      return redirectWithUpdateRefreshToken(API_DEPOSIT_STRING, parsedParams);
+    }
+  }, [userProfileStore.isBonus, parsedParams]);
+
   useEffect(() => {
     userProfileStore.getUserBonus(mainAppStore.initModel.miscUrl);
-  }, [])
+  }, []);
 
   return (
     <FlexContainer
@@ -101,17 +128,12 @@ const NavBar = observer(() => {
       </FlexContainer>
       <FlexContainer>
         {!mainAppStore.isPromoAccount && (
-          <DepositLink
-            onClick={() =>
-              redirectWithUpdateRefreshToken(API_DEPOSIT_STRING, parsedParams)
-            }
-          >
+          <DepositLink onClick={handleClickDeposit}>
             {userProfileStore.isBonus && (
               <FlexContainer marginRight="4px">
                 <SvgIcon {...IconGift} />
               </FlexContainer>
             )}
-
             {t('Deposit')}
           </DepositLink>
         )}
@@ -119,7 +141,9 @@ const NavBar = observer(() => {
 
       <AccountSwitcher show={mainAppStore.showAccountSwitcher} />
 
-      {userProfileStore.isBonusPopup && <BonusPopup />}
+      {userProfileStore.isBonusPopup && (
+        <BonusPopup handleDeposit={handleOpenDeposit} />
+      )}
     </FlexContainer>
   );
 });
