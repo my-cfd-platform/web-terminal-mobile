@@ -163,8 +163,17 @@ export class MainAppStore implements MainAppStoreProps {
     this.refreshToken =
       localStorage.getItem(LOCAL_STORAGE_REFRESH_TOKEN_KEY) || '';
     Axios.defaults.headers[RequestHeaders.AUTHORIZATION] = this.token;
-    
+
     Axios.defaults.timeout = this.connectTimeOut || 5000;
+    const newLang =
+      localStorage.getItem(LOCAL_STORAGE_LANGUAGE) ||
+      (window.navigator.language &&
+      languagesList.includes(
+        window.navigator.language.slice(0, 2).toLowerCase()
+      )
+        ? window.navigator.language.slice(0, 2).toLowerCase()
+        : CountriesEnum.EN);
+
     // @ts-ignore
     this.lang =
       localStorage.getItem(LOCAL_STORAGE_LANGUAGE) ||
