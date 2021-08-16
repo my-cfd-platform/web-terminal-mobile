@@ -30,6 +30,7 @@ import PositionEditSLTP from '../pages/PositionEditSL';
 import PositionEditSL from '../pages/PositionEditSL';
 import PositionEditTP from '../pages/PositionEditTP';
 import Onboarding from '../pages/Onboarding';
+import AccountBonusFaq from '../pages/AccountBonusFaq';
 
 export enum RouteLayoutType {
   Authorized,
@@ -207,6 +208,13 @@ const routesList = [
   {
     component: AccountAboutUs,
     path: Page.ACCOUNT_ABOUT_US,
+    exact: true,
+    strict: true,
+    layoutType: RouteLayoutType.Authorized,
+  },
+  {
+    component: AccountBonusFaq,
+    path: Page.BONUS_FAQ,
     exact: true,
     strict: true,
     layoutType: RouteLayoutType.Authorized,

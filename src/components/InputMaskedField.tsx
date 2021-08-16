@@ -28,6 +28,8 @@ interface InputFieldProps {
     | undefined;
   onBeforeInput?: any;
   mask: string;
+  readOnly?: boolean;
+  className?: string;
 }
 
 const InputMaskedField: FC<InputFieldProps> = ({
@@ -44,6 +46,9 @@ const InputMaskedField: FC<InputFieldProps> = ({
   inputMode,
   onBeforeInput,
   mask,
+  name,
+  readOnly = false,
+  className,
 }) => {
   return (
     <InputWrap>
@@ -62,6 +67,8 @@ const InputMaskedField: FC<InputFieldProps> = ({
         borderColor={(hasError && Colors.RED) || ''}
         onBlur={onBlur}
         autoComplete={autoComplete}
+        readOnly={readOnly}
+        className={className}
       />
       {hasError && <ErrorText>{errorText}</ErrorText>}
     </InputWrap>

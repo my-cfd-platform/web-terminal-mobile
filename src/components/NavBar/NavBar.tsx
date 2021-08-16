@@ -10,6 +10,11 @@ import { useTranslation } from 'react-i18next';
 import useRedirectMiddleware from '../../hooks/useRedirectMiddleware';
 import { ButtonWithoutStyles } from '../../styles/ButtonWithoutStyles';
 import AccountSwitcher from '../AccountSwitcher/AccountSwitcher';
+import SvgIcon from '../SvgIcon';
+import IconGift from '../../assets/svg_no_compress/icon-deposit-gift.svg';
+import PopupContainer from '../../containers/PopupContainer';
+import BonusPopup from '../BonusPopup';
+import { useCallback } from 'react';
 
 const NavBar = observer(() => {
   const { mainAppStore, userProfileStore } = useStores();
@@ -77,26 +82,68 @@ const NavBar = observer(() => {
     mainAppStore.promo,
   ]);
 
+  const handleOpenDeposit = useCallback(
+    (useBonus: boolean) => {
+      const newUrlParams = new URLSearchParams(parsedParams);
+
+      newUrlParams.set('useBonus', `${useBonus}`);
+      newUrlParams.set('expBonus', `${userProfileStore.bonusExpirationDate}`);
+      newUrlParams.set('amountBonus', `${userProfileStore.bonusPercent}`);
+
+      const newParsedParams = newUrlParams.toString();
+      mainAppStore.setParamsDeposit(false);
+      return redirectWithUpdateRefreshToken(
+        API_DEPOSIT_STRING,
+        newParsedParams
+      );
+    },
+    [parsedParams, userProfileStore]
+  );
+
+  const handleClickDeposit = useCallback(() => {
+    if (userProfileStore.isBonus) {
+      userProfileStore.showBonusPopup();
+    } else {
+      return redirectWithUpdateRefreshToken(API_DEPOSIT_STRING, parsedParams);
+    }
+  }, [userProfileStore.isBonus, parsedParams]);
+
+  useEffect(() => {
+    userProfileStore.getUserBonus(mainAppStore.initModel.miscUrl);
+  }, []);
+
   return (
     <FlexContainer
       width="100vw"
       position="relative"
       alignItems="center"
-      justifyContent="center"
+      justifyContent="space-between"
       height="48px"
+      padding="0 16px"
+      backgroundColor="#12151C"
     >
-      <AccountLabel />
-      <AccountsSwitchLink />
-      {!mainAppStore.isPromoAccount && (
-        <DepositLink
-          onClick={() =>
-            redirectWithUpdateRefreshToken(API_DEPOSIT_STRING, parsedParams)
-          }
-        >
-          {t('Deposit')}
-        </DepositLink>
-      )}
+      <FlexContainer flexDirection="row">
+        <AccountLabel />
+        <AccountsSwitchLink />
+      </FlexContainer>
+      <FlexContainer>
+        {!mainAppStore.isPromoAccount && (
+          <DepositLink onClick={handleClickDeposit}>
+            {userProfileStore.isBonus && (
+              <FlexContainer marginRight="4px">
+                <SvgIcon {...IconGift} />
+              </FlexContainer>
+            )}
+            {t('Deposit')}
+          </DepositLink>
+        )}
+      </FlexContainer>
+
       <AccountSwitcher show={mainAppStore.showAccountSwitcher} />
+
+      {userProfileStore.isBonusPopup && (
+        <BonusPopup handleDeposit={handleOpenDeposit} />
+      )}
     </FlexContainer>
   );
 });
@@ -105,12 +152,9 @@ export default NavBar;
 
 const DepositLink = styled(ButtonWithoutStyles)`
   font-size: 16px;
-  line-height: 1.3;
-  padding: 4px 0;
   font-weight: 500;
   color: ${Colors.ACCENT_BLUE};
-  position: absolute;
-  top: 50%;
-  right: 16px;
-  transform: translateY(-50%);
+  display: flex;
+  flex-direction: row;
+  align-items: center;
 `;

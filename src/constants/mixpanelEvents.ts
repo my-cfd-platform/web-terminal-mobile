@@ -51,6 +51,9 @@ const mixpanelEvents = {
   DEMO_REAL_WELCOME: 'demo real welcome',
   MOBILE_CHART_POSITION_VIEW: 'mobile chart position view',
   ONBOARDING: 'onboarding1',
+  TIMEOUT: 'timeout',
+  SERVER_ERROR_50X: 'server error 50x',
+  SERVER_ERROR_40X: 'server error 40x',
 };
 
 Object.freeze(mixpanelEvents);

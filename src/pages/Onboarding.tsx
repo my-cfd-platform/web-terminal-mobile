@@ -244,6 +244,22 @@ const Onboarding = observer(() => {
   };
 
   useEffect(() => {
+    const storageCheck = localStorage.getItem(LOCAL_STORAGE_SKIPPED_ONBOARDING);
+    const neededId = mainAppStore.accounts?.find((account) => !account.isLive)
+      ?.id;
+    const alreadySkipped =
+      storageCheck !== null ? JSON.parse(storageCheck) : [];
+    if (alreadySkipped.includes(neededId)) {
+      mainAppStore.activeAccountId = neededId || '';
+      mainAppStore.activeAccount = mainAppStore.accounts?.find(
+        (account) => !account.isLive
+      );
+      push(Page.DASHBOARD);
+    }
+  }, []);
+
+
+  useEffect(() => {
     let cleanupFunction = false;
     const getInfoFirstStep = async () => {
       try {
@@ -268,7 +284,7 @@ const Onboarding = observer(() => {
         push(Page.DASHBOARD);
       }
     };
-    isOnboardingAvailable(getInfoFirstStep);
+    getInfoFirstStep();
     
     return () => {
       cleanupFunction = true;

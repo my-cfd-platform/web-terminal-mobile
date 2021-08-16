@@ -28,6 +28,7 @@ import mixpanelEvents from '../constants/mixpanelEvents';
 import mixapanelProps from '../constants/mixpanelProps';
 import useRedirectMiddleware from '../hooks/useRedirectMiddleware';
 import { CountriesEnum } from '../enums/CountriesEnum';
+import AccProfileCarousel from '../components/AccProfileCarousel/AccProfileCarousel';
 
 const AccountProfile = observer(() => {
   const { mainAppStore, userProfileStore } = useStores();
@@ -60,9 +61,9 @@ const AccountProfile = observer(() => {
 
   return (
     // TODO: Refactor Safari
-    <FlexContainer flexDirection="column" minHeight="600px">
+    <FlexContainer flexDirection="column" minHeight="600px" overflow="auto">
       <AchievementStatusLabel />
-      <FlexContainer padding="16px" marginBottom="24px">
+      <FlexContainer padding="16px" marginBottom="16px">
         <FlexContainer width="64px">
           <UserPhoto
             alignItems="center"
@@ -122,6 +123,8 @@ const AccountProfile = observer(() => {
           </Observer>
         </FlexContainer>
       </FlexContainer>
+
+      {userProfileStore.isBonus && <AccProfileCarousel />}
 
       {!mainAppStore.isPromoAccount &&
         userProfileStore.userProfile?.kyc ===
@@ -249,7 +252,7 @@ const AccountProfile = observer(() => {
 
       <FlexContainer
         flexDirection="column"
-        marginBottom="24px"
+        marginBottom="36px"
         backgroundColor="rgb(28, 31, 38)"
       >
         <FlexContainer padding="0 16px" marginBottom="8px">
@@ -319,29 +322,61 @@ const AccountProfile = observer(() => {
         </ProfileMenuLink>
 
         {!mainAppStore.isPromoAccount && (
-          <ProfileMenuLink to={Page.ACCOUNT_ABOUT_US}>
-            <FlexContainer alignItems="center">
-              <FlexContainer
-                width="28px"
-                height="28px"
-                backgroundColor="#77787E"
-                borderRadius="50%"
-                justifyContent="center"
-                alignItems="center"
-                marginRight="14px"
-              >
-                <SvgIcon {...IconAboutUs} fillColor="#ffffff" />
+          <>
+            <ProfileMenuLink to={Page.ACCOUNT_ABOUT_US}>
+              <FlexContainer alignItems="center">
+                <FlexContainer
+                  width="28px"
+                  height="28px"
+                  backgroundColor="#77787E"
+                  borderRadius="50%"
+                  justifyContent="center"
+                  alignItems="center"
+                  marginRight="14px"
+                >
+                  <SvgIcon {...IconAboutUs} fillColor="#ffffff" />
+                </FlexContainer>
+                <PrimaryTextSpan
+                  color="#ffffff"
+                  fontSize="16px"
+                  fontWeight="normal"
+                >
+                  {t('About us')}
+                </PrimaryTextSpan>
               </FlexContainer>
-              <PrimaryTextSpan
-                color="#ffffff"
-                fontSize="16px"
-                fontWeight="normal"
-              >
-                {t('About us')}
-              </PrimaryTextSpan>
-            </FlexContainer>
-            <SvgIcon {...IconArrowLink} fillColor="rgba(196, 196, 196, 0.5)" />
-          </ProfileMenuLink>
+              <SvgIcon
+                {...IconArrowLink}
+                fillColor="rgba(196, 196, 196, 0.5)"
+              />
+            </ProfileMenuLink>
+
+            <ProfileMenuLink to={Page.BONUS_FAQ}>
+              <FlexContainer alignItems="center">
+                <FlexContainer
+                  width="28px"
+                  height="28px"
+                  backgroundColor="#77787E"
+                  borderRadius="50%"
+                  justifyContent="center"
+                  alignItems="center"
+                  marginRight="14px"
+                >
+                  <SvgIcon {...IconAboutUs} fillColor="#ffffff" />
+                </FlexContainer>
+                <PrimaryTextSpan
+                  color="#ffffff"
+                  fontSize="16px"
+                  fontWeight="normal"
+                >
+                  {t('Bonus FAQ')}
+                </PrimaryTextSpan>
+              </FlexContainer>
+              <SvgIcon
+                {...IconArrowLink}
+                fillColor="rgba(196, 196, 196, 0.5)"
+              />
+            </ProfileMenuLink>
+          </>
         )}
 
         <ProfileMenuButton onClick={handleLogout}>
