@@ -3,7 +3,6 @@ import moment from 'moment';
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useStores } from '../hooks/useStores';
-import countdown from 'countdown';
 
 const EventBonusTimer = observer(() => {
   let timerInterval: any;
