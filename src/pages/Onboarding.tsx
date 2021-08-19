@@ -50,6 +50,10 @@ const Onboarding = observer(() => {
     urlParams.set('trader_id', userProfileStore.userProfileId || '');
     urlParams.set('api', mainAppStore.initModel.tradingUrl);
     urlParams.set('rt', mainAppStore.refreshToken);
+
+    urlParams.set('useBonus', `true`);
+    urlParams.set('expBonus', `${userProfileStore.bonusExpirationDate}`);
+    urlParams.set('amountBonus', `${userProfileStore.bonusPercent}`);
     setParsedParams(urlParams.toString());
   }, [mainAppStore.token, mainAppStore.lang, mainAppStore.accounts]);
 
@@ -191,7 +195,14 @@ const Onboarding = observer(() => {
         mixpanel.track(mixpanelEvents.ONBOARDING, {
           [mixapanelProps.ONBOARDING_VALUE]: `real${actualStep}`,
         });
-        window.location.href = `${API_DEPOSIT_STRING}/?${parsedParams}`;
+
+        if (userProfileStore.isBonus) {
+          
+          userProfileStore.showBonusPopup();
+        } else {
+          window.location.href = `${API_DEPOSIT_STRING}/?${parsedParams}`;
+        }
+        
       } catch (error) {
         badRequestPopupStore.openModal();
         badRequestPopupStore.setMessage(error);

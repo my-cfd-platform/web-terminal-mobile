@@ -15,8 +15,12 @@ import IconGift from '../../assets/svg_no_compress/icon-deposit-gift.svg';
 import PopupContainer from '../../containers/PopupContainer';
 import BonusPopup from '../BonusPopup';
 import { useCallback } from 'react';
+import { FC } from 'react';
 
-const NavBar = observer(() => {
+interface Props {
+  showBar: boolean;
+}
+const NavBar: FC<Props> = observer(({ showBar }) => {
   const { mainAppStore, userProfileStore } = useStores();
   const urlParams = new URLSearchParams();
   const { t } = useTranslation();
@@ -108,43 +112,42 @@ const NavBar = observer(() => {
     }
   }, [userProfileStore.isBonus, parsedParams]);
 
-  useEffect(() => {
-    userProfileStore.getUserBonus(mainAppStore.initModel.miscUrl);
-  }, []);
-
   return (
-    <FlexContainer
-      width="100vw"
-      position="relative"
-      alignItems="center"
-      justifyContent="space-between"
-      height="48px"
-      padding="0 16px"
-      backgroundColor="#12151C"
-    >
-      <FlexContainer flexDirection="row">
-        <AccountLabel />
-        <AccountsSwitchLink />
-      </FlexContainer>
-      <FlexContainer>
-        {!mainAppStore.isPromoAccount && (
-          <DepositLink onClick={handleClickDeposit}>
-            {userProfileStore.isBonus && (
-              <FlexContainer marginRight="4px">
-                <SvgIcon {...IconGift} />
-              </FlexContainer>
+    <>
+      {showBar && (
+        <FlexContainer
+          width="100vw"
+          position="relative"
+          alignItems="center"
+          justifyContent="space-between"
+          height="48px"
+          padding="0 16px"
+          backgroundColor="#12151C"
+        >
+          <FlexContainer flexDirection="row">
+            <AccountLabel />
+            <AccountsSwitchLink />
+          </FlexContainer>
+          <FlexContainer>
+            {!mainAppStore.isPromoAccount && (
+              <DepositLink onClick={handleClickDeposit}>
+                {userProfileStore.isBonus && (
+                  <FlexContainer marginRight="4px">
+                    <SvgIcon {...IconGift} />
+                  </FlexContainer>
+                )}
+                {t('Deposit')}
+              </DepositLink>
             )}
-            {t('Deposit')}
-          </DepositLink>
-        )}
-      </FlexContainer>
-
-      <AccountSwitcher show={mainAppStore.showAccountSwitcher} />
+          </FlexContainer>
+          <AccountSwitcher show={mainAppStore.showAccountSwitcher} />
+        </FlexContainer>
+      )}
 
       {userProfileStore.isBonusPopup && userProfileStore.isBonus && (
         <BonusPopup handleDeposit={handleOpenDeposit} />
       )}
-    </FlexContainer>
+    </>
   );
 });
 

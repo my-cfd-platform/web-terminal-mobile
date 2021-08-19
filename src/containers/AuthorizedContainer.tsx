@@ -193,6 +193,11 @@ const AuthorizedContainer: FC = observer(({ children }) => {
     localStorage.setItem(LAST_PAGE_VISITED, location.pathname);
   }, [location.pathname]);
 
+
+  useEffect(() => {
+    userProfileStore.getUserBonus(mainAppStore.initModel.miscUrl);
+  }, []);
+
   return (
     <FlexContainer
       position="relative"
@@ -236,7 +241,8 @@ const AuthorizedContainer: FC = observer(({ children }) => {
           </>
         )}
       </Observer>
-      {showNavbarAndNav && <NavBar />}
+
+      <NavBar showBar={showNavbarAndNav} />
       <FlexContainer
         height={
           showNavbarAndNav ? `calc(${FULL_VH} - 128px)` : `calc(${FULL_VH})`
