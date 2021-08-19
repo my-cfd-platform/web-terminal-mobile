@@ -52,27 +52,26 @@ export class UserProfileStore implements ContextProps {
     try {
       const response = await API.getUserBonus(miscUrl);
 
-      if (response.responseCode === WelcomeBonusResponseEnum.Ok) {
+      if (
+        response.responseCode === WelcomeBonusResponseEnum.Ok &&
+        response.data.welcomeBonusExpirations !== null
+      ) {
         const currentDate = moment().unix();
 
-        if (response.data.welcomeBonusExpirations !== null) {
-          const bonusInfo =
-            response.data.welcomeBonusExpirations
-              .sort(
-                (a: IWelcomeBonusExpirations, b: IWelcomeBonusExpirations) =>
-                  a.expirationDateUtc - b.expirationDateUtc
-              )
-              .find(
-                (data: IWelcomeBonusExpirations) =>
-                  data.expirationDateUtc > currentDate
-              ) || response.data.welcomeBonusExpirations[0];
+        const bonusInfo =
+          response.data.welcomeBonusExpirations
+            .sort(
+              (a: IWelcomeBonusExpirations, b: IWelcomeBonusExpirations) =>
+                a.expirationDateUtc - b.expirationDateUtc
+            )
+            .find(
+              (data: IWelcomeBonusExpirations) =>
+                data.expirationDateUtc > currentDate
+            ) || response.data.welcomeBonusExpirations[0];
 
-          this.bonusPercent = bonusInfo.bonusPercentageFromFtd;
-          this.bonusExpirationDate = bonusInfo.expirationDateUtc;
-          this.setUserIsBonus();
-        } else {
-          this.setUserNotIsBonus();
-        }
+        this.bonusPercent = bonusInfo.bonusPercentageFromFtd;
+        this.bonusExpirationDate = bonusInfo.expirationDateUtc;
+        this.setUserIsBonus();
       } else {
         this.setUserNotIsBonus();
       }
