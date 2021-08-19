@@ -8,7 +8,10 @@ import SvgIcon from '../SvgIcon';
 import CopyIcon from '../../assets/svg/accounts/icon-copy.svg';
 import { useStores } from '../../hooks/useStores';
 import { moneyFormatPart } from '../../helpers/moneyFormat';
-import { getNumberSignNegative, getNumberSign } from '../../helpers/getNumberSign';
+import {
+  getNumberSignNegative,
+  getNumberSign,
+} from '../../helpers/getNumberSign';
 import { autorun } from 'mobx';
 import { PrimaryButton, SecondaryButton } from '../../styles/Buttons';
 import { useSwipeable } from 'react-swipeable';
@@ -75,6 +78,10 @@ const AccountSwitchItem = observer(
       urlParams.set('trader_id', userProfileStore.userProfileId || '');
       urlParams.set('api', mainAppStore.initModel.tradingUrl);
       urlParams.set('rt', mainAppStore.refreshToken);
+
+      urlParams.set('useBonus', `true`);
+      urlParams.set('expBonus', `${userProfileStore.bonusExpirationDate}`);
+      urlParams.set('amountBonus', `${userProfileStore.bonusPercent}`);
       setParsedParams(urlParams.toString());
     }, [
       mainAppStore.token,
@@ -116,6 +123,15 @@ const AccountSwitchItem = observer(
 
     const handleSwitch = () => () => {
       onSwitch(account.id);
+    };
+
+    const handleClickDeposit= () => () => {
+      if (userProfileStore.isBonus) {
+        userProfileStore.showBonusPopup();
+      } else {
+        redirectWithUpdateRefreshToken(API_DEPOSIT_STRING, parsedParams);
+      }
+      mainAppStore.closeAccountSwitcher();
     };
 
     return (
@@ -320,7 +336,13 @@ const AccountSwitchItem = observer(
 
         {/* CENTER */}
         {!isActive && (
-          <FlexContainer flex="2" alignItems="center" justifyContent="center" position="relative" zIndex="5">
+          <FlexContainer
+            flex="2"
+            alignItems="center"
+            justifyContent="center"
+            position="relative"
+            zIndex="5"
+          >
             <PrimaryButton
               isBorder={!account.isLive}
               height="46px"
@@ -343,16 +365,7 @@ const AccountSwitchItem = observer(
         <FlexContainer flexDirection="column">
           {isActive && account.isLive && (
             <FlexContainer justifyContent="space-between" width="100%">
-              <PrimaryButton
-                width="calc(50% - 4px)"
-                onClick={() => {
-                  redirectWithUpdateRefreshToken(
-                    API_DEPOSIT_STRING,
-                    parsedParams
-                  );
-                  mainAppStore.closeAccountSwitcher();
-                }}
-              >
+              <PrimaryButton width="calc(50% - 4px)" onClick={handleClickDeposit()}>
                 <PrimaryTextSpan
                   color="#252636"
                   fontSize="16px"
