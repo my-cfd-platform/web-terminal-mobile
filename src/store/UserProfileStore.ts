@@ -55,20 +55,24 @@ export class UserProfileStore implements ContextProps {
       if (response.responseCode === WelcomeBonusResponseEnum.Ok) {
         const currentDate = moment().unix();
 
-        const bonusInfo =
-          response.data.welcomeBonusExpirations
-            .sort(
-              (a: IWelcomeBonusExpirations, b: IWelcomeBonusExpirations) =>
-                a.expirationDateUtc - b.expirationDateUtc
-            )
-            .find(
-              (data: IWelcomeBonusExpirations) =>
-                data.expirationDateUtc > currentDate
-            ) || response.data.welcomeBonusExpirations[0];
+        if (response.data.welcomeBonusExpirations !== null) {
+          const bonusInfo =
+            response.data.welcomeBonusExpirations
+              .sort(
+                (a: IWelcomeBonusExpirations, b: IWelcomeBonusExpirations) =>
+                  a.expirationDateUtc - b.expirationDateUtc
+              )
+              .find(
+                (data: IWelcomeBonusExpirations) =>
+                  data.expirationDateUtc > currentDate
+              ) || response.data.welcomeBonusExpirations[0];
 
-        this.bonusPercent = bonusInfo.bonusPercentageFromFtd;
-        this.bonusExpirationDate = bonusInfo.expirationDateUtc;
-        this.setUserIsBonus();
+          this.bonusPercent = bonusInfo.bonusPercentageFromFtd;
+          this.bonusExpirationDate = bonusInfo.expirationDateUtc;
+          this.setUserIsBonus();
+        } else {
+          this.setUserNotIsBonus();
+        }
       } else {
         this.setUserNotIsBonus();
       }
