@@ -15,11 +15,12 @@ import * as animationData from '../assets/lotties/confettie-animation.json';
 import { useStores } from '../hooks/useStores';
 import EventBonusTimer from './EventBonusTimer';
 import { FC } from 'react';
+import { observer } from 'mobx-react-lite';
 
 interface Props {
   handleDeposit: (useBonus: boolean) => void;
 }
-const BonusPopup: FC<Props> = ({ handleDeposit }) => {
+const BonusPopup: FC<Props> = observer(({ handleDeposit }) => {
   const { t } = useTranslation();
   const { userProfileStore } = useStores();
 
@@ -139,7 +140,7 @@ const BonusPopup: FC<Props> = ({ handleDeposit }) => {
       </FlexContainer>
     </PopupContainer>
   );
-};
+});
 
 export default BonusPopup;
 
