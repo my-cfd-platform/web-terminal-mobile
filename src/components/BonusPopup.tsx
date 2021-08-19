@@ -68,7 +68,7 @@ const BonusPopup: FC<Props> = ({ handleDeposit }) => {
               fontWeight="bold"
               textAlign="center"
             >
-              {`${t('Get')} 30% ${t('bonus')}`}
+              {`${t('Get')} ${userProfileStore.bonusPercent}% ${t('bonus')}`}
             </PrimaryTextSpan>
 
             <Image src={BonusGift} alt="bonus gift" />

@@ -3,6 +3,7 @@ import moment from 'moment';
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useStores } from '../hooks/useStores';
+import countdown from 'countdown';
 
 const EventBonusTimer = observer(() => {
   let timerInterval: any;
@@ -12,15 +13,12 @@ const EventBonusTimer = observer(() => {
 
   const [timeLeft, setTimeLeft] = useState('');
   const countDown = () => {
-    let eventTime = userProfileStore.bonusExpirationDate,
-      currentTime = moment().unix(),
-      diffTime = eventTime - currentTime,
-      duration: any = moment.duration(diffTime * 1000, 'milliseconds'),
-      interval = 1000;
-
+    const interval = 1000;
     timerInterval = setInterval(function () {
-      currentTime = moment().unix();
-      duration = moment.duration(duration - interval, 'milliseconds');
+      let eventTime = userProfileStore.bonusExpirationDate;
+      let currentTime = Math.floor(new Date().getTime());
+      let diffTime = eventTime - currentTime;
+      let duration: any = moment.duration(diffTime, 'milliseconds');
 
       // update bonus info if exp
       if (currentTime >= eventTime) {

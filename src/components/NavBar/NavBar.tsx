@@ -141,7 +141,7 @@ const NavBar = observer(() => {
 
       <AccountSwitcher show={mainAppStore.showAccountSwitcher} />
 
-      {userProfileStore.isBonusPopup && (
+      {userProfileStore.isBonusPopup && userProfileStore.isBonus && (
         <BonusPopup handleDeposit={handleOpenDeposit} />
       )}
     </FlexContainer>
