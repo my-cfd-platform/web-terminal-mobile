@@ -107,7 +107,7 @@ const BonusPopup: FC<Props> = observer(({ handleDeposit }) => {
             {t('All profits made are yours to keep.')}
             <br />
             {t('All details about')}&nbsp;
-            <TextLink to={Page.BONUS_FAQ}>{t('Bonus Rules')}</TextLink>.
+            <TextLink onClick={handleCloseBonusPopup()} to={Page.BONUS_FAQ}>{t('Bonus Rules')}</TextLink>.
           </PrimaryTextParagraph>
 
           {/*  */}
