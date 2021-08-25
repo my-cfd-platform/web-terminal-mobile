@@ -46,15 +46,11 @@ const AccountProfile = observer(() => {
   const [parsedParams, setParsedParams] = useState('');
 
   const handleOpenDeposit = useCallback(() => {
-    const newUrlParams = new URLSearchParams(parsedParams);
-
-    newUrlParams.set('useBonus', `${userProfileStore.isBonus}`);
-    newUrlParams.set('expBonus', `${userProfileStore.bonusExpirationDate}`);
-    newUrlParams.set('amountBonus', `${userProfileStore.bonusPercent}`);
-
-    const newParsedParams = newUrlParams.toString();
-    mainAppStore.setParamsDeposit(false);
-    return redirectWithUpdateRefreshToken(API_DEPOSIT_STRING, newParsedParams);
+    if (userProfileStore.isBonus) {
+      userProfileStore.showBonusPopup();
+      return;
+    }
+    return redirectWithUpdateRefreshToken(API_DEPOSIT_STRING, parsedParams);
   }, [parsedParams, userProfileStore]);
 
   useEffect(() => {
