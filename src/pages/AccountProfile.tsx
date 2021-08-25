@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { FlexContainer } from '../styles/FlexContainer';
 import styled from '@emotion/styled';
 
@@ -44,6 +44,18 @@ const AccountProfile = observer(() => {
   const urlParams = new URLSearchParams();
 
   const [parsedParams, setParsedParams] = useState('');
+
+  const handleOpenDeposit = useCallback(() => {
+    const newUrlParams = new URLSearchParams(parsedParams);
+
+    newUrlParams.set('useBonus', `${userProfileStore.isBonus}`);
+    newUrlParams.set('expBonus', `${userProfileStore.bonusExpirationDate}`);
+    newUrlParams.set('amountBonus', `${userProfileStore.bonusPercent}`);
+
+    const newParsedParams = newUrlParams.toString();
+    mainAppStore.setParamsDeposit(false);
+    return redirectWithUpdateRefreshToken(API_DEPOSIT_STRING, newParsedParams);
+  }, [parsedParams, userProfileStore]);
 
   useEffect(() => {
     urlParams.set('token', mainAppStore.token);
@@ -172,11 +184,7 @@ const AccountProfile = observer(() => {
             </PrimaryTextSpan>
           </FlexContainer>
 
-          <ProfileMenuButton
-            onClick={() =>
-              redirectWithUpdateRefreshToken(API_DEPOSIT_STRING, parsedParams)
-            }
-          >
+          <ProfileMenuButton onClick={handleOpenDeposit}>
             <FlexContainer alignItems="center">
               <FlexContainer
                 width="28px"
