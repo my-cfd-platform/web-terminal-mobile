@@ -1,7 +1,5 @@
 import React, { FC, useEffect } from 'react';
 import styled from '@emotion/styled';
-import SuccessImage from '../../assets/images/success.png';
-
 import { ButtonWithoutStyles } from '../../styles/ButtonWithoutStyles';
 import { FlexContainer } from '../../styles/FlexContainer';
 import { useHistory } from 'react-router-dom';
@@ -9,7 +7,10 @@ import Pages from '../../constants/Pages';
 import { useTranslation } from 'react-i18next';
 import mixpanel from 'mixpanel-browser';
 import mixpanelEvents from '../../constants/mixpanelEvents';
+import Lottie from 'react-lottie';
 
+import * as confettie from '../../assets/lotties/confettie-animation.json';
+import * as SuccessImage from '../../assets/lotties/success-icon.json';
 interface Props {
   amount: number;
   currencySymbol?: string;
@@ -20,6 +21,32 @@ const DepositPaymentSuccess: FC<Props> = (props) => {
   const { push } = useHistory();
   const { t } = useTranslation();
 
+  const getLottieIconOptions = () => {
+    return {
+      loop: false,
+
+      autoplay: true,
+      pause: false,
+      animationData: SuccessImage.default,
+      rendererSettings: {
+        preserveAspectRatio: 'xMidYMid slice',
+        clearCanvas: false,
+      },
+    };
+  };
+
+  const getLottieConfettieOptions = () => {
+    return {
+      loop: true,
+      autoplay: true,
+      pause: false,
+      animationData: confettie.default,
+      rendererSettings: {
+        preserveAspectRatio: 'xMidYMid slice',
+        clearCanvas: false,
+      },
+    };
+  };
   useEffect(() => {
     mixpanel.track(mixpanelEvents.DEPOSIT_PAGE_SUCCESS);
   }, []);
@@ -32,8 +59,31 @@ const DepositPaymentSuccess: FC<Props> = (props) => {
           alignItems={'center'}
           marginBottom="40px"
           height="138px"
+          width="100%"
         >
-          <img src={SuccessImage} width={138} />
+          <FlexContainer width="100%" position="relative" zIndex="2">
+            <FlexContainer
+              width="100%"
+              position="absolute"
+              zIndex="0"
+              top="-53%"
+              left="0"
+              bottom="0"
+            >
+              <Lottie
+                options={getLottieConfettieOptions()}
+                height={`calc(100vw - 32px)`}
+                width={`calc(100vw - 32px)`}
+                isClickToPauseDisabled={true}
+              />
+            </FlexContainer>
+            <Lottie
+              options={getLottieIconOptions()}
+              height="136px"
+              width="136px"
+              isClickToPauseDisabled={true}
+            />
+          </FlexContainer>
         </FlexContainer>
         <SuccessText>{t('Success')}</SuccessText>
         <SuccessDescription>
@@ -63,7 +113,9 @@ const TradeButton = styled(ButtonWithoutStyles)`
   font-size: 16px;
   font-weight: bold;
   color: #252636;
-  &:hover, &:active, &:focus {
+  &:hover,
+  &:active,
+  &:focus {
     text-decoration: none;
     color: #252636;
   }
