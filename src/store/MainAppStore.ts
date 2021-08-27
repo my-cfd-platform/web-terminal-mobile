@@ -164,7 +164,7 @@ export class MainAppStore implements MainAppStoreProps {
       localStorage.getItem(LOCAL_STORAGE_REFRESH_TOKEN_KEY) || '';
     Axios.defaults.headers[RequestHeaders.AUTHORIZATION] = this.token;
 
-    Axios.defaults.timeout = this.connectTimeOut || 5000;
+    
     const newLang =
       localStorage.getItem(LOCAL_STORAGE_LANGUAGE) ||
       (window.navigator.language &&
@@ -788,7 +788,6 @@ export class MainAppStore implements MainAppStoreProps {
   setTokenHandler = (token: string) => {
     localStorage.setItem(LOCAL_STORAGE_TOKEN_KEY, token);
     Axios.defaults.headers[RequestHeaders.AUTHORIZATION] = token;
-    Axios.defaults.timeout = this.connectTimeOut || 5000;
     this.token = token;
   };
 
