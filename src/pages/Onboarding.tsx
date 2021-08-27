@@ -51,11 +51,11 @@ const Onboarding = observer(() => {
     urlParams.set('api', mainAppStore.initModel.tradingUrl);
     urlParams.set('rt', mainAppStore.refreshToken);
 
-    urlParams.set('useBonus', `true`);
+    urlParams.set('useBonus', `${userProfileStore.isBonus}`);
     urlParams.set('expBonus', `${userProfileStore.bonusExpirationDate}`);
     urlParams.set('amountBonus', `${userProfileStore.bonusPercent}`);
     setParsedParams(urlParams.toString());
-  }, [mainAppStore.token, mainAppStore.lang, mainAppStore.accounts]);
+  }, [mainAppStore.token, mainAppStore.lang, mainAppStore.accounts, userProfileStore]);
 
   const getLottieOptions = useCallback(() => {
     return {

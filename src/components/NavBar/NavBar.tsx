@@ -122,7 +122,7 @@ const NavBar: FC<Props> = observer(({ showBar }) => {
           justifyContent="space-between"
           height="48px"
           padding="0 16px"
-          backgroundColor="#12151C"
+          backgroundColor="#1C1F26"
         >
           <FlexContainer flexDirection="row">
             <AccountLabel />
