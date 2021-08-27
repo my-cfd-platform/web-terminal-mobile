@@ -74,19 +74,6 @@ class API {
     return formData;
   };
 
-  clientRequestOptions: AxiosRequestConfig = {
-    timeoutErrorMessage: requestOptions.TIMEOUT,
-    data: {
-      initBy: requestOptions.CLIENT,
-    },
-  };
-  backgroundRequestOptions: AxiosRequestConfig = {
-    timeoutErrorMessage: requestOptions.TIMEOUT,
-    data: {
-      initBy: requestOptions.BACKGROUND,
-    },
-  };
-
   //
   //  Clients Request
   //
@@ -96,8 +83,7 @@ class API {
     const formData = this.convertParamsToFormData(position);
     const response = await axios.post<OpenPositionResponseDTO>(
       `${API_STRING}${API_LIST.POSITIONS.OPEN}`,
-      formData,
-      this.clientRequestOptions
+      formData
     );
     return response.data;
   };
@@ -107,8 +93,7 @@ class API {
 
     const response = await axios.post<OpenPositionResponseDTO>(
       `${API_STRING}${API_LIST.POSITIONS.CLOSE}`,
-      formData,
-      this.clientRequestOptions
+      formData
     );
     return response.data;
   };
@@ -118,8 +103,7 @@ class API {
       `${API_AUTH_STRING || authUrl || authUrl}${
         AUTH_API_LIST.TRADER.AUTHENTICATE
       }`,
-      credentials,
-      this.clientRequestOptions
+      credentials
     );
     return response.data;
   };
@@ -127,8 +111,7 @@ class API {
   signUpNewTrader = async (credentials: UserRegistration, authUrl: string) => {
     const response = await axios.post<UserAuthenticateResponse>(
       `${API_AUTH_STRING || authUrl}${AUTH_API_LIST.TRADER.REGISTER}`,
-      credentials,
-      this.clientRequestOptions
+      credentials
     );
     return response.data;
   };
@@ -137,8 +120,7 @@ class API {
     const formData = this.convertParamsToFormData(position);
     const response = await axios.post<PendingOrderResponseDTO>(
       `${API_STRING}${API_LIST.PENDING_ORDERS.ADD}`,
-      formData,
-      this.clientRequestOptions
+      formData
     );
     return response.data;
   };
@@ -147,8 +129,7 @@ class API {
     const formData = this.convertParamsToFormData(position);
     const response = await axios.post<PendingOrderResponseDTO>(
       `${API_STRING}${API_LIST.PENDING_ORDERS.REMOVE}`,
-      formData,
-      this.clientRequestOptions
+      formData
     );
     return response.data;
   };
@@ -157,8 +138,7 @@ class API {
     const formData = this.convertParamsToFormData(position);
     const response = await axios.post<OpenPositionResponseDTO>(
       `${API_STRING}${API_LIST.POSITIONS.UPDATE_TOPING_UP}`,
-      formData,
-      this.clientRequestOptions
+      formData
     );
 
     return response.data;
@@ -168,8 +148,7 @@ class API {
     const formData = this.convertParamsToFormData(position);
     const response = await axios.post<OpenPositionResponseDTO>(
       `${API_STRING}${API_LIST.POSITIONS.UPDATE_SL_TP}`,
-      formData,
-      this.clientRequestOptions
+      formData
     );
     return response.data;
   };
@@ -179,8 +158,7 @@ class API {
       `${API_AUTH_STRING || authUrl}${AUTH_API_LIST.PERSONAL_DATA.CONFIRM}`,
       {
         link,
-      },
-      this.clientRequestOptions
+      }
     );
     return response.data;
   };
@@ -190,8 +168,7 @@ class API {
       `${API_AUTH_STRING || authUrl}${AUTH_API_LIST.TRADER.FORGOT_PASSWORD}`,
       {
         email,
-      },
-      this.clientRequestOptions
+      }
     );
     return response.data;
   };
@@ -202,8 +179,7 @@ class API {
   ) => {
     const response = await axios.post<{ result: OperationApiResponseCodes }>(
       `${API_AUTH_STRING || authUrl}${AUTH_API_LIST.TRADER.PASSWORD_RECOVERY}`,
-      params,
-      this.clientRequestOptions
+      params
     );
     return response.data;
   };
@@ -211,8 +187,7 @@ class API {
   createDeposit = async (params: CreateDepositParams) => {
     const response = await axios.post<DepositCreateDTO>(
       `${API_DEPOSIT_STRING}${API_LIST.DEPOSIT.CREATE}`,
-      params,
-      this.clientRequestOptions
+      params
     );
     return response.data;
   };
@@ -220,8 +195,7 @@ class API {
   createDepositInvoice = async (params: CreateDepositInvoiceParams) => {
     const response = await axios.post<CreateDepositInvoiceDTO>(
       `${API_DEPOSIT_STRING}${API_LIST.DEPOSIT.CREATE_INVOICE}`,
-      params,
-      this.clientRequestOptions
+      params
     );
     return response.data;
   };
@@ -229,8 +203,7 @@ class API {
   changePassword = async (params: ChangePasswordParams, authUrl: string) => {
     const response = await axios.post<ChangePasswordRespone>(
       `${API_AUTH_STRING || authUrl}${AUTH_API_LIST.TRADER.CHANGE_PASSWORD}`,
-      params,
-      this.clientRequestOptions
+      params
     );
     return response.data;
   };
@@ -243,8 +216,7 @@ class API {
       status: WithdrawalHistoryResponseStatus;
     }>(
       `${API_WITHDRAWAL_STRING || tradingUrl}${API_LIST.WITHWRAWAL.CREATE}`,
-      params,
-      this.clientRequestOptions
+      params
     );
     return response.data;
   };
@@ -255,8 +227,7 @@ class API {
   ) => {
     const response = await axios.post<WithdrawalHistoryDTO>(
       `${API_WITHDRAWAL_STRING || tradingUrl}${API_LIST.WITHWRAWAL.CANCEL}`,
-      params,
-      this.clientRequestOptions
+      params
     );
     return response.data;
   };
@@ -282,7 +253,6 @@ class API {
         params: {
           id,
         },
-        ...this.backgroundRequestOptions,
       }
     );
     return response.data;
@@ -290,8 +260,7 @@ class API {
 
   getHeaders = async () => {
     const response = await axios.get<string[]>(
-      `${API_STRING}${API_LIST.ACCOUNTS.GET_HEADERS}`,
-      this.backgroundRequestOptions
+      `${API_STRING}${API_LIST.ACCOUNTS.GET_HEADERS}`
     );
     return response.data;
   };
@@ -301,7 +270,6 @@ class API {
       `${API_STRING}${API_LIST.PRICE_HISTORY.CANDLES}`,
       {
         params,
-        ...this.backgroundRequestOptions,
       }
     );
     const bars = response.data.map((item) => ({
@@ -321,7 +289,6 @@ class API {
         params: {
           key,
         },
-        ...this.backgroundRequestOptions,
       }
     );
     return response.data;
@@ -334,8 +301,7 @@ class API {
     const formData = this.convertParamsToFormData(params);
     const response = await axios.post<void>(
       `${API_STRING || tradingUrl}${API_LIST.KEY_VALUE.POST}`,
-      formData,
-      this.backgroundRequestOptions
+      formData
     );
     return response.data;
   };
@@ -345,7 +311,6 @@ class API {
       `${API_STRING}${API_LIST.REPORTS.POSITIONS_HISTORY}`,
       {
         params,
-        ...this.backgroundRequestOptions,
       }
     );
     return response.data;
@@ -356,7 +321,6 @@ class API {
       `${API_STRING}${API_LIST.REPORTS.BALANCE_HISTORY}`,
       {
         params,
-        ...this.backgroundRequestOptions,
       }
     );
     return response.data;
@@ -369,7 +333,6 @@ class API {
         params: {
           processId: encodeURIComponent(processId),
         },
-        ...this.backgroundRequestOptions,
       }
     );
     return response.data;
@@ -379,8 +342,7 @@ class API {
     const response = await axios.get<string[]>(
       `${API_AUTH_STRING || authUrl}${
         AUTH_API_LIST.TRADER.ADDITIONAL_REGISTRATION_FIELDS
-      }`,
-      this.backgroundRequestOptions
+      }`
     );
     return response.data;
   };
@@ -389,10 +351,7 @@ class API {
     const response = await axios.get<{
       country: string;
       dial: string;
-    }>(
-      `${API_AUTH_STRING || authUrl}${AUTH_API_LIST.COMMON.GEOLOCATION_INFO}`,
-      this.backgroundRequestOptions
-    );
+    }>(`${API_AUTH_STRING || authUrl}${AUTH_API_LIST.COMMON.GEOLOCATION_INFO}`);
     return response.data;
   };
 
@@ -401,8 +360,7 @@ class API {
 
     const response = await axios.post<PersonalDataPostResponse>(
       `${API_AUTH_STRING || authUrl}${AUTH_API_LIST.PERSONAL_DATA.POST}`,
-      formData,
-      this.backgroundRequestOptions
+      formData
     );
     return response.data;
   };
@@ -412,8 +370,7 @@ class API {
     const response = await axios.get<Country[]>(
       `${API_AUTH_STRING || authUrl}${
         AUTH_API_LIST.COMMON.COUNTRIES
-      }/${langForApi}`,
-      this.backgroundRequestOptions
+      }/${langForApi}`
     );
     return response.data;
   };
@@ -431,8 +388,7 @@ class API {
       `${API_AUTH_STRING || authUrl}${
         AUTH_API_LIST.DOCUMENT.POST
       }/${documentType}`,
-      formData,
-      this.backgroundRequestOptions
+      formData
     );
     return response.data;
   };
@@ -445,7 +401,6 @@ class API {
       `${API_STRING}${API_LIST.INSTRUMENTS.FAVOURITES}`,
       {
         params,
-        ...this.backgroundRequestOptions,
       }
     );
     return response.data;
@@ -458,8 +413,7 @@ class API {
   }) => {
     const response = await axios.post<string[]>(
       `${API_STRING}${API_LIST.INSTRUMENTS.FAVOURITES}`,
-      params,
-      this.backgroundRequestOptions
+      params
     );
     return response.data;
   };
@@ -467,16 +421,14 @@ class API {
   getCryptoWallet = async (params: GetCryptoWalletParams) => {
     const response = await axios.post<GetCryptoWalletDTO>(
       `${API_DEPOSIT_STRING}${API_LIST.DEPOSIT.GET_CRYPTO_WALLET}`,
-      params,
-      this.backgroundRequestOptions
+      params
     );
     return response.data;
   };
 
   getTradingUrl = async (authUrl: string) => {
     const response = await axios.get<ServerInfoType>(
-      `${API_AUTH_STRING || authUrl}${AUTH_API_LIST.COMMON.SERVER_INFO}`,
-      this.backgroundRequestOptions
+      `${API_AUTH_STRING || authUrl}${AUTH_API_LIST.COMMON.SERVER_INFO}`
     );
     return response.data;
   };
@@ -484,8 +436,7 @@ class API {
   refreshToken = async (params: RefreshToken, authUrl: string) => {
     const response = await axios.post<RefreshTokenDTO>(
       `${API_AUTH_STRING || authUrl}${AUTH_API_LIST.TRADER.REFRESH_TOKEN}`,
-      params,
-      this.backgroundRequestOptions
+      params
     );
     return response.data;
   };
@@ -495,8 +446,7 @@ class API {
       `${API_AUTH_STRING || authUrl}${
         AUTH_API_LIST.PERSONAL_DATA.ON_VERIFICATION
       }`,
-      params,
-      this.backgroundRequestOptions
+      params
     );
     return response.data;
   };
@@ -529,17 +479,13 @@ class API {
             mobileAppLogo: '',
           } as InitModel,
         }
-      : await axios.get<InitModel>(
-          `${API_LIST.INIT.GET}`,
-          this.backgroundRequestOptions
-        );
+      : await axios.get<InitModel>(`${API_LIST.INIT.GET}`);
     return response.data;
   };
 
   getWithdrawalHistory = async (tradingUrl: string) => {
     const response = await axios.get<WithdrawalHistoryDTO>(
-      `${API_WITHDRAWAL_STRING || tradingUrl}${API_LIST.WITHWRAWAL.HISTORY}`,
-      this.backgroundRequestOptions
+      `${API_WITHDRAWAL_STRING || tradingUrl}${API_LIST.WITHWRAWAL.HISTORY}`
     );
     return response.data;
   };
@@ -547,8 +493,7 @@ class API {
   postLpLoginToken = async (params: LpLoginParams, authUrl: string) => {
     const response = await axios.post<UserAuthenticateResponse>(
       `${API_AUTH_STRING || authUrl}${AUTH_API_LIST.TRADER.LP_LOGIN}`,
-      params,
-      this.backgroundRequestOptions
+      params
     );
     return response.data;
   };
@@ -563,8 +508,7 @@ class API {
     const response = await axios.get<OnBoardingInfo>(
       `${API_MISC_STRING || miscUrl}${needToAdd}${
         API_LIST.ONBOARDING.STEPS
-      }/${stepNumber}?deviceTypeId=${deviceType}`,
-      this.backgroundRequestOptions
+      }/${stepNumber}?deviceTypeId=${deviceType}`
     );
     return response.data;
   };
@@ -573,8 +517,7 @@ class API {
     const needToAdd =
       (API_MISC_STRING || miscUrl).includes('/misc') || IS_LOCAL ? '' : '/misc';
     const response = await axios.get<IWelcomeBonusDTO>(
-      `${API_MISC_STRING || miscUrl}${needToAdd}${API_LIST.WELCOME_BONUS.GET}`,
-      this.backgroundRequestOptions
+      `${API_MISC_STRING || miscUrl}${needToAdd}${API_LIST.WELCOME_BONUS.GET}`
     );
     return response.data;
   };
@@ -582,8 +525,7 @@ class API {
   postDebug = async (params: DebugTypes) => {
     const response = await axios.post<DebugResponse>(
       `${API_STRING}${API_LIST.DEBUG.POST}`,
-      params,
-      this.backgroundRequestOptions
+      params
     );
     return response.data;
   };
