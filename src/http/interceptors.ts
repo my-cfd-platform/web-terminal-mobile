@@ -30,14 +30,14 @@ const injectInerceptors = (mainAppStore: MainAppStore) => {
 
   // TODO: research init flow
   axios.interceptors.response.use(
-    function (config: AxiosResponse) {
-      if (config.data.result === OperationApiResponseCodes.TechnicalError) {
-        axios.request(config.config);
+    function (response: AxiosResponse) {
+      if (response.data.result === OperationApiResponseCodes.TechnicalError) {
+        axios.request(response.config);
         if (!mainAppStore.rootStore.serverErrorPopupStore.isActive) {
           mainAppStore.rootStore.serverErrorPopupStore.openModal();
         }
         setTimeout(() => {
-          axios.request(config.config);
+          axios.request(response.config);
           if (!mainAppStore.rootStore.serverErrorPopupStore.isActive) {
             mainAppStore.rootStore.serverErrorPopupStore.openModal();
           }
@@ -47,18 +47,18 @@ const injectInerceptors = (mainAppStore: MainAppStore) => {
         );
       }
       if (
-        config.data.result ===
+        response.data.result ===
         OperationApiResponseCodes.InvalidUserNameOrPassword
       ) {
         mainAppStore.signOut();
       }
 
-      if (config.data.result === OperationApiResponseCodes.Ok) {
+      if (response.data.result === OperationApiResponseCodes.Ok) {
         if (mainAppStore.rootStore.serverErrorPopupStore.isActive) {
           mainAppStore.rootStore.serverErrorPopupStore.closeModal();
         }
       }
-      return config;
+      return Promise.resolve(response);
     },
 
     async function (error) {
@@ -101,19 +101,16 @@ const injectInerceptors = (mainAppStore: MainAppStore) => {
 
       const originalRequest = error.config;
 
-      if (error.response?.config?.url.includes(API_LIST.ONBOARDING.STEPS)) {
-        return Promise.reject(error);
-      }
+
 
       if (
-        error.response?.config?.url.includes(
-          API_LIST.WELCOME_BONUS.GET &&
-            error.response?.status &&
-            error.response?.status !== 401 &&
-            error.response?.status !== 403 &&
-            (error.response?.status.toString().includes('50') ||
-              error.response?.status.toString().includes('40'))
-        )
+        (error.response?.config?.url.includes(API_LIST.ONBOARDING.STEPS) ||
+          error.response?.config?.url.includes(API_LIST.WELCOME_BONUS.GET)) &&
+        error.response?.status &&
+        error.response?.status !== 401 &&
+        error.response?.status !== 403 &&
+        (error.response?.status.toString().includes('50') ||
+          error.response?.status.toString().includes('40'))
       ) {
         return Promise.reject(error);
       }
