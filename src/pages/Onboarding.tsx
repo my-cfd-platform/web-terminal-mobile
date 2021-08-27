@@ -342,12 +342,12 @@ const Onboarding = observer(() => {
               : handleClickLottie
           }
         >
-          {<Lottie
-              options={getLottieOptions()}
-              height={getActualWidth() * 1.5}
-              width={getActualWidth()}
-              isClickToPauseDisabled={true}
-          />}
+          <Lottie
+            options={getLottieOptions()}
+            height={getActualWidth() * 1.5}
+            width={getActualWidth()}
+            isClickToPauseDisabled={true}
+          />
         </FlexContainer>
         {!actualStepInfo?.data.fullScreen && (
           <BottomWrapper justifyContent="center" flexDirection="column">
