@@ -105,21 +105,30 @@ const injectInerceptors = (mainAppStore: MainAppStore) => {
         return Promise.reject(error);
       }
 
+      if (
+        error.response?.config?.url.includes(
+          API_LIST.WELCOME_BONUS.GET &&
+            error.response?.status &&
+            error.response?.status !== 401 &&
+            error.response?.status !== 403 &&
+            (error.response?.status.toString().includes('50') ||
+              error.response?.status.toString().includes('40'))
+        )
+      ) {
+        return Promise.reject(error);
+      }
+
       switch (error.response?.status) {
         case 400:
         case 500:
-          if (
-            !error.response?.config?.url.includes(API_LIST.WELCOME_BONUS.GET)
-          ) {
-            function requestAgain() {
-              axios.request(error.config);
-              if (!mainAppStore.rootStore.serverErrorPopupStore.isActive) {
-                mainAppStore.rootStore.serverErrorPopupStore.openModal();
-              }
+          function requestAgain() {
+            axios.request(error.config);
+            if (!mainAppStore.rootStore.serverErrorPopupStore.isActive) {
+              mainAppStore.rootStore.serverErrorPopupStore.openModal();
             }
-            setTimeout(requestAgain, +mainAppStore.connectTimeOut);
-            mainAppStore.isLoading = false;
           }
+          setTimeout(requestAgain, +mainAppStore.connectTimeOut);
+          mainAppStore.isLoading = false;
 
           break;
 
