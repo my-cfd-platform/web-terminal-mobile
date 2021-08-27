@@ -62,7 +62,9 @@ const Onboarding = observer(() => {
       loop: false,
       autoplay: true,
       pause: false,
-      animationData: JSON.parse(actualStepInfo?.data.lottieJson || ''),
+      animationData: actualStepInfo?.data.lottieJson !== null ?
+        JSON.parse(actualStepInfo?.data.lottieJson || '') :
+        '',
       rendererSettings: {
         preserveAspectRatio: 'xMidYMid slice',
         clearCanvas: false,
@@ -340,12 +342,12 @@ const Onboarding = observer(() => {
               : handleClickLottie
           }
         >
-          <Lottie
-            options={getLottieOptions()}
-            height={getActualWidth() * 1.5}
-            width={getActualWidth()}
-            isClickToPauseDisabled={true}
-          />
+          {<Lottie
+              options={getLottieOptions()}
+              height={getActualWidth() * 1.5}
+              width={getActualWidth()}
+              isClickToPauseDisabled={true}
+          />}
         </FlexContainer>
         {!actualStepInfo?.data.fullScreen && (
           <BottomWrapper justifyContent="center" flexDirection="column">
