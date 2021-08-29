@@ -1,7 +1,6 @@
 import React, { FC, useEffect, useState } from 'react';
 import styled from '@emotion/styled';
 
-import PendingImage from '../../assets/images/icon-attention.png';
 import { FlexContainer } from '../../styles/FlexContainer';
 import { useHistory } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
@@ -11,6 +10,9 @@ import mixpanel from 'mixpanel-browser';
 import mixpanelEvents from '../../constants/mixpanelEvents';
 import SvgIcon from '../SvgIcon';
 import { PrimaryTextSpan } from '../../styles/TextsElements';
+
+import * as PendingImage from '../../assets/lotties/pending-icon.json';
+import Lottie from 'react-lottie';
 
 const DepositPaymentPending: FC = () => {
   const { mainAppStore, userProfileStore } = useStores();
@@ -34,6 +36,20 @@ const DepositPaymentPending: FC = () => {
     mainAppStore.accounts,
     userProfileStore.userProfileId,
   ]);
+
+  const getLottieIconOptions = () => {
+    return {
+      loop: false,
+
+      autoplay: true,
+      pause: false,
+      animationData: PendingImage.default,
+      rendererSettings: {
+        preserveAspectRatio: 'xMidYMid slice',
+        clearCanvas: false,
+      },
+    };
+  };
 
   useEffect(() => {
     mixpanel.track(mixpanelEvents.DEPOSIT_PAGE_FAILED);
@@ -60,7 +76,12 @@ const DepositPaymentPending: FC = () => {
           marginBottom="25px"
           height="138px"
         >
-          <img src={PendingImage} width={138} />
+          <Lottie
+            options={getLottieIconOptions()}
+            height="136px"
+            width="136px"
+            isClickToPauseDisabled={true}
+          />
         </FlexContainer>
         <FailText>{t('Pending')}</FailText>
         <PrimaryTextSpan></PrimaryTextSpan>
