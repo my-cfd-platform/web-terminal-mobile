@@ -36,7 +36,8 @@ const ChartContainer: FC = observer(() => {
       !tradingViewStore.tradingWidget &&
       mainAppStore.activeSession &&
       instrumentsStore.activeInstrument &&
-      instrumentsStore.instruments.length
+      instrumentsStore.instruments.length && 
+      match?.isExact
     ) {
       mainAppStore.isLoading = true;
       const widgetOptions: ChartingLibraryWidgetOptions = {
@@ -136,6 +137,7 @@ const ChartContainer: FC = observer(() => {
 
         // tvWidget.activeChart().setVisibleRange(fromTo);
 
+        console.log('view chart: ', match?.isExact)
         if (
           instrumentsStore.activeInstrument &&
           instrumentsStore.activeInstrument.chartType
@@ -151,6 +153,7 @@ const ChartContainer: FC = observer(() => {
     instrumentsStore.activeInstrument,
     instrumentsStore.instruments,
     tradingViewStore.tradingWidget,
+    match
   ]);
 
   return (
