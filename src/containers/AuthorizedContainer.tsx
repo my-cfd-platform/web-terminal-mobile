@@ -220,13 +220,9 @@ const AuthorizedContainer: FC = observer(({ children }) => {
           </>
         )}
       </Observer>
-      <Observer>
-        {() => (
-          <LoaderFullscreen
+      <LoaderFullscreen
             isLoading={mainAppStore.isLoading || waitingData || mainAppStore.dataLoading}
           ></LoaderFullscreen>
-        )}
-      </Observer>
       <Observer>
         {() => <>{serverErrorPopupStore.isActive && <ServerErrorPopup />}</>}
       </Observer>
@@ -251,7 +247,7 @@ const AuthorizedContainer: FC = observer(({ children }) => {
         overflow="auto"
       >
         {children}
-        <Observer>{() => <ChartContainer />}</Observer>
+        <ChartContainer />
       </FlexContainer>
       {showNavbarAndNav && <NavigationPanel />}
     </FlexContainer>

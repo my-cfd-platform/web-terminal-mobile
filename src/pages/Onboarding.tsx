@@ -50,20 +50,23 @@ const Onboarding = observer(() => {
     urlParams.set('api', mainAppStore.initModel.tradingUrl);
     urlParams.set('rt', mainAppStore.refreshToken);
 
-    urlParams.set('useBonus', `${userProfileStore.isBonus}`);
-    urlParams.set('expBonus', `${userProfileStore.bonusExpirationDate}`);
-    urlParams.set('amountBonus', `${userProfileStore.bonusPercent}`);
     setParsedParams(urlParams.toString());
-  }, [mainAppStore.token, mainAppStore.lang, mainAppStore.accounts, userProfileStore]);
+  }, [
+    mainAppStore.token,
+    mainAppStore.lang,
+    mainAppStore.accounts,
+    userProfileStore,
+  ]);
 
   const getLottieOptions = useCallback(() => {
     return {
       loop: false,
       autoplay: true,
       pause: false,
-      animationData: actualStepInfo?.data.lottieJson !== null ?
-        JSON.parse(actualStepInfo?.data.lottieJson || '') :
-        '',
+      animationData:
+        actualStepInfo?.data.lottieJson !== null
+          ? JSON.parse(actualStepInfo?.data.lottieJson || '')
+          : '',
       rendererSettings: {
         preserveAspectRatio: 'xMidYMid slice',
         clearCanvas: false,
@@ -138,7 +141,6 @@ const Onboarding = observer(() => {
       if (acc) {
         mainAppStore.setActiveAccount(acc);
       }
-      
 
       push(Page.DASHBOARD);
     }
@@ -188,12 +190,10 @@ const Onboarding = observer(() => {
         });
 
         if (userProfileStore.isBonus) {
-          
           userProfileStore.showBonusPopup();
         } else {
           window.location.href = `${API_DEPOSIT_STRING}/?${parsedParams}`;
         }
-        
       } catch (error) {
         badRequestPopupStore.openModal();
         badRequestPopupStore.setMessage(error);
@@ -271,7 +271,7 @@ const Onboarding = observer(() => {
       }
     };
     getInfoFirstStep();
-    
+
     return () => {
       cleanupFunction = true;
       const useAccount = mainAppStore.accounts.find(
@@ -282,7 +282,6 @@ const Onboarding = observer(() => {
       }
     };
   }, []);
-
 
   if (loading || actualStepInfo === null) {
     return (

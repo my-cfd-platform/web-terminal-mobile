@@ -28,17 +28,18 @@ const DemoRealPopup = () => {
       'active_account_id',
       mainAppStore.accounts.find((item) => item.isLive)?.id || ''
     );
-    urlParams.set('useBonus', `${userProfileStore.isBonus}`);
-    urlParams.set('expBonus', `${userProfileStore.bonusExpirationDate}`);
-    urlParams.set('amountBonus', `${userProfileStore.bonusPercent}`);
-
     urlParams.set('env', 'web_mob');
     urlParams.set('lang', mainAppStore.lang);
     urlParams.set('trader_id', userProfileStore.userProfileId || '');
     urlParams.set('api', mainAppStore.initModel.tradingUrl);
     urlParams.set('rt', mainAppStore.refreshToken);
     setParsedParams(urlParams.toString());
-  }, [mainAppStore.token, mainAppStore.lang, mainAppStore.accounts, userProfileStore]);
+  }, [
+    mainAppStore.token,
+    mainAppStore.lang,
+    mainAppStore.accounts,
+    userProfileStore,
+  ]);
 
   const sendMixpanelEvents = (demoRealFunds: 'real' | 'demo') => {
     mixpanel.track(mixpanelEvents.DEMO_REAL_WELCOME, {
@@ -88,7 +89,13 @@ const DemoRealPopup = () => {
         mainAppStore.setActiveAccount(acc);
         mainAppStore.isLoading = true;
         sendMixpanelEvents('real');
-        window.location.href = `${API_DEPOSIT_STRING}/?${parsedParams}`;
+
+        if (userProfileStore.isBonus) {
+          userProfileStore.showBonusPopup();
+        } else {
+          window.location.href = `${API_DEPOSIT_STRING}/?${parsedParams}`;
+        }
+
         mainAppStore.addTriggerDissableOnboarding();
         mainAppStore.isDemoRealPopup = false;
       } catch (error) {

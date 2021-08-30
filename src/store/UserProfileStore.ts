@@ -51,7 +51,6 @@ export class UserProfileStore implements ContextProps {
     this.setBonusLoading();
     try {
       const response = await API.getUserBonus(miscUrl);
-
       if (
         response.responseCode === WelcomeBonusResponseEnum.Ok &&
         response.data.welcomeBonusExpirations !== null
