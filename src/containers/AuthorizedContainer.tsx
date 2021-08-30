@@ -133,11 +133,15 @@ const AuthorizedContainer: FC = observer(({ children }) => {
         }
       }
     }
-    fetchPersonalData();
+
+    if (mainAppStore.token) {
+      fetchPersonalData();
+    }
+
     return () => {
       cleanupFunction = true;
     };
-  }, []);
+  }, [mainAppStore.token]);
 
   useEffect(() => {
     // TODO Think about realization
@@ -186,17 +190,18 @@ const AuthorizedContainer: FC = observer(({ children }) => {
     mainAppStore.isOnboarding,
     mainAppStore.isVerification,
     mainAppStore.isPromoAccount,
-    waitingData
+    waitingData,
   ]);
 
   useEffect(() => {
     localStorage.setItem(LAST_PAGE_VISITED, location.pathname);
   }, [location.pathname]);
 
-
   useEffect(() => {
-    userProfileStore.getUserBonus(mainAppStore.initModel.miscUrl);
-  }, []);
+    if (mainAppStore.token) {
+      userProfileStore.getUserBonus(mainAppStore.initModel.miscUrl);
+    }
+  }, [mainAppStore.token]);
 
   return (
     <FlexContainer
@@ -221,8 +226,10 @@ const AuthorizedContainer: FC = observer(({ children }) => {
         )}
       </Observer>
       <LoaderFullscreen
-            isLoading={mainAppStore.isLoading || waitingData || mainAppStore.dataLoading}
-          ></LoaderFullscreen>
+        isLoading={
+          mainAppStore.isLoading || waitingData || mainAppStore.dataLoading
+        }
+      ></LoaderFullscreen>
       <Observer>
         {() => <>{serverErrorPopupStore.isActive && <ServerErrorPopup />}</>}
       </Observer>

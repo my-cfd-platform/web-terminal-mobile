@@ -773,6 +773,7 @@ export class MainAppStore implements MainAppStoreProps {
     this.accounts = [];
     this.rootStore.withdrawalStore.clearStore();
     this.balanceWas = 0;
+    this.rootStore.userProfileStore.resetBonusStore();
     if (this.activeAccount) {
       this.setParamsAsset(null);
       this.setParamsMarkets(null);
