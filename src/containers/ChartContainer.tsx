@@ -15,8 +15,6 @@ import { observer } from 'mobx-react-lite';
 import { useRouteMatch } from 'react-router-dom';
 import Page from '../constants/Pages';
 import styled from '@emotion/styled';
-import { getIntervalByKey } from '../helpers/getIntervalByKey';
-import moment from 'moment';
 
 const containerId = 'tv_chart_container';
 
@@ -130,14 +128,12 @@ const ChartContainer: FC = observer(() => {
         mainAppStore.isLoading = false;
         markersOnChartStore.renderActivePositionsMarkersOnChart();
 
-        const fromTo = {
-          from: getIntervalByKey('15m') / 1000,
-          to: moment.utc().valueOf() / 1000,
-        };
-
+        // const fromTo = {
+        //   from: getIntervalByKey('15m') / 1000,
+        //   to: moment.utc().valueOf() / 1000,
+        // };
         // tvWidget.activeChart().setVisibleRange(fromTo);
 
-        console.log('view chart: ', match?.isExact)
         if (
           instrumentsStore.activeInstrument &&
           instrumentsStore.activeInstrument.chartType
