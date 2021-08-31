@@ -21,6 +21,7 @@ import Topics from '../constants/websocketTopics';
 import Fields from '../constants/fields';
 import styled from '@emotion/styled';
 import { keyframes } from '@emotion/core';
+import { LOCAL_STORAGE_SKIPPED_ONBOARDING } from '../constants/global';
 import { observer } from 'mobx-react-lite';
 import { OnBoardingResponseEnum } from '../enums/OnBoardingRsponseEnum';
 
@@ -50,23 +51,20 @@ const Onboarding = observer(() => {
     urlParams.set('api', mainAppStore.initModel.tradingUrl);
     urlParams.set('rt', mainAppStore.refreshToken);
 
+    urlParams.set('useBonus', `${userProfileStore.isBonus}`);
+    urlParams.set('expBonus', `${userProfileStore.bonusExpirationDate}`);
+    urlParams.set('amountBonus', `${userProfileStore.bonusPercent}`);
     setParsedParams(urlParams.toString());
-  }, [
-    mainAppStore.token,
-    mainAppStore.lang,
-    mainAppStore.accounts,
-    userProfileStore,
-  ]);
+  }, [mainAppStore.token, mainAppStore.lang, mainAppStore.accounts, userProfileStore]);
 
   const getLottieOptions = useCallback(() => {
     return {
       loop: false,
       autoplay: true,
       pause: false,
-      animationData:
-        actualStepInfo?.data.lottieJson !== null
-          ? JSON.parse(actualStepInfo?.data.lottieJson || '')
-          : '',
+      animationData: actualStepInfo?.data.lottieJson !== null ?
+        JSON.parse(actualStepInfo?.data.lottieJson || '') :
+        '',
       rendererSettings: {
         preserveAspectRatio: 'xMidYMid slice',
         clearCanvas: false,
@@ -141,7 +139,18 @@ const Onboarding = observer(() => {
       if (acc) {
         mainAppStore.setActiveAccount(acc);
       }
-
+      const storageCheck = localStorage.getItem(
+        LOCAL_STORAGE_SKIPPED_ONBOARDING
+      );
+      const neededId = mainAppStore.accounts?.find((account) => !account.isLive)
+        ?.id;
+      const alreadySkipped =
+        storageCheck !== null ? JSON.parse(storageCheck) : [];
+      alreadySkipped.push(neededId);
+      localStorage.setItem(
+        LOCAL_STORAGE_SKIPPED_ONBOARDING,
+        JSON.stringify(alreadySkipped)
+      );
       push(Page.DASHBOARD);
     }
   };
@@ -190,10 +199,13 @@ const Onboarding = observer(() => {
         });
 
         if (userProfileStore.isBonus) {
+          console.log('show BP');
           userProfileStore.showBonusPopup();
+          mainAppStore.setLoading(false);
         } else {
           window.location.href = `${API_DEPOSIT_STRING}/?${parsedParams}`;
         }
+        
       } catch (error) {
         badRequestPopupStore.openModal();
         badRequestPopupStore.setMessage(error);
@@ -246,6 +258,22 @@ const Onboarding = observer(() => {
   };
 
   useEffect(() => {
+    const storageCheck = localStorage.getItem(LOCAL_STORAGE_SKIPPED_ONBOARDING);
+    const neededId = mainAppStore.accounts?.find((account) => !account.isLive)
+      ?.id;
+    const alreadySkipped =
+      storageCheck !== null ? JSON.parse(storageCheck) : [];
+    if (alreadySkipped.includes(neededId)) {
+      mainAppStore.activeAccountId = neededId || '';
+      mainAppStore.activeAccount = mainAppStore.accounts?.find(
+        (account) => !account.isLive
+      );
+      push(Page.DASHBOARD);
+    }
+  }, []);
+
+
+  useEffect(() => {
     let cleanupFunction = false;
     const getInfoFirstStep = async () => {
       try {
@@ -271,7 +299,7 @@ const Onboarding = observer(() => {
       }
     };
     getInfoFirstStep();
-
+    
     return () => {
       cleanupFunction = true;
       const useAccount = mainAppStore.accounts.find(
@@ -282,6 +310,7 @@ const Onboarding = observer(() => {
       }
     };
   }, []);
+
 
   if (loading || actualStepInfo === null) {
     return (

@@ -77,6 +77,8 @@ const AuthorizedContainer: FC = observer(({ children }) => {
     }
   }, [mainAppStore.isPromoAccount]);
 
+  let timer: any;
+
   useEffect(() => {
     let cleanupFunction = false;
     async function fetchPersonalData() {
@@ -121,13 +123,13 @@ const AuthorizedContainer: FC = observer(({ children }) => {
               push(Page.PHONE_VERIFICATION);
             }
           }
-          setTimeout(() => {
+          timer = setTimeout(() => {
             setWaitingData(false);
           }, 4000);
         }
       } catch (error) {
         if (!cleanupFunction) {
-          setTimeout(() => {
+          timer = setTimeout(() => {
             setWaitingData(false);
           }, 4000);
         }
@@ -140,6 +142,7 @@ const AuthorizedContainer: FC = observer(({ children }) => {
 
     return () => {
       cleanupFunction = true;
+      clearTimeout(timer);
     };
   }, [mainAppStore.token]);
 
