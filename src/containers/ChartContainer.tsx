@@ -34,7 +34,7 @@ const ChartContainer: FC = observer(() => {
       !tradingViewStore.tradingWidget &&
       mainAppStore.activeSession &&
       instrumentsStore.activeInstrument &&
-      instrumentsStore.instruments.length && 
+      instrumentsStore.instruments.length &&
       match?.isExact
     ) {
       mainAppStore.isLoading = true;
@@ -149,7 +149,7 @@ const ChartContainer: FC = observer(() => {
     instrumentsStore.activeInstrument,
     instrumentsStore.instruments,
     tradingViewStore.tradingWidget,
-    match
+    match,
   ]);
 
   return (

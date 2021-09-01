@@ -24,6 +24,7 @@ const AccountBonusFaq = observer(() => {
           <PrimaryTextParagraph
             color="rgba(255, 255, 255, 0.4)"
             fontSize="13px"
+            lineHeight="20px"
           >
             {t(
               'A “bonus” is the money that a company provides to a client for the purposes of trading only under certain conditions. You can view all details on your bonus account. A “bonus” is given to one account per client only.'
@@ -43,6 +44,7 @@ const AccountBonusFaq = observer(() => {
           <PrimaryTextParagraph
             color="rgba(255, 255, 255, 0.4)"
             fontSize="13px"
+            lineHeight="20px"
           >
             {t(
               'The amount of “bonus” depends on the amount of money you deposit. The maximum bonus amount is $500.'
@@ -62,6 +64,7 @@ const AccountBonusFaq = observer(() => {
           <PrimaryTextParagraph
             color="rgba(255, 255, 255, 0.4)"
             fontSize="13px"
+            lineHeight="20px"
           >
             {t(
               'All the profit a trader makes belongs to him/her. It can be withdrawn at any moment and without any further conditions. But note that you cannot withdraw bonus funds themselves: if you submit a withdrawal request, your bonuses are burned.'
@@ -89,6 +92,7 @@ const AccountBonusFaq = observer(() => {
           <PrimaryTextParagraph
             color="rgba(255, 255, 255, 0.4)"
             fontSize="13px"
+            lineHeight="20px"
           >
             {t(
               'Bonuses will be automatically deducted if you apply to make a withdrawal.'
