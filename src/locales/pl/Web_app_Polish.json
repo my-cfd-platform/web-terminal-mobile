@@ -482,5 +482,15 @@
     "Verification Required": "Potrzebna weryfikacja",
     "Accounts Worldwide": "Konta na całym świecie",
     "Up to": "Do",
-    "leverage": "dźwignia"
+    "leverage": "dźwignia",
+    "What does “bonus” mean?": "Co oznacza termin \"bonus\"?",
+    "A “bonus” is the money that a company provides to a client for the purposes of trading only under certain conditions. You can view all details on your bonus account. A “bonus” is given to one account per client only.": "Bonus\" to pieniądze, które firma udostępnia klientowi w celu handlu tylko pod pewnymi warunkami. Możesz zobaczyć wszystkie szczegóły na swoim koncie bonusowym. Bonus\" jest przyznawany tylko jednemu klientowi na jedno konto. Jaka jest wysokość mojego \"bonusu\"?",
+    "What is my “bonus” amount?": "Jaka jest wysokość mojego \"bonusu\"?",
+    "The amount of “bonus” depends on the amount of money you deposit. The maximum bonus amount is $500.": "Wysokość \"bonusu\" zależy od ilości wpłaconych przez Ciebie pieniędzy. Maksymalna kwota bonusu wynosi 500$.",
+    "What are the rules on the use of bonuses?": "Jakie są zasady korzystania z bonusów?",
+    "All the profit a trader makes belongs to him/her. It can be withdrawn at any moment and without any further conditions. But note that you cannot withdraw bonus funds themselves: if you submit a withdrawal request, your bonuses are burned.": "Cały zysk, który osiągnął trader, należy do niego. Może on zostać wypłacony w dowolnym momencie i bez żadnych dodatkowych warunków. Pamiętaj jednak, że nie możesz wypłacić samych środków bonusowych: jeśli złożysz wniosek o wypłatę, Twoje bonusy zostaną spalone. ",
+    "Example: If a trader deposited $100 in real funds to the account, and gets a $30 bonus fund, the account balance will be: $100 (own money) + $30 (bonus) = $130. A trader can use $130 for trading by depositing only $100. All the profits a trader makes will belong to him/her.": "Przykład: Jeśli trader wpłacił na konto 100$ realnych środków i otrzymuje 30$ środków bonusowych, stan konta będzie wynosił: $100 (środki własne) + $30 (bonus) = $130. Trader może wykorzystać $130 do handlu, wpłacając tylko $100. Wszystkie zyski, które osiągnie trader, będą należały do niego.",
+    "A “bonus” cannot be lost until there is a balance on the account.": "Bonus\" nie może zostać utracony, dopóki na rachunku nie pojawi się saldo.",
+    "Can I withdraw my bonus money?": "Czy mogę wypłacić moje pieniądze bonusowe?",
+    "Bonuses will be automatically deducted if you apply to make a withdrawal.": "Bonusy zostaną automatycznie odliczone, jeśli będziesz chciał dokonać wypłaty."
 }
