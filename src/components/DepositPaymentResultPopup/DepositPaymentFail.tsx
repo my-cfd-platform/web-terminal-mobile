@@ -2,19 +2,20 @@ import React, { FC, useEffect, useState } from 'react';
 import styled from '@emotion/styled';
 
 import { FlexContainer } from '../../styles/FlexContainer';
-import { useHistory } from 'react-router-dom';
+import { useHistory, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useStores } from '../../hooks/useStores';
 import Page from '../../constants/Pages';
-import mixpanel from 'mixpanel-browser';
+import mixpanel, { push } from 'mixpanel-browser';
 import mixpanelEvents from '../../constants/mixpanelEvents';
 import * as FailImage from '../../assets/lotties/fail-icon.json';
 import Lottie from 'react-lottie';
+import { TradeButton } from '../../styles/Buttons';
 
 const DepositPaymentFail: FC = () => {
   const { mainAppStore, userProfileStore } = useStores();
   const [parsedParams, setParsedParams] = useState('');
-  const { replace } = useHistory();
+  const { replace, push } = useHistory();
 
   const getLottieIconOptions = () => {
     return {
@@ -57,6 +58,12 @@ const DepositPaymentFail: FC = () => {
   const { t } = useTranslation();
 
   const replaceCurrentState = () => {
+    if (userProfileStore.isBonus) {
+      userProfileStore.showBonusPopup();
+    } else {
+      window.location.href = `${API_DEPOSIT_STRING}/?${parsedParams}`;
+    }
+
     replace(Page.DASHBOARD);
     return true;
   };
@@ -88,12 +95,9 @@ const DepositPaymentFail: FC = () => {
         </FailDescription>
       </FlexContainer>
       <FlexContainer padding="0 16px" width="100%">
-        <OtherMethodsButton
-          href={`${API_DEPOSIT_STRING}/?${parsedParams}`}
-          onClick={replaceCurrentState}
-        >
+        <TradeButton onClick={replaceCurrentState}>
           {t('Back to Deposit')}
-        </OtherMethodsButton>
+        </TradeButton>
       </FlexContainer>
     </>
   );

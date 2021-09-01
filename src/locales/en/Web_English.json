@@ -455,12 +455,6 @@
     "FAQ_AM": "https://allianzmarket.biz/en/how-to-trade/",
     "FAQ_HP": "https://handelpro.com/how-it-works/",
     "FAQ_M": "https://www.monfex.com/faq",
-    "AboutUs_M": "https://www.monfex.com/why-us",
-    "AboutUs_AM": "https://allianzmarket.com/en/about/",
-    "AboutUs_HP": "https://handelpro.com/about/",
-    "Support_AM": "https://allianzmarket.com/en/contact-us/",
-    "Support_HP": "https://handelpro.com/contact-us/",
-    "Support_M": "https://www.monfex.com/contact-us",
     "Thank you for your transaction": "Thank you for your transaction",
     "Please note, that it is now being processed and it might take up to 2 business days": "Please note, that it is now being processed and it might take up to 2 business days",
     "You will receive an update to your e-mail": "You will receive an update to your e-mail",
@@ -489,7 +483,6 @@
     "Accounts Worldwide": "Accounts Worldwide",
     "Up to": "Up to",
     "leverage": "leverage",
-    "Registration from your country is not allowed": "Registration from your country is not allowed",
     "Bonus FAQ": "Bonus FAQ",
     "What does “bonus” mean?": "What does “bonus” mean?",
     "A “bonus” is the money that a company provides to a client for the purposes of trading only under certain conditions. You can view all details on your bonus account. A “bonus” is given to one account per client only.": "A “bonus” is the money that a company provides to a client for the purposes of trading only under certain conditions. You can view all details on your bonus account. A “bonus” is given to one account per client only.",
@@ -510,6 +503,13 @@
     "Get": "Get",
     "bonus": "bonus",
     "Onboarding guide": "Onboarding guide",
-    "Learn how to start trading": "Learn how to start trading"
-    
+    "Learn how to start trading": "Learn how to start trading",
+    "days": "days",
+    "hours": "hours",
+    "minutes": "minutes",
+    "seconds": "seconds",
+    "day": "day",
+    "hour": "hour",
+    "minute": "minute",
+    "second": "second"
 }

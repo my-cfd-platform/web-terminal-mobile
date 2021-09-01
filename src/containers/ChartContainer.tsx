@@ -15,8 +15,6 @@ import { observer } from 'mobx-react-lite';
 import { useRouteMatch } from 'react-router-dom';
 import Page from '../constants/Pages';
 import styled from '@emotion/styled';
-import { getIntervalByKey } from '../helpers/getIntervalByKey';
-import moment from 'moment';
 
 const containerId = 'tv_chart_container';
 
@@ -36,7 +34,8 @@ const ChartContainer: FC = observer(() => {
       !tradingViewStore.tradingWidget &&
       mainAppStore.activeSession &&
       instrumentsStore.activeInstrument &&
-      instrumentsStore.instruments.length
+      instrumentsStore.instruments.length &&
+      match?.isExact
     ) {
       mainAppStore.isLoading = true;
       const widgetOptions: ChartingLibraryWidgetOptions = {
@@ -129,11 +128,10 @@ const ChartContainer: FC = observer(() => {
         mainAppStore.isLoading = false;
         markersOnChartStore.renderActivePositionsMarkersOnChart();
 
-        const fromTo = {
-          from: getIntervalByKey('15m') / 1000,
-          to: moment.utc().valueOf() / 1000,
-        };
-
+        // const fromTo = {
+        //   from: getIntervalByKey('15m') / 1000,
+        //   to: moment.utc().valueOf() / 1000,
+        // };
         // tvWidget.activeChart().setVisibleRange(fromTo);
 
         if (
@@ -151,6 +149,7 @@ const ChartContainer: FC = observer(() => {
     instrumentsStore.activeInstrument,
     instrumentsStore.instruments,
     tradingViewStore.tradingWidget,
+    match,
   ]);
 
   return (

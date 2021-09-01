@@ -2,7 +2,7 @@ import React, { FC, useEffect, useState } from 'react';
 import styled from '@emotion/styled';
 
 import { FlexContainer } from '../../styles/FlexContainer';
-import { useHistory } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useStores } from '../../hooks/useStores';
 import Page from '../../constants/Pages';
@@ -114,7 +114,7 @@ const DepositPaymentPending: FC = () => {
         </FlexContainer>
       </FlexContainer>
       <FlexContainer padding="0 16px" width="100%">
-        <OtherMethodsButton href={Page.DASHBOARD} onClick={replaceCurrentState}>
+        <OtherMethodsButton to={Page.DASHBOARD}>
           {t('Back to Trading')}
         </OtherMethodsButton>
       </FlexContainer>
@@ -124,7 +124,7 @@ const DepositPaymentPending: FC = () => {
 
 export default DepositPaymentPending;
 
-const OtherMethodsButton = styled.a`
+const OtherMethodsButton = styled(Link)`
   background-color: #00ffdd;
   border-radius: 10px;
   width: 100%;

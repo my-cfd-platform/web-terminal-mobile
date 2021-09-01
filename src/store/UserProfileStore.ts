@@ -47,11 +47,17 @@ export class UserProfileStore implements ContextProps {
   hideBonusPopup = () => (this.isBonusPopup = false);
 
   @action
+  resetBonusStore = () => {
+    this.isBonus = false;
+    this.bonusPercent = 0;
+    this.bonusExpirationDate = 0;
+  };
+  
+  @action
   getUserBonus = async (miscUrl: string) => {
     this.setBonusLoading();
     try {
       const response = await API.getUserBonus(miscUrl);
-
       if (
         response.responseCode === WelcomeBonusResponseEnum.Ok &&
         response.data.welcomeBonusExpirations !== null

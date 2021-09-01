@@ -11,6 +11,7 @@ import Lottie from 'react-lottie';
 
 import * as confettie from '../../assets/lotties/confettie-animation.json';
 import * as SuccessImage from '../../assets/lotties/success-icon.json';
+import { TradeButton } from '../../styles/Buttons';
 interface Props {
   amount: number;
   currencySymbol?: string;
@@ -105,21 +106,6 @@ const DepositPaymentSuccess: FC<Props> = (props) => {
 
 export default DepositPaymentSuccess;
 
-const TradeButton = styled(ButtonWithoutStyles)`
-  background-color: #00ffdd;
-  border-radius: 10px;
-  width: 100%;
-  padding: 20px;
-  font-size: 16px;
-  font-weight: bold;
-  color: #252636;
-  &:hover,
-  &:active,
-  &:focus {
-    text-decoration: none;
-    color: #252636;
-  }
-`;
 
 const SuccessText = styled.span`
   font-weight: 500;

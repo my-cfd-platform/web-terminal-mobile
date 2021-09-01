@@ -30,6 +30,7 @@ const NavigationPanel = observer(() => {
     setOrderCount(`${quotesStore.activePositions.length}`);
   }, [quotesStore.activePositions]);
 
+  let timer: any;
   useEffect(() => {
     let cleanupFunction = false;
     if (mainAppStore.activeAccount) {
@@ -39,7 +40,7 @@ const NavigationPanel = observer(() => {
           if (response.accountId === mainAppStore.activeAccount?.id) {
             if(!cleanupFunction) {
               setSpin(true);
-              setTimeout(() => setSpin(false), 500);
+              timer = setTimeout(() => setSpin(false), 500);
             }
           }
         }
@@ -57,6 +58,7 @@ const NavigationPanel = observer(() => {
     }
     return () => {
       cleanupFunction = true
+      clearTimeout(timer);
     };
   }, [mainAppStore.activeAccount]);
   return (

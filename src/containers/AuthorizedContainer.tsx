@@ -77,6 +77,8 @@ const AuthorizedContainer: FC = observer(({ children }) => {
     }
   }, [mainAppStore.isPromoAccount]);
 
+  let timer: any;
+
   useEffect(() => {
     let cleanupFunction = false;
     async function fetchPersonalData() {
@@ -121,23 +123,28 @@ const AuthorizedContainer: FC = observer(({ children }) => {
               push(Page.PHONE_VERIFICATION);
             }
           }
-          setTimeout(() => {
+          timer = setTimeout(() => {
             setWaitingData(false);
           }, 4000);
         }
       } catch (error) {
         if (!cleanupFunction) {
-          setTimeout(() => {
+          timer = setTimeout(() => {
             setWaitingData(false);
           }, 4000);
         }
       }
     }
-    fetchPersonalData();
+
+    if (mainAppStore.token) {
+      fetchPersonalData();
+    }
+
     return () => {
       cleanupFunction = true;
+      clearTimeout(timer);
     };
-  }, []);
+  }, [mainAppStore.token]);
 
   useEffect(() => {
     // TODO Think about realization
@@ -186,17 +193,18 @@ const AuthorizedContainer: FC = observer(({ children }) => {
     mainAppStore.isOnboarding,
     mainAppStore.isVerification,
     mainAppStore.isPromoAccount,
-    waitingData
+    waitingData,
   ]);
 
   useEffect(() => {
     localStorage.setItem(LAST_PAGE_VISITED, location.pathname);
   }, [location.pathname]);
 
-
   useEffect(() => {
-    userProfileStore.getUserBonus(mainAppStore.initModel.miscUrl);
-  }, []);
+    if (mainAppStore.token) {
+      userProfileStore.getUserBonus(mainAppStore.initModel.miscUrl);
+    }
+  }, [mainAppStore.token]);
 
   return (
     <FlexContainer
@@ -220,13 +228,11 @@ const AuthorizedContainer: FC = observer(({ children }) => {
           </>
         )}
       </Observer>
-      <Observer>
-        {() => (
-          <LoaderFullscreen
-            isLoading={mainAppStore.isLoading || waitingData || mainAppStore.dataLoading}
-          ></LoaderFullscreen>
-        )}
-      </Observer>
+      <LoaderFullscreen
+        isLoading={
+          mainAppStore.isLoading || waitingData || mainAppStore.dataLoading
+        }
+      ></LoaderFullscreen>
       <Observer>
         {() => <>{serverErrorPopupStore.isActive && <ServerErrorPopup />}</>}
       </Observer>
@@ -251,7 +257,7 @@ const AuthorizedContainer: FC = observer(({ children }) => {
         overflow="auto"
       >
         {children}
-        <Observer>{() => <ChartContainer />}</Observer>
+        <ChartContainer />
       </FlexContainer>
       {showNavbarAndNav && <NavigationPanel />}
     </FlexContainer>

@@ -68,3 +68,21 @@ export const SecondaryButton = styled(ButtonWithoutStyles)<
     }
   }
 `;
+
+
+
+export const TradeButton = styled(ButtonWithoutStyles)`
+  background-color: #00ffdd;
+  border-radius: 10px;
+  width: 100%;
+  padding: 20px;
+  font-size: 16px;
+  font-weight: bold;
+  color: #252636;
+  &:hover,
+  &:active,
+  &:focus {
+    text-decoration: none;
+    color: #252636;
+  }
+`;
