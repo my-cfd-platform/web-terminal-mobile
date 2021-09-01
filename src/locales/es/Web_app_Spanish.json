@@ -482,5 +482,15 @@
     "Verification Required": "Verificación requerida",
     "Accounts Worldwide": "Cuentas en todo el mundo",
     "Up to": "Hasta",
-    "leverage": "apalancamiento"
+    "leverage": "apalancamiento",
+    "What does “bonus” mean?": "¿Qué significa \"bonificación\"?",
+    "A “bonus” is the money that a company provides to a client for the purposes of trading only under certain conditions. You can view all details on your bonus account. A “bonus” is given to one account per client only.": "\"Bonificación” es el dinero que la empresa proporciona a un cliente con el fin de negociar en determinadas condiciones. Puedes ver todos los detalles en tu cuenta de bonificación. Se otorga solamente un \"bono\" a una cuenta por un cliente.",
+    "What is my “bonus” amount?": "¿Cuál es el monto de mi ”bonificación”?",
+    "The amount of “bonus” depends on the amount of money you deposit. The maximum bonus amount is $500.": "El monto de \"bonificación\" depende de la cantidad de dinero que depositas. La cantidad máxima de bonificación – $ 500.",
+    "What are the rules on the use of bonuses?": "¿Cuáles son las reglas sobre el uso de bonificaciones?",
+    "All the profit a trader makes belongs to him/her. It can be withdrawn at any moment and without any further conditions. But note that you cannot withdraw bonus funds themselves: if you submit a withdrawal request, your bonuses are burned.": "El beneficio que obtiene un comerciante le pertenece.  Puede retirarse en cualquier momento sin más condiciones. Pero tienes que tener en cuenta que no puedes retirar los fondos de bonificación por sí mismo: si envía una solicitud de retiro, tus bonificaciones se queman.",
+    "Example: If a trader deposited $100 in real funds to the account, and gets a $30 bonus fund, the account balance will be: $100 (own money) + $30 (bonus) = $130. A trader can use $130 for trading by depositing only $100. All the profits a trader makes will belong to him/her.": "Ejemplo: un trader depositó $ 100 de fondos reales en la cuenta, obtiene un fondo de bonificación de $ 30, el saldo de la cuenta será: $ 100 (dinero propio) + $ 30 (bonificación) = $ 130. El comerciante puede usar $ 130 para operar depositando solo $ 100. Todas las ganancias que obtenga un comerciante le pertenecerán.",
+    "A “bonus” cannot be lost until there is a balance on the account.": "Un \"bono\" no se puede perder hasta que haya un saldo en la cuenta.",
+    "Can I withdraw my bonus money?": "¿Puedo retirar el dinero de mi bono?",
+    "Bonuses will be automatically deducted if you apply to make a withdrawal.": "Las bonificaciones se deducirán automáticamente si solicitas hacer un retiro."
 }
