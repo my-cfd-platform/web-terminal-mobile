@@ -1,7 +1,6 @@
-import { css, keyframes } from '@emotion/core';
+import { keyframes } from '@emotion/core';
 import styled from '@emotion/styled';
-import { Observer, observer } from 'mobx-react-lite';
-import React, { useEffect, useRef, useState } from 'react';
+import React from 'react';
 import { useTranslation } from 'react-i18next';
 import Fields from '../../constants/fields';
 import Topics from '../../constants/websocketTopics';
@@ -16,6 +15,8 @@ import 'owl.carousel/dist/assets/owl.carousel.css';
 import 'owl.carousel/dist/assets/owl.theme.default.css';
 import './style-carousel.css';
 import { FULL_VH } from '../../constants/global';
+import { useHistory } from 'react-router-dom';
+import Page from '../../constants/Pages';
 
 interface IAccountSwitcherProps {
   show: boolean;
@@ -30,8 +31,7 @@ const AccountSwitcher = ({ show }: IAccountSwitcherProps) => {
 
   // helpers
   const { t } = useTranslation();
-  const wrapperRef = useRef<HTMLDivElement>(null);
-  const [shouldRender, setRender] = useState(mainAppStore.showAccountSwitcher);
+  const { push } = useHistory();
   // --
 
   // functions
@@ -51,6 +51,7 @@ const AccountSwitcher = ({ show }: IAccountSwitcherProps) => {
       portfolioNavLinksStore.setPortfolioNavLink(PortfolioTabEnum.ACTIVE);
     }
     mainAppStore.isLoading = true;
+
     // --- --- --- --- ---
     notificationStore.notificationMessage = `${t(
       'Your account has been switched on'
@@ -58,24 +59,14 @@ const AccountSwitcher = ({ show }: IAccountSwitcherProps) => {
     notificationStore.isSuccessfull = true;
     notificationStore.openNotification();
     mainAppStore.closeAccountSwitcher();
+
+    push(Page.DASHBOARD);
   };
   // --
 
   const handleClickClose = () => {
     mainAppStore.closeAccountSwitcher();
   };
-
-  const onAnimationEnd = () => {
-    if (!mainAppStore.showAccountSwitcher) {
-      setRender(false);
-    }
-  };
-
-  useEffect(() => {
-    if (mainAppStore.showAccountSwitcher) {
-      setRender(true);
-    }
-  }, [mainAppStore.showAccountSwitcher]);
 
   return (
     <Modal>
@@ -87,7 +78,6 @@ const AccountSwitcher = ({ show }: IAccountSwitcherProps) => {
         <AccountSlider
           className="account-switch-slider"
           show={show}
-          onAnimationEnd={onAnimationEnd}
           width="100vw"
         >
           <OwlCarousel
