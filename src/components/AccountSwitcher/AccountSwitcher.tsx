@@ -36,11 +36,11 @@ const AccountSwitcher = observer(({ show }: IAccountSwitcherProps) => {
   // --
 
   // functions
-  const handleSwitch = (accId: string) => {
+  const handleSwitch = async (accId: string) => {
     if (mainAppStore.activeAccount?.id === accId) {
       return;
     }
-
+    mainAppStore.isLoading = true;
     mainAppStore.balanceWas = 0;
     mainAppStore.activeSession?.send(Topics.SET_ACTIVE_ACCOUNT, {
       [Fields.ACCOUNT_ID]: accId,
@@ -48,10 +48,10 @@ const AccountSwitcher = observer(({ show }: IAccountSwitcherProps) => {
     const account = mainAppStore.accounts.find((acc) => acc.id === accId);
 
     if (account) {
-      mainAppStore.setActiveAccount(account);
+      await mainAppStore.setActiveAccount(account);
       portfolioNavLinksStore.setPortfolioNavLink(PortfolioTabEnum.ACTIVE);
     }
-    mainAppStore.isLoading = true;
+    
 
     // --- --- --- --- ---
     notificationStore.notificationMessage = `${t(
@@ -60,6 +60,7 @@ const AccountSwitcher = observer(({ show }: IAccountSwitcherProps) => {
     notificationStore.isSuccessfull = true;
     notificationStore.openNotification();
     mainAppStore.closeAccountSwitcher();
+    mainAppStore.isLoading = false;
   };
   // --
 

@@ -654,14 +654,14 @@ export class MainAppStore implements MainAppStoreProps {
   };
 
   @action
-  setActiveAccount = (account: AccountModelWebSocketDTO) => {
+  setActiveAccount = async (account: AccountModelWebSocketDTO) => {
     this.activeAccount = account;
     this.setActiveAccountId(account.id);
     // TODO: think how remove crutch
     this.rootStore.historyStore.positionsHistoryReport.positionsHistory = [];
     this.rootStore.tradingViewStore.tradingWidget = undefined;
     this.rootStore.instrumentsStore.activeInstrument = this.rootStore.instrumentsStore.activeInstruments[0];
-    API.setKeyValue(
+    await API.setKeyValue(
       {
         key: KeysInApi.ACTIVE_ACCOUNT_ID,
         value: account.id,
