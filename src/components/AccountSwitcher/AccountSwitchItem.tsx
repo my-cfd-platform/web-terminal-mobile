@@ -78,10 +78,6 @@ const AccountSwitchItem = observer(
       urlParams.set('trader_id', userProfileStore.userProfileId || '');
       urlParams.set('api', mainAppStore.initModel.tradingUrl);
       urlParams.set('rt', mainAppStore.refreshToken);
-
-      urlParams.set('useBonus', `true`);
-      urlParams.set('expBonus', `${userProfileStore.bonusExpirationDate}`);
-      urlParams.set('amountBonus', `${userProfileStore.bonusPercent}`);
       setParsedParams(urlParams.toString());
     }, [
       mainAppStore.token,
@@ -89,6 +85,15 @@ const AccountSwitchItem = observer(
       mainAppStore.accounts,
       userProfileStore.userProfileId,
     ]);
+
+    const handleClickDeposit = () => () => {
+      if (userProfileStore.isBonus) {
+        userProfileStore.showBonusPopup();
+      } else {
+        redirectWithUpdateRefreshToken(API_DEPOSIT_STRING, parsedParams);
+      }
+      mainAppStore.closeAccountSwitcher();
+    };
 
     useEffect(() => {
       if (mainAppStore.activeAccount?.balance !== undefined) {
@@ -123,15 +128,6 @@ const AccountSwitchItem = observer(
 
     const handleSwitch = () => () => {
       onSwitch(account.id);
-    };
-
-    const handleClickDeposit= () => () => {
-      if (userProfileStore.isBonus) {
-        userProfileStore.showBonusPopup();
-      } else {
-        redirectWithUpdateRefreshToken(API_DEPOSIT_STRING, parsedParams);
-      }
-      mainAppStore.closeAccountSwitcher();
     };
 
     return (
@@ -365,7 +361,10 @@ const AccountSwitchItem = observer(
         <FlexContainer flexDirection="column">
           {isActive && account.isLive && (
             <FlexContainer justifyContent="space-between" width="100%">
-              <PrimaryButton width="calc(50% - 4px)" onClick={handleClickDeposit()}>
+              <PrimaryButton
+                width="calc(50% - 4px)"
+                onClick={handleClickDeposit()}
+              >
                 <PrimaryTextSpan
                   color="#252636"
                   fontSize="16px"
