@@ -17,11 +17,12 @@ import './style-carousel.css';
 import { FULL_VH, LAST_PAGE_VISITED } from '../../constants/global';
 import { useHistory } from 'react-router-dom';
 import Page from '../../constants/Pages';
+import { observer } from 'mobx-react-lite';
 
 interface IAccountSwitcherProps {
   show: boolean;
 }
-const AccountSwitcher = ({ show }: IAccountSwitcherProps) => {
+const AccountSwitcher = observer(({ show }: IAccountSwitcherProps) => {
   const {
     mainAppStore,
     notificationStore,
@@ -99,7 +100,7 @@ const AccountSwitcher = ({ show }: IAccountSwitcherProps) => {
       </Wrapper>
     </Modal>
   );
-};
+});
 
 export default AccountSwitcher;
 
