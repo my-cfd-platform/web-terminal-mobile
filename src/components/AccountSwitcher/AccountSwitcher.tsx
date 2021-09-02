@@ -14,7 +14,7 @@ import OwlCarousel from 'react-owl-carousel';
 import 'owl.carousel/dist/assets/owl.carousel.css';
 import 'owl.carousel/dist/assets/owl.theme.default.css';
 import './style-carousel.css';
-import { FULL_VH } from '../../constants/global';
+import { FULL_VH, LAST_PAGE_VISITED } from '../../constants/global';
 import { useHistory } from 'react-router-dom';
 import Page from '../../constants/Pages';
 
