@@ -229,9 +229,7 @@ const AuthorizedContainer: FC = observer(({ children }) => {
         )}
       </Observer>
       <LoaderFullscreen
-        isLoading={
-          mainAppStore.isLoading || waitingData || mainAppStore.dataLoading
-        }
+        isLoading={mainAppStore.isLoading || waitingData}
       ></LoaderFullscreen>
       <Observer>
         {() => <>{serverErrorPopupStore.isActive && <ServerErrorPopup />}</>}
@@ -244,10 +242,10 @@ const AuthorizedContainer: FC = observer(({ children }) => {
               !mainAppStore.isOnboarding &&
               !mainAppStore.isVerification &&
               !mainAppStore.isPromoAccount && <DemoRealPopup></DemoRealPopup>}
+            
           </>
         )}
       </Observer>
-
       <NavBar showBar={showNavbarAndNav} />
       <FlexContainer
         height={
