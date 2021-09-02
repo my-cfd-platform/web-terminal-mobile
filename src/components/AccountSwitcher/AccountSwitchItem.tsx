@@ -123,6 +123,7 @@ const AccountSwitchItem = observer(
 
     const handleSwitch = () => () => {
       onSwitch(account.id);
+      push(Page.DASHBOARD);
     };
 
     const handleClickDeposit= () => () => {
