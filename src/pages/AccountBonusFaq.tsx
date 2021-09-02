@@ -18,6 +18,7 @@ const AccountBonusFaq = observer(() => {
             color="#ffffff"
             fontSize="13px"
             marginBottom="8px"
+            lineHeight="20px"
           >
             {t('What does “bonus” mean?')}
           </PrimaryTextSpan>
@@ -38,6 +39,7 @@ const AccountBonusFaq = observer(() => {
             color="#ffffff"
             fontSize="13px"
             marginBottom="8px"
+            lineHeight="20px"
           >
             {t('What is my “bonus” amount?')}
           </PrimaryTextSpan>
@@ -58,6 +60,7 @@ const AccountBonusFaq = observer(() => {
             color="#ffffff"
             fontSize="13px"
             marginBottom="8px"
+            lineHeight="20px"
           >
             {t('What are the rules on the use of bonuses?')}
           </PrimaryTextSpan>
@@ -86,6 +89,7 @@ const AccountBonusFaq = observer(() => {
             color="#ffffff"
             fontSize="13px"
             marginBottom="8px"
+            lineHeight="20px"
           >
             {t('Can I withdraw my bonus money?')}
           </PrimaryTextSpan>
