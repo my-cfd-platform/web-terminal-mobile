@@ -51,7 +51,6 @@ import { DebugTypes } from '../types/DebugTypes';
 import { getCircularReplacer } from '../helpers/getCircularReplacer';
 import { getStatesSnapshot } from '../helpers/getStatesSnapshot';
 
-
 interface MainAppStoreProps {
   token: string;
   refreshToken: string;
@@ -164,7 +163,6 @@ export class MainAppStore implements MainAppStoreProps {
       localStorage.getItem(LOCAL_STORAGE_REFRESH_TOKEN_KEY) || '';
     Axios.defaults.headers[RequestHeaders.AUTHORIZATION] = this.token;
 
-    
     const newLang =
       localStorage.getItem(LOCAL_STORAGE_LANGUAGE) ||
       (window.navigator.language &&
@@ -239,27 +237,30 @@ export class MainAppStore implements MainAppStoreProps {
           await connection.send(Topics.INIT, token);
           this.isAuthorized = true;
           this.activeSession = connection;
-          this.pingPongConnection();
         } catch (error) {
           this.isAuthorized = false;
           this.isInitLoading = false;
         }
       } catch (error) {
         this.isInitLoading = false;
-        setTimeout(
-          connectToWebocket,
-          this.signalRReconnectTimeOut ? +this.signalRReconnectTimeOut : 10000
-        );
+        connectToWebocket();
       }
     };
     connectToWebocket();
 
     connection.on(Topics.UNAUTHORIZED, () => {
       if (this.refreshToken) {
-        this.postRefreshToken().then(() => {
-          axios.defaults.headers[RequestHeaders.AUTHORIZATION] = this.token;
-          this.handleInitConnection();
-        });
+        this.postRefreshToken()
+          .then(() => {
+            axios.defaults.headers[RequestHeaders.AUTHORIZATION] = this.token;
+            if (this.activeSession) {
+              this.activeSession.stop();
+            }
+            this.handleInitConnection();
+          })
+          .catch(() => {
+            this.signOut();
+          });
       } else {
         this.signOut();
       }
@@ -449,17 +450,13 @@ export class MainAppStore implements MainAppStoreProps {
       }
     );
 
-    connection.on(
-      Topics.PONG,
-      (response: ResponseFromWebsocket<any>) => {
-        if (response.now) {
-          this.signalRReconectCounter = 0;
-          this.rootStore.badRequestPopupStore.stopRecconect();
-        }
+    connection.on(Topics.PONG, (response: ResponseFromWebsocket<any>) => {
+      if (response.now) {
+        this.signalRReconectCounter = 0;
+        this.rootStore.badRequestPopupStore.stopRecconect();
       }
-    );
+    });
   };
-
 
   @action
   socketPing = () => {
@@ -478,9 +475,9 @@ export class MainAppStore implements MainAppStoreProps {
         this.handleInitConnection();
         return;
       }
-  
+
       this.socketPing();
-  
+
       timer = setTimeout(() => {
         this.signalRReconectCounter += 1;
         this.pingPongConnection();
@@ -703,7 +700,6 @@ export class MainAppStore implements MainAppStoreProps {
 
   @action
   signInLpLogin = async (params: LpLoginParams) => {
-
     if (this.isAuthorized) {
       this.signOut();
     }
@@ -864,10 +860,10 @@ export class MainAppStore implements MainAppStoreProps {
     this.paramsBalanceHistory = params;
   };
 
-  @action 
+  @action
   setDataLoading = (on: boolean) => {
     this.dataLoading = on;
-  }
+  };
 
   @computed
   get realAcc() {
