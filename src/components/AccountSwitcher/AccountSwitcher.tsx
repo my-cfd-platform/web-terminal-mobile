@@ -59,8 +59,6 @@ const AccountSwitcher = ({ show }: IAccountSwitcherProps) => {
     notificationStore.isSuccessfull = true;
     notificationStore.openNotification();
     mainAppStore.closeAccountSwitcher();
-
-    push(Page.DASHBOARD);
   };
   // --
 
