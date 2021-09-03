@@ -511,5 +511,7 @@
     "day": "dzień",
     "hour": "godzina",
     "minute": "minuta",
-    "second": "sekunda"
+    "second": "sekunda",
+    "Only": "Tylko",
+    "left": "zostały"
 }
