@@ -19,12 +19,11 @@ import mixpanel from 'mixpanel-browser';
 import mixpanelEvents from '../../constants/mixpanelEvents';
 import { getProcessId } from '../../helpers/getProcessId';
 import LoaderForComponents from '../LoaderForComponents';
+import { MAX_FILE_UPLOAD_5_MB } from '../../constants/global';
 
 interface Props {
   changeStep: (name: string) => void;
 }
-
-const MAX_FILE_UPLOAD_5_MB = 5000000;
 
 const AccountVerificationResidence: FC<Props> = (props) => {
   const { changeStep } = props;
