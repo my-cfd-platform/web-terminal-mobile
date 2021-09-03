@@ -39,8 +39,8 @@ const AccountVerificationIdentify: FC<Props> = (props) => {
       console.log('no file uploaded');
       return;
     }
+    console.log('filesize', e.target.files[0].size);
     if (e.target.files[0].size > MAX_FILE_UPLOAD_5_MB) {
-      console.log('filesize', e.target.files[0].size);
       changeStep(accountVerifySteps.VERIFICATION_LARGE_FILE);
     } else {
       setFile(e.target.files[0]);
