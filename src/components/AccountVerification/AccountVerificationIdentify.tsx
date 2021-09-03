@@ -18,12 +18,13 @@ import API from '../../helpers/API';
 import mixpanel from 'mixpanel-browser';
 import mixpanelEvents from '../../constants/mixpanelEvents';
 import LoaderForComponents from '../../components/LoaderForComponents';
+import { MAX_FILE_UPLOAD_5_MB } from '../../constants/global';
 
 interface Props {
   changeStep: (name: string) => void;
 }
 
-const MAX_FILE_UPLOAD_5_MB = 5242880;
+
 
 const AccountVerificationIdentify: FC<Props> = (props) => {
   const { changeStep } = props;
@@ -39,8 +40,8 @@ const AccountVerificationIdentify: FC<Props> = (props) => {
       console.log('no file uploaded');
       return;
     }
+    console.log('filesize', e.target.files[0].size);
     if (e.target.files[0].size > MAX_FILE_UPLOAD_5_MB) {
-      console.log('filesize', e.target.files[0].size);
       changeStep(accountVerifySteps.VERIFICATION_LARGE_FILE);
     } else {
       setFile(e.target.files[0]);
@@ -386,7 +387,7 @@ const MenuToUploadItem = styled(FlexContainer)`
   &:hover {
     text-decoration: none;
   }
-  &:first-child {
+  &::first-of-type {
     border-bottom: 1px solid ${Colors.DARK_BLACK};
   }
 `;

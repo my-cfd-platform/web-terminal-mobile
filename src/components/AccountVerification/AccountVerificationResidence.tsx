@@ -19,6 +19,7 @@ import mixpanel from 'mixpanel-browser';
 import mixpanelEvents from '../../constants/mixpanelEvents';
 import { getProcessId } from '../../helpers/getProcessId';
 import LoaderForComponents from '../LoaderForComponents';
+import { MAX_FILE_UPLOAD_5_MB } from '../../constants/global';
 
 interface Props {
   changeStep: (name: string) => void;
@@ -38,7 +39,7 @@ const AccountVerificationResidence: FC<Props> = (props) => {
   };
 
   const handlerUploadImage = (e: any) => {
-    if (e.target.files[0].size > 5242880) {
+    if (e.target.files[0].size > MAX_FILE_UPLOAD_5_MB) {
       changeStep(accountVerifySteps.VERIFICATION_LARGE_FILE);
     } else {
       setFile(e.target.files[0]);
