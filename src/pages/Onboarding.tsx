@@ -332,7 +332,7 @@ const Onboarding = observer(() => {
               padding="0 16px 40px"
               flexDirection="column"
               position="relative"
-              margin="-200px 0 0 0"
+              margin={`${actualStep === 7 ? '-80px' : '-200px'} 0 0 0`}
             >
               {actualStepInfo?.data.title && (
                 <PrimaryTextSpan
