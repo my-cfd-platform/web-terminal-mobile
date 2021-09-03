@@ -23,7 +23,7 @@ interface Props {
   changeStep: (name: string) => void;
 }
 
-const MAX_FILE_UPLOAD_5_MB = 5242880;
+const MAX_FILE_UPLOAD_5_MB = 5000000;
 
 const AccountVerificationIdentify: FC<Props> = (props) => {
   const { changeStep } = props;
@@ -386,7 +386,7 @@ const MenuToUploadItem = styled(FlexContainer)`
   &:hover {
     text-decoration: none;
   }
-  &:first-child {
+  &::first-of-type {
     border-bottom: 1px solid ${Colors.DARK_BLACK};
   }
 `;

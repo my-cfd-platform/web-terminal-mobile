@@ -24,6 +24,8 @@ interface Props {
   changeStep: (name: string) => void;
 }
 
+const MAX_FILE_UPLOAD_5_MB = 5000000;
+
 const AccountVerificationResidence: FC<Props> = (props) => {
   const { changeStep } = props;
   const { mainAppStore, userProfileStore } = useStores();
@@ -38,7 +40,7 @@ const AccountVerificationResidence: FC<Props> = (props) => {
   };
 
   const handlerUploadImage = (e: any) => {
-    if (e.target.files[0].size > 5242880) {
+    if (e.target.files[0].size > MAX_FILE_UPLOAD_5_MB) {
       changeStep(accountVerifySteps.VERIFICATION_LARGE_FILE);
     } else {
       setFile(e.target.files[0]);
