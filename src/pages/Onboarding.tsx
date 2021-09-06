@@ -50,9 +50,6 @@ const Onboarding = observer(() => {
     urlParams.set('api', mainAppStore.initModel.tradingUrl);
     urlParams.set('rt', mainAppStore.refreshToken);
 
-    urlParams.set('useBonus', `${userProfileStore.isBonus}`);
-    urlParams.set('expBonus', `${userProfileStore.bonusExpirationDate}`);
-    urlParams.set('amountBonus', `${userProfileStore.bonusPercent}`);
     setParsedParams(urlParams.toString());
   }, [mainAppStore.token, mainAppStore.lang, mainAppStore.accounts, userProfileStore]);
 
@@ -159,7 +156,7 @@ const Onboarding = observer(() => {
         push(Page.DASHBOARD);
       } catch (error) {
         badRequestPopupStore.openModal();
-        badRequestPopupStore.setMessage(error);
+        badRequestPopupStore.setMessage(`${error}`);
       }
     }
   };
@@ -187,7 +184,6 @@ const Onboarding = observer(() => {
         });
 
         if (userProfileStore.isBonus) {
-          console.log('show BP');
           userProfileStore.showBonusPopup();
           mainAppStore.setLoading(false);
         } else {
@@ -196,7 +192,7 @@ const Onboarding = observer(() => {
         
       } catch (error) {
         badRequestPopupStore.openModal();
-        badRequestPopupStore.setMessage(error);
+        badRequestPopupStore.setMessage(`${error}`);
       }
     }
   };
@@ -283,6 +279,12 @@ const Onboarding = observer(() => {
       }
     };
   }, []);
+
+  useEffect(() => {
+    if (!mainAppStore.isPromoAccount) {
+      push(Page.DASHBOARD)
+    }
+  }, [!mainAppStore.isPromoAccount])
 
 
   if (loading || actualStepInfo === null) {

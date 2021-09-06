@@ -144,7 +144,7 @@ const NavBar: FC<Props> = observer(({ showBar }) => {
         </FlexContainer>
       )}
 
-      {userProfileStore.isBonusPopup && userProfileStore.isBonus && (
+      {userProfileStore.isBonusPopup && userProfileStore.isBonus && !mainAppStore.isPromoAccount && (
         <BonusPopup handleDeposit={handleOpenDeposit} />
       )}
     </>
