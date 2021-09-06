@@ -26,6 +26,12 @@ export const ListForEN = {
     originName: 'Русский',
     shortName: 'RU',
   },
+
+  [CountriesEnum.PT]: {
+    name: 'Portuguese',
+    originName: 'Português',
+    shortName: 'PT',
+  },
 };
 
 export const ListForPL = {
@@ -54,6 +60,12 @@ export const ListForPL = {
     originName: 'Русский',
     shortName: 'RU',
   },
+
+  [CountriesEnum.PT]: {
+    name: 'Portuguese',
+    originName: 'Português',
+    shortName: 'PT',
+  },
 };
 
 export const ListForES = {
@@ -81,6 +93,12 @@ export const ListForES = {
     name: 'Ruso',
     originName: 'Русский',
     shortName: 'RU',
+  },
+
+  [CountriesEnum.PT]: {
+    name: 'Portuguese',
+    originName: 'Português',
+    shortName: 'PT',
   },
 };
 
@@ -111,6 +129,12 @@ export const ListForDE = {
     originName: 'Русский',
     shortName: 'RU',
   },
+
+  [CountriesEnum.PT]: {
+    name: 'Portuguese',
+    originName: 'Português',
+    shortName: 'PT',
+  },
 };
 
 export const ListForRU = {
@@ -138,6 +162,45 @@ export const ListForRU = {
     name: 'Russian',
     originName: 'Русский',
     shortName: 'RU',
+  },
+
+  [CountriesEnum.PT]: {
+    name: 'Португальский',
+    originName: 'Português',
+    shortName: 'PT',
+  },
+};
+
+export const ListForPT = {
+  [CountriesEnum.EN]: {
+    name: 'English',
+    originName: 'English',
+    shortName: 'EN',
+  },
+  [CountriesEnum.PL]: {
+    name: 'Polish',
+    originName: 'Polski',
+    shortName: 'PL',
+  },
+  [CountriesEnum.ES]: {
+    name: 'Spanish',
+    originName: 'Español',
+    shortName: 'ES',
+  },
+  [CountriesEnum.DE]: {
+    name: 'German',
+    originName: 'Deutsch',
+    shortName: 'DE',
+  },
+  [CountriesEnum.RU]: {
+    name: 'Russian',
+    originName: 'Русский',
+    shortName: 'RU',
+  },
+  [CountriesEnum.PT]: {
+    name: 'Portuguese',
+    originName: 'Português',
+    shortName: 'PT',
   },
 };
 
