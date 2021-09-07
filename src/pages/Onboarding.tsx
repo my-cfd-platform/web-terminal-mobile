@@ -281,7 +281,7 @@ const Onboarding = observer(() => {
   }, []);
 
   useEffect(() => {
-    if (!mainAppStore.isPromoAccount) {
+    if (mainAppStore.isPromoAccount) {
       push(Page.DASHBOARD)
     }
   }, [!mainAppStore.isPromoAccount])
