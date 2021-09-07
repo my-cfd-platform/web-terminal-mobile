@@ -284,7 +284,7 @@ const Onboarding = observer(() => {
     if (mainAppStore.isPromoAccount) {
       push(Page.DASHBOARD)
     }
-  }, [!mainAppStore.isPromoAccount])
+  }, [mainAppStore.isPromoAccount])
 
 
   if (loading || actualStepInfo === null) {
