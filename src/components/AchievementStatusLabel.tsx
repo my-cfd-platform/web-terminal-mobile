@@ -9,6 +9,7 @@ import { PrimaryTextSpan } from '../styles/TextsElements';
 import SilverBG from '../assets/images/achievement_status_bg/silver.png';
 import GoldBG from '../assets/images/achievement_status_bg/gold.png';
 import PlatinumBG from '../assets/images/achievement_status_bg/platinum.png';
+import UltraBG from '../assets/images/achievement_status_bg/ultra.png';
 
 const listStatus = [
   AchievementStatus.SILVER,
@@ -27,7 +28,8 @@ const AchievementStatusLabel = observer(() => {
       case AchievementStatus.GOLD:
         return GoldBG;
       case AchievementStatus.PLATINUM:
-        return PlatinumBG;
+        // return PlatinumBG;
+        return UltraBG;
       default:
         return SilverBG;
     }
@@ -41,7 +43,8 @@ const AchievementStatusLabel = observer(() => {
       case AchievementStatus.GOLD:
         return '#FFFCCC';
       case AchievementStatus.PLATINUM:
-        return '#00FFDD';
+        // return '#00FFDD';
+        return '#AE88FF';
       default:
         return '#ffffff';
     }
@@ -70,7 +73,10 @@ const AchievementStatusLabel = observer(() => {
           lineHeight="1"
           textTransform="uppercase"
         >
-          {mainAppStore.accounts.find((acc) => acc.isLive)?.achievementStatus === AchievementStatus.PLATINUM ? AchievementStatus.VIP : mainAppStore.accounts.find((acc) => acc.isLive)?.achievementStatus}
+          {mainAppStore.accounts.find((acc) => acc.isLive)
+            ?.achievementStatus === AchievementStatus.PLATINUM
+            ? AchievementStatus.ULTRA
+            : mainAppStore.accounts.find((acc) => acc.isLive)?.achievementStatus}
         </PrimaryTextSpan>
       </Label>
     </Wrap>
