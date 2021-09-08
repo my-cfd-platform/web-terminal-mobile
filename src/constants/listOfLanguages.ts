@@ -62,7 +62,7 @@ export const ListForPL = {
   },
 
   [CountriesEnum.PT]: {
-    name: 'Portuguese',
+    name: 'Portugalski',
     originName: 'Português',
     shortName: 'PT',
   },
@@ -96,7 +96,7 @@ export const ListForES = {
   },
 
   [CountriesEnum.PT]: {
-    name: 'Portuguese',
+    name: 'Portugués',
     originName: 'Português',
     shortName: 'PT',
   },
@@ -131,7 +131,7 @@ export const ListForDE = {
   },
 
   [CountriesEnum.PT]: {
-    name: 'Portuguese',
+    name: 'Portugiesisch',
     originName: 'Português',
     shortName: 'PT',
   },
@@ -173,32 +173,32 @@ export const ListForRU = {
 
 export const ListForPT = {
   [CountriesEnum.EN]: {
-    name: 'English',
+    name: 'Inglés',
     originName: 'English',
     shortName: 'EN',
   },
   [CountriesEnum.PL]: {
-    name: 'Polish',
+    name: 'Polonês',
     originName: 'Polski',
     shortName: 'PL',
   },
   [CountriesEnum.ES]: {
-    name: 'Spanish',
+    name: 'Espanhol',
     originName: 'Español',
     shortName: 'ES',
   },
   [CountriesEnum.DE]: {
-    name: 'German',
+    name: 'Alemão',
     originName: 'Deutsch',
     shortName: 'DE',
   },
   [CountriesEnum.RU]: {
-    name: 'Russian',
+    name: 'Russo',
     originName: 'Русский',
     shortName: 'RU',
   },
   [CountriesEnum.PT]: {
-    name: 'Portuguese',
+    name: 'Português',
     originName: 'Português',
     shortName: 'PT',
   },
