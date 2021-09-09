@@ -86,14 +86,10 @@ const Onboarding = observer(() => {
           });
         }
       } else {
-        mainAppStore.isOnboarding = false;
-        mainAppStore.isDemoRealPopup = true;
-        push(Page.DASHBOARD);
+        openDemoRealPopup();
       }
     } catch (error) {
-      mainAppStore.isOnboarding = false;
-      mainAppStore.isDemoRealPopup = true;
-      push(Page.DASHBOARD);
+      openDemoRealPopup();
     }
   };
 
@@ -229,19 +225,12 @@ const Onboarding = observer(() => {
     return wrapperRef.current?.offsetWidth || 375;
   }, [wrapperRef]);
 
-  const isOnboardingAvailable = async (callback: any) => {
-    //
-    const isAvailable = await mainAppStore.checkOnboardingShow();
-    if (!isAvailable) {
-      push(Page.DASHBOARD);
-    } else {
-      // init OB
-      callback();
-      //
-    }
-  };
-
-
+  const openDemoRealPopup = () => {
+    mainAppStore.isOnboarding = false;
+    mainAppStore.isDemoRealPopup = true;
+    push(Page.DEMO_REAL_PAGE);
+  }
+  
   useEffect(() => {
     let cleanupFunction = false;
     const getInfoFirstStep = async () => {
@@ -257,14 +246,10 @@ const Onboarding = observer(() => {
           setActualStep(1);
           setLoading(false);
         } else {
-          mainAppStore.isOnboarding = false;
-          mainAppStore.isDemoRealPopup = true;
-          push(Page.DASHBOARD);
+          openDemoRealPopup();
         }
       } catch (error) {
-        mainAppStore.isOnboarding = false;
-        mainAppStore.isDemoRealPopup = true;
-        push(Page.DASHBOARD);
+        openDemoRealPopup();
       }
     };
     getInfoFirstStep();
@@ -284,7 +269,7 @@ const Onboarding = observer(() => {
     if (mainAppStore.isPromoAccount) {
       push(Page.DASHBOARD)
     }
-  }, [mainAppStore.isPromoAccount])
+  }, [mainAppStore.isPromoAccount]);
 
 
   if (loading || actualStepInfo === null) {
