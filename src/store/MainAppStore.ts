@@ -155,6 +155,10 @@ export class MainAppStore implements MainAppStoreProps {
   @observable dataLoading = false;
   @observable signalRReconectCounter = 0;
 
+  @observable debugSocketMode = false;
+  @observable debugDontPing = false;
+  @observable debugSocketReconnect = false;
+
   constructor(rootStore: RootStore) {
     this.rootStore = rootStore;
     this.token = localStorage.getItem(LOCAL_STORAGE_TOKEN_KEY) || '';
@@ -195,7 +199,7 @@ export class MainAppStore implements MainAppStoreProps {
     } catch (error) {
       this.isInitLoading = false;
       this.rootStore.badRequestPopupStore.openModal();
-      this.rootStore.badRequestPopupStore.setMessage(error);
+      this.rootStore.badRequestPopupStore.setMessage(`${error}`);
     }
   };
 
@@ -222,14 +226,49 @@ export class MainAppStore implements MainAppStoreProps {
     });
   };
 
+  handleSocketCloseError = (error: any) => {
+    if (error && error?.message.indexOf('1006') > -1) {
+      if (this.websocketConnectionTries < 3) {
+        this.websocketConnectionTries = this.websocketConnectionTries + 1; // TODO: mobx strange behavior with i++;
+        this.handleInitConnection();
+      } else {
+        window.location.reload();
+        return;
+      }
+    }
+
+    if (this.isAuthorized) {
+      const objectToSend = {
+        message: error?.message,
+        name: error?.name,
+        stack: error?.stack,
+      };
+      const jsonLogObject = {
+        error: JSON.stringify(objectToSend),
+        snapShot: JSON.stringify(
+          getStatesSnapshot(this),
+          getCircularReplacer()
+        ),
+      };
+      const params: DebugTypes = {
+        level: debugLevel.TRANSPORT,
+        processId: getProcessId(),
+        message: error?.message || 'unknown error',
+        jsonLogObject: JSON.stringify(jsonLogObject),
+      };
+      API.postDebug(params);
+    }
+  };
+
   handleInitConnection = async (token = this.token) => {
-    this.isLoading = true;
+    this.setIsLoading(true);
     const connectionString = IS_LOCAL
       ? WS_HOST
       : `${this.initModel.tradingUrl}/signalr`;
     const connection = initConnection(connectionString);
 
     const connectToWebocket = async () => {
+      console.log('connectToWebocket');
       try {
         await connection.start();
         this.websocketConnectionTries = 0;
@@ -237,6 +276,7 @@ export class MainAppStore implements MainAppStoreProps {
           await connection.send(Topics.INIT, token);
           this.isAuthorized = true;
           this.activeSession = connection;
+          this.pingPongConnection();
         } catch (error) {
           this.isAuthorized = false;
           this.isInitLoading = false;
@@ -246,6 +286,7 @@ export class MainAppStore implements MainAppStoreProps {
         connectToWebocket();
       }
     };
+
     connectToWebocket();
 
     connection.on(Topics.UNAUTHORIZED, () => {
@@ -331,37 +372,7 @@ export class MainAppStore implements MainAppStoreProps {
 
     connection.onclose((error) => {
       // TODO: https://monfex.atlassian.net/browse/WEBT-510
-      if (error && error?.message.indexOf('1006') > -1) {
-        if (this.websocketConnectionTries < 3) {
-          this.websocketConnectionTries = this.websocketConnectionTries + 1; // TODO: mobx strange behavior with i++;
-          this.handleInitConnection();
-        } else {
-          window.location.reload();
-          return;
-        }
-      }
-
-      if (this.isAuthorized) {
-        const objectToSend = {
-          message: error?.message,
-          name: error?.name,
-          stack: error?.stack,
-        };
-        const jsonLogObject = {
-          error: JSON.stringify(objectToSend),
-          snapShot: JSON.stringify(
-            getStatesSnapshot(this),
-            getCircularReplacer()
-          ),
-        };
-        const params: DebugTypes = {
-          level: debugLevel.TRANSPORT,
-          processId: getProcessId(),
-          message: error?.message || 'unknown error',
-          jsonLogObject: JSON.stringify(jsonLogObject),
-        };
-        API.postDebug(params);
-      }
+      this.handleSocketCloseError(error);
 
       this.socketError = true;
       this.isLoading = false;
@@ -451,6 +462,11 @@ export class MainAppStore implements MainAppStoreProps {
     );
 
     connection.on(Topics.PONG, (response: ResponseFromWebsocket<any>) => {
+      if (this.debugSocketMode) {
+        console.log('cancel ping');
+        return;
+      }
+
       if (response.now) {
         this.signalRReconectCounter = 0;
         this.rootStore.badRequestPopupStore.stopRecconect();
@@ -461,7 +477,9 @@ export class MainAppStore implements MainAppStoreProps {
   @action
   socketPing = () => {
     if (this.activeSession) {
-      this.activeSession?.send(Topics.PING);
+      try {
+        this.activeSession.send(Topics.PING);
+      } catch (error) {}
     }
   };
 
@@ -470,21 +488,44 @@ export class MainAppStore implements MainAppStoreProps {
     let timer: any;
 
     if (this.activeSession && this.isAuthorized) {
-      if (this.signalRReconectCounter >= 2) {
+      console.log('ping pong counter: ', this.signalRReconectCounter);
+      if (this.signalRReconectCounter > 3) {
         this.rootStore.badRequestPopupStore.setRecconect();
-        this.handleInitConnection();
+
+        this.activeSession?.stop().finally(() => {
+          this.handleInitConnection();
+          this.debugSocketMode = false;
+          this.debugDontPing = false;
+        });
+
         return;
       }
 
-      this.socketPing();
+      if (!this.debugDontPing) {
+        this.socketPing();
+      }
 
       timer = setTimeout(() => {
-        this.signalRReconectCounter += 1;
+        this.signalRReconectCounter = this.signalRReconectCounter + 1;
         this.pingPongConnection();
       }, 3000);
     } else {
       clearTimeout(timer);
     }
+  };
+
+  @action
+  setIsLoading = (loading: boolean) => {
+    this.isLoading = loading;
+  };
+
+  // For socket
+  @action
+  handleSocketServerError = (response: ResponseFromWebsocket<ServerError>) => {
+    this.isInitLoading = false;
+    this.setIsLoading(false);
+    this.rootStore.badRequestPopupStore.openModal();
+    this.rootStore.badRequestPopupStore.setMessage(response.data.reason);
   };
 
   @action
@@ -643,7 +684,7 @@ export class MainAppStore implements MainAppStoreProps {
       this.isInitLoading = false;
     } catch (error) {
       this.isLoading = false;
-      this.rootStore.badRequestPopupStore.setMessage(error);
+      this.rootStore.badRequestPopupStore.setMessage(`${error}`);
       this.rootStore.badRequestPopupStore.openModal();
     }
   };

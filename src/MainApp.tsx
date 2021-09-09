@@ -21,6 +21,8 @@ import SmartBanner from 'react-smartbanner';
 import { observer, Observer } from 'mobx-react-lite';
 import HelmetMetaHeader from './components/HelmetMetaHeader';
 
+declare const window: any;
+
 const DAYS_HIDDEN = IS_LIVE ? 30 : 1;
 const DAYS_VIEW_HIDDEN = IS_LIVE ? 90 : 1;
 
@@ -123,6 +125,41 @@ const MainApp: FC = () => {
   }, []);
 
   useEffect(() => {
+
+    window.stopPongDebugMode = function () {
+      console.log('DEBUG: Stop listen pong');
+      mainAppStore.debugSocketMode = true;
+    };
+
+    window.stopPingDebugMode = function () {
+      console.log('DEBUG: Stop send ping');
+      mainAppStore.debugDontPing = true;
+    };
+
+    window.startSocketInitError = function () {
+      console.log('DEBUG: Open connection has error');
+      mainAppStore.debugSocketReconnect = true;
+    };
+
+    window.stopSocketInitError = function () {
+      console.log('DEBUG: Stop Socket Init Error');
+      mainAppStore.debugSocketReconnect = false;
+    };
+
+    window.debugSocketServerError = () => {
+      console.log('DEBUG: Test servererror message');
+      const response = {
+        data: { reason: 'Test Server error' },
+        now: 'test',
+      };
+      mainAppStore.handleSocketServerError(response);
+    };
+
+    window.debugSocketCloseError = () => {
+      console.log('DEBUG: Stop Socket with Error');
+      mainAppStore.handleSocketCloseError(Error('Socket close error'));
+    };
+
     autorun(() => {
       if (mainAppStore.activeAccountId) {
         fetchFavoriteInstruments();
