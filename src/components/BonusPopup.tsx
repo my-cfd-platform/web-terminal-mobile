@@ -16,6 +16,7 @@ import { useStores } from '../hooks/useStores';
 import EventBonusTimer from './EventBonusTimer';
 import { FC } from 'react';
 import { observer } from 'mobx-react-lite';
+import { FULL_VH } from '../constants/global';
 
 interface Props {
   handleDeposit: (useBonus: boolean) => void;
@@ -41,16 +42,18 @@ const BonusPopup: FC<Props> = observer(({ handleDeposit }) => {
 
   const handleClickOpenDeposit = (useBonus: boolean) => () => {
     handleDeposit(useBonus);
-  }
+  };
 
   return (
     <PopupContainer title={t('Bonus')} onClose={handleCloseBonusPopup()}>
       <FlexContainer
         flexDirection="column"
-        height="100%"
+        maxHeight={`calc(${FULL_VH} - 179px)`}
+        flex="1"
         width="100%"
         justifyContent="space-between"
         padding="16px"
+        overflow="auto"
       >
         <FlexContainer
           position="relative"
@@ -107,36 +110,47 @@ const BonusPopup: FC<Props> = observer(({ handleDeposit }) => {
             {t('All profits made are yours to keep.')}
             <br />
             {t('All details about')}&nbsp;
-            <TextLink onClick={handleCloseBonusPopup()} to={Page.BONUS_FAQ}>{t('Bonus Rules')}</TextLink>.
+            <TextLink onClick={handleCloseBonusPopup()} to={Page.BONUS_FAQ}>
+              {t('Bonus Rules')}
+            </TextLink>
+            .
           </PrimaryTextParagraph>
-
-          {/*  */}
-          <FlexContainer marginBottom="20px">
-            <PrimaryButton width="100%" onClick={handleClickOpenDeposit(true)}>
-              <PrimaryTextSpan
-                fontSize="16px"
-                color="#1C1F26"
-                fontWeight="bold"
-                textTransform="capitalize"
-              >
-                {t('Get bonus')}
-              </PrimaryTextSpan>
-            </PrimaryButton>
-          </FlexContainer>
-          {/*  */}
-          <FlexContainer
-            marginBottom="4px"
-            width="100%"
-            justifyContent="center"
-          >
-            <ButtonWithoutStyles onClick={handleClickOpenDeposit(false)}>
-              <PrimaryTextSpan fontSize="16px" color="#ffffff" fontWeight={500}>
-                {t('Skip bonus')}
-              </PrimaryTextSpan>
-            </ButtonWithoutStyles>
-          </FlexContainer>
-          {/*  */}
         </FlexContainer>
+      </FlexContainer>
+
+      <FlexContainer
+        flexDirection="column"
+        width="calc(100% - 32px)"
+        position="absolute"
+        bottom="0"
+        left="16px"
+        right="16px"
+        zIndex="1"
+        padding="16px 0"
+        backgroundColor="#1C1F26"
+      >
+        {/*  */}
+        <FlexContainer marginBottom="20px">
+          <PrimaryButton width="100%" onClick={handleClickOpenDeposit(true)}>
+            <PrimaryTextSpan
+              fontSize="16px"
+              color="#1C1F26"
+              fontWeight="bold"
+              textTransform="capitalize"
+            >
+              {t('Get bonus')}
+            </PrimaryTextSpan>
+          </PrimaryButton>
+        </FlexContainer>
+        {/*  */}
+        <FlexContainer marginBottom="4px" width="100%" justifyContent="center">
+          <ButtonWithoutStyles onClick={handleClickOpenDeposit(false)}>
+            <PrimaryTextSpan fontSize="16px" color="#ffffff" fontWeight={500}>
+              {t('Skip bonus')}
+            </PrimaryTextSpan>
+          </ButtonWithoutStyles>
+        </FlexContainer>
+        {/*  */}
       </FlexContainer>
     </PopupContainer>
   );
