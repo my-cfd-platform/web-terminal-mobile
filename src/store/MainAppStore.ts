@@ -365,8 +365,7 @@ export class MainAppStore implements MainAppStoreProps {
         console.log(Topics.SERVER_ERROR);
         this.isInitLoading = false;
         this.isLoading = false;
-        this.rootStore.badRequestPopupStore.openModal();
-        this.rootStore.badRequestPopupStore.setMessage(response.data.reason);
+        this.handleSocketServerError(response);
       }
     );
 
@@ -524,8 +523,8 @@ export class MainAppStore implements MainAppStoreProps {
   handleSocketServerError = (response: ResponseFromWebsocket<ServerError>) => {
     this.isInitLoading = false;
     this.setIsLoading(false);
-    this.rootStore.badRequestPopupStore.openModal();
-    this.rootStore.badRequestPopupStore.setMessage(response.data.reason);
+    this.rootStore.serverErrorPopupStore.openModal();
+    // response.data.reason 
   };
 
   @action
