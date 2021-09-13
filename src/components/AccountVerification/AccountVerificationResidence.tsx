@@ -20,6 +20,7 @@ import mixpanelEvents from '../../constants/mixpanelEvents';
 import { getProcessId } from '../../helpers/getProcessId';
 import LoaderForComponents from '../LoaderForComponents';
 import { MAX_FILE_UPLOAD_5_MB } from '../../constants/global';
+import apiResponseCodeMessages from '../../constants/apiResponseCodeMessages';
 
 interface Props {
   changeStep: (name: string) => void;
@@ -27,7 +28,7 @@ interface Props {
 
 const AccountVerificationResidence: FC<Props> = (props) => {
   const { changeStep } = props;
-  const { mainAppStore, userProfileStore } = useStores();
+  const { mainAppStore, userProfileStore, notificationStore } = useStores();
   const { t } = useTranslation();
   const [isOpen, setOpen] = useState(false);
   const [file, setFile] = useState(new Blob());
@@ -79,7 +80,15 @@ const AccountVerificationResidence: FC<Props> = (props) => {
       );
       mixpanel.track(mixpanelEvents.KYC_STEP_2);
       await postPersonalData();
-    } catch (error) {}
+    } catch (error) {
+      setFile(new Blob());
+      setImage('');
+      setLoader(false);
+
+      notificationStore.notificationMessage = t(apiResponseCodeMessages[16]);
+      notificationStore.isSuccessfull = false;
+      notificationStore.openNotification();
+    }
   };
 
   return (

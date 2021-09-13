@@ -12,6 +12,7 @@ import {
   ListForES,
   ListForDE,
   ListForRU,
+  ListForPT,
 } from '../constants/listOfLanguages';
 import { useStores } from '../hooks/useStores';
 import { useTranslation } from 'react-i18next';
@@ -63,6 +64,13 @@ const AccountLanguage = () => {
           name: ListForRU[CountriesEnum.RU],
         });
         setList(ListForRU);
+        break;
+      case CountriesEnum.PT:
+        setActiveLanguage({
+          id: CountriesEnum.PT,
+          name: ListForPT[CountriesEnum.PT],
+        });
+        setList(ListForPT);
         break;
       default:
         break;

@@ -28,6 +28,7 @@ const Page = {
   PAYMENTS: '/payments/:status',
   ONBOARDING: '/onboarding',
   BONUS_FAQ: '/bonus-faq',
+  DEMO_REAL_PAGE: '/select-account',
 
   ABOUT_US: 'https://www.monfex.com/why-us',
   FAQ: '#',

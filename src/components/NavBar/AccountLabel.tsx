@@ -10,10 +10,7 @@ const AccountLabel = observer(() => {
   const { mainAppStore } = useStores();
   const { t } = useTranslation();
   return (
-    <FlexContainer
-      alignItems="center"
-      justifyContent="center"
-    >
+    <FlexContainer alignItems="center" justifyContent="center">
       {!mainAppStore.activeAccount?.isLive && (
         <PrimaryTextSpan
           color="rgba(255, 255, 255, 0.4)"
@@ -22,7 +19,7 @@ const AccountLabel = observer(() => {
           textTransform="uppercase"
           marginRight="14px"
         >
-          {t('Demo')}
+          Demo
         </PrimaryTextSpan>
       )}
     </FlexContainer>

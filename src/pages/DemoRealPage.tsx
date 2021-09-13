@@ -1,26 +1,30 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { FlexContainer } from '../styles/FlexContainer';
-import styled from '@emotion/styled';
-import { ButtonWithoutStyles } from '../styles/ButtonWithoutStyles';
-import Colors from '../constants/Colors';
-import { PrimaryTextSpan } from '../styles/TextsElements';
-import { useStores } from '../hooks/useStores';
+import BackFlowLayout from '../components/BackFlowLayout';
 import { useTranslation } from 'react-i18next';
-import SuccessImage from '../assets/images/success.png';
-import API from '../helpers/API';
-import KeysInApi from '../constants/keysInApi';
-import Topics from '../constants/websocketTopics';
-import Fields from '../constants/fields';
-import Modal from './Modal';
+import styled from '@emotion/styled';
+import { useStores } from '../hooks/useStores';
+import { observer } from 'mobx-react-lite';
 import mixpanel from 'mixpanel-browser';
+import Colors from '../constants/Colors';
 import mixpanelEvents from '../constants/mixpanelEvents';
 import mixapanelProps from '../constants/mixpanelProps';
+import { PrimaryTextSpan } from '../styles/TextsElements';
+import SuccessImage from '../assets/images/success.png';
+import { ButtonWithoutStyles } from '../styles/ButtonWithoutStyles';
+import Fields from '../constants/fields';
+import KeysInApi from '../constants/keysInApi';
+import Topics from '../constants/websocketTopics';
+import API from '../helpers/API';
+import { useHistory } from 'react-router';
+import Page from '../constants/Pages';
 
-const DemoRealPopup = () => {
+const DemoRealPage = observer(() => {
   const { mainAppStore, badRequestPopupStore, userProfileStore } = useStores();
   const urlParams = new URLSearchParams();
   const { t } = useTranslation();
   const [parsedParams, setParsedParams] = useState('');
+  const { push } = useHistory();
 
   useEffect(() => {
     urlParams.set('token', mainAppStore.token);
@@ -65,9 +69,11 @@ const DemoRealPopup = () => {
         sendMixpanelEvents('demo');
         mainAppStore.addTriggerDissableOnboarding();
         mainAppStore.isDemoRealPopup = false;
+
+        push(Page.DASHBOARD);
       } catch (error) {
         badRequestPopupStore.openModal();
-        badRequestPopupStore.setMessage(error);
+        badRequestPopupStore.setMessage(`${error}`);
       }
     }
   };
@@ -100,64 +106,64 @@ const DemoRealPopup = () => {
         mainAppStore.isDemoRealPopup = false;
       } catch (error) {
         badRequestPopupStore.openModal();
-        badRequestPopupStore.setMessage(error);
+        badRequestPopupStore.setMessage(`${error}`);
       }
     }
   };
-  return (
-    <Modal>
-      <FlexContainer
-        position="fixed"
-        top="0"
-        left="0"
-        right="0"
-        bottom="0"
-        backgroundColor="#1C1F26"
-        flexDirection="column"
-        justifyContent="space-between"
-        zIndex="103"
-        padding="24px 0"
-      >
-        <FlexContainer
-          flexDirection="column"
-          alignItems="center"
-          padding="60px 0 0 0"
-        >
-          <SuccessImageWrapper src={SuccessImage} />
-          <PrimaryTextSpan
-            color="#fff"
-            fontSize="18px"
-            marginBottom="8px"
-            fontWeight={500}
-          >
-            {t('Congratulations!')}
-          </PrimaryTextSpan>
-          <PrimaryTextSpan color="rgba(196, 196, 196, 0.5)" fontSize="13px">
-            {t('You Have Been Successfully Registered')}
-          </PrimaryTextSpan>
-        </FlexContainer>
-        <FlexContainer justifyContent="space-between" padding="0 24px">
-          <PracticeOnDemoButton onClick={selectDemoAccount}>
-            <PrimaryTextSpan fontSize="13px" fontWeight="bold" color="#fff">
-              {t('Practice on Demo')}
-            </PrimaryTextSpan>
-          </PracticeOnDemoButton>
-          <InvestRealFunds onClick={selectRealAccount}>
-            <PrimaryTextSpan
-              fontSize="13px"
-              fontWeight="bold"
-              color={Colors.BLACK}
-            >
-              {t('Deposit')}
-            </PrimaryTextSpan>
-          </InvestRealFunds>
-        </FlexContainer>
-      </FlexContainer>
-    </Modal>
-  );
-};
 
-export default DemoRealPopup;
+  useEffect(() => {
+    if (!mainAppStore.isDemoRealPopup) {
+      push(Page.DASHBOARD);
+    }
+  }, [mainAppStore.isDemoRealPopup]);
+
+  return (
+    <FlexContainer
+      backgroundColor="#1C1F26"
+      flexDirection="column"
+      justifyContent="space-between"
+      padding="24px 0"
+      flex="1"
+    >
+      <FlexContainer
+        flexDirection="column"
+        alignItems="center"
+        padding="60px 0 0 0"
+      >
+        <SuccessImageWrapper src={SuccessImage} />
+        <PrimaryTextSpan
+          color="#fff"
+          fontSize="18px"
+          marginBottom="8px"
+          fontWeight={500}
+        >
+          {t('Congratulations!')}
+        </PrimaryTextSpan>
+        <PrimaryTextSpan color="rgba(196, 196, 196, 0.5)" fontSize="13px">
+          {t('You Have Been Successfully Registered')}
+        </PrimaryTextSpan>
+      </FlexContainer>
+      <FlexContainer justifyContent="space-between" padding="0 24px">
+        <PracticeOnDemoButton onClick={selectDemoAccount}>
+          <PrimaryTextSpan fontSize="13px" fontWeight="bold" color="#fff">
+            {t('Practice on Demo')}
+          </PrimaryTextSpan>
+        </PracticeOnDemoButton>
+        <InvestRealFunds onClick={selectRealAccount}>
+          <PrimaryTextSpan
+            fontSize="13px"
+            fontWeight="bold"
+            color={Colors.BLACK}
+          >
+            {t('Deposit')}
+          </PrimaryTextSpan>
+        </InvestRealFunds>
+      </FlexContainer>
+    </FlexContainer>
+  );
+});
+
+export default DemoRealPage;
 
 const PracticeOnDemoButton = styled(ButtonWithoutStyles)`
   background-color: ${Colors.RED};
