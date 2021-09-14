@@ -260,7 +260,7 @@ export class MainAppStore implements MainAppStoreProps {
     }
   };
 
-  handleInitConnection = async (token = this.token) => {
+  handleNewInitConnection = async (token = this.token) => {
     this.setIsLoading(true);
     const connectionString = IS_LOCAL
       ? WS_HOST
@@ -384,6 +384,8 @@ export class MainAppStore implements MainAppStoreProps {
 
       console.log('websocket error: ', error);
       console.log('=====/=====');
+
+      this.signalRReconectCounter = 0;
     });
 
     connection.on(
@@ -473,11 +475,22 @@ export class MainAppStore implements MainAppStoreProps {
     });
   };
 
+
+  handleInitConnection = async (token = this.token) => {
+    if (this.activeSession) {
+      this.activeSession
+        .stop()
+        .finally(() => this.handleNewInitConnection(token));
+    } else {
+      this.handleNewInitConnection(token);
+    }
+  };
+
   @action
   socketPing = () => {
     if (this.activeSession) {
       try {
-        this.activeSession.send(Topics.PING);
+        this.activeSession?.send(Topics.PING);
       } catch (error) {}
     }
   };
