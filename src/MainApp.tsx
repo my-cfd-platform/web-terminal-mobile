@@ -44,11 +44,11 @@ const MainApp: FC = () => {
   const fetchFavoriteInstruments = useCallback(async () => {
     if (mainAppStore.activeAccount) {
       mainAppStore.setDataLoading(true);
-      
+
       const accountType = mainAppStore.activeAccount?.isLive
         ? AccountTypeEnum.Live
         : AccountTypeEnum.Demo;
-      
+
       try {
         const response = await API.getFavoriteInstrumets({
           type: accountType,
@@ -68,7 +68,11 @@ const MainApp: FC = () => {
         mainAppStore.setDataLoading(false);
       } catch (error) {
         mainAppStore.setDataLoading(false);
-        instrumentsStore.setActiveInstrumentsIds(instrumentsStore.instruments.slice(0, 5).map(instr => instr.instrumentItem.id));
+        instrumentsStore.setActiveInstrumentsIds(
+          instrumentsStore.instruments
+            .slice(0, 5)
+            .map((instr) => instr.instrumentItem.id)
+        );
         instrumentsStore.switchInstrument(
           instrumentsStore.instruments[0].instrumentItem.id,
           false
@@ -83,6 +87,13 @@ const MainApp: FC = () => {
     mainAppStore.isLoading,
   ]);
 
+  const setFullHeightProperty = () => {
+    document.documentElement.style.setProperty(
+      '--vh',
+      `${window.innerHeight * 0.01}px`
+    );
+  };
+
   useEffect(() => {
     mainAppStore.handleInitConnection();
   }, [mainAppStore.isAuthorized]);
@@ -93,18 +104,18 @@ const MainApp: FC = () => {
         i18n.changeLanguage(mainAppStore.lang);
       }
     });
-    document.documentElement.style.setProperty(
-      '--vh',
-      `${window.innerHeight * 0.01}px`
-    );
+    setFullHeightProperty();
   }, []);
 
   useEffect(() => {
     window.addEventListener('resize', () => {
-      document.documentElement.style.setProperty(
-        '--vh',
-        `${window.innerHeight * 0.01}px`
-      );
+      console.log('resize');
+      setFullHeightProperty();
+    });
+
+    window.addEventListener('orientationchange', () => {
+      console.log('change landscape');
+      setFullHeightProperty();
     });
   }, []);
 
@@ -125,7 +136,6 @@ const MainApp: FC = () => {
   }, []);
 
   useEffect(() => {
-
     window.stopPongDebugMode = function () {
       console.log('DEBUG: Stop listen pong');
       mainAppStore.debugSocketMode = true;
