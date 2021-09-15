@@ -268,9 +268,17 @@ export class MainAppStore implements MainAppStoreProps {
       : `${this.initModel.tradingUrl}/signalr`;
     const connection = initConnection(connectionString);
 
+    const debugSocketReconnectFunction = () => {
+      if (this.debugSocketReconnect) {
+        console.log('Return error socket init');
+        return Promise.reject('Error socket init');
+      }
+    };
+
     const connectToWebocket = async () => {
       console.log('connectToWebocket');
       try {
+        await debugSocketReconnectFunction();
         await connection.start();
         this.websocketConnectionTries = 0;
         try {
@@ -284,7 +292,10 @@ export class MainAppStore implements MainAppStoreProps {
         }
       } catch (error) {
         this.isInitLoading = false;
-        connectToWebocket();
+        setTimeout(
+          connectToWebocket,
+          this.signalRReconnectTimeOut ? +this.signalRReconnectTimeOut : 3000
+        );
       }
     };
 
