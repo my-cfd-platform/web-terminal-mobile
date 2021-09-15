@@ -536,6 +536,11 @@ export class MainAppStore implements MainAppStoreProps {
   handleSocketServerError = (response: ResponseFromWebsocket<ServerError>) => {
     this.isInitLoading = false;
     this.setIsLoading(false);
+    if (this.activeSession) {
+      this.activeSession?.stop().finally(() => {
+        this.activeSession = undefined
+      });
+    }
     this.rootStore.serverErrorPopupStore.openModal();
     // response.data.reason 
   };
