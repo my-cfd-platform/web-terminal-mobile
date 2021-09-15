@@ -226,8 +226,9 @@ export class MainAppStore implements MainAppStoreProps {
     });
   };
 
+  @action
   handleSocketCloseError = (error: any) => {
-    if (error && error?.message.indexOf('1006') > -1) {
+    if (error) {
       if (this.websocketConnectionTries < 3) {
         this.websocketConnectionTries = this.websocketConnectionTries + 1; // TODO: mobx strange behavior with i++;
         this.handleInitConnection();
@@ -475,7 +476,6 @@ export class MainAppStore implements MainAppStoreProps {
     });
   };
 
-
   handleInitConnection = async (token = this.token) => {
     if (this.activeSession) {
       this.activeSession
@@ -538,11 +538,11 @@ export class MainAppStore implements MainAppStoreProps {
     this.setIsLoading(false);
     if (this.activeSession) {
       this.activeSession?.stop().finally(() => {
-        this.activeSession = undefined
+        this.activeSession = undefined;
       });
     }
     this.rootStore.serverErrorPopupStore.openModal();
-    // response.data.reason 
+    // response.data.reason
   };
 
   @action

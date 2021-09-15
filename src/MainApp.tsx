@@ -157,7 +157,8 @@ const MainApp: FC = () => {
 
     window.debugSocketCloseError = () => {
       console.log('DEBUG: Stop Socket with Error');
-      mainAppStore.handleSocketCloseError(Error('Socket close error'));
+      const error = new Error('Socket close error');
+      mainAppStore.handleSocketCloseError(error);
     };
 
     autorun(() => {
