@@ -18,7 +18,6 @@ import KYCStatus from '../constants/KYCStatus';
 import { useStores } from '../hooks/useStores';
 import DepositPaymentResultPopup from '../components/DepositPaymentResultPopup/DepositPaymentResultPopup';
 import LoaderFullscreen from '../components/LoaderFullscreen';
-import DemoRealPopup from '../components/DemoRealPopup';
 import NetworkErrorPopup from '../components/NetworkErrorPopup';
 import ServerErrorPopup from '../components/ServerErrorPopup';
 import mixpanelEvents from '../constants/mixpanelEvents';
@@ -46,6 +45,7 @@ const AuthorizedContainer: FC = observer(({ children }) => {
     Page.PHONE_VERIFICATION,
     Page.ONBOARDING,
     Page.BONUS_FAQ,
+    Page.DEMO_REAL_PAGE,
   ]);
 
   const { push } = useHistory();
@@ -67,6 +67,7 @@ const AuthorizedContainer: FC = observer(({ children }) => {
     Page.ACCOUNT_ABOUT_US,
     Page.ACCOUNTS_SWITCH,
     Page.BONUS_FAQ,
+    Page.DEMO_REAL_PAGE,
   ]);
 
   const isHiddenPromoPage = hidenPromoPageList?.isExact;
@@ -235,17 +236,7 @@ const AuthorizedContainer: FC = observer(({ children }) => {
         {() => <>{serverErrorPopupStore.isActive && <ServerErrorPopup />}</>}
       </Observer>
       <Observer>{() => <NetworkErrorPopup></NetworkErrorPopup>}</Observer>
-      <Observer>
-        {() => (
-          <>
-            {mainAppStore.isDemoRealPopup &&
-              !mainAppStore.isOnboarding &&
-              !mainAppStore.isVerification &&
-              !mainAppStore.isPromoAccount && <DemoRealPopup></DemoRealPopup>}
-            
-          </>
-        )}
-      </Observer>
+
       <NavBar showBar={showNavbarAndNav} />
       <FlexContainer
         height={

@@ -21,6 +21,8 @@ import SmartBanner from 'react-smartbanner';
 import { observer, Observer } from 'mobx-react-lite';
 import HelmetMetaHeader from './components/HelmetMetaHeader';
 
+declare const window: any;
+
 const DAYS_HIDDEN = IS_LIVE ? 30 : 1;
 const DAYS_VIEW_HIDDEN = IS_LIVE ? 90 : 1;
 
@@ -42,11 +44,11 @@ const MainApp: FC = () => {
   const fetchFavoriteInstruments = useCallback(async () => {
     if (mainAppStore.activeAccount) {
       mainAppStore.setDataLoading(true);
-      
+
       const accountType = mainAppStore.activeAccount?.isLive
         ? AccountTypeEnum.Live
         : AccountTypeEnum.Demo;
-      
+
       try {
         const response = await API.getFavoriteInstrumets({
           type: accountType,
@@ -66,7 +68,11 @@ const MainApp: FC = () => {
         mainAppStore.setDataLoading(false);
       } catch (error) {
         mainAppStore.setDataLoading(false);
-        instrumentsStore.setActiveInstrumentsIds(instrumentsStore.instruments.slice(0, 5).map(instr => instr.instrumentItem.id));
+        instrumentsStore.setActiveInstrumentsIds(
+          instrumentsStore.instruments
+            .slice(0, 5)
+            .map((instr) => instr.instrumentItem.id)
+        );
         instrumentsStore.switchInstrument(
           instrumentsStore.instruments[0].instrumentItem.id,
           false
@@ -81,6 +87,13 @@ const MainApp: FC = () => {
     mainAppStore.isLoading,
   ]);
 
+  const setFullHeightProperty = () => {
+    document.documentElement.style.setProperty(
+      '--vh',
+      `${window.innerHeight * 0.01}px`
+    );
+  };
+
   useEffect(() => {
     mainAppStore.handleInitConnection();
   }, [mainAppStore.isAuthorized]);
@@ -91,18 +104,18 @@ const MainApp: FC = () => {
         i18n.changeLanguage(mainAppStore.lang);
       }
     });
-    document.documentElement.style.setProperty(
-      '--vh',
-      `${window.innerHeight * 0.01}px`
-    );
+    setFullHeightProperty();
   }, []);
 
   useEffect(() => {
     window.addEventListener('resize', () => {
-      document.documentElement.style.setProperty(
-        '--vh',
-        `${window.innerHeight * 0.01}px`
-      );
+      console.log('resize');
+      setFullHeightProperty();
+    });
+
+    window.addEventListener('orientationchange', () => {
+      console.log('change landscape');
+      setFullHeightProperty();
     });
   }, []);
 
@@ -123,6 +136,41 @@ const MainApp: FC = () => {
   }, []);
 
   useEffect(() => {
+    window.stopPongDebugMode = function () {
+      console.log('DEBUG: Stop listen pong');
+      mainAppStore.debugSocketMode = true;
+    };
+
+    window.stopPingDebugMode = function () {
+      console.log('DEBUG: Stop send ping');
+      mainAppStore.debugDontPing = true;
+    };
+
+    window.startSocketInitError = function () {
+      console.log('DEBUG: Open connection has error');
+      mainAppStore.debugSocketReconnect = true;
+    };
+
+    window.stopSocketInitError = function () {
+      console.log('DEBUG: Stop Socket Init Error');
+      mainAppStore.debugSocketReconnect = false;
+    };
+
+    window.debugSocketServerError = () => {
+      console.log('DEBUG: Test servererror message');
+      const response = {
+        data: { reason: 'Test Server error' },
+        now: 'test',
+      };
+      mainAppStore.handleSocketServerError(response);
+    };
+
+    window.debugSocketCloseError = () => {
+      console.log('DEBUG: Stop Socket with Error');
+      const error = new Error('Socket close error');
+      mainAppStore.handleSocketCloseError(error);
+    };
+
     autorun(() => {
       if (mainAppStore.activeAccountId) {
         fetchFavoriteInstruments();

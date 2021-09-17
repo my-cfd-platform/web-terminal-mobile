@@ -31,6 +31,7 @@ import PositionEditSL from '../pages/PositionEditSL';
 import PositionEditTP from '../pages/PositionEditTP';
 import Onboarding from '../pages/Onboarding';
 import AccountBonusFaq from '../pages/AccountBonusFaq';
+import DemoRealPage from '../pages/DemoRealPage';
 
 export enum RouteLayoutType {
   Authorized,
@@ -143,6 +144,13 @@ const routesList = [
   {
     component: AccountBalanceHistory,
     path: Page.ACCOUNT_BALANCE_HISTORY,
+    exact: true,
+    strict: true,
+    layoutType: RouteLayoutType.Authorized,
+  },
+  {
+    component: DemoRealPage,
+    path: Page.DEMO_REAL_PAGE,
     exact: true,
     strict: true,
     layoutType: RouteLayoutType.Authorized,
