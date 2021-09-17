@@ -4,5 +4,5 @@ export enum CountriesEnum {
   ES = 'es',
   DE = 'de',
   RU = 'ru',
-  PT = 'pt',
+  //PT = 'pt',
 }

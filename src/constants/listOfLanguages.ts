@@ -27,11 +27,11 @@ export const ListForEN = {
     shortName: 'RU',
   },
 
-  [CountriesEnum.PT]: {
-    name: 'Portuguese',
-    originName: 'Português',
-    shortName: 'PT',
-  },
+  // [CountriesEnum.PT]: {
+  //   name: 'Portuguese',
+  //   originName: 'Português',
+  //   shortName: 'PT',
+  // },
 };
 
 export const ListForPL = {
@@ -61,11 +61,11 @@ export const ListForPL = {
     shortName: 'RU',
   },
 
-  [CountriesEnum.PT]: {
-    name: 'Portugalski',
-    originName: 'Português',
-    shortName: 'PT',
-  },
+  // [CountriesEnum.PT]: {
+  //   name: 'Portugalski',
+  //   originName: 'Português',
+  //   shortName: 'PT',
+  // },
 };
 
 export const ListForES = {
@@ -95,11 +95,11 @@ export const ListForES = {
     shortName: 'RU',
   },
 
-  [CountriesEnum.PT]: {
-    name: 'Portugués',
-    originName: 'Português',
-    shortName: 'PT',
-  },
+  // [CountriesEnum.PT]: {
+  //   name: 'Portugués',
+  //   originName: 'Português',
+  //   shortName: 'PT',
+  // },
 };
 
 
@@ -130,11 +130,11 @@ export const ListForDE = {
     shortName: 'RU',
   },
 
-  [CountriesEnum.PT]: {
-    name: 'Portugiesisch',
-    originName: 'Português',
-    shortName: 'PT',
-  },
+  // [CountriesEnum.PT]: {
+  //   name: 'Portugiesisch',
+  //   originName: 'Português',
+  //   shortName: 'PT',
+  // },
 };
 
 export const ListForRU = {
@@ -164,44 +164,44 @@ export const ListForRU = {
     shortName: 'RU',
   },
 
-  [CountriesEnum.PT]: {
-    name: 'Португальский',
-    originName: 'Português',
-    shortName: 'PT',
-  },
+  // [CountriesEnum.PT]: {
+  //   name: 'Португальский',
+  //   originName: 'Português',
+  //   shortName: 'PT',
+  // },
 };
 
-export const ListForPT = {
-  [CountriesEnum.EN]: {
-    name: 'Inglés',
-    originName: 'English',
-    shortName: 'EN',
-  },
-  [CountriesEnum.PL]: {
-    name: 'Polonês',
-    originName: 'Polski',
-    shortName: 'PL',
-  },
-  [CountriesEnum.ES]: {
-    name: 'Espanhol',
-    originName: 'Español',
-    shortName: 'ES',
-  },
-  [CountriesEnum.DE]: {
-    name: 'Alemão',
-    originName: 'Deutsch',
-    shortName: 'DE',
-  },
-  [CountriesEnum.RU]: {
-    name: 'Russo',
-    originName: 'Русский',
-    shortName: 'RU',
-  },
-  [CountriesEnum.PT]: {
-    name: 'Português',
-    originName: 'Português',
-    shortName: 'PT',
-  },
-};
+// export const ListForPT = {
+//   [CountriesEnum.EN]: {
+//     name: 'Inglés',
+//     originName: 'English',
+//     shortName: 'EN',
+//   },
+//   [CountriesEnum.PL]: {
+//     name: 'Polonês',
+//     originName: 'Polski',
+//     shortName: 'PL',
+//   },
+//   [CountriesEnum.ES]: {
+//     name: 'Espanhol',
+//     originName: 'Español',
+//     shortName: 'ES',
+//   },
+//   [CountriesEnum.DE]: {
+//     name: 'Alemão',
+//     originName: 'Deutsch',
+//     shortName: 'DE',
+//   },
+//   [CountriesEnum.RU]: {
+//     name: 'Russo',
+//     originName: 'Русский',
+//     shortName: 'RU',
+//   },
+//   [CountriesEnum.PT]: {
+//     name: 'Português',
+//     originName: 'Português',
+//     shortName: 'PT',
+//   },
+// };
 
 export type ListOfCountriesType = typeof ListForEN;
