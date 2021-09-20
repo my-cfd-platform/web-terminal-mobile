@@ -491,6 +491,8 @@ export class MainAppStore implements MainAppStoreProps {
         await this.activeSession.stop();
         this.activeSession = undefined;
       }
+      this.websocketConnectionTries = 0;
+      
       console.log('Initiate new socket connection')
       this.handleNewInitConnection(token);
     } catch (error) {}
