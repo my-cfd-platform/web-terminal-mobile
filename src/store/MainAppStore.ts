@@ -486,13 +486,14 @@ export class MainAppStore implements MainAppStoreProps {
   };
 
   handleInitConnection = async (token = this.token) => {
-    if (this.activeSession) {
-      this.activeSession
-        .stop()
-        .finally(() => this.handleNewInitConnection(token));
-    } else {
+    try {
+      if (this.activeSession) {
+        await this.activeSession.stop();
+        this.activeSession = undefined;
+      }
+      console.log('Initiate new socket connection')
       this.handleNewInitConnection(token);
-    }
+    } catch (error) {}
   };
 
   @action
