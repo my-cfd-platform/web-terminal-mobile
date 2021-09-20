@@ -74,9 +74,7 @@ interface MainAppStoreProps {
   isPromoAccount: boolean;
   promo: string;
   showAccountSwitcher: boolean;
-
   connectTimeOut: number;
-
   dataLoading: boolean;
 }
 
@@ -512,7 +510,7 @@ export class MainAppStore implements MainAppStoreProps {
 
     if (this.activeSession && this.isAuthorized) {
       console.log('ping pong counter: ', this.signalRReconectCounter);
-      if (this.signalRReconectCounter > 3) {
+      if (this.signalRReconectCounter === 3) {
         this.rootStore.badRequestPopupStore.setRecconect();
 
         this.activeSession?.stop().finally(() => {
@@ -520,7 +518,6 @@ export class MainAppStore implements MainAppStoreProps {
           this.debugSocketMode = false;
           this.debugDontPing = false;
         });
-
         return;
       }
 
