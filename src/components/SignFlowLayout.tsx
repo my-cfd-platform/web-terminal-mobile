@@ -7,12 +7,14 @@ import LogoMonfex from '../assets/images/logo.png';
 import NetworkErrorPopup from './NetworkErrorPopup';
 import NotificationPopup from './NotificationPopup';
 import ServerErrorPopup from './ServerErrorPopup';
+import TimeoutNotificationPopup from './TimeoutNotificationPopup';
+import ReloadPopup from './ReloadPopup';
 
 interface Props {}
 
 const SignFlowLayout: FC<Props> = (props) => {
   const { children } = props;
-  const { mainAppStore, serverErrorPopupStore } = useStores();
+  const { mainAppStore, serverErrorPopupStore, badRequestPopupStore } = useStores();
 
   return (
     <FlexContainer
@@ -26,7 +28,22 @@ const SignFlowLayout: FC<Props> = (props) => {
       <Observer>
         {() => <>{serverErrorPopupStore.isActive && <ServerErrorPopup />}</>}
       </Observer>
-      <Observer>{() => <NotificationPopup></NotificationPopup>}</Observer>
+      <Observer>{() => (
+        <>
+          <NotificationPopup />
+          <TimeoutNotificationPopup
+            show={badRequestPopupStore.isActiveTimeout}
+            isSuccessfull={false}
+            text={badRequestPopupStore.requestMessage}
+            toggleNotify={badRequestPopupStore.closeModal}
+          />
+          <ReloadPopup
+            show={badRequestPopupStore.isActiveReload}
+            isSuccessfull={false}
+            text={badRequestPopupStore.requestMessage}
+            toggleNotify={badRequestPopupStore.closeModal}/>
+        </>
+      )}</Observer>
       <FlexContainer
         justifyContent="center"
         alignItems="center"

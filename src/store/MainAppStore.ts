@@ -135,7 +135,7 @@ export class MainAppStore implements MainAppStoreProps {
   @observable promo = '';
   @observable showAccountSwitcher: boolean = false;
   @observable onboardingJustClosed: boolean = false;
-  @observable connectTimeOut = 5000;
+  @observable connectTimeOut = 10000;
   websocketConnectionTries = 0;
 
   paramsAsset: string | null = null;
@@ -157,6 +157,9 @@ export class MainAppStore implements MainAppStoreProps {
   @observable debugDontPing = false;
   @observable debugSocketReconnect = false;
 
+  @observable requestErrorStack: string[] = [];
+  @observable requestReconnectCounter: number = 0;
+
   constructor(rootStore: RootStore) {
     this.rootStore = rootStore;
     this.token = localStorage.getItem(LOCAL_STORAGE_TOKEN_KEY) || '';
@@ -164,6 +167,7 @@ export class MainAppStore implements MainAppStoreProps {
     this.refreshToken =
       localStorage.getItem(LOCAL_STORAGE_REFRESH_TOKEN_KEY) || '';
     Axios.defaults.headers[RequestHeaders.AUTHORIZATION] = this.token;
+    Axios.defaults.timeout = this.connectTimeOut;
 
     const newLang =
       localStorage.getItem(LOCAL_STORAGE_LANGUAGE) ||
@@ -839,6 +843,9 @@ export class MainAppStore implements MainAppStoreProps {
     this.rootStore.withdrawalStore.clearStore();
     this.balanceWas = 0;
     this.rootStore.userProfileStore.resetBonusStore();
+    this.requestReconnectCounter = 0;
+    this.rootStore.badRequestPopupStore.stopRecconect();
+    this.requestErrorStack = [];
     if (this.activeAccount) {
       this.setParamsAsset(null);
       this.setParamsMarkets(null);
@@ -932,6 +939,11 @@ export class MainAppStore implements MainAppStoreProps {
   @action
   setDataLoading = (on: boolean) => {
     this.dataLoading = on;
+  };
+
+  @action
+  setRequestErrorStack = (newStack: string[]) => {
+    this.requestErrorStack = newStack;
   };
 
   @computed

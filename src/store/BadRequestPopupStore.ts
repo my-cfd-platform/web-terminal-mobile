@@ -11,6 +11,8 @@ export class BadRequestPopupStore implements ContextProps {
   @observable isNetworkError: boolean = false;
   @observable isRecconect: boolean = false;
   @observable isReload: boolean = false;
+  @observable isActiveTimeout: boolean = false;
+  @observable isActiveReload: boolean = false;
 
   @action
   setNetwork = (status: boolean) => {
@@ -44,11 +46,32 @@ export class BadRequestPopupStore implements ContextProps {
   @action
   closeModal = () => {
     this.isActive = false;
+    this.isActiveTimeout = false;
+  };
+
+  @action
+  closeModalTimeout = () => {
+    this.isActiveTimeout = false;
+  };
+
+  @action
+  closeModalReload = () => {
+    this.isActiveReload = false;
   };
 
   @action
   openModal = () => {
     this.isActive = !this.isNetworkError;
+  };
+
+  @action
+  openModalTimeout = () => {
+    this.isActiveTimeout = true;
+  };
+
+  @action
+  openModalReload = () => {
+    this.isActiveReload = true;
   };
 
   @action

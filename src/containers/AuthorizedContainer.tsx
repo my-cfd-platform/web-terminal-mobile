@@ -21,6 +21,8 @@ import LoaderFullscreen from '../components/LoaderFullscreen';
 import NetworkErrorPopup from '../components/NetworkErrorPopup';
 import ServerErrorPopup from '../components/ServerErrorPopup';
 import mixpanelEvents from '../constants/mixpanelEvents';
+import TimeoutNotificationPopup from '../components/TimeoutNotificationPopup';
+import ReloadPopup from '../components/ReloadPopup';
 
 const AuthorizedContainer: FC = observer(({ children }) => {
   const match = useRouteMatch([
@@ -49,7 +51,12 @@ const AuthorizedContainer: FC = observer(({ children }) => {
   ]);
 
   const { push } = useHistory();
-  const { mainAppStore, userProfileStore, serverErrorPopupStore } = useStores();
+  const {
+    mainAppStore,
+    userProfileStore,
+    serverErrorPopupStore,
+    badRequestPopupStore
+  } = useStores();
   const [waitingData, setWaitingData] = useState<boolean>(true);
   const showNavbarAndNav = !match?.isExact;
 
@@ -221,6 +228,19 @@ const AuthorizedContainer: FC = observer(({ children }) => {
             <NotificationPopup></NotificationPopup>
             <NotificationActivePositionPopup></NotificationActivePositionPopup>
             <NotificationPendingPositionPopup></NotificationPendingPositionPopup>
+            {(badRequestPopupStore.isActiveTimeout) &&
+              <TimeoutNotificationPopup
+                show={badRequestPopupStore.isActiveTimeout}
+                isSuccessfull={false}
+                text={badRequestPopupStore.requestMessage}
+                toggleNotify={badRequestPopupStore.closeModal}/>
+            }
+            <ReloadPopup
+              show={badRequestPopupStore.isActiveReload}
+              isSuccessfull={false}
+              text={badRequestPopupStore.requestMessage}
+              toggleNotify={badRequestPopupStore.closeModal}
+            />
             {mainAppStore.activeAccount && !mainAppStore.isPromoAccount && (
               <>
                 <DepositPaymentResultPopup />
