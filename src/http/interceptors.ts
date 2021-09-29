@@ -318,6 +318,7 @@ const injectInerceptors = (mainAppStore: MainAppStore) => {
       // --- mixpanel
 
       if (isTimeOutError && !isReconnectedRequest) {
+        mainAppStore.rootStore.notificationStore.isSuccessfull = false;
         openNotification('Timeout connection error', mainAppStore);
       }
 

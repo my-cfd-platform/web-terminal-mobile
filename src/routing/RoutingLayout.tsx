@@ -10,11 +10,14 @@ import AuthorizedContainer from '../containers/AuthorizedContainer';
 import SignFlowLayout from '../components/SignFlowLayout';
 import NetworkErrorPopup from '../components/NetworkErrorPopup';
 import Page from '../constants/Pages';
+import TimeoutNotificationPopup from '../components/TimeoutNotificationPopup';
+import ReloadPopup from '../components/ReloadPopup';
+import NotificationPopup from "../components/NotificationPopup";
 
 const RoutingLayout: FC = () => {
   const location = useLocation();
   const { push } = useHistory();
-  const { mainAppStore, serverErrorPopupStore } = useStores();
+  const { mainAppStore, serverErrorPopupStore, badRequestPopupStore } = useStores();
 
   const allRoutes = routesList.map((route) => (
     <RouteWrapper key={route.path} {...route} />
@@ -64,7 +67,23 @@ const RoutingLayout: FC = () => {
           {!location.search && <Redirect to={location.pathname.replace(/\/+$/, "")} />}
           <Observer>
             {() => (
-              <>{serverErrorPopupStore.isActive && <NetworkErrorPopup />}</>
+              <>
+                {serverErrorPopupStore.isActive && <NetworkErrorPopup />}
+                <NotificationPopup />
+                {(badRequestPopupStore.isActiveTimeout) &&
+                <TimeoutNotificationPopup
+                    show={badRequestPopupStore.isActiveTimeout}
+                    isSuccessfull={false}
+                    text={badRequestPopupStore.requestMessage}
+                    toggleNotify={badRequestPopupStore.closeModal}/>
+                }
+                <ReloadPopup
+                  show={badRequestPopupStore.isActiveReload}
+                  isSuccessfull={false}
+                  text={badRequestPopupStore.requestMessage}
+                  toggleNotify={badRequestPopupStore.closeModal}
+                />
+              </>
             )}
           </Observer>
           <Observer>{() => <NetworkErrorPopup />}</Observer>
