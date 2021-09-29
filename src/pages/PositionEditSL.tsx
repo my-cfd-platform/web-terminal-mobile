@@ -380,7 +380,9 @@ const PositionEditSL = observer(() => {
         notificationStore.isSuccessfull = false;
         notificationStore.openNotification();
       }
-    } catch (error) { }
+    } catch (error) {
+      setLoading(false);
+    }
   };
 
   const {

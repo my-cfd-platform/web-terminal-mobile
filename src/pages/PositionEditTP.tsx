@@ -252,7 +252,9 @@ const PositionEditTP = observer(() => {
       }
 
 
-    } catch (error) {}
+    } catch (error) {
+      setLoading(false);
+    }
   };
 
   const {
