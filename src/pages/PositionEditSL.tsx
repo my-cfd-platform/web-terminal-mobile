@@ -301,9 +301,7 @@ const PositionEditSL = observer(() => {
           updateSavePosition.position.isToppingUpActive
         ) {
           setLoading(false);
-          notificationStore.notificationMessage = t(
-            apiResponseCodeMessages[OperationApiResponseCodes.TechnicalError]
-          );
+          notificationStore.notificationMessage = t('Please enter a different Stop Loss amount');
           notificationStore.isSuccessfull = false;
           notificationStore.openNotification();
           return;

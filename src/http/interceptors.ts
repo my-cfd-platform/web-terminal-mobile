@@ -398,10 +398,7 @@ const injectInerceptors = (mainAppStore: MainAppStore) => {
             ){
               return Promise.reject(error);
             } else {
-              mainAppStore.rootStore.badRequestPopupStore.setMessage(
-                error.message
-              );
-              mainAppStore.rootStore.badRequestPopupStore.openModal();
+              openNotification(error.message, mainAppStore, true);
             }
           } else {
             if (mainAppStore.refreshToken && !originalRequest._retry) {

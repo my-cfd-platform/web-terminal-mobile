@@ -513,5 +513,6 @@
     "minute": "minute",
     "second": "second",
     "Only":"Only",
-    "left": "left"
+    "left": "left",
+    "Please enter a different Stop Loss amount": "Please enter a different Stop Loss amount"
 }
