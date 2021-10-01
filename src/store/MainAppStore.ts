@@ -242,9 +242,15 @@ export class MainAppStore implements MainAppStoreProps {
 
     if (this.isAuthorized) {
       const objectToSend = {
-        message: error?.message,
-        name: error?.name,
-        stack: error?.stack,
+        context: 'socket',
+        urlAPI: this.initModel.tradingUrl,
+        urlMiscAPI: this.initModel.miscUrl,
+        urlAuthAPI: this.initModel.authUrl,
+        platform: 'Web-mobile',
+        config: error?.config || 'config is missing',
+        message: error?.message || 'message is empty',
+        name: error?.name || 'name is empty',
+        stack: error?.stack || 'stack is empty',
       };
       const jsonLogObject = {
         error: JSON.stringify(objectToSend),

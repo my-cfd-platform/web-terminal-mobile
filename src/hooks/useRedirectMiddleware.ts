@@ -23,7 +23,7 @@ const useRedirectMiddleware = () => {
     const arrayOfParams = Object.values(unparsedParams);
     if (arrayOfParams.some((item) => !item)) {
       const jsonLogObject = {
-        error: 'redirect error',
+        error: JSON.stringify({ message: 'redirect error', object: arrayOfParams }),
         snapShot: JSON.stringify(getStatesSnapshot(mainAppStore), getCircularReplacer()),
       };
       const params: DebugTypes = {
