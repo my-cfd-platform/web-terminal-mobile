@@ -380,7 +380,8 @@ class API {
     const response = await axios.get<string[]>(
       `${API_AUTH_STRING || authUrl}${
         AUTH_API_LIST.TRADER.ADDITIONAL_REGISTRATION_FIELDS
-      }`
+      }`,
+      this.backgroundRequestOptions
     );
     return response.data;
   };
