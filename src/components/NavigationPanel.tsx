@@ -9,6 +9,7 @@ import IconMarkets from '../assets/svg/navigation/markets.svg';
 import IconPortfolio from '../assets/svg/navigation/portfolio.svg';
 import IconChart from '../assets/svg/navigation/chart.svg';
 import IconNews from '../assets/svg/navigation/news.svg';
+import IconEducation from '../assets/svg/navigation/education.svg';
 import IconUser from '../assets/svg/navigation/user.svg';
 import Colors from '../constants/Colors';
 import { useStores } from '../hooks/useStores';
@@ -100,7 +101,7 @@ const NavigationPanel = observer(() => {
         </CustomNavLink>
         <CustomNavLink to={Page.NEWS} activeClassName="selected">
           <SvgIcon
-            {...IconNews}
+            {...IconEducation}
             fillColor="#979797"
             hoverFillColor={Colors.ACCENT}
           />
