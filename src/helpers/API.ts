@@ -62,6 +62,7 @@ import { BrandEnum } from '../constants/brandingLinksTranslate';
 import { DebugResponse, DebugTypes } from '../types/DebugTypes';
 import { OnBoardingInfo } from '../types/OnBoardingTypes';
 import requestOptions from '../constants/requestOptions';
+import { IEducationCoursesDTO, IEducationQuestionsDTO } from '../types/EducationTypes';
 
 class API {
   private convertParamsToFormData = (params: { [key: string]: any }) => {
@@ -518,6 +519,37 @@ class API {
       (API_MISC_STRING || miscUrl).includes('/misc') || IS_LOCAL ? '' : '/misc';
     const response = await axios.get<IWelcomeBonusDTO>(
       `${API_MISC_STRING || miscUrl}${needToAdd}${API_LIST.WELCOME_BONUS.GET}`
+    );
+    return response.data;
+  };
+
+
+  getListOfCourses = async (miscUrl: string) => {
+    const needToAdd =
+      (API_MISC_STRING || miscUrl).includes('/misc') || IS_LOCAL ? '' : '/misc';
+    const response = await axios.get<IEducationCoursesDTO>(
+      `${API_MISC_STRING || miscUrl}${needToAdd}${API_LIST.EDUCATION.LIST}`
+    );
+    return response.data;
+  };
+
+  getQuestionsByCourses = async (miscUrl: string, id: string) => {
+    const needToAdd =
+      (API_MISC_STRING || miscUrl).includes('/misc') || IS_LOCAL ? '' : '/misc';
+    const response = await axios.get<IEducationQuestionsDTO>(
+      `${API_MISC_STRING || miscUrl}${needToAdd}${API_LIST.EDUCATION.LIST}/${id}`
+    );
+    return response.data;
+  };
+
+  saveProgressEducation = async (miscUrl: string, id: string, index: number) => {
+    const needToAdd =
+      (API_MISC_STRING || miscUrl).includes('/misc') || IS_LOCAL ? '' : '/misc';
+    const response = await axios.post<IEducationCoursesDTO>(
+      `${API_MISC_STRING || miscUrl}${needToAdd}${API_LIST.EDUCATION.LIST}/${id}/saveProgress`,
+      {
+        lastQuestionId: index
+      }
     );
     return response.data;
   };

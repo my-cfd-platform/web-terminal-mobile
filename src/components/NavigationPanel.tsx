@@ -99,7 +99,7 @@ const NavigationPanel = observer(() => {
             hoverFillColor={Colors.ACCENT}
           />
         </CustomNavLink>
-        <CustomNavLink to={Page.NEWS} activeClassName="selected">
+        <CustomNavLink to={Page.EDUCATION} activeClassName="selected">
           <SvgIcon
             {...IconEducation}
             fillColor="#979797"

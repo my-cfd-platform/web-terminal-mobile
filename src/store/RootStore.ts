@@ -19,6 +19,7 @@ import { ServerErrorPopupStore } from './ServerErrorPopupStore';
 import { UserProfileStore } from './UserProfileStore';
 import { PortfolioNavLinksStore } from './PortfolioNavLinksStore';
 import { MarkersOnChartStore } from './MarkersOnChartStore';
+import { EducationStore } from './EducationStore';
 
 export class RootStore {
   quotesStore: QuotesStore;
@@ -42,6 +43,7 @@ export class RootStore {
   userProfileStore: UserProfileStore;
   portfolioNavLinksStore: PortfolioNavLinksStore;
   markersOnChartStore: MarkersOnChartStore;
+  educationStore: EducationStore;
 
   constructor() {
     this.quotesStore = new QuotesStore(this);
@@ -65,5 +67,6 @@ export class RootStore {
     this.userProfileStore = new UserProfileStore();
     this.portfolioNavLinksStore = new PortfolioNavLinksStore();
     this.markersOnChartStore = new MarkersOnChartStore(this);
+    this.educationStore = new EducationStore(this);
   }
 }

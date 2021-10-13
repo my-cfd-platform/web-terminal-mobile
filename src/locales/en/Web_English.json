@@ -513,5 +513,12 @@
     "minute": "minute",
     "second": "second",
     "Only":"Only",
-    "left": "left"
+    "left": "left",
+    "Education": "Education",
+    "Review": "Review",
+    "Continue": "Continue",
+    "Course": "Course",
+    "modules": "modules",
+    "Finish": "Finish",
+    "Previous": "Previous"
 }

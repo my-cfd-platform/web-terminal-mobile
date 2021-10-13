@@ -21,7 +21,7 @@ interface Props {
   showBar: boolean;
 }
 const NavBar: FC<Props> = observer(({ showBar }) => {
-  const { mainAppStore, userProfileStore } = useStores();
+  const { mainAppStore, userProfileStore, educationStore } = useStores();
   const urlParams = new URLSearchParams();
   const { t } = useTranslation();
   const [parsedParams, setParsedParams] = useState('');
@@ -112,6 +112,12 @@ const NavBar: FC<Props> = observer(({ showBar }) => {
     }
   }, [userProfileStore.isBonus, parsedParams]);
 
+  useEffect(() => {
+    if (educationStore.coursesList === null) {
+      educationStore.getCourserList();
+    }
+  }, []);
+
   return (
     <>
       {showBar && (
@@ -144,9 +150,11 @@ const NavBar: FC<Props> = observer(({ showBar }) => {
         </FlexContainer>
       )}
 
-      {userProfileStore.isBonusPopup && userProfileStore.isBonus && !mainAppStore.isPromoAccount && (
-        <BonusPopup handleDeposit={handleOpenDeposit} />
-      )}
+      {userProfileStore.isBonusPopup &&
+        userProfileStore.isBonus &&
+        !mainAppStore.isPromoAccount && (
+          <BonusPopup handleDeposit={handleOpenDeposit} />
+        )}
     </>
   );
 });

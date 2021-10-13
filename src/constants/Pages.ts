@@ -42,6 +42,9 @@ const Page = {
   POSITION_DETAILS: '/portfolio/:type/:id',
   PORTFOLIO_MAIN: '/portfolio',
   NEWS: '/news',
+  EDUCATION: '/education',
+  EDUCATION_LIST: '/education/:id',
+  EDUCATION_QUESTION: '/education/question',
 
   ACCOUNTS_SWITCH: '/accounts',
   DEPOSIT: '/deposit',
