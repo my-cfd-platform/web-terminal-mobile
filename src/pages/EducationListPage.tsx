@@ -8,6 +8,7 @@ import { WelcomeBonusResponseEnum } from '../enums/WelcomeBonusResponseEnum';
 import API from '../helpers/API';
 import { useStores } from '../hooks/useStores';
 import { FlexContainer } from '../styles/FlexContainer';
+import { IEducationCourses, IEducationQuestion } from '../types/EducationTypes';
 
 const EducationListPage = observer(() => {
   const { mainAppStore, educationStore } = useStores();
@@ -31,7 +32,7 @@ const EducationListPage = observer(() => {
 
   useEffect(() => {
     if (educationStore.coursesList !== null) {
-      const course = educationStore.coursesList.find((item) => item.id === id);
+      const course = educationStore.coursesList.find((item: IEducationCourses) => item.id === id);
       educationStore.setActiveCourse(course || null);
       if (!course) {
         push(Page.EDUCATION);
@@ -41,21 +42,30 @@ const EducationListPage = observer(() => {
 
   return (
     <BackFlowLayout pageTitle={educationStore.questionsList?.title}>
-      <FlexContainer flexDirection="column" width="100%">
-        {educationStore.questionsList?.questions.map((item, index) => (
-          <EducationQuestionItem
-            key={item.id}
-            number={index + 1}
-            isActive={educationStore.questionsList?.lastQuestionId === item.id}
-            isVisited={
-              !!(
-                educationStore.activeCourse &&
-                index <= educationStore.activeCourse.lastQuestionNumber
-              )
-            }
-            item={item}
-          />
-        ))}
+      <FlexContainer
+        maxHeight="calc(100vh - 72px)"
+        width="100%"
+        overflow="auto"
+        flexDirection="column"
+      >
+        {educationStore.questionsList?.questions.map(
+          (item: IEducationQuestion, index: number) => (
+            <EducationQuestionItem
+              key={item.id}
+              number={index + 1}
+              isActive={
+                educationStore.questionsList?.lastQuestionId === item.id
+              }
+              isVisited={
+                !!(
+                  educationStore.activeCourse &&
+                  index <= educationStore.activeCourse.lastQuestionNumber
+                )
+              }
+              item={item}
+            />
+          )
+        )}
       </FlexContainer>
     </BackFlowLayout>
   );

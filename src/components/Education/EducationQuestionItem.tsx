@@ -55,6 +55,7 @@ const EducationQuestionItem = ({
               lineHeight="1.3"
               fontSize="14px"
               color={isActive ? '#ffffff' : `rgba(255, 255, 255, 0.64)`}
+              textAlign="left"
             >
               {item.title}
             </PrimaryTextSpan>

@@ -13,6 +13,7 @@ import { PrimaryTextSpan } from '../styles/TextsElements';
 import IconList from '../assets/svg/education/icon-list.svg';
 import { PrimaryButton } from '../styles/Buttons';
 import { useTranslation } from 'react-i18next';
+import { IEducationCourses } from '../types/EducationTypes';
 
 const EducationQuestionPage = observer(() => {
   const { educationStore } = useStores();
@@ -60,7 +61,7 @@ const EducationQuestionPage = observer(() => {
         indexOfQuestion + 1 >
         educationStore.activeCourse?.lastQuestionNumber!
       ) {
-        const newCourseList = educationStore.coursesList?.map((item) => {
+        const newCourseList = educationStore.coursesList?.map((item: IEducationCourses) => {
           if (item.id === educationStore.activeCourse?.id) {
             const newCourse = {
               ...item,

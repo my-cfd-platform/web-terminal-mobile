@@ -7,6 +7,7 @@ import API from '../helpers/API';
 import { useStores } from '../hooks/useStores';
 import { FlexContainer } from '../styles/FlexContainer';
 import { PrimaryTextSpan } from '../styles/TextsElements';
+import { IEducationCourses } from '../types/EducationTypes';
 
 const EducationCourse = observer(() => {
   const { t } = useTranslation();
@@ -21,7 +22,7 @@ const EducationCourse = observer(() => {
       </FlexContainer>
 
       <FlexContainer flexDirection="column">
-        {educationStore.coursesList?.map((item, counter) => (
+        {educationStore.coursesList?.map((item: IEducationCourses, counter: number) => (
           <EducationCourseListItem
             key={item.id}
             course={item}
