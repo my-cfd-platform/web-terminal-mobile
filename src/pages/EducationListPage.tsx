@@ -32,7 +32,9 @@ const EducationListPage = observer(() => {
 
   useEffect(() => {
     if (educationStore.coursesList !== null) {
-      const course = educationStore.coursesList.find((item: IEducationCourses) => item.id === id);
+      const course = educationStore.coursesList.find(
+        (item: IEducationCourses) => item.id === id
+      );
       educationStore.setActiveCourse(course || null);
       if (!course) {
         push(Page.EDUCATION);
@@ -41,7 +43,10 @@ const EducationListPage = observer(() => {
   }, [educationStore.coursesList, educationStore.activeCourse, id]);
 
   return (
-    <BackFlowLayout pageTitle={educationStore.questionsList?.title}>
+    <BackFlowLayout
+      pageTitle={educationStore.questionsList?.title}
+      backLink={`${Page.EDUCATION}`}
+    >
       <FlexContainer
         maxHeight="calc(100vh - 72px)"
         width="100%"

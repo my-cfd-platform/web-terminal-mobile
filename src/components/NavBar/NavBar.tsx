@@ -16,6 +16,7 @@ import PopupContainer from '../../containers/PopupContainer';
 import BonusPopup from '../BonusPopup';
 import { useCallback } from 'react';
 import { FC } from 'react';
+import EducationSuccessPopup from '../Education/EducationSuccessPopup';
 
 interface Props {
   showBar: boolean;
@@ -155,6 +156,10 @@ const NavBar: FC<Props> = observer(({ showBar }) => {
         !mainAppStore.isPromoAccount && (
           <BonusPopup handleDeposit={handleOpenDeposit} />
         )}
+
+      {!mainAppStore.isPromoAccount && educationStore.showPopup && (
+        <EducationSuccessPopup />
+      )}
     </>
   );
 });
