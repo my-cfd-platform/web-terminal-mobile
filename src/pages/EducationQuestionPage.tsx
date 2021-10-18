@@ -17,7 +17,7 @@ import { IEducationCourses } from '../types/EducationTypes';
 
 const EducationQuestionPage = observer(() => {
   const { educationStore, mainAppStore } = useStores();
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const { push } = useHistory();
 
   const [activePage, setActivePage] = useState<number>(0);
@@ -147,7 +147,7 @@ const EducationQuestionPage = observer(() => {
             height="100%"
             src={`${window.location.origin}/${
               educationStore.activeQuestion?.pages[activePage]?.url || ''
-            }?platform=${mainAppStore.initModel.brandName}`}
+            }?platform=${mainAppStore.initModel.brandName}&lang=${i18n.language || 'en'}`}
           />
         </FlexContainer>
         <FlexContainer padding="12px 16px" height="80px">

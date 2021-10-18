@@ -14,6 +14,7 @@ import { PrimaryTextSpan } from '../../styles/TextsElements';
 import { FULL_VH } from '../../constants/global';
 import { useHistory } from 'react-router';
 import Page from '../../constants/Pages';
+import { IEducationCourses } from '../../types/EducationTypes';
 
 const EducationSuccessPopup = observer(() => {
   const { mainAppStore, educationStore, userProfileStore } = useStores();
@@ -50,41 +51,76 @@ const EducationSuccessPopup = observer(() => {
   };
 
   const nextCourse = () => {
-    const indexOfCourse: null | number | undefined = educationStore.activeCourse
-      ? educationStore.coursesList?.indexOf(educationStore.activeCourse)
-      : null;
+    let indexOfCourse: null | number | undefined = null;
+    educationStore.coursesList?.map((item, index) => {
+      if (item.id === educationStore.activeCourse?.id) {
+        indexOfCourse = index;
+      }
+      return item;
+    });
     educationStore.setActiveCourse(null);
     if (
       indexOfCourse !== null &&
       indexOfCourse !== undefined &&
-      educationStore.coursesList &&
-      educationStore.coursesList[indexOfCourse + 1]
+      educationStore.coursesList
     ) {
-      educationStore.setActiveCourse(
-        educationStore.coursesList[indexOfCourse + 1]
-      );
-      push(`${Page.EDUCATION}/${educationStore.coursesList[indexOfCourse + 1].id}`)
+      let nexCoursePage: IEducationCourses;
+
+      switch (indexOfCourse) {
+        case 0:
+          if (
+            educationStore.coursesList[1]?.totalQuestions ===
+            educationStore.coursesList[1]?.lastQuestionNumber
+          ) {
+            nexCoursePage = educationStore.coursesList[indexOfCourse + 2];
+          } else {
+            nexCoursePage = educationStore.coursesList[indexOfCourse + 1];
+          }
+          break;
+        case 1:
+          if (
+            educationStore.coursesList[2]?.totalQuestions ===
+            educationStore.coursesList[2]?.lastQuestionNumber
+          ) {
+            nexCoursePage = educationStore.coursesList[0];
+          } else {
+            nexCoursePage = educationStore.coursesList[indexOfCourse + 1];
+          }
+          break;
+        case 2:
+          if (
+            educationStore.coursesList[0]?.totalQuestions ===
+            educationStore.coursesList[0]?.lastQuestionNumber
+          ) {
+            nexCoursePage = educationStore.coursesList[1];
+          } else {
+            nexCoursePage = educationStore.coursesList[0];
+          }
+          break;
+        default:
+          nexCoursePage = educationStore.coursesList[indexOfCourse + 1];
+      }
+
+      educationStore.setActiveCourse(nexCoursePage);
+
+      push(`${Page.EDUCATION}/${nexCoursePage.id}`);
     }
     educationStore.setShowPopup(false);
   };
 
   const closePopup = () => {
-    educationStore.setActiveCourse(null);
+    //educationStore.setActiveCourse(null);
     educationStore.setActiveQuestion(null);
-    educationStore.setQuestionsList(null);
+    //educationStore.setQuestionsList(null);
     educationStore.setShowPopup(false);
-    push(Page.EDUCATION);
+    push(`${Page.EDUCATION}/${educationStore.activeCourse?.id}`);
   };
 
-  const checkLastCourse = useCallback(() => {
-    return (
-      (educationStore.coursesList &&
-        educationStore.activeCourse?.id ===
-          educationStore.coursesList[educationStore.coursesList?.length! - 1]
-            ?.id) ||
-      false
+  const checkLastCourses = useCallback(() => {
+    return educationStore.coursesList?.every(
+      (item) => item.lastQuestionNumber === item.totalQuestions
     );
-  }, [educationStore.activeCourse, educationStore.coursesList]);
+  }, [educationStore.coursesList]);
 
   const handleOpenDeposit = () => {
     if (userProfileStore.isBonus) {
@@ -118,7 +154,7 @@ const EducationSuccessPopup = observer(() => {
   return (
     <PopupContainer
       title={`${educationStore.activeCourse?.title || ''}`}
-      onClose={() => {}}
+      onClose={closePopup}
     >
       <FlexContainer width="100%" flex="1" flexDirection="column">
         <FlexContainer
@@ -189,10 +225,10 @@ const EducationSuccessPopup = observer(() => {
             justifyContent="center"
           >
             <ButtonWithoutStyles
-              onClick={checkLastCourse() ? closePopup : nextCourse}
+              onClick={checkLastCourses() ? closePopup : nextCourse}
             >
               <PrimaryTextSpan color="#ffffff" fontSize="16px">
-                {checkLastCourse() ? t('Finish Course') : t('Next Course')}
+                {checkLastCourses() ? t('Finish Course') : t('Next Course')}
               </PrimaryTextSpan>
             </ButtonWithoutStyles>
           </FlexContainer>

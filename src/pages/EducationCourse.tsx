@@ -22,13 +22,15 @@ const EducationCourse = observer(() => {
       </FlexContainer>
 
       <FlexContainer flexDirection="column">
-        {educationStore.coursesList?.map((item: IEducationCourses, counter: number) => (
-          <EducationCourseListItem
-            key={item.id}
-            course={item}
-            counter={counter}
-          />
-        ))}
+        {educationStore.coursesList?.map(
+          (item: IEducationCourses, counter: number) => (
+            <React.Fragment key={item.id}>
+              {item.id && item.totalQuestions > 0 && (
+                <EducationCourseListItem course={item} counter={counter} />
+              )}
+            </React.Fragment>
+          )
+        )}
       </FlexContainer>
     </FlexContainer>
   );
