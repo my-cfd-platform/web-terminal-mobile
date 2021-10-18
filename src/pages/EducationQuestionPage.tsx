@@ -61,7 +61,7 @@ const EducationQuestionPage = observer(() => {
         indexOfQuestion + 1 >
         educationStore.activeCourse?.lastQuestionNumber!
       ) {
-        const newCourseList = educationStore.coursesList?.map((item: IEducationCourses) => {
+        const newCourseList = educationStore.coursesList?.map((item) => {
           if (item.id === educationStore.activeCourse?.id) {
             const newCourse = {
               ...item,
@@ -147,7 +147,9 @@ const EducationQuestionPage = observer(() => {
             height="100%"
             src={`${window.location.origin}/${
               educationStore.activeQuestion?.pages[activePage]?.url || ''
-            }?platform=${mainAppStore.initModel.brandName}&lang=${i18n.language || 'en'}`}
+            }?platform=${mainAppStore.initModel.brandName}&lang=${
+              i18n.language || 'en'
+            }`}
           />
         </FlexContainer>
         <FlexContainer padding="12px 16px" height="80px">
