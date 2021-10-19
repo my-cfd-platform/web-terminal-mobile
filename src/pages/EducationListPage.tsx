@@ -8,7 +8,7 @@ import { WelcomeBonusResponseEnum } from '../enums/WelcomeBonusResponseEnum';
 import API from '../helpers/API';
 import { useStores } from '../hooks/useStores';
 import { FlexContainer } from '../styles/FlexContainer';
-import { IEducationCourses, IEducationQuestion } from '../types/EducationTypes';
+import { IEducationCourses, IEducationQuestion, IEducationQuestionsList } from '../types/EducationTypes';
 
 const EducationListPage = observer(() => {
   const { mainAppStore, educationStore } = useStores();
@@ -23,7 +23,16 @@ const EducationListPage = observer(() => {
           id
         );
         if (response.responseCode === WelcomeBonusResponseEnum.Ok) {
-          educationStore.setQuestionsList(response.data);
+          const newData: IEducationQuestionsList = response.data;
+          newData.questions = response.data.questions.sort((a, b) => a.id - b.id);
+          educationStore.setQuestionsList(newData);
+          educationStore.setActiveQuestion(
+            educationStore.questionsList?.questions[
+              educationStore.activeCourse?.lastQuestionNumber!
+            ] ||
+            educationStore.questionsList?.questions[0] ||
+            null
+          );
         }
       } catch (error) {}
     };
