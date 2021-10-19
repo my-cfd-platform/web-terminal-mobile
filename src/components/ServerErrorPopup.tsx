@@ -37,7 +37,7 @@ const ServerErrorPopup = () => {
               textAlign="center"
             >
               {t(
-                'Please wait while we processing your request or click "Reload"'
+                `Please wait while we processing your request or click 'Reload'`
               )}
               .
             </PrimaryTextSpan>
