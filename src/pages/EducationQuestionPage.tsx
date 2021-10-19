@@ -48,7 +48,7 @@ const EducationQuestionPage = observer(() => {
         ]?.id && activePage === educationStore.activeQuestion?.pages.length! - 1
     );
   }, [educationStore.activeQuestion, educationStore.questionsList, activePage]);
-
+  
   const handleNextPage = useCallback(() => {
     setLastHandle('next');
     if (activePage === educationStore.activeQuestion?.pages.length! - 1) {
