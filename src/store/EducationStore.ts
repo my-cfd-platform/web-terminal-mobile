@@ -87,4 +87,12 @@ export class EducationStore implements IEducationStore {
     this.rootStore.serverErrorPopupStore.setReloadPayload(Page.EDUCATION);
     this.rootStore.serverErrorPopupStore.openModal();
   };
+
+  @action
+  resetStore = () => {
+    this.setQuestionsList(null);
+    this.setCoursesList(null);
+    this.setActiveCourse(null);
+    this.setActiveQuestion(null);
+  }
 }
