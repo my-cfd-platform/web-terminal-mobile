@@ -123,12 +123,14 @@ const EducationSuccessPopup = observer(() => {
   }, [educationStore.coursesList]);
 
   const handleOpenDeposit = () => {
-    if (userProfileStore.isBonus) {
-      userProfileStore.showBonusPopup();
-      mainAppStore.setLoading(false);
-    } else {
-      window.location.href = `${API_DEPOSIT_STRING}/?${parsedParams}`;
-    }
+    // if (userProfileStore.isBonus) {
+    //   userProfileStore.showBonusPopup();
+    //   mainAppStore.setLoading(false);
+    // } else {
+    //   window.location.href = `${API_DEPOSIT_STRING}/?${parsedParams}`;
+    // }
+
+    window.location.href = `${API_DEPOSIT_STRING}/?${parsedParams}`;
   };
 
   useEffect(() => {
