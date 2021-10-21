@@ -101,7 +101,7 @@ const EducationQuestionPage = observer(() => {
           }
         } catch (error) {
           educationStore.openErrorModal();
-          return
+          return;
         }
       }
       if (
@@ -193,7 +193,9 @@ const EducationQuestionPage = observer(() => {
               {t('Previous')}
             </PrevBtn>
             <PrimaryButton onClick={handleNextPage}>
-              {checkLastPage() ? t('Finish') : t('Next')}
+              <PrimaryTextSpan color="#1C1F26" fontSize="16px" fontWeight={700}>
+                {checkLastPage() ? t('Finish') : t('Next')}
+              </PrimaryTextSpan>
             </PrimaryButton>
           </ButtonContainer>
         </FlexContainer>
