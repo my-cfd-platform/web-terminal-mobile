@@ -35,6 +35,7 @@ import DemoRealPage from '../pages/DemoRealPage';
 import EducationCourse from '../pages/EducationCourse';
 import EducationListPage from '../pages/EducationListPage';
 import EducationQuestionPage from '../pages/EducationQuestionPage';
+import PageNotFound from '../pages/PageNotFound';
 
 export enum RouteLayoutType {
   Authorized,
@@ -284,6 +285,13 @@ const routesList = [
   {
     component: Onboarding,
     path: Page.ONBOARDING,
+    exact: true,
+    strict: true,
+    layoutType: RouteLayoutType.Authorized,
+  },
+  {
+    component: PageNotFound,
+    path: Page.PAGE_NOT_FOUND,
     exact: true,
     strict: true,
     layoutType: RouteLayoutType.Authorized,

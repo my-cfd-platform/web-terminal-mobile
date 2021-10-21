@@ -36,7 +36,7 @@ const Page = {
 
   TERMS_OF_SERVICE: 'https://monfex.com/terms-of-service',
   PRIVACY_POLICY: 'https://www.monfex.com/privacy-policy',
-
+  
   MARKETS: '/markets',
   PORTFOLIO: '/portfolio/:type',
   POSITION_DETAILS: '/portfolio/:type/:id',
@@ -59,6 +59,8 @@ const Page = {
   TP_EDIT_MAIN: '/edit-tp',
   TP_EDIT: '/edit-tp/:id',
 
+
+  PAGE_NOT_FOUND: '/page-not-found',
 };
 
 Object.freeze(Page);

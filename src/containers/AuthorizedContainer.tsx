@@ -47,6 +47,7 @@ const AuthorizedContainer: FC = observer(({ children }) => {
     Page.BONUS_FAQ,
     Page.DEMO_REAL_PAGE,
     Page.EDUCATION_LIST,
+    Page.PAGE_NOT_FOUND,
   ]);
 
   const { push } = useHistory();

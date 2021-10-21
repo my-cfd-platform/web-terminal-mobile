@@ -14,9 +14,12 @@ import IconList from '../assets/svg/education/icon-list.svg';
 import { PrimaryButton } from '../styles/Buttons';
 import { useTranslation } from 'react-i18next';
 import { IEducationCourses } from '../types/EducationTypes';
+import API from '../helpers/API';
+import apiResponseCodeMessages from '../constants/apiResponseCodeMessages';
+import { OperationApiResponseCodes } from '../enums/OperationApiResponseCodes';
 
 const EducationQuestionPage = observer(() => {
-  const { educationStore, mainAppStore } = useStores();
+  const { educationStore, mainAppStore, notificationStore } = useStores();
   const { t, i18n } = useTranslation();
   const { push } = useHistory();
 
@@ -48,8 +51,8 @@ const EducationQuestionPage = observer(() => {
         ]?.id && activePage === educationStore.activeQuestion?.pages.length! - 1
     );
   }, [educationStore.activeQuestion, educationStore.questionsList, activePage]);
-  
-  const handleNextPage = useCallback(() => {
+
+  const handleNextPage = useCallback(async () => {
     setLastHandle('next');
     if (activePage === educationStore.activeQuestion?.pages.length! - 1) {
       setActivePage(0);
@@ -75,7 +78,31 @@ const EducationQuestionPage = observer(() => {
         if (newCourseList) {
           educationStore.setCoursesList(newCourseList);
         }
-        educationStore.saveProgress();
+        try {
+          const response = await API.saveProgressEducation(
+            mainAppStore.initModel.miscUrl,
+            educationStore.activeCourse?.id || '',
+            educationStore.activeQuestion?.id || 0
+          );
+
+          switch (response.responseCode) {
+            case 0:
+              break;
+
+            default:
+              notificationStore.notificationMessage = t(
+                apiResponseCodeMessages[
+                  OperationApiResponseCodes.TechnicalError
+                ]
+              );
+              notificationStore.isSuccessfull = false;
+              notificationStore.openNotification();
+              break;
+          }
+        } catch (error) {
+          educationStore.openErrorModal();
+          return
+        }
       }
       if (
         indexOfQuestion ===

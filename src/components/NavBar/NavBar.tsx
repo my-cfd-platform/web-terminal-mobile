@@ -114,10 +114,10 @@ const NavBar: FC<Props> = observer(({ showBar }) => {
   }, [userProfileStore.isBonus, parsedParams]);
 
   useEffect(() => {
-    if (educationStore.coursesList === null) {
+    if (mainAppStore.token && mainAppStore.isAuthorized) {
       educationStore.getCourserList();
     }
-  }, []);
+  }, [mainAppStore.lang, mainAppStore.isAuthorized, mainAppStore.token]);
 
   return (
     <>

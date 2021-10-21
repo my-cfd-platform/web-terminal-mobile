@@ -7,6 +7,7 @@ import {
 } from '../types/EducationTypes';
 import API from '../helpers/API';
 import { WelcomeBonusResponseEnum } from '../enums/WelcomeBonusResponseEnum';
+import Page from '../constants/Pages';
 
 interface IEducationStore {
   educationIsLoaded: boolean;
@@ -68,8 +69,12 @@ export class EducationStore implements IEducationStore {
         this.rootStore.mainAppStore.initModel.miscUrl
       );
       if (response.responseCode === WelcomeBonusResponseEnum.Ok) {
+        const validCourseList = response.data.some(item => item.totalQuestions > 0 && item.id);
+        if (validCourseList) {
+          this.setCoursesList(response.data);
+        }
         this.setEducationIsLoaded(true);
-        this.setCoursesList(response.data);
+        
       } else {
         this.setEducationIsLoaded(false);
         this.setCoursesList(null);
@@ -78,13 +83,8 @@ export class EducationStore implements IEducationStore {
   };
 
   @action
-  saveProgress = async () => {
-    try {
-      await API.saveProgressEducation(
-        this.rootStore.mainAppStore.initModel.miscUrl,
-        this.activeCourse?.id || '',
-        this.activeQuestion?.id || 0
-      )      
-    } catch (error) {}
-  }
+  openErrorModal = (error?: string) => {
+    this.rootStore.serverErrorPopupStore.setReloadPayload(Page.EDUCATION);
+    this.rootStore.serverErrorPopupStore.openModal();
+  };
 }

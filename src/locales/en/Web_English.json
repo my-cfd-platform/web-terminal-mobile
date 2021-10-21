@@ -525,5 +525,8 @@
     "Finish Course": "Finish Course",
     "Next Course": "Next Course",
     "Congratulation! You have successfully completed": "Congratulation! You have successfully completed",
-    "Please wait while we processing your request or click 'Reload'": "Please wait while we processing your request or click 'Reload'"
+    "Please wait while we processing your request or click 'Reload'": "Please wait while we processing your request or click 'Reload'",
+    "Oops.. page not found": "Oops.. page not found",
+    "Go Home": "Go Home",
+    "Course Not Found": "Course Not Found"
 }
