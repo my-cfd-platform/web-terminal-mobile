@@ -62,7 +62,6 @@ const injectInerceptors = (mainAppStore: MainAppStore) => {
     },
 
     async function (error) {
-      
       if (error.config?.url.includes(API_LIST.DEBUG.POST)) {
         return await Promise.reject(error);
       }
@@ -102,11 +101,10 @@ const injectInerceptors = (mainAppStore: MainAppStore) => {
 
       const originalRequest = error.config;
 
-
-
       if (
         (error.config?.url.includes(API_LIST.ONBOARDING.STEPS) ||
-        error.config?.url.includes(API_LIST.WELCOME_BONUS.GET) || error.config?.url.includes(API_LIST.EDUCATION.LIST)) &&
+          error.config?.url.includes(API_LIST.WELCOME_BONUS.GET) ||
+          error.config?.url.includes(API_LIST.EDUCATION.LIST)) &&
         error.response?.status &&
         error.response?.status !== 401 &&
         error.response?.status !== 403 &&

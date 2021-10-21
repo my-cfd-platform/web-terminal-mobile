@@ -152,7 +152,7 @@ const EducationQuestionPage = observer(() => {
     <BackFlowLayout
       type="close"
       pageTitle={educationStore.activeCourse?.title}
-      backLink={`${Page.EDUCATION}/${educationStore.activeCourse?.id}`}
+      backLink={`${Page.EDUCATION}`}
     >
       <FlexContainer position="absolute" top="16px" right="16px">
         <PrimaryTextSpan
