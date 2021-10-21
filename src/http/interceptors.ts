@@ -106,7 +106,7 @@ const injectInerceptors = (mainAppStore: MainAppStore) => {
 
       if (
         (error.config?.url.includes(API_LIST.ONBOARDING.STEPS) ||
-        error.config?.url.includes(API_LIST.WELCOME_BONUS.GET)) &&
+        error.config?.url.includes(API_LIST.WELCOME_BONUS.GET) || error.config?.url.includes(API_LIST.EDUCATION.LIST)) &&
         error.response?.status &&
         error.response?.status !== 401 &&
         error.response?.status !== 403 &&
