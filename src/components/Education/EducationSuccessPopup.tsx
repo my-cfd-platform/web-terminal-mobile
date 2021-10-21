@@ -214,7 +214,9 @@ const EducationSuccessPopup = observer(() => {
         <FlexContainer width="100%" flexDirection="column" padding="16px">
           <FlexContainer width="100%">
             <PrimaryButton width="100%" onClick={handleOpenDeposit}>
-              {t('Deposit & Start Trading')}
+              <PrimaryTextSpan color="#1C1F26" fontSize="16px" fontWeight={700}>
+                {t('Deposit & Start Trading')}
+              </PrimaryTextSpan>
             </PrimaryButton>
           </FlexContainer>
 
