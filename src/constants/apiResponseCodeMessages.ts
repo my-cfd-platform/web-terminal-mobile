@@ -52,6 +52,7 @@ const apiResponseCodeMessages = {
     'Your account is blocked. We\'ve detected suspicious activity on your account. This block will expire in 15 min.',
   [OperationApiResponseCodes.CountryIsRestricted]:
     'Registration from your country is not allowed',
+  [OperationApiResponseCodes.TradingDisabled]: 'Trading is temporarily disabled',
 };
 
 Object.freeze(apiResponseCodeMessages);
