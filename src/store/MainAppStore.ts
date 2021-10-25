@@ -707,7 +707,6 @@ export class MainAppStore implements MainAppStoreProps {
       }
 
       this.activeAccount = activeAccount;
-
       this.isLoading = false;
       this.isInitLoading = false;
     } catch (error) {
