@@ -26,6 +26,17 @@ const EducationQuestionPage = observer(() => {
   const [activePage, setActivePage] = useState<number>(0);
   const [lastHandle, setLastHandle] = useState<'prev' | 'next' | null>(null);
 
+  const checkPage = useCallback(() => {
+    if (!educationStore.activeQuestion?.pages[activePage]?.url) {
+      return `${window.location.origin}/${Page.PAGE_NOT_FOUND}`;
+    }
+    return `${window.location.origin}/${
+      educationStore.activeQuestion?.pages[activePage]?.url || ''
+    }?platform=${mainAppStore.initModel.brandName}&lang=${
+      i18n.language || 'en'
+    }`;
+  }, [activePage, educationStore.activeQuestion]);
+
   const checkNumberOfQuestion = () => {
     const indexOfQuestion = educationStore.questionsList?.questions.indexOf(
       educationStore.activeQuestion!
@@ -172,11 +183,7 @@ const EducationQuestionPage = observer(() => {
             frameBorder="none"
             width="100%"
             height="100%"
-            src={`${window.location.origin}/${
-              educationStore.activeQuestion?.pages[activePage]?.url || ''
-            }?platform=${mainAppStore.initModel.brandName}&lang=${
-              i18n.language || 'en'
-            }`}
+            src={checkPage()}
           />
         </FlexContainer>
         <FlexContainer padding="12px 16px" height="80px">
