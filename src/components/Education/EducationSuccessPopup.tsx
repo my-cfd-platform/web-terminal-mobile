@@ -144,6 +144,7 @@ const EducationSuccessPopup = observer(() => {
     urlParams.set('trader_id', userProfileStore.userProfileId || '');
     urlParams.set('api', mainAppStore.initModel.tradingUrl);
     urlParams.set('rt', mainAppStore.refreshToken);
+    urlParams.set('useBonus', 'true');
 
     setParsedParams(urlParams.toString());
   }, [
