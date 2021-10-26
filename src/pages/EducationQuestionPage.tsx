@@ -66,68 +66,77 @@ const EducationQuestionPage = observer(() => {
 
   const handleNextPage = useCallback(async () => {
     setLastHandle('next');
-    if (activePage === educationStore.activeQuestion?.pages.length! - 1) {
-      setActivePage(0);
-      const indexOfQuestion =
-        educationStore.questionsList?.questions.indexOf(
-          educationStore.activeQuestion!
-        ) || 0;
-      if (
-        indexOfQuestion + 1 >
-        educationStore.activeCourse?.lastQuestionNumber!
-      ) {
-        const newCourseList = educationStore.coursesList?.map((item) => {
-          if (item.id === educationStore.activeCourse?.id) {
-            const newCourse = {
-              ...item,
-              lastQuestionNumber: indexOfQuestion + 1,
-            };
-            educationStore.setActiveCourse(newCourse);
-            return newCourse;
+
+    try {
+      const response = await API.saveProgressEducation(
+        mainAppStore.initModel.miscUrl,
+        educationStore.activeCourse?.id || '',
+        educationStore.activeQuestion?.id || 0
+      );
+
+      switch (response.responseCode) {
+        case 0:
+          {
+            if (
+              activePage ===
+              educationStore.activeQuestion?.pages.length! - 1
+            ) {
+              setActivePage(0);
+              const indexOfQuestion =
+                educationStore.questionsList?.questions.indexOf(
+                  educationStore.activeQuestion!
+                ) || 0;
+              if (
+                indexOfQuestion + 1 >
+                educationStore.activeCourse?.lastQuestionNumber!
+              ) {
+                const newCourseList = educationStore.coursesList?.map(
+                  (item) => {
+                    if (item.id === educationStore.activeCourse?.id) {
+                      const newCourse = {
+                        ...item,
+                        lastQuestionNumber: indexOfQuestion + 1,
+                      };
+                      educationStore.setActiveCourse(newCourse);
+                      return newCourse;
+                    }
+                    return item;
+                  }
+                );
+                if (newCourseList) {
+                  educationStore.setCoursesList(newCourseList);
+                }
+              }
+              if (
+                indexOfQuestion ===
+                educationStore.questionsList?.questions.length! - 1
+              ) {
+                educationStore.setShowPopup(true);
+              } else {
+                educationStore.setActiveQuestion(
+                  educationStore.questionsList?.questions[
+                    indexOfQuestion + 1
+                  ] || null
+                );
+              }
+            } else {
+              setActivePage(activePage + 1);
+            }
           }
-          return item;
-        });
-        if (newCourseList) {
-          educationStore.setCoursesList(newCourseList);
-        }
-        try {
-          const response = await API.saveProgressEducation(
-            mainAppStore.initModel.miscUrl,
-            educationStore.activeCourse?.id || '',
-            educationStore.activeQuestion?.id || 0
+          break;
+
+        default:
+          notificationStore.notificationMessage = t(
+            apiResponseCodeMessages[OperationApiResponseCodes.TechnicalError]
           );
-
-          switch (response.responseCode) {
-            case 0:
-              break;
-
-            default:
-              notificationStore.notificationMessage = t(
-                apiResponseCodeMessages[
-                  OperationApiResponseCodes.TechnicalError
-                ]
-              );
-              notificationStore.isSuccessfull = false;
-              notificationStore.openNotification();
-              break;
-          }
-        } catch (error) {
-          educationStore.openErrorModal();
-          return;
-        }
+          notificationStore.isSuccessfull = false;
+          notificationStore.openNotification();
+          push(`${Page.EDUCATION}/${educationStore.activeCourse?.id}`);
+          break;
       }
-      if (
-        indexOfQuestion ===
-        educationStore.questionsList?.questions.length! - 1
-      ) {
-        educationStore.setShowPopup(true);
-      } else {
-        educationStore.setActiveQuestion(
-          educationStore.questionsList?.questions[indexOfQuestion + 1] || null
-        );
-      }
-    } else {
-      setActivePage(activePage + 1);
+    } catch (error) {
+      educationStore.openErrorModal();
+      return;
     }
   }, [activePage, educationStore.questionsList, educationStore.activeQuestion]);
 
