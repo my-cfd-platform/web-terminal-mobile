@@ -28,7 +28,8 @@ const EducationQuestionPage = observer(() => {
 
   const checkPage = useCallback(() => {
     if (!educationStore.activeQuestion?.pages[activePage]?.url) {
-      return `${window.location.origin}/${Page.PAGE_NOT_FOUND}`;
+      push(`${window.location.origin}${Page.PAGE_NOT_FOUND}`);
+      return;
     }
     return `${window.location.origin}/${
       educationStore.activeQuestion?.pages[activePage]?.url || ''
