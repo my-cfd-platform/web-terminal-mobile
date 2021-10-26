@@ -53,7 +53,7 @@ const NotificationPendingPositionPopup: FC<Props> = observer(() => {
       }
       pendingPositionNotificationStore.timer = setTimeout(() => {
         pendingPositionNotificationStore.closeNotification();
-      }, 2000);
+      }, 5000);
     }
     return;
   }, [pendingPositionNotificationStore.isActiveNotification]);

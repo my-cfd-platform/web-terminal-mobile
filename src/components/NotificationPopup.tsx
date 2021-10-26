@@ -51,7 +51,7 @@ const NotificationPopup: FC<Props> = observer(() => {
       }
       notificationStore.timer = setTimeout(() => {
         notificationStore.closeNotification();
-      }, 2000);
+      }, 5000);
     }
     return;
   }, [notificationStore.isActiveNotification]);
