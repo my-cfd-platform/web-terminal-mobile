@@ -513,5 +513,22 @@
     "minute": "minuto",
     "second": "segundo",
     "Only": "Solo",
-    "left": "quedan"
+    "left": "quedan",
+    "Please enter a different Stop Loss amount": "Ingrese una cantidad de Stop Loss diferente",
+    "Education": "Educación",
+    "Review": "Revisar",
+    "Continue": "Continuar",
+    "Course": "Curso",
+    "modules": "módulos",
+    "Finish": "Terminar",
+    "Previous": "Previa",
+    "Deposit & Start Trading": "Deposite y comience a operar",
+    "Finish Course": "Terminar el curso",
+    "Next Course": "Próximo curso",
+    "Congratulation! You have successfully completed": "¡Felicidades! Ha completado con éxito",
+    "Please wait while we processing your request or click 'Reload'": "Espere mientras procesamos su solicitud o haga clic en 'Recargar'",
+    "Oops.. page not found": "Ups.. página no encontrada",
+    "Go Home": "Ir a Inicio",
+    "Course Not Found": "Curso no encontrado",
+    "Trading is temporarily disabled": "El comercio está temporalmente deshabilitado"
 }
