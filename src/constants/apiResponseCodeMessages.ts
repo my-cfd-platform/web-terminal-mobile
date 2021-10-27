@@ -46,7 +46,7 @@ const apiResponseCodeMessages = {
     'Trading is not available for this asset now. Please try again later.',
   [OperationApiResponseCodes.MaxOpenPositionsAmount]:
     'You exceed the maximum amount for orders',
-  [OperationApiResponseCodes.SystemError]: 'Technical Error.',
+  [OperationApiResponseCodes.SystemError]: 'Some tech error, see SEQ errors',
   [OperationApiResponseCodes.PersonalDataNotValid]: 'Personal data is not valid.',
   [OperationApiResponseCodes.TooManyAttempts]:
     'Your account is blocked. We\'ve detected suspicious activity on your account. This block will expire in 15 min.',
