@@ -31,10 +31,16 @@ const EducationQuestionPage = observer(() => {
       push(`${window.location.origin}${Page.PAGE_NOT_FOUND}`);
       return;
     }
+    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+    console.log('is ios', isIOS);
     return `${window.location.origin}/${
       educationStore.activeQuestion?.pages[activePage]?.url || ''
     }?platform=${mainAppStore.initModel.brandName}&lang=${
       i18n.language || 'en'
+    }&device=${isIOS ? 'ios' : 'android'}&app_link=${
+      isIOS
+        ? `${mainAppStore.initModel.iosAppLink}`
+        : `${mainAppStore.initModel.androidAppLink}`
     }`;
   }, [activePage, educationStore.activeQuestion]);
 
