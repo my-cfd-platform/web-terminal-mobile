@@ -32,7 +32,7 @@ const EducationQuestionPage = observer(() => {
       return;
     }
     const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
-    console.log('is ios', isIOS);
+
     return `${window.location.origin}/${
       educationStore.activeQuestion?.pages[activePage]?.url || ''
     }?platform=${mainAppStore.initModel.brandName}&lang=${
