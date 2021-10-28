@@ -13,10 +13,6 @@ const EducationCourse = observer(() => {
   const { t } = useTranslation();
   const { educationStore } = useStores();
 
-  useEffect(() => {
-    
-  }, []);
-
   return (
     <FlexContainer flexDirection="column">
       <FlexContainer padding="20px 16px" flexDirection="column">
