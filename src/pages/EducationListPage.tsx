@@ -53,12 +53,13 @@ const EducationListPage = observer(() => {
           }
 
           default:
+            educationStore.setQuestionsList(null);
+            educationStore.setActiveQuestion(null);
+            
             notificationStore.notificationMessage = t('Course Not Found');
             notificationStore.isSuccessfull = false;
             notificationStore.openNotification();
             break;
-        }
-        if (response.responseCode === WelcomeBonusResponseEnum.Ok) {
         }
       } catch (error) {
         educationStore.openErrorModal();
