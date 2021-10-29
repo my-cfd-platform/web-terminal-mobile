@@ -72,6 +72,8 @@ export class EducationStore implements IEducationStore {
         const validCourseList = response.data.some(item => item.totalQuestions > 0 && item.id);
         if (validCourseList) {
           this.setCoursesList(response.data);
+        } else {
+          this.setCoursesList(null);
         }
         this.setEducationIsLoaded(true);
         
