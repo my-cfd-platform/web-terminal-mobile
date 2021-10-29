@@ -530,5 +530,6 @@
     "Oops.. page not found": "Упс.. страница не найдена",
     "Go Home": "На Главную",
     "Course Not Found": "Курс не найден",
-    "Trading is temporarily disabled": "Возможность торговли временно заблокирована"
+    "Trading is temporarily disabled": "Возможность торговли временно заблокирована",
+    "System Error": "Системная ошибка"
 }
