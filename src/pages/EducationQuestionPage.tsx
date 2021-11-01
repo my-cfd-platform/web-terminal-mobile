@@ -136,9 +136,7 @@ const EducationQuestionPage = observer(() => {
           break;
 
         default:
-          notificationStore.notificationMessage = t(
-            apiResponseCodeMessages[OperationApiResponseCodes.TechnicalError]
-          );
+          notificationStore.notificationMessage = `Oops... ${t("Something went wrong")}`;
           notificationStore.isSuccessfull = false;
           notificationStore.openNotification();
           push(`${Page.EDUCATION}/${educationStore.activeCourse?.id}`);

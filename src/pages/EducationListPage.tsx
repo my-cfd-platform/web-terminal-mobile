@@ -56,7 +56,7 @@ const EducationListPage = observer(() => {
             educationStore.setQuestionsList(null);
             educationStore.setActiveQuestion(null);
             
-            notificationStore.notificationMessage = t('Course Not Found');
+            notificationStore.notificationMessage = `Oops... ${t("Something went wrong")}`;
             notificationStore.isSuccessfull = false;
             notificationStore.openNotification();
             break;
@@ -83,7 +83,7 @@ const EducationListPage = observer(() => {
   return (
     <BackFlowLayout
       pageTitle={
-        educationStore.questionsList?.title || `${t('Course Not Found')}`
+        educationStore.questionsList?.title || `Oops... ${t("Something went wrong")}`
       }
       backLink={`${Page.EDUCATION}`}
     >
