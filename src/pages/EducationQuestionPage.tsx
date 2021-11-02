@@ -136,15 +136,20 @@ const EducationQuestionPage = observer(() => {
           break;
 
         default:
-          notificationStore.notificationMessage = `Oops... ${t("Something went wrong")}`;
+          notificationStore.notificationMessage = `Oops... ${t(
+            'Something went wrong'
+          )}`;
           notificationStore.isSuccessfull = false;
           notificationStore.openNotification();
           push(`${Page.EDUCATION}/${educationStore.activeCourse?.id}`);
           break;
       }
     } catch (error) {
-      educationStore.openErrorModal();
-      return;
+      notificationStore.notificationMessage = `Oops... ${t(
+        'Something went wrong'
+      )}`;
+      notificationStore.isSuccessfull = false;
+      notificationStore.openNotification();
     }
   }, [activePage, educationStore.questionsList, educationStore.activeQuestion]);
 
