@@ -29,12 +29,11 @@ const EducationQuestionPage = observer(() => {
   const checkPage = useCallback(() => {
     if (
       !educationStore.activeQuestion?.pages ||
-      educationStore.activeQuestion?.pages === null ||
       !educationStore.activeQuestion?.pages[activePage]?.url
     ) {
-      // push(`${window.location.origin}${Page.PAGE_NOT_FOUND}`);
       return `${window.location.origin}/education/404`;
     }
+
     const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
 
     return `${window.location.origin}/${
@@ -46,6 +45,7 @@ const EducationQuestionPage = observer(() => {
         ? `${mainAppStore.initModel.iosAppLink}`
         : `${mainAppStore.initModel.androidAppLink}`
     }`;
+    
   }, [activePage, educationStore.activeQuestion]);
 
   const checkNumberOfQuestion = () => {
