@@ -20,20 +20,30 @@ import Page from '../../constants/Pages';
 interface Props {
   course: IEducationCourses;
   counter: number;
+  handleToggle: (id: string) => void;
+  isOpened: boolean;
 }
 
 const EducationCourseListItem: FC<Props> = observer((props) => {
   const {
     course: { id, title, description, lastQuestionNumber, totalQuestions },
     counter,
+    handleToggle,
+    isOpened = false,
   } = props;
 
   const { educationStore } = useStores();
 
-  const [on, toggle] = useState<boolean>(false);
+  const [on, toggle] = useState<boolean>(isOpened);
 
   const { t } = useTranslation();
   const { push } = useHistory();
+
+  useEffect(() => {
+    if (isOpened !== on) {
+      toggle(isOpened);
+    }
+  }, [isOpened]);
 
   const starsByCounter = () => {
     switch (counter) {
@@ -142,12 +152,12 @@ const EducationCourseListItem: FC<Props> = observer((props) => {
   };
 
   const toggling = () => {
-    toggle(!on);
+    handleToggle(id);
   };
 
   const handleOpenQuestions = () => {
     educationStore.setActiveCourse(props.course);
-    push(`${Page.EDUCATION}/${props.course.id}`)
+    push(`${Page.EDUCATION}/${props.course.id}`);
   };
 
   return (

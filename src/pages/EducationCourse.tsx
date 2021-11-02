@@ -1,5 +1,5 @@
 import { observer, Observer } from 'mobx-react-lite';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import EducationCourseListItem from '../components/Education/EducationCourseListItem';
 import { WelcomeBonusResponseEnum } from '../enums/WelcomeBonusResponseEnum';
@@ -12,6 +12,16 @@ import { IEducationCourses } from '../types/EducationTypes';
 const EducationCourse = observer(() => {
   const { t } = useTranslation();
   const { educationStore } = useStores();
+
+  const [openCouerse, setOpenCourse] = useState<string | null>(null);
+
+  const handleOpenCourse = (id: string) => {
+    if (openCouerse === id) {
+      setOpenCourse(null);
+      return;
+    }
+    setOpenCourse(id);
+  }
 
   return (
     <FlexContainer flexDirection="column">
@@ -26,7 +36,7 @@ const EducationCourse = observer(() => {
           (item: IEducationCourses, counter: number) => (
             <React.Fragment key={item.id}>
               {item.id && item.totalQuestions > 0 && (
-                <EducationCourseListItem course={item} counter={counter} />
+                <EducationCourseListItem handleToggle={handleOpenCourse} isOpened={openCouerse === item.id} course={item} counter={counter} />
               )}
             </React.Fragment>
           )
