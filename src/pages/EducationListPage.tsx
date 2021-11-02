@@ -69,7 +69,11 @@ const EducationListPage = observer(() => {
         educationStore.openErrorModal();
       }
     };
-    getList();
+
+    if (!educationStore.questionsList || (educationStore.questionsList && educationStore.questionsList?.id !== id)) {
+      getList();
+    }
+    
   }, []);
 
   useEffect(() => {
