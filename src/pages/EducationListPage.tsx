@@ -1,5 +1,5 @@
 import { observer, Observer } from 'mobx-react-lite';
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useHistory, useLocation, useParams } from 'react-router';
 import BackFlowLayout from '../components/BackFlowLayout';
@@ -16,6 +16,8 @@ import {
 } from '../types/EducationTypes';
 
 const EducationListPage = observer(() => {
+  const activeQuestionRef = useRef<HTMLDivElement | null>(null);
+
   const { mainAppStore, educationStore, notificationStore } = useStores();
   const { t } = useTranslation();
   const { push } = useHistory();
@@ -55,8 +57,10 @@ const EducationListPage = observer(() => {
           default:
             educationStore.setQuestionsList(null);
             educationStore.setActiveQuestion(null);
-            
-            notificationStore.notificationMessage = `Oops... ${t("Something went wrong")}`;
+
+            notificationStore.notificationMessage = `Oops... ${t(
+              'Something went wrong'
+            )}`;
             notificationStore.isSuccessfull = false;
             notificationStore.openNotification();
             break;
@@ -80,10 +84,24 @@ const EducationListPage = observer(() => {
     }
   }, [educationStore.coursesList, educationStore.activeCourse, id]);
 
+  useEffect(() => {
+    let timer: any;
+    if (activeQuestionRef !== null) {
+      timer = setTimeout(() => {
+        activeQuestionRef?.current?.scrollIntoView();
+      }, 0);
+    }
+
+    return () => {
+      clearTimeout(timer);
+    };
+  }, [educationStore.activeQuestion]);
+
   return (
     <BackFlowLayout
       pageTitle={
-        educationStore.questionsList?.title || `Oops... ${t("Something went wrong")}`
+        educationStore.questionsList?.title ||
+        `Oops... ${t('Something went wrong')}`
       }
       backLink={`${Page.EDUCATION}`}
     >
@@ -96,6 +114,11 @@ const EducationListPage = observer(() => {
         {educationStore.questionsList?.questions.map(
           (item: IEducationQuestion, index: number) => (
             <EducationQuestionItem
+              itemRef={
+                item.id === educationStore.activeQuestion?.id
+                  ? activeQuestionRef
+                  : null
+              }
               key={item.id}
               number={index + 1}
               isActive={

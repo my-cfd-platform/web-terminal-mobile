@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { LegacyRef } from 'react';
 import { FlexContainer } from '../../styles/FlexContainer';
 import { PrimaryTextSpan } from '../../styles/TextsElements';
 import { IEducationQuestion } from '../../types/EducationTypes';
@@ -12,12 +12,15 @@ import { useStores } from '../../hooks/useStores';
 import { useHistory } from 'react-router';
 import Page from '../../constants/Pages';
 interface Props {
+  itemRef: LegacyRef<HTMLDivElement> | null;
   item: IEducationQuestion;
   isVisited: boolean;
   isActive: boolean;
   number: number;
 }
+
 const EducationQuestionItem = ({
+  itemRef,
   item,
   isVisited,
   isActive,
@@ -25,11 +28,12 @@ const EducationQuestionItem = ({
 }: Props) => {
   const { educationStore } = useStores();
   const { push } = useHistory();
+
   const handleSelectCourse = async () => {
     if (!isVisited) {
       return;
     }
-    console.log(item)
+
     educationStore.setActiveQuestion(item);
     push(Page.EDUCATION_QUESTION);
   };
@@ -37,6 +41,7 @@ const EducationQuestionItem = ({
   return (
     <ButtonWithoutStyles onClick={handleSelectCourse}>
       <FlexContainer
+        ref={itemRef}
         backgroundColor="rgba(42, 45, 56, 0.5)"
         padding="20px 16px"
         marginBottom="2px"
