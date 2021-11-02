@@ -23,6 +23,17 @@ const EducationListPage = observer(() => {
   const { push } = useHistory();
   const { id } = useParams<{ id: string }>();
 
+  const openEmptyState = () => {
+    educationStore.setQuestionsList(null);
+    educationStore.setActiveQuestion(null);
+
+    notificationStore.notificationMessage = `Oops... ${t(
+      'Something went wrong'
+    )}`;
+    notificationStore.isSuccessfull = false;
+    notificationStore.openNotification();
+  };
+
   useEffect(() => {
     const getList = async () => {
       try {
@@ -33,11 +44,20 @@ const EducationListPage = observer(() => {
 
         switch (response.responseCode) {
           case WelcomeBonusResponseEnum.Ok: {
-            const isEmpty = response.data.questions.length <= 0;
-            if (isEmpty) {
-              push(Page.PAGE_NOT_FOUND);
+            const isEmpty =
+              response.data.questions.length <= 0 ||
+              response.data.questions === null;
+
+            if (
+              !response.data.id ||
+              isEmpty ||
+              Object.keys(response.data).length <= 0 ||
+              response.data === null
+            ) {
+              openEmptyState();
               break;
             }
+
             const newData: IEducationQuestionsList = response.data;
             newData.questions = response.data.questions.sort(
               (a, b) => a.id - b.id
@@ -53,16 +73,8 @@ const EducationListPage = observer(() => {
 
             break;
           }
-
           default:
-            educationStore.setQuestionsList(null);
-            educationStore.setActiveQuestion(null);
-
-            notificationStore.notificationMessage = `Oops... ${t(
-              'Something went wrong'
-            )}`;
-            notificationStore.isSuccessfull = false;
-            notificationStore.openNotification();
+            openEmptyState();
             break;
         }
       } catch (error) {
@@ -70,10 +82,12 @@ const EducationListPage = observer(() => {
       }
     };
 
-    if (!educationStore.questionsList || (educationStore.questionsList && educationStore.questionsList?.id !== id)) {
+    if (
+      !educationStore.questionsList ||
+      (educationStore.questionsList && educationStore.questionsList?.id !== id)
+    ) {
       getList();
     }
-    
   }, []);
 
   useEffect(() => {
