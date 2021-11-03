@@ -8,6 +8,7 @@ import {
 import API from '../helpers/API';
 import { WelcomeBonusResponseEnum } from '../enums/WelcomeBonusResponseEnum';
 import Page from '../constants/Pages';
+import { EducationResponseEnum } from '../enums/EducationResponseEnum';
 
 interface IEducationStore {
   educationIsLoaded: boolean;
@@ -68,7 +69,7 @@ export class EducationStore implements IEducationStore {
       const response = await API.getListOfCourses(
         this.rootStore.mainAppStore.initModel.miscUrl
       );
-      if (response.responseCode === WelcomeBonusResponseEnum.Ok) {
+      if (response.responseCode === EducationResponseEnum.Ok) {
         const validCourseList = response.data.some(item => item.totalQuestions > 0 && item.id);
         if (validCourseList) {
           this.setCoursesList(response.data);

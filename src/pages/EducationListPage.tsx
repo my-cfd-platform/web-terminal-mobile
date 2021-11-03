@@ -6,6 +6,7 @@ import BackFlowLayout from '../components/BackFlowLayout';
 import EducationQuestionItem from '../components/Education/EducationQuestionItem';
 import LoaderForComponents from '../components/LoaderForComponents';
 import Page from '../constants/Pages';
+import { EducationResponseEnum } from '../enums/EducationResponseEnum';
 import { WelcomeBonusResponseEnum } from '../enums/WelcomeBonusResponseEnum';
 import API from '../helpers/API';
 import { useStores } from '../hooks/useStores';
@@ -45,7 +46,7 @@ const EducationListPage = observer(() => {
         );
 
         switch (response.responseCode) {
-          case WelcomeBonusResponseEnum.Ok: {
+          case EducationResponseEnum.Ok: {
             if (
               response.data === null ||
               Object.keys(response.data).length <= 0 ||

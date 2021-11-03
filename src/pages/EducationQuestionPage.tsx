@@ -17,6 +17,7 @@ import { IEducationCourses } from '../types/EducationTypes';
 import API from '../helpers/API';
 import apiResponseCodeMessages from '../constants/apiResponseCodeMessages';
 import { OperationApiResponseCodes } from '../enums/OperationApiResponseCodes';
+import { EducationResponseEnum } from '../enums/EducationResponseEnum';
 
 const EducationQuestionPage = observer(() => {
   const { educationStore, mainAppStore, notificationStore } = useStores();
@@ -25,6 +26,15 @@ const EducationQuestionPage = observer(() => {
 
   const [activePage, setActivePage] = useState<number>(0);
   const [lastHandle, setLastHandle] = useState<'prev' | 'next' | null>(null);
+
+  const openEmptyState = () => {
+    notificationStore.notificationMessage = `Oops... ${t(
+      'Something went wrong'
+    )}`;
+    notificationStore.isSuccessfull = false;
+    notificationStore.openNotification();
+    push(`${Page.EDUCATION}/${educationStore.activeCourse?.id}`);
+  }
 
   const checkPage = useCallback(() => {
     if (
@@ -73,86 +83,62 @@ const EducationQuestionPage = observer(() => {
     );
   }, [educationStore.activeQuestion, educationStore.questionsList, activePage]);
 
-  const handleNextPage = useCallback(async () => {
-    setLastHandle('next');
 
+  const saveProgress = async () => {
     try {
       const response = await API.saveProgressEducation(
         mainAppStore.initModel.miscUrl,
         educationStore.activeCourse?.id || '',
         educationStore.activeQuestion?.id || 0
       );
-
-      switch (response.responseCode) {
-        case 0:
-          {
-            if (
-              educationStore.activeQuestion?.pages !== null &&
-              activePage === educationStore.activeQuestion?.pages.length! - 1
-            ) {
-              setActivePage(0);
-              const indexOfQuestion =
-                educationStore.questionsList?.questions.indexOf(
-                  educationStore.activeQuestion!
-                ) || 0;
-              if (
-                indexOfQuestion + 1 >
-                educationStore.activeCourse?.lastQuestionNumber!
-              ) {
-                const newCourseList = educationStore.coursesList?.map(
-                  (item) => {
-                    if (item.id === educationStore.activeCourse?.id) {
-                      const newCourse = {
-                        ...item,
-                        lastQuestionNumber: indexOfQuestion + 1,
-                      };
-                      educationStore.setActiveCourse(newCourse);
-                      return newCourse;
-                    }
-                    return item;
-                  }
-                );
-                if (newCourseList) {
-                  educationStore.setCoursesList(newCourseList);
-                }
-              }
-              if (
-                indexOfQuestion ===
-                educationStore.questionsList?.questions.length! - 1
-              ) {
-                educationStore.setShowPopup(true);
-              } else {
-                educationStore.setActiveQuestion(
-                  educationStore.questionsList?.questions[
-                    indexOfQuestion + 1
-                  ] || null
-                );
-              }
-            } else {
-              setActivePage(activePage + 1);
-            }
-          }
-          break;
-
-        default:
-          notificationStore.notificationMessage = `Oops... ${t(
-            'Something went wrong'
-          )}`;
-          notificationStore.isSuccessfull = false;
-          notificationStore.openNotification();
-          push(`${Page.EDUCATION}/${educationStore.activeCourse?.id}`);
-          break;
+      if (
+        response.responseCode !== EducationResponseEnum.Ok
+      ) {
+        openEmptyState();
       }
-    } catch (error) {
-      console.log(error);
-      notificationStore.notificationMessage = `Oops... ${t(
-        'Something went wrong'
-      )}`;
-      notificationStore.isSuccessfull = false;
-      notificationStore.openNotification();
-      push(`${Page.EDUCATION}/${educationStore.activeCourse?.id}`);
+    } catch {
+      openEmptyState();
     }
-  }, [activePage, educationStore.questionsList, educationStore.activeQuestion]);
+  };
+
+  const handleNextPage = useCallback(() => {
+    setLastHandle('next');
+    if (
+      educationStore.activeQuestion?.pages === null ||
+      activePage === educationStore.activeQuestion?.pages.length! - 1
+    ) {
+      setActivePage(0);
+      const indexOfQuestion = educationStore.questionsList?.questions.indexOf(educationStore.activeQuestion!) || 0;
+      if (indexOfQuestion + 1 > educationStore.activeCourse?.lastQuestionNumber!) {
+        const newCourseList = educationStore.coursesList?.map((item) => {
+          if (item.id === educationStore.activeCourse?.id) {
+            const newCourse = {
+              ...item,
+              lastQuestionNumber: indexOfQuestion + 1
+            };
+            educationStore.setActiveCourse(newCourse);
+            return newCourse;
+          }
+          return item;
+        });
+        if (newCourseList) {
+          educationStore.setCoursesList(newCourseList);
+        }
+        saveProgress();
+      }
+      if (indexOfQuestion === educationStore.questionsList?.questions.length! - 1) {
+        educationStore.setShowPopup(true);
+      } else {
+        educationStore.setActiveQuestion(educationStore.questionsList?.questions[indexOfQuestion + 1] || null);
+      }
+    } else {
+      setActivePage(activePage + 1);
+    }
+  }, [
+    activePage,
+    educationStore.questionsList,
+    educationStore.activeQuestion
+  ]);
 
   const handlePrevPage = useCallback(() => {
     setLastHandle('prev');
