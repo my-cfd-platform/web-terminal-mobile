@@ -5,7 +5,8 @@ export interface IEducationCourses {
   title: string,
   description : string,
   lastQuestionNumber: number,
-  totalQuestions: number
+  totalQuestions: number,
+  order: number
 }
 
 export interface IEducationCoursesDTO {

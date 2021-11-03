@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { useHistory, useLocation, useParams } from 'react-router';
 import BackFlowLayout from '../components/BackFlowLayout';
 import EducationQuestionItem from '../components/Education/EducationQuestionItem';
+import LoaderForComponents from '../components/LoaderForComponents';
 import Page from '../constants/Pages';
 import { WelcomeBonusResponseEnum } from '../enums/WelcomeBonusResponseEnum';
 import API from '../helpers/API';
@@ -37,6 +38,7 @@ const EducationListPage = observer(() => {
   useEffect(() => {
     const getList = async () => {
       try {
+        educationStore.setEducationIsLoaded(true);
         const response = await API.getQuestionsByCourses(
           mainAppStore.initModel.miscUrl,
           id
@@ -45,9 +47,8 @@ const EducationListPage = observer(() => {
         switch (response.responseCode) {
           case WelcomeBonusResponseEnum.Ok: {
             const isEmpty =
-              response.data.questions.length <= 0 ||
-              response.data.questions === null;
-
+              response.data.questions === null ||
+              response.data.questions.length <= 0;
             if (
               !response.data.id ||
               isEmpty ||
@@ -70,14 +71,16 @@ const EducationListPage = observer(() => {
                 educationStore.questionsList?.questions[0] ||
                 null
             );
-
             break;
           }
           default:
             openEmptyState();
             break;
         }
+
+        educationStore.setEducationIsLoaded(false);
       } catch (error) {
+        educationStore.setEducationIsLoaded(false);
         educationStore.openErrorModal();
       }
     };
@@ -117,9 +120,9 @@ const EducationListPage = observer(() => {
 
   return (
     <BackFlowLayout
-      pageTitle={
-        educationStore.questionsList?.title ||
-        `Oops... ${t('Something went wrong')}`
+      pageTitle={educationStore.educationIsLoaded
+          ? ''
+          : educationStore.questionsList?.title || `Oops... ${t('Something went wrong')}`
       }
       backLink={`${Page.EDUCATION}`}
     >
@@ -129,6 +132,7 @@ const EducationListPage = observer(() => {
         overflow="auto"
         flexDirection="column"
       >
+        <LoaderForComponents isLoading={educationStore.educationIsLoaded} />
         {educationStore.questionsList?.questions.map(
           (item: IEducationQuestion, index: number) => (
             <EducationQuestionItem
