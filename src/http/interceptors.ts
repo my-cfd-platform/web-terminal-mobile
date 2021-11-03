@@ -100,7 +100,7 @@ const injectInerceptors = (mainAppStore: MainAppStore) => {
       }
 
       const originalRequest = error.config;
-
+      
       if (
         (error.config?.url.includes(API_LIST.ONBOARDING.STEPS) ||
           error.config?.url.includes(API_LIST.WELCOME_BONUS.GET) ||

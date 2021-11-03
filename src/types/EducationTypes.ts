@@ -29,7 +29,7 @@ export interface IEducationQuestionsList {
   id: string,
   title: string,
   description : string,
-  lastQuestionId: number,
+  lastQuestionNumber: number,
   questions: IEducationQuestion[]
 }
 

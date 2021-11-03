@@ -49,7 +49,7 @@ const EducationListPage = observer(() => {
             if (
               response.data === null ||
               Object.keys(response.data).length <= 0 ||
-              response.data.lastQuestionId === null ||
+              response.data.lastQuestionNumber === null ||
               !response.data.id ||
               response.data.questions === null ||
               response.data.questions.length <= 0
@@ -145,7 +145,7 @@ const EducationListPage = observer(() => {
               key={item.id}
               number={index + 1}
               isActive={
-                educationStore.questionsList?.lastQuestionId === item.id
+                educationStore.questionsList?.lastQuestionNumber === item.id
               }
               isVisited={
                 !!(

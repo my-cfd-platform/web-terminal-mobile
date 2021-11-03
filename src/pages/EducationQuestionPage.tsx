@@ -151,6 +151,7 @@ const EducationQuestionPage = observer(() => {
       )}`;
       notificationStore.isSuccessfull = false;
       notificationStore.openNotification();
+      push(`${Page.EDUCATION}/${educationStore.activeCourse?.id}`);
     }
   }, [activePage, educationStore.questionsList, educationStore.activeQuestion]);
 
