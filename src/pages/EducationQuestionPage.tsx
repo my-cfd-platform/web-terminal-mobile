@@ -45,7 +45,6 @@ const EducationQuestionPage = observer(() => {
         ? `${mainAppStore.initModel.iosAppLink}`
         : `${mainAppStore.initModel.androidAppLink}`
     }`;
-    
   }, [activePage, educationStore.activeQuestion]);
 
   const checkNumberOfQuestion = () => {
@@ -88,8 +87,8 @@ const EducationQuestionPage = observer(() => {
         case 0:
           {
             if (
-              activePage ===
-              educationStore.activeQuestion?.pages.length! - 1
+              educationStore.activeQuestion?.pages !== null &&
+              activePage === educationStore.activeQuestion?.pages.length! - 1
             ) {
               setActivePage(0);
               const indexOfQuestion =
@@ -145,7 +144,7 @@ const EducationQuestionPage = observer(() => {
           break;
       }
     } catch (error) {
-      console.log(error)
+      console.log(error);
       notificationStore.notificationMessage = `Oops... ${t(
         'Something went wrong'
       )}`;
