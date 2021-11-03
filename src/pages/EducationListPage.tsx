@@ -46,14 +46,13 @@ const EducationListPage = observer(() => {
 
         switch (response.responseCode) {
           case WelcomeBonusResponseEnum.Ok: {
-            const isEmpty =
-              response.data.questions === null ||
-              response.data.questions.length <= 0;
             if (
               response.data === null ||
+              Object.keys(response.data).length <= 0 ||
+              response.data.lastQuestionId === null ||
               !response.data.id ||
-              isEmpty ||
-              Object.keys(response.data).length <= 0
+              response.data.questions === null ||
+              response.data.questions.length <= 0
             ) {
               openEmptyState();
               break;

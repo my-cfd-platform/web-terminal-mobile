@@ -145,6 +145,7 @@ const EducationQuestionPage = observer(() => {
           break;
       }
     } catch (error) {
+      console.log(error)
       notificationStore.notificationMessage = `Oops... ${t(
         'Something went wrong'
       )}`;
