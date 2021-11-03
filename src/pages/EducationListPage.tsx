@@ -50,10 +50,10 @@ const EducationListPage = observer(() => {
               response.data.questions === null ||
               response.data.questions.length <= 0;
             if (
+              response.data === null ||
               !response.data.id ||
               isEmpty ||
-              Object.keys(response.data).length <= 0 ||
-              response.data === null
+              Object.keys(response.data).length <= 0
             ) {
               openEmptyState();
               break;
@@ -120,9 +120,11 @@ const EducationListPage = observer(() => {
 
   return (
     <BackFlowLayout
-      pageTitle={educationStore.educationIsLoaded
+      pageTitle={
+        educationStore.educationIsLoaded
           ? ''
-          : educationStore.questionsList?.title || `Oops... ${t('Something went wrong')}`
+          : educationStore.questionsList?.title ||
+            `Oops... ${t('Something went wrong')}`
       }
       backLink={`${Page.EDUCATION}`}
     >
