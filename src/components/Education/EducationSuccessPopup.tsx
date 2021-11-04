@@ -117,7 +117,7 @@ const EducationSuccessPopup = observer(() => {
   };
 
   const checkLastCourses = useCallback(() => {
-    return educationStore.coursesList?.every(
+    return educationStore.coursesList?.filter(el => el.totalQuestions > 0).every(
       (item) => item.lastQuestionNumber === item.totalQuestions
     );
   }, [educationStore.coursesList]);

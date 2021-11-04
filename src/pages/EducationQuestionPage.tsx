@@ -34,14 +34,14 @@ const EducationQuestionPage = observer(() => {
     notificationStore.isSuccessfull = false;
     notificationStore.openNotification();
     push(`${Page.EDUCATION}/${educationStore.activeCourse?.id}`);
-  }
+  };
 
   const checkPage = useCallback(() => {
     if (
       !educationStore.activeQuestion?.pages ||
       !educationStore.activeQuestion?.pages[activePage]?.url
     ) {
-      return `${window.location.origin}/education/404`;
+      return ''; //`${window.location.origin}/education/404`;
     }
 
     const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
@@ -77,12 +77,11 @@ const EducationQuestionPage = observer(() => {
   const checkLastPage = useCallback(() => {
     return (
       educationStore.activeQuestion?.id ===
-        educationStore.questionsList?.questions[
-          educationStore.questionsList?.questions.length - 1
-        ]?.id && activePage === educationStore.activeQuestion?.pages.length! - 1
+      educationStore.questionsList?.questions[
+        educationStore.questionsList?.questions.length - 1
+      ]?.id
     );
   }, [educationStore.activeQuestion, educationStore.questionsList, activePage]);
-
 
   const saveProgress = async () => {
     try {
@@ -91,9 +90,7 @@ const EducationQuestionPage = observer(() => {
         educationStore.activeCourse?.id || '',
         educationStore.activeQuestion?.id || 0
       );
-      if (
-        response.responseCode !== EducationResponseEnum.Ok
-      ) {
+      if (response.responseCode !== EducationResponseEnum.Ok) {
         openEmptyState();
       }
     } catch {
@@ -105,16 +102,23 @@ const EducationQuestionPage = observer(() => {
     setLastHandle('next');
     if (
       educationStore.activeQuestion?.pages === null ||
+      educationStore.activeQuestion?.pages?.length! === 0 ||
       activePage === educationStore.activeQuestion?.pages.length! - 1
     ) {
       setActivePage(0);
-      const indexOfQuestion = educationStore.questionsList?.questions.indexOf(educationStore.activeQuestion!) || 0;
-      if (indexOfQuestion + 1 > educationStore.activeCourse?.lastQuestionNumber!) {
+      const indexOfQuestion =
+        educationStore.questionsList?.questions.indexOf(
+          educationStore.activeQuestion!
+        ) || 0;
+      if (
+        indexOfQuestion + 1 >
+        educationStore.activeCourse?.lastQuestionNumber!
+      ) {
         const newCourseList = educationStore.coursesList?.map((item) => {
           if (item.id === educationStore.activeCourse?.id) {
             const newCourse = {
               ...item,
-              lastQuestionNumber: indexOfQuestion + 1
+              lastQuestionNumber: indexOfQuestion + 1,
             };
             educationStore.setActiveCourse(newCourse);
             return newCourse;
@@ -126,19 +130,20 @@ const EducationQuestionPage = observer(() => {
         }
         saveProgress();
       }
-      if (indexOfQuestion === educationStore.questionsList?.questions.length! - 1) {
+      if (
+        indexOfQuestion ===
+        educationStore.questionsList?.questions.length! - 1
+      ) {
         educationStore.setShowPopup(true);
       } else {
-        educationStore.setActiveQuestion(educationStore.questionsList?.questions[indexOfQuestion + 1] || null);
+        educationStore.setActiveQuestion(
+          educationStore.questionsList?.questions[indexOfQuestion + 1] || null
+        );
       }
     } else {
       setActivePage(activePage + 1);
     }
-  }, [
-    activePage,
-    educationStore.questionsList,
-    educationStore.activeQuestion
-  ]);
+  }, [activePage, educationStore.questionsList, educationStore.activeQuestion]);
 
   const handlePrevPage = useCallback(() => {
     setLastHandle('prev');

@@ -63,14 +63,29 @@ const EducationListPage = observer(() => {
             newData.questions = response.data.questions.sort(
               (a, b) => a.id - b.id
             );
+
             educationStore.setQuestionsList(newData);
-            educationStore.setActiveQuestion(
-              educationStore.questionsList?.questions[
-                educationStore.activeCourse?.lastQuestionNumber!
-              ] ||
-                educationStore.questionsList?.questions[0] ||
-                null
-            );
+            if (
+              educationStore.activeCourse?.totalQuestions ===
+              educationStore.questionsList?.lastQuestionNumber
+            ) {
+              // is completed course
+              educationStore.setActiveQuestion(
+                educationStore.questionsList?.questions[
+                  educationStore.activeCourse?.lastQuestionNumber! - 1
+                ] || null
+              );
+            } else {
+              educationStore.setActiveQuestion(
+                educationStore.questionsList?.questions[
+                  educationStore.activeCourse?.lastQuestionNumber!
+                ] ||
+                  educationStore.questionsList?.questions[0] ||
+                  null
+              );
+            }
+
+            console.log('loaded course');
             break;
           }
           default:
@@ -78,6 +93,7 @@ const EducationListPage = observer(() => {
             break;
         }
 
+        console.log('loaded course');
         educationStore.setEducationIsLoaded(false);
       } catch (error) {
         educationStore.setEducationIsLoaded(false);
