@@ -41,7 +41,7 @@ const EducationQuestionPage = observer(() => {
       !educationStore.activeQuestion?.pages ||
       !educationStore.activeQuestion?.pages[activePage]?.url
     ) {
-      return ''; //`${window.location.origin}/education/404`;
+      return `${window.location.origin}/education/404`;
     }
 
     const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
