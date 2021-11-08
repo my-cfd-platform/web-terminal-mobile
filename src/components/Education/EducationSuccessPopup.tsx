@@ -64,19 +64,16 @@ const EducationSuccessPopup = observer(() => {
       indexOfCourse !== undefined &&
       educationStore.coursesList
     ) {
+      let nexCoursePage: IEducationCourses;
       switch (indexOfCourse) {
         case 0:
           if (
             educationStore.coursesList[1]?.totalQuestions ===
             educationStore.coursesList[1]?.lastQuestionNumber
           ) {
-            educationStore.setActiveCourse(
-              educationStore.coursesList[indexOfCourse + 2]
-            );
+            nexCoursePage = educationStore.coursesList[indexOfCourse + 2];
           } else {
-            educationStore.setActiveCourse(
-              educationStore.coursesList[indexOfCourse + 1]
-            );
+            nexCoursePage = educationStore.coursesList[indexOfCourse + 1];
           }
           break;
         case 1:
@@ -84,11 +81,9 @@ const EducationSuccessPopup = observer(() => {
             educationStore.coursesList[0]?.totalQuestions ===
             educationStore.coursesList[0]?.lastQuestionNumber
           ) {
-            educationStore.setActiveCourse(
-              educationStore.coursesList[indexOfCourse + 1]
-            );
+            nexCoursePage = educationStore.coursesList[indexOfCourse + 1];
           } else {
-            educationStore.setActiveCourse(educationStore.coursesList[0]);
+            nexCoursePage = educationStore.coursesList[0];
           }
           break;
         case 2:
@@ -96,16 +91,17 @@ const EducationSuccessPopup = observer(() => {
             educationStore.coursesList[0]?.totalQuestions ===
             educationStore.coursesList[0]?.lastQuestionNumber
           ) {
-            educationStore.setActiveCourse(educationStore.coursesList[1]);
+            nexCoursePage = educationStore.coursesList[1];
           } else {
-            educationStore.setActiveCourse(educationStore.coursesList[0]);
+            nexCoursePage = educationStore.coursesList[0];
           }
           break;
         default:
-          educationStore.setActiveCourse(
-            educationStore.coursesList[indexOfCourse + 1]
-          );
+          nexCoursePage = educationStore.coursesList[indexOfCourse + 1];
       }
+
+      educationStore.setActiveCourse(nexCoursePage);
+      push(`${Page.EDUCATION}/${nexCoursePage.id}`);
     }
     educationStore.setShowPopup(false);
   };
