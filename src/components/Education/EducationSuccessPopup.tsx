@@ -64,27 +64,31 @@ const EducationSuccessPopup = observer(() => {
       indexOfCourse !== undefined &&
       educationStore.coursesList
     ) {
-      let nexCoursePage: IEducationCourses;
-
       switch (indexOfCourse) {
         case 0:
           if (
             educationStore.coursesList[1]?.totalQuestions ===
             educationStore.coursesList[1]?.lastQuestionNumber
           ) {
-            nexCoursePage = educationStore.coursesList[indexOfCourse + 2];
+            educationStore.setActiveCourse(
+              educationStore.coursesList[indexOfCourse + 2]
+            );
           } else {
-            nexCoursePage = educationStore.coursesList[indexOfCourse + 1];
+            educationStore.setActiveCourse(
+              educationStore.coursesList[indexOfCourse + 1]
+            );
           }
           break;
         case 1:
           if (
-            educationStore.coursesList[2]?.totalQuestions ===
-            educationStore.coursesList[2]?.lastQuestionNumber
+            educationStore.coursesList[0]?.totalQuestions ===
+            educationStore.coursesList[0]?.lastQuestionNumber
           ) {
-            nexCoursePage = educationStore.coursesList[0];
+            educationStore.setActiveCourse(
+              educationStore.coursesList[indexOfCourse + 1]
+            );
           } else {
-            nexCoursePage = educationStore.coursesList[indexOfCourse + 1];
+            educationStore.setActiveCourse(educationStore.coursesList[0]);
           }
           break;
         case 2:
@@ -92,18 +96,16 @@ const EducationSuccessPopup = observer(() => {
             educationStore.coursesList[0]?.totalQuestions ===
             educationStore.coursesList[0]?.lastQuestionNumber
           ) {
-            nexCoursePage = educationStore.coursesList[1];
+            educationStore.setActiveCourse(educationStore.coursesList[1]);
           } else {
-            nexCoursePage = educationStore.coursesList[0];
+            educationStore.setActiveCourse(educationStore.coursesList[0]);
           }
           break;
         default:
-          nexCoursePage = educationStore.coursesList[indexOfCourse + 1];
+          educationStore.setActiveCourse(
+            educationStore.coursesList[indexOfCourse + 1]
+          );
       }
-
-      educationStore.setActiveCourse(nexCoursePage);
-
-      push(`${Page.EDUCATION}/${nexCoursePage.id}`);
     }
     educationStore.setShowPopup(false);
   };
@@ -117,9 +119,9 @@ const EducationSuccessPopup = observer(() => {
   };
 
   const checkLastCourses = useCallback(() => {
-    return educationStore.coursesList?.filter(el => el.totalQuestions > 0).every(
-      (item) => item.lastQuestionNumber === item.totalQuestions
-    );
+    return educationStore.coursesList
+      ?.filter((el) => el.totalQuestions > 0)
+      .every((item) => item.lastQuestionNumber === item.totalQuestions);
   }, [educationStore.coursesList]);
 
   const handleOpenDeposit = () => {
