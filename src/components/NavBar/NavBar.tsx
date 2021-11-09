@@ -129,7 +129,7 @@ const NavBar: FC<Props> = observer(({ showBar }) => {
     mainAppStore.token,
     mainAppStore.isPromoAccount,
     mainAppStore.promo,
-    !mainAppStore.activeACCLoading,
+    mainAppStore.activeACCLoading,
   ]);
 
   return (
