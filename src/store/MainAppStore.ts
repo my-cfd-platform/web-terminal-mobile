@@ -136,6 +136,8 @@ export class MainAppStore implements MainAppStoreProps {
   @observable showAccountSwitcher: boolean = false;
   @observable onboardingJustClosed: boolean = false;
   @observable connectTimeOut = 5000;
+  @observable activeACCLoading = true;
+
   websocketConnectionTries = 0;
 
   paramsAsset: string | null = null;
@@ -673,6 +675,7 @@ export class MainAppStore implements MainAppStoreProps {
 
   getActiveAccount = async () => {
     try {
+      this.activeACCLoading = true;
       await this.checkOnboardingShow();
 
       const activeAccountId = await API.getKeyValue(
@@ -705,6 +708,7 @@ export class MainAppStore implements MainAppStoreProps {
         }
       }
 
+      this.activeACCLoading = false;
       this.activeAccount = activeAccount;
       this.isLoading = false;
       this.isInitLoading = false;
