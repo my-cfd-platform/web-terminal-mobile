@@ -206,10 +206,20 @@ const AuthorizedContainer: FC = observer(({ children }) => {
   }, [location.pathname]);
 
   useEffect(() => {
-    if (mainAppStore.token) {
+    if (
+      mainAppStore.token &&
+      !mainAppStore.isPromoAccount &&
+      !mainAppStore.promo &&
+      !mainAppStore.activeACCLoading
+    ) {
       userProfileStore.getUserBonus(mainAppStore.initModel.miscUrl);
     }
-  }, [mainAppStore.token]);
+  }, [
+    mainAppStore.token,
+    mainAppStore.isPromoAccount,
+    mainAppStore.promo,
+    mainAppStore.activeACCLoading,
+  ]);
 
   return (
     <FlexContainer
