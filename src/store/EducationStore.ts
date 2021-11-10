@@ -70,14 +70,25 @@ export class EducationStore implements IEducationStore {
         this.rootStore.mainAppStore.initModel.miscUrl
       );
       if (response.responseCode === EducationResponseEnum.Ok) {
-        const validCourseList = response.data.some(item => item.totalQuestions > 0 && item.id);
+        const validCourseList = response.data.some(
+          (item) => item.totalQuestions > 0 && item.id
+        );
+
         if (validCourseList) {
-          this.setCoursesList(response.data);
+          let courseFilterList:
+            | IEducationCourses[]
+            | null = response.data.filter(
+            (el) => el.id && el.totalQuestions > 0
+          );
+          if (courseFilterList.length <= 0) {
+            courseFilterList = null;
+          }
+
+          this.setCoursesList(courseFilterList);
         } else {
           this.setCoursesList(null);
         }
         this.setEducationIsLoaded(true);
-        
       } else {
         this.setEducationIsLoaded(false);
         this.setCoursesList(null);
@@ -97,5 +108,5 @@ export class EducationStore implements IEducationStore {
     this.setCoursesList(null);
     this.setActiveCourse(null);
     this.setActiveQuestion(null);
-  }
+  };
 }
