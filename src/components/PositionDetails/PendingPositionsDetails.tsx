@@ -87,6 +87,12 @@ const PendingPositionsDetails: FC<Props> = observer((props) => {
     [position, instrumentsStore.instruments]
   );
 
+  const instrumentName = useCallback((instrument: string) => {
+    return instrumentsStore.instruments.find(
+      (item) => item.instrumentItem.id === instrument
+    )?.instrumentItem.name || '';
+  }, [instrumentsStore.instruments]);
+
   useEffect(() => {
     mainAppStore.setParamsPortfolioPending(null);
     const positionById = quotesStore.pendingOrders.find(
@@ -312,7 +318,7 @@ const PendingPositionsDetails: FC<Props> = observer((props) => {
             <ClosePositionButton applyHandler={handleCloseOrder}>
               {t('Confirm closing of')}&nbsp;
               <PrimaryTextSpan color="#ffffff">
-                {position.instrument}
+                {instrumentName(position.instrument)}
               </PrimaryTextSpan>
               &nbsp; {t('position for')}&nbsp;
               <PrimaryTextSpan color="#ffffff">

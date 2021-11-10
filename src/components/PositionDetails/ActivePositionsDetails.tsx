@@ -47,6 +47,12 @@ const ActivePositionsDetails: FC<Props> = observer((props) => {
   } = useStores();
   const { push } = useHistory();
 
+  const instrumentName = useCallback((instrument: string) => {
+    return instrumentsStore.instruments.find(
+        (item) => item.instrumentItem.id === instrument
+      )?.instrumentItem.name || '';
+  }, [instrumentsStore.instruments]);
+
   const [position, setPosition] = useState<PositionModelWSDTO>();
 
   const [closeLoading, setCloseLoading] = useState(false);
@@ -432,7 +438,7 @@ const ActivePositionsDetails: FC<Props> = observer((props) => {
             >
               {t('Confirm closing of')}&nbsp;
               <PrimaryTextSpan color="#ffffff">
-                {position.instrument}
+                {instrumentName(position.instrument)}
               </PrimaryTextSpan>
               &nbsp; {t('position for')}&nbsp;
               <PrimaryTextSpan color="#ffffff">

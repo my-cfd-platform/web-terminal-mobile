@@ -1,3 +1,4 @@
+import { EducationResponseEnum } from '../enums/EducationResponseEnum';
 import { WelcomeBonusResponseEnum } from '../enums/WelcomeBonusResponseEnum';
 
 export interface IEducationCourses {
@@ -5,11 +6,12 @@ export interface IEducationCourses {
   title: string,
   description : string,
   lastQuestionNumber: number,
-  totalQuestions: number
+  totalQuestions: number,
+  order: number
 }
 
 export interface IEducationCoursesDTO {
-  responseCode: WelcomeBonusResponseEnum;
+  responseCode: EducationResponseEnum;
   data: IEducationCourses[];
 }
 
@@ -28,11 +30,11 @@ export interface IEducationQuestionsList {
   id: string,
   title: string,
   description : string,
-  lastQuestionId: number,
+  lastQuestionNumber: number,
   questions: IEducationQuestion[]
 }
 
 export interface IEducationQuestionsDTO {
-  responseCode: WelcomeBonusResponseEnum;
+  responseCode: EducationResponseEnum;
   data: IEducationQuestionsList;
 }

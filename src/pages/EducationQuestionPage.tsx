@@ -17,6 +17,7 @@ import { IEducationCourses } from '../types/EducationTypes';
 import API from '../helpers/API';
 import apiResponseCodeMessages from '../constants/apiResponseCodeMessages';
 import { OperationApiResponseCodes } from '../enums/OperationApiResponseCodes';
+import { EducationResponseEnum } from '../enums/EducationResponseEnum';
 
 const EducationQuestionPage = observer(() => {
   const { educationStore, mainAppStore, notificationStore } = useStores();
@@ -25,6 +26,36 @@ const EducationQuestionPage = observer(() => {
 
   const [activePage, setActivePage] = useState<number>(0);
   const [lastHandle, setLastHandle] = useState<'prev' | 'next' | null>(null);
+
+  const openEmptyState = () => {
+    notificationStore.notificationMessage = `Oops... ${t(
+      'Something went wrong'
+    )}`;
+    notificationStore.isSuccessfull = false;
+    notificationStore.openNotification();
+    push(`${Page.EDUCATION}/${educationStore.activeCourse?.id}`);
+  };
+
+  const checkPage = useCallback(() => {
+    if (
+      !educationStore.activeQuestion?.pages ||
+      !educationStore.activeQuestion?.pages[activePage]?.url
+    ) {
+      return `${window.location.origin}/education/404`;
+    }
+
+    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+
+    return `${window.location.origin}/${
+      educationStore.activeQuestion?.pages[activePage]?.url || ''
+    }?platform=${mainAppStore.initModel.brandName}&lang=${
+      i18n.language || 'en'
+    }&device=${isIOS ? 'ios' : 'android'}&app_link=${
+      isIOS
+        ? `${mainAppStore.initModel.iosAppLink}`
+        : `${mainAppStore.initModel.androidAppLink}`
+    }`;
+  }, [activePage, educationStore.activeQuestion]);
 
   const checkNumberOfQuestion = () => {
     const indexOfQuestion = educationStore.questionsList?.questions.indexOf(
@@ -46,15 +77,34 @@ const EducationQuestionPage = observer(() => {
   const checkLastPage = useCallback(() => {
     return (
       educationStore.activeQuestion?.id ===
-        educationStore.questionsList?.questions[
-          educationStore.questionsList?.questions.length - 1
-        ]?.id && activePage === educationStore.activeQuestion?.pages.length! - 1
+      educationStore.questionsList?.questions[
+        educationStore.questionsList?.questions.length - 1
+      ]?.id
     );
   }, [educationStore.activeQuestion, educationStore.questionsList, activePage]);
 
-  const handleNextPage = useCallback(async () => {
+  const saveProgress = async () => {
+    try {
+      const response = await API.saveProgressEducation(
+        mainAppStore.initModel.miscUrl,
+        educationStore.activeCourse?.id || '',
+        educationStore.activeQuestion?.id || 0
+      );
+      if (response.responseCode !== EducationResponseEnum.Ok) {
+        openEmptyState();
+      }
+    } catch {
+      openEmptyState();
+    }
+  };
+
+  const handleNextPage = useCallback(() => {
     setLastHandle('next');
-    if (activePage === educationStore.activeQuestion?.pages.length! - 1) {
+    if (
+      educationStore.activeQuestion?.pages === null ||
+      educationStore.activeQuestion?.pages?.length! === 0 ||
+      activePage === educationStore.activeQuestion?.pages.length! - 1
+    ) {
       setActivePage(0);
       const indexOfQuestion =
         educationStore.questionsList?.questions.indexOf(
@@ -78,31 +128,7 @@ const EducationQuestionPage = observer(() => {
         if (newCourseList) {
           educationStore.setCoursesList(newCourseList);
         }
-        try {
-          const response = await API.saveProgressEducation(
-            mainAppStore.initModel.miscUrl,
-            educationStore.activeCourse?.id || '',
-            educationStore.activeQuestion?.id || 0
-          );
-
-          switch (response.responseCode) {
-            case 0:
-              break;
-
-            default:
-              notificationStore.notificationMessage = t(
-                apiResponseCodeMessages[
-                  OperationApiResponseCodes.TechnicalError
-                ]
-              );
-              notificationStore.isSuccessfull = false;
-              notificationStore.openNotification();
-              break;
-          }
-        } catch (error) {
-          educationStore.openErrorModal();
-          return;
-        }
+        saveProgress();
       }
       if (
         indexOfQuestion ===
@@ -172,11 +198,7 @@ const EducationQuestionPage = observer(() => {
             frameBorder="none"
             width="100%"
             height="100%"
-            src={`${window.location.origin}/${
-              educationStore.activeQuestion?.pages[activePage]?.url || ''
-            }?platform=${mainAppStore.initModel.brandName}&lang=${
-              i18n.language || 'en'
-            }`}
+            src={checkPage()}
           />
         </FlexContainer>
         <FlexContainer padding="12px 16px" height="80px">

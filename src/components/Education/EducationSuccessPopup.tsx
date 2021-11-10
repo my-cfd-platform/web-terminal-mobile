@@ -65,7 +65,6 @@ const EducationSuccessPopup = observer(() => {
       educationStore.coursesList
     ) {
       let nexCoursePage: IEducationCourses;
-
       switch (indexOfCourse) {
         case 0:
           if (
@@ -79,12 +78,12 @@ const EducationSuccessPopup = observer(() => {
           break;
         case 1:
           if (
-            educationStore.coursesList[2]?.totalQuestions ===
-            educationStore.coursesList[2]?.lastQuestionNumber
+            educationStore.coursesList[0]?.totalQuestions ===
+            educationStore.coursesList[0]?.lastQuestionNumber
           ) {
-            nexCoursePage = educationStore.coursesList[0];
-          } else {
             nexCoursePage = educationStore.coursesList[indexOfCourse + 1];
+          } else {
+            nexCoursePage = educationStore.coursesList[0];
           }
           break;
         case 2:
@@ -102,7 +101,6 @@ const EducationSuccessPopup = observer(() => {
       }
 
       educationStore.setActiveCourse(nexCoursePage);
-
       push(`${Page.EDUCATION}/${nexCoursePage.id}`);
     }
     educationStore.setShowPopup(false);
@@ -117,9 +115,9 @@ const EducationSuccessPopup = observer(() => {
   };
 
   const checkLastCourses = useCallback(() => {
-    return educationStore.coursesList?.every(
-      (item) => item.lastQuestionNumber === item.totalQuestions
-    );
+    return educationStore.coursesList
+      ?.filter((el) => el.totalQuestions > 0)
+      .every((item) => item.lastQuestionNumber === item.totalQuestions);
   }, [educationStore.coursesList]);
 
   const handleOpenDeposit = () => {
@@ -144,6 +142,7 @@ const EducationSuccessPopup = observer(() => {
     urlParams.set('trader_id', userProfileStore.userProfileId || '');
     urlParams.set('api', mainAppStore.initModel.tradingUrl);
     urlParams.set('rt', mainAppStore.refreshToken);
+    urlParams.set('useBonus', 'true');
 
     setParsedParams(urlParams.toString());
   }, [
