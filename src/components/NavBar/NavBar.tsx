@@ -137,12 +137,14 @@ const NavBar: FC<Props> = observer(({ showBar }) => {
       {showBar && (
         <FlexContainer
           width="100vw"
+          maxWidth="414px"
           position="relative"
           alignItems="center"
           justifyContent="space-between"
           height="48px"
           padding="0 16px"
           backgroundColor="#1C1F26"
+          margin="0 auto"
         >
           <FlexContainer flexDirection="row">
             <AccountLabel />

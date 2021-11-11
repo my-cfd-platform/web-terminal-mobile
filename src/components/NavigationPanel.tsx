@@ -68,7 +68,7 @@ const NavigationPanel = observer(() => {
         justifyContent="space-around"
         alignItems="center"
         width="100%"
-        maxWidth="375px"
+        maxWidth="414px"
       >
         <CustomNavLink to={Page.MARKETS} activeClassName="selected">
           <SvgIcon

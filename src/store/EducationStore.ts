@@ -9,6 +9,8 @@ import API from '../helpers/API';
 import { WelcomeBonusResponseEnum } from '../enums/WelcomeBonusResponseEnum';
 import Page from '../constants/Pages';
 import { EducationResponseEnum } from '../enums/EducationResponseEnum';
+import { HintEnum } from '../enums/HintEnum';
+import KeysInApi from '../constants/keysInApi';
 
 interface IEducationStore {
   educationIsLoaded: boolean;
@@ -17,6 +19,7 @@ interface IEducationStore {
   questionsList: IEducationQuestionsList | null;
   activeCourse: IEducationCourses | null;
   activeQuestion: IEducationQuestion | null;
+  educationHint: HintEnum | null;
 }
 
 export class EducationStore implements IEducationStore {
@@ -27,6 +30,7 @@ export class EducationStore implements IEducationStore {
   @observable activeCourse: IEducationCourses | null = null;
   @observable activeQuestion: IEducationQuestion | null = null;
   @observable showPopup: boolean = false;
+  @observable educationHint: HintEnum | null = null;
 
   constructor(rootStore: RootStore) {
     // makeAutoObservable(this, { rootStore: false });
@@ -64,20 +68,45 @@ export class EducationStore implements IEducationStore {
   };
 
   @action
+  setHint = async (value: HintEnum | null, saveKeyValue: boolean = true) => {
+    try {
+      this.educationHint = value;
+      saveKeyValue && API.setKeyValue(
+        {
+          key: KeysInApi.SHOW_HINT,
+          value: value || false,
+        },
+        this.rootStore.mainAppStore.initModel.tradingUrl
+      );
+    } catch (error) {}
+  };
+
+  @action
+  openHint = (value: HintEnum, saveKeyValue: boolean = true) => {
+    this.setHint(value, saveKeyValue);
+  };
+
+  @action
+  closeHint = () => {
+    this.setHint(null);
+  };
+
+  @action
   getCourserList = async () => {
     try {
       const response = await API.getListOfCourses(
         this.rootStore.mainAppStore.initModel.miscUrl
       );
       if (response.responseCode === EducationResponseEnum.Ok) {
-        const validCourseList = response.data.some(item => item.totalQuestions > 0 && item.id);
+        const validCourseList = response.data.some(
+          (item) => item.totalQuestions > 0 && item.id
+        );
         if (validCourseList) {
           this.setCoursesList(response.data);
         } else {
           this.setCoursesList(null);
         }
         this.setEducationIsLoaded(true);
-        
       } else {
         this.setEducationIsLoaded(false);
         this.setCoursesList(null);
@@ -97,5 +126,6 @@ export class EducationStore implements IEducationStore {
     this.setCoursesList(null);
     this.setActiveCourse(null);
     this.setActiveQuestion(null);
-  }
+    this.setHint(null);
+  };
 }
