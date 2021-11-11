@@ -188,7 +188,7 @@ const ClosedPositionsDetails: FC<Props> = observer(({ positionId }) => {
             <PrimaryTextSpan fontSize="16px">
               {getNumberSign(position.swap)}
               {mainAppStore.activeAccount?.symbol}
-              {Math.abs(position.swap).toFixed(2)}
+              {Math.abs(position.swap + position.commission).toFixed(2)}
             </PrimaryTextSpan>
           </FlexContainer>
 
