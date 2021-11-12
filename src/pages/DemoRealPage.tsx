@@ -85,6 +85,7 @@ const DemoRealPage = observer(() => {
   };
 
   const selectRealAccount = async () => {
+    educationStore.setFTopenHint(HintEnum.Deposit);
     const acc = mainAppStore.accounts.find((item) => item.isLive);
     if (acc) {
       try {
@@ -102,7 +103,7 @@ const DemoRealPage = observer(() => {
         mainAppStore.isLoading = true;
         sendMixpanelEvents('real');
 
-        educationStore.setFTopenHint(HintEnum.Deposit);
+        
 
         if (userProfileStore.isBonus) {
           userProfileStore.showBonusPopup();

@@ -172,6 +172,7 @@ const Onboarding = observer(() => {
   };
 
   const selectRealAccount = async () => {
+    educationStore.setFTopenHint(HintEnum.Deposit);
     const acc = mainAppStore.accounts.find((item) => item.isLive);
     if (acc) {
       try {
@@ -192,8 +193,6 @@ const Onboarding = observer(() => {
         mixpanel.track(mixpanelEvents.ONBOARDING, {
           [mixapanelProps.ONBOARDING_VALUE]: `real${actualStep}`,
         });
-
-        educationStore.setFTopenHint(HintEnum.Deposit);
 
         if (userProfileStore.isBonus) {
           userProfileStore.showBonusPopup();
