@@ -152,6 +152,6 @@ export class EducationStore implements IEducationStore {
     this.setCoursesList(null);
     this.setActiveCourse(null);
     this.setActiveQuestion(null);
-    this.setHint(null);
+    this.setHint(null, false);
   };
 }
