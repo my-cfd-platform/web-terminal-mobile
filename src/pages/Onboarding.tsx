@@ -23,11 +23,17 @@ import styled from '@emotion/styled';
 import { keyframes } from '@emotion/core';
 import { observer } from 'mobx-react-lite';
 import { OnBoardingResponseEnum } from '../enums/OnBoardingRsponseEnum';
+import { HintEnum } from '../enums/HintEnum';
 
 const Onboarding = observer(() => {
   const { t } = useTranslation();
   const { push } = useHistory();
-  const { badRequestPopupStore, mainAppStore, userProfileStore } = useStores();
+  const {
+    badRequestPopupStore,
+    mainAppStore,
+    userProfileStore,
+    educationStore,
+  } = useStores();
 
   const wrapperRef = useRef<HTMLDivElement>(document.createElement('div'));
   const [actualStep, setActualStep] = useState<number>(1);
@@ -51,16 +57,22 @@ const Onboarding = observer(() => {
     urlParams.set('rt', mainAppStore.refreshToken);
 
     setParsedParams(urlParams.toString());
-  }, [mainAppStore.token, mainAppStore.lang, mainAppStore.accounts, userProfileStore]);
+  }, [
+    mainAppStore.token,
+    mainAppStore.lang,
+    mainAppStore.accounts,
+    userProfileStore,
+  ]);
 
   const getLottieOptions = useCallback(() => {
     return {
       loop: false,
       autoplay: true,
       pause: false,
-      animationData: actualStepInfo?.data.lottieJson !== null ?
-        JSON.parse(actualStepInfo?.data.lottieJson || '') :
-        '',
+      animationData:
+        actualStepInfo?.data.lottieJson !== null
+          ? JSON.parse(actualStepInfo?.data.lottieJson || '')
+          : '',
       rendererSettings: {
         preserveAspectRatio: 'xMidYMid slice',
         clearCanvas: false,
@@ -131,7 +143,8 @@ const Onboarding = observer(() => {
       if (acc) {
         mainAppStore.setActiveAccount(acc);
       }
-      
+
+      educationStore.setFTopenHint(HintEnum.SkipOB);
       push(Page.DASHBOARD);
     }
   };
@@ -149,6 +162,7 @@ const Onboarding = observer(() => {
         });
         mainAppStore.addTriggerDissableOnboarding();
         mainAppStore.isOnboarding = false;
+        educationStore.setFTopenHint(HintEnum.DemoACC);
         push(Page.DASHBOARD);
       } catch (error) {
         badRequestPopupStore.openModal();
@@ -179,13 +193,14 @@ const Onboarding = observer(() => {
           [mixapanelProps.ONBOARDING_VALUE]: `real${actualStep}`,
         });
 
+        educationStore.setFTopenHint(HintEnum.Deposit);
+
         if (userProfileStore.isBonus) {
           userProfileStore.showBonusPopup();
           mainAppStore.setLoading(false);
         } else {
           window.location.href = `${API_DEPOSIT_STRING}/?${parsedParams}`;
         }
-        
       } catch (error) {
         badRequestPopupStore.openModal();
         badRequestPopupStore.setMessage(`${error}`);
@@ -229,8 +244,8 @@ const Onboarding = observer(() => {
     mainAppStore.isOnboarding = false;
     mainAppStore.isDemoRealPopup = true;
     push(Page.DEMO_REAL_PAGE);
-  }
-  
+  };
+
   useEffect(() => {
     let cleanupFunction = false;
     const getInfoFirstStep = async () => {
@@ -253,7 +268,7 @@ const Onboarding = observer(() => {
       }
     };
     getInfoFirstStep();
-    
+
     return () => {
       cleanupFunction = true;
       const useAccount = mainAppStore.accounts.find(
@@ -267,10 +282,9 @@ const Onboarding = observer(() => {
 
   useEffect(() => {
     if (mainAppStore.isPromoAccount) {
-      push(Page.DASHBOARD)
+      push(Page.DASHBOARD);
     }
   }, [mainAppStore.isPromoAccount]);
-
 
   if (loading || actualStepInfo === null) {
     return (

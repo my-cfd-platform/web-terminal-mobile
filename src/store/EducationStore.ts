@@ -9,6 +9,8 @@ import API from '../helpers/API';
 import { WelcomeBonusResponseEnum } from '../enums/WelcomeBonusResponseEnum';
 import Page from '../constants/Pages';
 import { EducationResponseEnum } from '../enums/EducationResponseEnum';
+import { HintEnum } from '../enums/HintEnum';
+import KeysInApi from '../constants/keysInApi';
 
 interface IEducationStore {
   educationIsLoaded: boolean;
@@ -17,6 +19,7 @@ interface IEducationStore {
   questionsList: IEducationQuestionsList | null;
   activeCourse: IEducationCourses | null;
   activeQuestion: IEducationQuestion | null;
+  educationHint: HintEnum | null;
 }
 
 export class EducationStore implements IEducationStore {
@@ -27,6 +30,7 @@ export class EducationStore implements IEducationStore {
   @observable activeCourse: IEducationCourses | null = null;
   @observable activeQuestion: IEducationQuestion | null = null;
   @observable showPopup: boolean = false;
+  @observable educationHint: HintEnum | null = null;
 
   constructor(rootStore: RootStore) {
     // makeAutoObservable(this, { rootStore: false });
@@ -63,6 +67,47 @@ export class EducationStore implements IEducationStore {
     this.activeQuestion = newValue;
   };
 
+
+  @action
+  setHint = async (value: HintEnum | null, saveKeyValue: boolean = true) => {
+    try {
+      this.educationHint = value;
+      saveKeyValue && API.setKeyValue(
+        {
+          key: KeysInApi.SHOW_HINT,
+          value: value || false,
+        },
+        this.rootStore.mainAppStore.initModel.tradingUrl
+      );
+    } catch (error) {}
+  };
+
+  @action
+  setFTopenHint = async (value: HintEnum) => {
+    const userActiveHint = await API.getKeyValue(
+      KeysInApi.SHOW_HINT,
+      this.rootStore.mainAppStore.initModel.tradingUrl
+    );
+    // hint was closet
+    if (userActiveHint === 'false') {
+      return
+    }
+    // hint dont exist
+    if (!Object.keys(HintEnum).includes(userActiveHint.trim())) {
+      this.setHint(value)
+    }
+  }
+
+  @action
+  openHint = (value: HintEnum, saveKeyValue: boolean = true) => {
+    this.setHint(value, saveKeyValue);
+  };
+
+  @action
+  closeHint = () => {
+    this.setHint(null);
+  };
+
   @action
   getCourserList = async () => {
     try {
@@ -73,7 +118,6 @@ export class EducationStore implements IEducationStore {
         const validCourseList = response.data.some(
           (item) => item.totalQuestions > 0 && item.id
         );
-
         if (validCourseList) {
           let courseFilterList:
             | IEducationCourses[]
@@ -108,5 +152,6 @@ export class EducationStore implements IEducationStore {
     this.setCoursesList(null);
     this.setActiveCourse(null);
     this.setActiveQuestion(null);
+    this.setHint(null);
   };
 }

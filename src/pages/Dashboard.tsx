@@ -11,12 +11,14 @@ import Page from '../constants/Pages';
 import { PositionModelWSDTO } from '../types/Positions';
 import ActiveChartOrders from '../components/Dashboard/ActiveChartOrders';
 import { observer } from 'mobx-react-lite';
+import HintComponent from '../components/HintsComponent/HintComponent';
 
 const Dashboard: FC = observer(() => {
   const {
     instrumentsStore,
     quotesStore,
-    mainAppStore
+    mainAppStore,
+    educationStore
   } = useStores();
   const { push } = useHistory();
 
@@ -65,6 +67,8 @@ const Dashboard: FC = observer(() => {
 
   return (
     <>
+      {!mainAppStore.promo && !mainAppStore.isPromoAccount && !mainAppStore.activeACCLoading && educationStore.educationHint !== null && <HintComponent hintType={educationStore.educationHint} />}
+
       <FlexContainer flexDirection="column" width="100%" order="1">
         <FavouriteInstruments />
         {activePositions.length > 0

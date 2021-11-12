@@ -50,6 +50,7 @@ import { getProcessId } from '../helpers/getProcessId';
 import { DebugTypes } from '../types/DebugTypes';
 import { getCircularReplacer } from '../helpers/getCircularReplacer';
 import { getStatesSnapshot } from '../helpers/getStatesSnapshot';
+import { HintEnum } from '../enums/HintEnum';
 
 interface MainAppStoreProps {
   token: string;
@@ -687,6 +688,17 @@ export class MainAppStore implements MainAppStoreProps {
         KeysInApi.ACTIVE_ACCOUNT_TARGET,
         this.initModel.tradingUrl
       );
+
+      const userActiveHint = await API.getKeyValue(
+        KeysInApi.SHOW_HINT,
+        this.initModel.tradingUrl
+      );
+
+      if (Object.keys(HintEnum).includes(userActiveHint.trim())) {
+        // @ts-ignore
+        this.rootStore.educationStore.openHint(userActiveHint.trim(), false);
+      }
+      
 
       if (activeAccountTarget === 'facebook') {
         this.isPromoAccount = true;
