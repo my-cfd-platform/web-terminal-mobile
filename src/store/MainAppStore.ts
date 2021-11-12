@@ -694,9 +694,9 @@ export class MainAppStore implements MainAppStoreProps {
         this.initModel.tradingUrl
       );
 
-      if (Object.keys(HintEnum).includes(userActiveHint.trim())) {
+      if (userActiveHint && userActiveHint !== 'false') {
         // @ts-ignore
-        this.rootStore.educationStore.openHint(userActiveHint.trim(), false);
+        this.rootStore.educationStore.openHint(userActiveHint, false);
       }
       
 
