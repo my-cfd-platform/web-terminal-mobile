@@ -67,6 +67,7 @@ export class EducationStore implements IEducationStore {
     this.activeQuestion = newValue;
   };
 
+
   @action
   setHint = async (value: HintEnum | null, saveKeyValue: boolean = true) => {
     try {
@@ -80,6 +81,22 @@ export class EducationStore implements IEducationStore {
       );
     } catch (error) {}
   };
+
+  @action
+  setFTopenHint = async (value: HintEnum) => {
+    const userActiveHint = await API.getKeyValue(
+      KeysInApi.SHOW_HINT,
+      this.rootStore.mainAppStore.initModel.tradingUrl
+    );
+    // hint was closet
+    if (userActiveHint === 'false') {
+      return
+    }
+    // hint dont exist
+    if (!Object.keys(HintEnum).includes(userActiveHint.trim())) {
+      this.setHint(value)
+    }
+  }
 
   @action
   openHint = (value: HintEnum, saveKeyValue: boolean = true) => {

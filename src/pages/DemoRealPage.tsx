@@ -18,9 +18,15 @@ import Topics from '../constants/websocketTopics';
 import API from '../helpers/API';
 import { useHistory } from 'react-router';
 import Page from '../constants/Pages';
+import { HintEnum } from '../enums/HintEnum';
 
 const DemoRealPage = observer(() => {
-  const { mainAppStore, badRequestPopupStore, userProfileStore } = useStores();
+  const {
+    mainAppStore,
+    badRequestPopupStore,
+    userProfileStore,
+    educationStore,
+  } = useStores();
   const urlParams = new URLSearchParams();
   const { t } = useTranslation();
   const [parsedParams, setParsedParams] = useState('');
@@ -69,7 +75,7 @@ const DemoRealPage = observer(() => {
         sendMixpanelEvents('demo');
         mainAppStore.addTriggerDissableOnboarding();
         mainAppStore.isDemoRealPopup = false;
-
+        educationStore.setFTopenHint(HintEnum.DemoACC);
         push(Page.DASHBOARD);
       } catch (error) {
         badRequestPopupStore.openModal();
@@ -95,6 +101,8 @@ const DemoRealPage = observer(() => {
         mainAppStore.setActiveAccount(acc);
         mainAppStore.isLoading = true;
         sendMixpanelEvents('real');
+
+        educationStore.setFTopenHint(HintEnum.Deposit);
 
         if (userProfileStore.isBonus) {
           userProfileStore.showBonusPopup();
