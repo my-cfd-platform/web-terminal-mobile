@@ -63,7 +63,7 @@ const EducationListPage = observer(() => {
             newData.questions = response.data.questions.sort(
               (a, b) => a.id - b.id
             );
-
+            
             educationStore.setQuestionsList(newData);
             if (
               educationStore.activeCourse?.totalQuestions ===
@@ -115,6 +115,7 @@ const EducationListPage = observer(() => {
         (item: IEducationCourses) => item.id === id
       );
       educationStore.setActiveCourse(course || null);
+      educationStore.setEducationIsLoaded(false);
       if (!course) {
         push(Page.PAGE_NOT_FOUND);
       }
