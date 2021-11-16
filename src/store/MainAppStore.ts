@@ -751,6 +751,9 @@ export class MainAppStore implements MainAppStoreProps {
       },
       this.initModel.tradingUrl
     );
+    this.activeSession?.send(Topics.SET_ACTIVE_ACCOUNT, {
+      [Fields.ACCOUNT_ID]: account.id,
+    });
   };
 
   @action

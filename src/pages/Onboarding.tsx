@@ -129,20 +129,10 @@ const Onboarding = observer(() => {
     } else {
       const acc = mainAppStore.accounts.find((acc) => acc.isLive);
       if (acc) {
-        console.log('set acc Live');
-        educationStore.setFTopenHint(HintEnum.SkipOB);
-
-        await API.setKeyValue(
-          {
-            key: KeysInApi.ACTIVE_ACCOUNT_ID,
-            value: acc.id,
-          },
-          mainAppStore.initModel.tradingUrl
-        );
-        mainAppStore.activeSession?.send(Topics.SET_ACTIVE_ACCOUNT, {
-          [Fields.ACCOUNT_ID]: acc.id,
-        });
+        
         await mainAppStore.setActiveAccount(acc);
+        console.log('set acc Live: ', acc.id);
+        educationStore.setFTopenHint(HintEnum.SkipOB);
       }
 
       mixpanel.track(mixpanelEvents.ONBOARDING, {
