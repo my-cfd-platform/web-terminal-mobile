@@ -121,30 +121,17 @@ const Onboarding = observer(() => {
       actualStepInfo?.data.totalSteps &&
       actualStepInfo?.data.totalSteps !== actualStep
     ) {
-      const neededId = mainAppStore.accounts?.find((account) => account.isLive)
-        ?.id;
-      mainAppStore.activeAccountId = neededId || '';
-      mainAppStore.activeAccount = mainAppStore.accounts?.find(
-        (account) => !account.isLive
-      );
       mixpanel.track(mixpanelEvents.ONBOARDING, {
         [mixapanelProps.ONBOARDING_VALUE]: `close${actualStep}`,
       });
       setActualStep(actualStepInfo?.data.totalSteps);
       getInfoByStep(actualStepInfo?.data.totalSteps);
     } else {
-      mixpanel.track(mixpanelEvents.ONBOARDING, {
-        [mixapanelProps.ONBOARDING_VALUE]: `close${actualStep}`,
-      });
-      mainAppStore.onboardingJustClosed = true;
-      mainAppStore.addTriggerDissableOnboarding();
-      mainAppStore.isOnboarding = false;
-
-      const acc = mainAppStore.accounts.find((item) => item.isLive);
-
-      console.log('acc is live: ', acc?.isLive);
+      const acc = mainAppStore.accounts.find((acc) => acc.isLive);
       if (acc) {
         console.log('set acc Live');
+        educationStore.setFTopenHint(HintEnum.SkipOB);
+
         await API.setKeyValue(
           {
             key: KeysInApi.ACTIVE_ACCOUNT_ID,
@@ -155,10 +142,17 @@ const Onboarding = observer(() => {
         mainAppStore.activeSession?.send(Topics.SET_ACTIVE_ACCOUNT, {
           [Fields.ACCOUNT_ID]: acc.id,
         });
-        mainAppStore.setActiveAccount(acc);
+        await mainAppStore.setActiveAccount(acc);
       }
 
-      educationStore.setFTopenHint(HintEnum.SkipOB);
+      mixpanel.track(mixpanelEvents.ONBOARDING, {
+        [mixapanelProps.ONBOARDING_VALUE]: `close${actualStep}`,
+      });
+
+      mainAppStore.onboardingJustClosed = true;
+      mainAppStore.addTriggerDissableOnboarding();
+      mainAppStore.isOnboarding = false;
+
       push(Page.DASHBOARD);
     }
   };
