@@ -116,7 +116,8 @@ const Onboarding = observer(() => {
     getInfoByStep(nextStep);
   };
 
-  const closeOnBoarding = () => {
+  const closeOnBoarding = async () => {
+
     if (
       actualStepInfo?.data.totalSteps &&
       actualStepInfo?.data.totalSteps !== actualStep
@@ -142,8 +143,14 @@ const Onboarding = observer(() => {
       const acc = mainAppStore.accounts.find((item) => item.isLive);
       if (acc) {
         mainAppStore.setActiveAccount(acc);
+        await API.setKeyValue(
+          {
+            key: KeysInApi.ACTIVE_ACCOUNT_ID,
+            value: acc.id,
+          },
+          mainAppStore.initModel.tradingUrl
+        );
       }
-
       educationStore.setFTopenHint(HintEnum.SkipOB);
       push(Page.DASHBOARD);
     }
