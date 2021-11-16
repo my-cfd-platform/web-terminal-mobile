@@ -698,7 +698,6 @@ export class MainAppStore implements MainAppStoreProps {
         // @ts-ignore
         this.rootStore.educationStore.openHint(userActiveHint, false);
       }
-      
 
       if (activeAccountTarget === 'facebook') {
         this.isPromoAccount = true;
@@ -751,9 +750,6 @@ export class MainAppStore implements MainAppStoreProps {
       },
       this.initModel.tradingUrl
     );
-    this.activeSession?.send(Topics.SET_ACTIVE_ACCOUNT, {
-      [Fields.ACCOUNT_ID]: account.id,
-    });
   };
 
   @action

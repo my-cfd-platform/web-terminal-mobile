@@ -128,11 +128,15 @@ const Onboarding = observer(() => {
       getInfoByStep(actualStepInfo?.data.totalSteps);
     } else {
       const acc = mainAppStore.accounts.find((acc) => acc.isLive);
+
+      mainAppStore.activeSession?.send(Topics.SET_ACTIVE_ACCOUNT, {
+        [Fields.ACCOUNT_ID]: acc?.id,
+      });
+
       if (acc) {
-        
         await mainAppStore.setActiveAccount(acc);
-        console.log('set acc Live: ', acc.id);
         educationStore.setFTopenHint(HintEnum.SkipOB);
+        console.log('set acc Live: ', acc.id);
       }
 
       mixpanel.track(mixpanelEvents.ONBOARDING, {
