@@ -134,7 +134,15 @@ const Onboarding = observer(() => {
       });
 
       if (acc) {
-        await mainAppStore.setActiveAccount(acc);
+        await API.setKeyValue(
+          {
+            key: KeysInApi.ACTIVE_ACCOUNT_ID,
+            value: acc.id,
+          },
+          mainAppStore.initModel.tradingUrl
+        );
+        mainAppStore.setActiveAccountId(acc.id);
+        mainAppStore.activeAccount = acc;
         educationStore.setFTopenHint(HintEnum.SkipOB);
         console.log('set acc Live: ', acc.id);
       }

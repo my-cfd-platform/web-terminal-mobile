@@ -609,7 +609,7 @@ export class MainAppStore implements MainAppStoreProps {
   addTriggerDissableOnboarding = async () => {
     this.isOnboarding = false;
     try {
-      API.setKeyValue(
+      await API.setKeyValue(
         {
           key: KeysInApi.SHOW_ONBOARDING,
           value: false,
