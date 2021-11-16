@@ -121,7 +121,7 @@ const Onboarding = observer(() => {
       actualStepInfo?.data.totalSteps &&
       actualStepInfo?.data.totalSteps !== actualStep
     ) {
-      const neededId = mainAppStore.accounts?.find((account) => !account.isLive)
+      const neededId = mainAppStore.accounts?.find((account) => account.isLive)
         ?.id;
       mainAppStore.activeAccountId = neededId || '';
       mainAppStore.activeAccount = mainAppStore.accounts?.find(
@@ -139,7 +139,7 @@ const Onboarding = observer(() => {
       mainAppStore.onboardingJustClosed = true;
       mainAppStore.addTriggerDissableOnboarding();
       mainAppStore.isOnboarding = false;
-      const acc = mainAppStore.accounts.find((item) => !item.isLive);
+      const acc = mainAppStore.accounts.find((item) => item.isLive);
       if (acc) {
         mainAppStore.setActiveAccount(acc);
       }
