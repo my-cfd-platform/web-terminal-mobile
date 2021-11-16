@@ -117,7 +117,6 @@ const Onboarding = observer(() => {
   };
 
   const closeOnBoarding = async () => {
-
     if (
       actualStepInfo?.data.totalSteps &&
       actualStepInfo?.data.totalSteps !== actualStep
@@ -140,9 +139,12 @@ const Onboarding = observer(() => {
       mainAppStore.onboardingJustClosed = true;
       mainAppStore.addTriggerDissableOnboarding();
       mainAppStore.isOnboarding = false;
+
       const acc = mainAppStore.accounts.find((item) => item.isLive);
+
+      console.log('acc is live: ', acc?.isLive);
       if (acc) {
-        mainAppStore.setActiveAccount(acc);
+        console.log('set acc Live');
         await API.setKeyValue(
           {
             key: KeysInApi.ACTIVE_ACCOUNT_ID,
@@ -150,7 +152,12 @@ const Onboarding = observer(() => {
           },
           mainAppStore.initModel.tradingUrl
         );
+        mainAppStore.activeSession?.send(Topics.SET_ACTIVE_ACCOUNT, {
+          [Fields.ACCOUNT_ID]: acc.id,
+        });
+        mainAppStore.setActiveAccount(acc);
       }
+
       educationStore.setFTopenHint(HintEnum.SkipOB);
       push(Page.DASHBOARD);
     }
