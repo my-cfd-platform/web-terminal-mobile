@@ -1,3 +1,4 @@
+import { observer } from 'mobx-react-lite';
 import React, { useEffect, useState } from 'react';
 import { FULL_VH } from '../../constants/global';
 import { HINT_DATA } from '../../constants/hintsData';
@@ -12,7 +13,7 @@ interface Props {
   hintType: HintEnum;
 }
 
-const HintComponent = ({ hintType }: Props) => {
+const HintComponent = observer(({ hintType }: Props) => {
   const { educationStore } = useStores();
   const [step, setStep] = useState<number>(0);
   const [activeFlowData, setData] = useState<IHint[] | null>(null);
@@ -83,6 +84,6 @@ const HintComponent = ({ hintType }: Props) => {
       </FlexContainer>
     </Modal>
   );
-};
+});
 
 export default HintComponent;
