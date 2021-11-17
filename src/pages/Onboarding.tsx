@@ -251,7 +251,6 @@ const Onboarding = observer(() => {
   };
 
   useEffect(() => {
-    let cleanupFunction = false;
     const getInfoFirstStep = async () => {
       try {
         const response = await API.getOnBoardingInfoByStep(
@@ -272,16 +271,6 @@ const Onboarding = observer(() => {
       }
     };
     getInfoFirstStep();
-
-    return () => {
-      cleanupFunction = true;
-      const useAccount = mainAppStore.accounts.find(
-        (account) => !account.isLive
-      );
-      if (useAccount) {
-        mainAppStore.setActiveAccount(useAccount);
-      }
-    };
   }, []);
 
   useEffect(() => {
