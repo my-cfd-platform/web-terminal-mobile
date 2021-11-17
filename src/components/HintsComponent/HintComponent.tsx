@@ -30,8 +30,30 @@ const HintComponent = ({ hintType }: Props) => {
     setStep(step + 1);
   };
 
+  const getHintData = (hintType: HintEnum) => {
+    let data = HINT_DATA[hintType] || null;
+
+    if (!educationStore.coursesList && data) {
+      switch (hintType) {
+        case HintEnum.Deposit:
+        case HintEnum.DemoACC:
+          // 5 step is education
+          data.slice(4, 1);
+          break;
+        case HintEnum.SkipOB:
+          // 4 step is education
+          data.slice(3, 1);
+          break;
+
+        default:
+          break;
+      }
+    }
+    setData(data);
+  };
+
   useEffect(() => {
-    setData(HINT_DATA[hintType] || null);
+    getHintData(hintType);
   }, [hintType]);
 
   if (activeFlowData === null) {
