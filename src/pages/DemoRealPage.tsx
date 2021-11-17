@@ -60,27 +60,15 @@ const DemoRealPage = observer(() => {
   const selectDemoAccount = async () => {
     const acc = mainAppStore.accounts.find((item) => !item.isLive);
     if (acc) {
-      try {
-        await API.setKeyValue(
-          {
-            key: KeysInApi.ACTIVE_ACCOUNT_ID,
-            value: acc.id,
-          },
-          mainAppStore.initModel.tradingUrl
-        );
-        mainAppStore.activeSession?.send(Topics.SET_ACTIVE_ACCOUNT, {
-          [Fields.ACCOUNT_ID]: acc.id,
-        });
-        mainAppStore.setActiveAccount(acc);
-        sendMixpanelEvents('demo');
-        mainAppStore.addTriggerDissableOnboarding();
-        mainAppStore.isDemoRealPopup = false;
-        educationStore.setFTopenHint(HintEnum.DemoACC);
-        push(Page.DASHBOARD);
-      } catch (error) {
-        badRequestPopupStore.openModal();
-        badRequestPopupStore.setMessage(`${error}`);
-      }
+      mainAppStore.activeSession?.send(Topics.SET_ACTIVE_ACCOUNT, {
+        [Fields.ACCOUNT_ID]: acc.id,
+      });
+      mainAppStore.setActiveAccount(acc);
+      sendMixpanelEvents('demo');
+      mainAppStore.addTriggerDissableOnboarding();
+      mainAppStore.isDemoRealPopup = false;
+      educationStore.setFTopenHint(HintEnum.DemoACC);
+      push(Page.DASHBOARD);
     }
   };
 
