@@ -38,13 +38,12 @@ const HintComponent = ({ hintType }: Props) => {
         case HintEnum.Deposit:
         case HintEnum.DemoACC:
           // 5 step is education
-          data.slice(4, 1);
+          data.splice(4, 1);
           break;
         case HintEnum.SkipOB:
           // 4 step is education
-          data.slice(3, 1);
+          data.splice(3, 1);
           break;
-
         default:
           break;
       }
