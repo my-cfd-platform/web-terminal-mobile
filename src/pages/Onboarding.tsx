@@ -158,10 +158,10 @@ const Onboarding = observer(() => {
     const acc = mainAppStore.accounts.find((item) => !item.isLive);
     if (acc) {
       try {
+        mainAppStore.setActiveAccount(acc);
         mainAppStore.activeSession?.send(Topics.SET_ACTIVE_ACCOUNT, {
           [Fields.ACCOUNT_ID]: acc.id,
         });
-        mainAppStore.setActiveAccount(acc);
         mixpanel.track(mixpanelEvents.ONBOARDING, {
           [mixapanelProps.ONBOARDING_VALUE]: `demo${actualStep}`,
         });
@@ -180,34 +180,22 @@ const Onboarding = observer(() => {
     educationStore.setFTopenHint(HintEnum.Deposit);
     const acc = mainAppStore.accounts.find((item) => item.isLive);
     if (acc) {
-      try {
-        await API.setKeyValue(
-          {
-            key: KeysInApi.ACTIVE_ACCOUNT_ID,
-            value: acc.id,
-          },
-          mainAppStore.initModel.tradingUrl
-        );
-        mainAppStore.activeSession?.send(Topics.SET_ACTIVE_ACCOUNT, {
-          [Fields.ACCOUNT_ID]: acc.id,
-        });
-        mainAppStore.setActiveAccount(acc);
-        mainAppStore.addTriggerDissableOnboarding();
-        mainAppStore.isOnboarding = false;
-        mainAppStore.isLoading = true;
-        mixpanel.track(mixpanelEvents.ONBOARDING, {
-          [mixapanelProps.ONBOARDING_VALUE]: `real${actualStep}`,
-        });
+      mainAppStore.setActiveAccount(acc);
+      mainAppStore.activeSession?.send(Topics.SET_ACTIVE_ACCOUNT, {
+        [Fields.ACCOUNT_ID]: acc.id,
+      });
+      mainAppStore.addTriggerDissableOnboarding();
+      mainAppStore.isOnboarding = false;
+      mainAppStore.isLoading = true;
+      mixpanel.track(mixpanelEvents.ONBOARDING, {
+        [mixapanelProps.ONBOARDING_VALUE]: `real${actualStep}`,
+      });
 
-        if (userProfileStore.isBonus) {
-          userProfileStore.showBonusPopup();
-          mainAppStore.setLoading(false);
-        } else {
-          window.location.href = `${API_DEPOSIT_STRING}/?${parsedParams}`;
-        }
-      } catch (error) {
-        badRequestPopupStore.openModal();
-        badRequestPopupStore.setMessage(`${error}`);
+      if (userProfileStore.isBonus) {
+        userProfileStore.showBonusPopup();
+        mainAppStore.setLoading(false);
+      } else {
+        window.location.href = `${API_DEPOSIT_STRING}/?${parsedParams}`;
       }
     }
   };
