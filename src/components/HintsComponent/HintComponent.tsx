@@ -78,7 +78,7 @@ const HintComponent = ({ hintType }: Props) => {
           onClose={handleClose}
           onNext={handleNext}
           total={activeFlowData.length}
-          currentStepNum={step}
+          currentStepNum={step + 1}
         />
       </FlexContainer>
     </Modal>
