@@ -32,7 +32,7 @@ const HintComponent = ({ hintType }: Props) => {
   const getHintData = (hintType: HintEnum) => {
     let data = HINT_DATA[hintType] || null;
     let filterData = data;
-    if (!educationStore.coursesList && data) {
+    if (!educationStore.coursesList || !educationStore.educationIsLoaded) {
       switch (hintType) {
         case HintEnum.Deposit:
         case HintEnum.DemoACC:
@@ -53,7 +53,7 @@ const HintComponent = ({ hintType }: Props) => {
 
   useEffect(() => {
     getHintData(hintType);
-  }, [hintType]);
+  }, [hintType, educationStore.educationIsLoaded, educationStore.coursesList]);
 
   if (activeFlowData === null) {
     return null;
