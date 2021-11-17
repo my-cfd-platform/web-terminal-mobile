@@ -48,7 +48,6 @@ const HintComponent = ({ hintType }: Props) => {
           break;
       }
     }
-    console.log(filterData);
     setData(filterData);
   };
 
