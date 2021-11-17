@@ -31,24 +31,25 @@ const HintComponent = ({ hintType }: Props) => {
 
   const getHintData = (hintType: HintEnum) => {
     let data = HINT_DATA[hintType] || null;
-
+    let filterData = data;
     if (!educationStore.coursesList && data) {
       switch (hintType) {
         case HintEnum.Deposit:
         case HintEnum.DemoACC:
           // 5 step is education
-          data.splice(4, 1);
+          filterData = data.filter((el) => el.order !== 5);
           break;
         case HintEnum.SkipOB:
           // 4 step is education
-          data.splice(3, 1);
+          filterData = data.filter((el) => el.order !== 4);
           break;
         default:
+          filterData = data;
           break;
       }
     }
-    console.log(data)
-    setData(data);
+    console.log(filterData);
+    setData(filterData);
   };
 
   useEffect(() => {
