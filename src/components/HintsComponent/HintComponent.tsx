@@ -14,7 +14,6 @@ interface Props {
 
 const HintComponent = ({ hintType }: Props) => {
   const { educationStore } = useStores();
-
   const [step, setStep] = useState<number>(0);
   const [activeFlowData, setData] = useState<IHint[] | null>(null);
 
@@ -48,6 +47,7 @@ const HintComponent = ({ hintType }: Props) => {
           break;
       }
     }
+    console.log(data)
     setData(data);
   };
 
