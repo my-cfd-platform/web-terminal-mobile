@@ -18,9 +18,15 @@ import Topics from '../constants/websocketTopics';
 import API from '../helpers/API';
 import { useHistory } from 'react-router';
 import Page from '../constants/Pages';
+import { HintEnum } from '../enums/HintEnum';
 
 const DemoRealPage = observer(() => {
-  const { mainAppStore, badRequestPopupStore, userProfileStore } = useStores();
+  const {
+    mainAppStore,
+    badRequestPopupStore,
+    userProfileStore,
+    educationStore,
+  } = useStores();
   const urlParams = new URLSearchParams();
   const { t } = useTranslation();
   const [parsedParams, setParsedParams] = useState('');
@@ -69,7 +75,7 @@ const DemoRealPage = observer(() => {
         sendMixpanelEvents('demo');
         mainAppStore.addTriggerDissableOnboarding();
         mainAppStore.isDemoRealPopup = false;
-
+        educationStore.setFTopenHint(HintEnum.DemoACC);
         push(Page.DASHBOARD);
       } catch (error) {
         badRequestPopupStore.openModal();
@@ -79,35 +85,26 @@ const DemoRealPage = observer(() => {
   };
 
   const selectRealAccount = async () => {
+    educationStore.setFTopenHint(HintEnum.Deposit);
     const acc = mainAppStore.accounts.find((item) => item.isLive);
     if (acc) {
-      try {
-        await API.setKeyValue(
-          {
-            key: KeysInApi.ACTIVE_ACCOUNT_ID,
-            value: acc.id,
-          },
-          mainAppStore.initModel.tradingUrl
-        );
-        mainAppStore.activeSession?.send(Topics.SET_ACTIVE_ACCOUNT, {
-          [Fields.ACCOUNT_ID]: acc.id,
-        });
-        mainAppStore.setActiveAccount(acc);
-        mainAppStore.isLoading = true;
-        sendMixpanelEvents('real');
+      mainAppStore.setActiveAccount(acc);
+      mainAppStore.activeSession?.send(Topics.SET_ACTIVE_ACCOUNT, {
+        [Fields.ACCOUNT_ID]: acc.id,
+      });
+      mainAppStore.isLoading = true;
+      sendMixpanelEvents('real');
 
-        if (userProfileStore.isBonus) {
-          userProfileStore.showBonusPopup();
-        } else {
-          window.location.href = `${API_DEPOSIT_STRING}/?${parsedParams}`;
-        }
 
-        mainAppStore.addTriggerDissableOnboarding();
-        mainAppStore.isDemoRealPopup = false;
-      } catch (error) {
-        badRequestPopupStore.openModal();
-        badRequestPopupStore.setMessage(`${error}`);
+
+      if (userProfileStore.isBonus) {
+        userProfileStore.showBonusPopup();
+      } else {
+        window.location.href = `${API_DEPOSIT_STRING}/?${parsedParams}`;
       }
+
+      mainAppStore.addTriggerDissableOnboarding();
+      mainAppStore.isDemoRealPopup = false;
     }
   };
 

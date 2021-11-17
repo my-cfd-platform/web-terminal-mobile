@@ -32,6 +32,10 @@ import PositionEditTP from '../pages/PositionEditTP';
 import Onboarding from '../pages/Onboarding';
 import AccountBonusFaq from '../pages/AccountBonusFaq';
 import DemoRealPage from '../pages/DemoRealPage';
+import EducationCourse from '../pages/EducationCourse';
+import EducationListPage from '../pages/EducationListPage';
+import EducationQuestionPage from '../pages/EducationQuestionPage';
+import PageNotFound from '../pages/PageNotFound';
 
 export enum RouteLayoutType {
   Authorized,
@@ -128,12 +132,28 @@ const routesList = [
     layoutType: RouteLayoutType.Authorized,
   },
   {
-    component: News,
-    path: Page.NEWS,
+    component: EducationCourse,
+    path: Page.EDUCATION,
+    exact: true,
+    strict: true,
+    layoutType: RouteLayoutType.Authorized,
+  },
+
+  {
+    component: EducationQuestionPage,
+    path: Page.EDUCATION_QUESTION,
+    exact: true,
+    strict: true,
+    layoutType: RouteLayoutType.Authorized,
+  },
+  {
+    component: EducationListPage,
+    path: Page.EDUCATION_LIST,
     exact: false,
     strict: true,
     layoutType: RouteLayoutType.Authorized,
   },
+
   {
     component: OrderPage,
     path: Page.ORDER,
@@ -265,6 +285,13 @@ const routesList = [
   {
     component: Onboarding,
     path: Page.ONBOARDING,
+    exact: true,
+    strict: true,
+    layoutType: RouteLayoutType.Authorized,
+  },
+  {
+    component: PageNotFound,
+    path: Page.PAGE_NOT_FOUND,
     exact: true,
     strict: true,
     layoutType: RouteLayoutType.Authorized,

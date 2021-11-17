@@ -11,30 +11,34 @@ import Page from '../constants/Pages';
 import { PositionModelWSDTO } from '../types/Positions';
 import ActiveChartOrders from '../components/Dashboard/ActiveChartOrders';
 import { observer } from 'mobx-react-lite';
+import HintComponent from '../components/HintsComponent/HintComponent';
 
 const Dashboard: FC = observer(() => {
   const {
     instrumentsStore,
     quotesStore,
-    mainAppStore
+    mainAppStore,
+    educationStore,
+    userProfileStore
   } = useStores();
   const { push } = useHistory();
 
   const [activePositions, setActivePositions] = useState<PositionModelWSDTO[]>(
     quotesStore.sortedActivePositions.filter(
-      (position) => instrumentsStore.activeInstrument?.instrumentItem.id ===
-        position.instrument)
+      (position) =>
+        instrumentsStore.activeInstrument?.instrumentItem.id ===
+        position.instrument
+    )
   );
 
   useEffect(() => {
     const newPositions = quotesStore.sortedActivePositions.filter(
-      (position) => instrumentsStore.activeInstrument?.instrumentItem.id ===
-        position.instrument);
+      (position) =>
+        instrumentsStore.activeInstrument?.instrumentItem.id ===
+        position.instrument
+    );
     setActivePositions(newPositions);
-  }, [
-    instrumentsStore.activeInstrument,
-    quotesStore.sortedActivePositions
-  ]);
+  }, [instrumentsStore.activeInstrument, quotesStore.sortedActivePositions]);
 
   useEffect(() => {
     if (
@@ -46,10 +50,7 @@ const Dashboard: FC = observer(() => {
       );
       mainAppStore.onboardingJustClosed = false;
     }
-  }, [
-    instrumentsStore.activeInstruments,
-    mainAppStore.onboardingJustClosed
-  ]);
+  }, [instrumentsStore.activeInstruments, mainAppStore.onboardingJustClosed]);
 
   const handleClickBuy = () => {
     push(
@@ -65,11 +66,21 @@ const Dashboard: FC = observer(() => {
 
   return (
     <>
+      {!mainAppStore.promo &&
+        !mainAppStore.isPromoAccount &&
+        !mainAppStore.activeACCLoading &&
+        educationStore.educationHint !== null &&
+        !userProfileStore.isBonusPopup && (
+          <HintComponent hintType={educationStore.educationHint} />
+        )}
+
       <FlexContainer flexDirection="column" width="100%" order="1">
         <FavouriteInstruments />
-        {activePositions.length > 0
-          ? <ActiveChartOrders activePositions={activePositions} />
-          : <ActiveInstrument />}
+        {activePositions.length > 0 ? (
+          <ActiveChartOrders activePositions={activePositions} />
+        ) : (
+          <ActiveInstrument />
+        )}
       </FlexContainer>
       <FlexContainer flexDirection="column" width="100%" order="3">
         <TimeScaleWrapper></TimeScaleWrapper>

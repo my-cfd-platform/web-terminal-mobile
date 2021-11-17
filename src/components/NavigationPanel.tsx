@@ -9,6 +9,7 @@ import IconMarkets from '../assets/svg/navigation/markets.svg';
 import IconPortfolio from '../assets/svg/navigation/portfolio.svg';
 import IconChart from '../assets/svg/navigation/chart.svg';
 import IconNews from '../assets/svg/navigation/news.svg';
+import IconEducation from '../assets/svg/navigation/education.svg';
 import IconUser from '../assets/svg/navigation/user.svg';
 import Colors from '../constants/Colors';
 import { useStores } from '../hooks/useStores';
@@ -67,7 +68,7 @@ const NavigationPanel = observer(() => {
         justifyContent="space-around"
         alignItems="center"
         width="100%"
-        maxWidth="375px"
+        maxWidth="414px"
       >
         <CustomNavLink to={Page.MARKETS} activeClassName="selected">
           <SvgIcon
@@ -98,9 +99,9 @@ const NavigationPanel = observer(() => {
             hoverFillColor={Colors.ACCENT}
           />
         </CustomNavLink>
-        <CustomNavLink to={Page.NEWS} activeClassName="selected">
+        <CustomNavLink to={Page.EDUCATION} activeClassName="selected">
           <SvgIcon
-            {...IconNews}
+            {...IconEducation}
             fillColor="#979797"
             hoverFillColor={Colors.ACCENT}
           />

@@ -23,11 +23,17 @@ import styled from '@emotion/styled';
 import { keyframes } from '@emotion/core';
 import { observer } from 'mobx-react-lite';
 import { OnBoardingResponseEnum } from '../enums/OnBoardingRsponseEnum';
+import { HintEnum } from '../enums/HintEnum';
 
 const Onboarding = observer(() => {
   const { t } = useTranslation();
   const { push } = useHistory();
-  const { badRequestPopupStore, mainAppStore, userProfileStore } = useStores();
+  const {
+    badRequestPopupStore,
+    mainAppStore,
+    userProfileStore,
+    educationStore,
+  } = useStores();
 
   const wrapperRef = useRef<HTMLDivElement>(document.createElement('div'));
   const [actualStep, setActualStep] = useState<number>(1);
@@ -51,16 +57,22 @@ const Onboarding = observer(() => {
     urlParams.set('rt', mainAppStore.refreshToken);
 
     setParsedParams(urlParams.toString());
-  }, [mainAppStore.token, mainAppStore.lang, mainAppStore.accounts, userProfileStore]);
+  }, [
+    mainAppStore.token,
+    mainAppStore.lang,
+    mainAppStore.accounts,
+    userProfileStore,
+  ]);
 
   const getLottieOptions = useCallback(() => {
     return {
       loop: false,
       autoplay: true,
       pause: false,
-      animationData: actualStepInfo?.data.lottieJson !== null ?
-        JSON.parse(actualStepInfo?.data.lottieJson || '') :
-        '',
+      animationData:
+        actualStepInfo?.data.lottieJson !== null
+          ? JSON.parse(actualStepInfo?.data.lottieJson || '')
+          : '',
       rendererSettings: {
         preserveAspectRatio: 'xMidYMid slice',
         clearCanvas: false,
@@ -104,34 +116,40 @@ const Onboarding = observer(() => {
     getInfoByStep(nextStep);
   };
 
-  const closeOnBoarding = () => {
+  const closeOnBoarding = async () => {
     if (
       actualStepInfo?.data.totalSteps &&
       actualStepInfo?.data.totalSteps !== actualStep
     ) {
-      const neededId = mainAppStore.accounts?.find((account) => !account.isLive)
-        ?.id;
-      mainAppStore.activeAccountId = neededId || '';
-      mainAppStore.activeAccount = mainAppStore.accounts?.find(
-        (account) => !account.isLive
-      );
       mixpanel.track(mixpanelEvents.ONBOARDING, {
         [mixapanelProps.ONBOARDING_VALUE]: `close${actualStep}`,
       });
       setActualStep(actualStepInfo?.data.totalSteps);
       getInfoByStep(actualStepInfo?.data.totalSteps);
     } else {
+      const acc = mainAppStore.accounts.find((acc) => acc.isLive);
+
+      mainAppStore.activeSession?.send(Topics.SET_ACTIVE_ACCOUNT, {
+        [Fields.ACCOUNT_ID]: acc?.id,
+      });
+
+      if (acc) {
+        mainAppStore.activeSession?.send(Topics.SET_ACTIVE_ACCOUNT, {
+          [Fields.ACCOUNT_ID]: acc.id,
+        });
+        mainAppStore.setActiveAccount(acc);
+        educationStore.setFTopenHint(HintEnum.SkipOB);
+        console.log('set acc Live: ', acc.id);
+      }
+
       mixpanel.track(mixpanelEvents.ONBOARDING, {
         [mixapanelProps.ONBOARDING_VALUE]: `close${actualStep}`,
       });
+
       mainAppStore.onboardingJustClosed = true;
       mainAppStore.addTriggerDissableOnboarding();
       mainAppStore.isOnboarding = false;
-      const acc = mainAppStore.accounts.find((item) => !item.isLive);
-      if (acc) {
-        mainAppStore.setActiveAccount(acc);
-      }
-      
+
       push(Page.DASHBOARD);
     }
   };
@@ -140,15 +158,16 @@ const Onboarding = observer(() => {
     const acc = mainAppStore.accounts.find((item) => !item.isLive);
     if (acc) {
       try {
+        mainAppStore.setActiveAccount(acc);
         mainAppStore.activeSession?.send(Topics.SET_ACTIVE_ACCOUNT, {
           [Fields.ACCOUNT_ID]: acc.id,
         });
-        mainAppStore.setActiveAccount(acc);
         mixpanel.track(mixpanelEvents.ONBOARDING, {
           [mixapanelProps.ONBOARDING_VALUE]: `demo${actualStep}`,
         });
         mainAppStore.addTriggerDissableOnboarding();
         mainAppStore.isOnboarding = false;
+        educationStore.setFTopenHint(HintEnum.DemoACC);
         push(Page.DASHBOARD);
       } catch (error) {
         badRequestPopupStore.openModal();
@@ -158,37 +177,25 @@ const Onboarding = observer(() => {
   };
 
   const selectRealAccount = async () => {
+    educationStore.setFTopenHint(HintEnum.Deposit);
     const acc = mainAppStore.accounts.find((item) => item.isLive);
     if (acc) {
-      try {
-        await API.setKeyValue(
-          {
-            key: KeysInApi.ACTIVE_ACCOUNT_ID,
-            value: acc.id,
-          },
-          mainAppStore.initModel.tradingUrl
-        );
-        mainAppStore.activeSession?.send(Topics.SET_ACTIVE_ACCOUNT, {
-          [Fields.ACCOUNT_ID]: acc.id,
-        });
-        mainAppStore.setActiveAccount(acc);
-        mainAppStore.addTriggerDissableOnboarding();
-        mainAppStore.isOnboarding = false;
-        mainAppStore.isLoading = true;
-        mixpanel.track(mixpanelEvents.ONBOARDING, {
-          [mixapanelProps.ONBOARDING_VALUE]: `real${actualStep}`,
-        });
+      mainAppStore.setActiveAccount(acc);
+      mainAppStore.activeSession?.send(Topics.SET_ACTIVE_ACCOUNT, {
+        [Fields.ACCOUNT_ID]: acc.id,
+      });
+      mainAppStore.addTriggerDissableOnboarding();
+      mainAppStore.isOnboarding = false;
+      mainAppStore.isLoading = true;
+      mixpanel.track(mixpanelEvents.ONBOARDING, {
+        [mixapanelProps.ONBOARDING_VALUE]: `real${actualStep}`,
+      });
 
-        if (userProfileStore.isBonus) {
-          userProfileStore.showBonusPopup();
-          mainAppStore.setLoading(false);
-        } else {
-          window.location.href = `${API_DEPOSIT_STRING}/?${parsedParams}`;
-        }
-        
-      } catch (error) {
-        badRequestPopupStore.openModal();
-        badRequestPopupStore.setMessage(`${error}`);
+      if (userProfileStore.isBonus) {
+        userProfileStore.showBonusPopup();
+        mainAppStore.setLoading(false);
+      } else {
+        window.location.href = `${API_DEPOSIT_STRING}/?${parsedParams}`;
       }
     }
   };
@@ -229,10 +236,9 @@ const Onboarding = observer(() => {
     mainAppStore.isOnboarding = false;
     mainAppStore.isDemoRealPopup = true;
     push(Page.DEMO_REAL_PAGE);
-  }
-  
+  };
+
   useEffect(() => {
-    let cleanupFunction = false;
     const getInfoFirstStep = async () => {
       try {
         const response = await API.getOnBoardingInfoByStep(
@@ -253,24 +259,13 @@ const Onboarding = observer(() => {
       }
     };
     getInfoFirstStep();
-    
-    return () => {
-      cleanupFunction = true;
-      const useAccount = mainAppStore.accounts.find(
-        (account) => !account.isLive
-      );
-      if (useAccount) {
-        mainAppStore.setActiveAccount(useAccount);
-      }
-    };
   }, []);
 
   useEffect(() => {
     if (mainAppStore.isPromoAccount) {
-      push(Page.DASHBOARD)
+      push(Page.DASHBOARD);
     }
   }, [mainAppStore.isPromoAccount]);
-
 
   if (loading || actualStepInfo === null) {
     return (

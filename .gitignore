@@ -1,11 +1,8 @@
-<<<<<<< HEAD
 node_modules
-=======
-﻿/node_modules
+/node_modules
 /.git
 /wwwroot
 /.vs
 /dist
 .idea
-.DS_Store
->>>>>>> e29dd2aab1c17482e764bc7a45734b768a8eee00
+**/.DS_Store

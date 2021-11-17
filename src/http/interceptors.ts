@@ -231,7 +231,8 @@ const injectInerceptors = (mainAppStore: MainAppStore) => {
       if (
         (
           getApiUrl(requestUrl).includes(API_LIST.ONBOARDING.STEPS) ||
-          getApiUrl(requestUrl).includes(API_LIST.WELCOME_BONUS.GET)
+          getApiUrl(requestUrl).includes(API_LIST.WELCOME_BONUS.GET) ||
+          getApiUrl(requestUrl).includes(API_LIST.EDUCATION.LIST)
         ) &&
         error.response?.status !== 401 &&
         error.response?.status !== 403

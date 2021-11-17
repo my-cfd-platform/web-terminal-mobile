@@ -50,6 +50,7 @@ import { getProcessId } from '../helpers/getProcessId';
 import { DebugTypes } from '../types/DebugTypes';
 import { getCircularReplacer } from '../helpers/getCircularReplacer';
 import { getStatesSnapshot } from '../helpers/getStatesSnapshot';
+import { HintEnum } from '../enums/HintEnum';
 
 interface MainAppStoreProps {
   token: string;
@@ -135,7 +136,9 @@ export class MainAppStore implements MainAppStoreProps {
   @observable promo = '';
   @observable showAccountSwitcher: boolean = false;
   @observable onboardingJustClosed: boolean = false;
-  @observable connectTimeOut = 10000;
+  @observable connectTimeOut = 5000;
+  @observable activeACCLoading = true;
+
   websocketConnectionTries = 0;
 
   paramsAsset: string | null = null;
@@ -284,7 +287,6 @@ export class MainAppStore implements MainAppStoreProps {
     };
 
     const connectToWebocket = async () => {
-      console.log('connectToWebocket');
       try {
         await debugSocketReconnectFunction();
         await connection.start();
@@ -402,8 +404,10 @@ export class MainAppStore implements MainAppStoreProps {
           apiResponseCodeMessages[OperationApiResponseCodes.TechnicalError]
       );
 
-      console.log('websocket error: ', error);
-      console.log('=====/=====');
+      if (error) {
+        console.log('websocket error: ', error);
+        console.log('=====/=====');
+      }
 
       this.signalRReconectCounter = 0;
     });
@@ -502,8 +506,7 @@ export class MainAppStore implements MainAppStoreProps {
         this.activeSession = undefined;
       }
       this.websocketConnectionTries = 0;
-      
-      console.log('Initiate new socket connection')
+
       this.handleNewInitConnection(token);
     } catch (error) {}
   };
@@ -522,7 +525,6 @@ export class MainAppStore implements MainAppStoreProps {
     let timer: any;
 
     if (this.activeSession && this.isAuthorized) {
-      console.log('ping pong counter: ', this.signalRReconectCounter);
       if (this.signalRReconectCounter === 3) {
         this.rootStore.badRequestPopupStore.setRecconect();
 
@@ -617,7 +619,7 @@ export class MainAppStore implements MainAppStoreProps {
   addTriggerDissableOnboarding = async () => {
     this.isOnboarding = false;
     try {
-      API.setKeyValue(
+      await API.setKeyValue(
         {
           key: KeysInApi.SHOW_ONBOARDING,
           value: false,
@@ -684,6 +686,7 @@ export class MainAppStore implements MainAppStoreProps {
 
   getActiveAccount = async () => {
     try {
+      this.activeACCLoading = true;
       await this.checkOnboardingShow();
 
       const activeAccountId = await API.getKeyValue(
@@ -695,6 +698,16 @@ export class MainAppStore implements MainAppStoreProps {
         KeysInApi.ACTIVE_ACCOUNT_TARGET,
         this.initModel.tradingUrl
       );
+
+      const userActiveHint = await API.getKeyValue(
+        KeysInApi.SHOW_HINT,
+        this.initModel.tradingUrl
+      );
+
+      if (userActiveHint && userActiveHint !== 'false') {
+        // @ts-ignore
+        this.rootStore.educationStore.openHint(userActiveHint, false);
+      }
 
       if (activeAccountTarget === 'facebook') {
         this.isPromoAccount = true;
@@ -716,8 +729,8 @@ export class MainAppStore implements MainAppStoreProps {
         }
       }
 
+      this.activeACCLoading = false;
       this.activeAccount = activeAccount;
-
       this.isLoading = false;
       this.isInitLoading = false;
     } catch (error) {
@@ -852,6 +865,8 @@ export class MainAppStore implements MainAppStoreProps {
     this.requestReconnectCounter = 0;
     this.rootStore.badRequestPopupStore.stopRecconect();
     this.requestErrorStack = [];
+    this.rootStore.educationStore.resetStore();
+
     if (this.activeAccount) {
       this.setParamsAsset(null);
       this.setParamsMarkets(null);

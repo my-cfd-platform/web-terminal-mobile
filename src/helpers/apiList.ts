@@ -55,6 +55,9 @@ const API_LIST = {
   WELCOME_BONUS: {
     GET: '/v1/welcomeBonus',
   },
+  EDUCATION: {
+    LIST: '/v1/educations',
+  },
 };
 
 Object.freeze(API_LIST);

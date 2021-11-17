@@ -48,6 +48,8 @@ const AuthorizedContainer: FC = observer(({ children }) => {
     Page.ONBOARDING,
     Page.BONUS_FAQ,
     Page.DEMO_REAL_PAGE,
+    Page.EDUCATION_LIST,
+    Page.PAGE_NOT_FOUND,
   ]);
 
   const { push } = useHistory();
@@ -75,6 +77,8 @@ const AuthorizedContainer: FC = observer(({ children }) => {
     Page.ACCOUNTS_SWITCH,
     Page.BONUS_FAQ,
     Page.DEMO_REAL_PAGE,
+    Page.EDUCATION,
+    Page.EDUCATION_LIST,
   ]);
 
   const isHiddenPromoPage = hidenPromoPageList?.isExact;
@@ -209,10 +213,20 @@ const AuthorizedContainer: FC = observer(({ children }) => {
   }, [location.pathname]);
 
   useEffect(() => {
-    if (mainAppStore.token) {
+    if (
+      mainAppStore.token &&
+      !mainAppStore.isPromoAccount &&
+      !mainAppStore.promo &&
+      !mainAppStore.activeACCLoading
+    ) {
       userProfileStore.getUserBonus(mainAppStore.initModel.miscUrl);
     }
-  }, [mainAppStore.token]);
+  }, [
+    mainAppStore.token,
+    mainAppStore.isPromoAccount,
+    mainAppStore.promo,
+    mainAppStore.activeACCLoading,
+  ]);
 
   return (
     <FlexContainer

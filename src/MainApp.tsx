@@ -272,12 +272,12 @@ const MainApp: FC = () => {
           body {
             color: #fff;
             background-color: ${Colors.BACKGROUD_PAGE};
-            height: 100%;
+            height: calc(${FULL_VH});
             overscroll-behavior: contain;
           }
 
           #root {
-            height: 100%;
+            height: calc(${FULL_VH});
           }
 
           .grecaptcha-badge {

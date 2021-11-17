@@ -36,12 +36,15 @@ const Page = {
 
   TERMS_OF_SERVICE: 'https://monfex.com/terms-of-service',
   PRIVACY_POLICY: 'https://www.monfex.com/privacy-policy',
-
+  
   MARKETS: '/markets',
   PORTFOLIO: '/portfolio/:type',
   POSITION_DETAILS: '/portfolio/:type/:id',
   PORTFOLIO_MAIN: '/portfolio',
   NEWS: '/news',
+  EDUCATION: '/course',
+  EDUCATION_LIST: '/course/:id',
+  EDUCATION_QUESTION: '/course/question',
 
   ACCOUNTS_SWITCH: '/accounts',
   DEPOSIT: '/deposit',
@@ -56,6 +59,8 @@ const Page = {
   TP_EDIT_MAIN: '/edit-tp',
   TP_EDIT: '/edit-tp/:id',
 
+
+  PAGE_NOT_FOUND: '/page-not-found',
 };
 
 Object.freeze(Page);

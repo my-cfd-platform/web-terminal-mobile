@@ -16,12 +16,13 @@ import PopupContainer from '../../containers/PopupContainer';
 import BonusPopup from '../BonusPopup';
 import { useCallback } from 'react';
 import { FC } from 'react';
+import EducationSuccessPopup from '../Education/EducationSuccessPopup';
 
 interface Props {
   showBar: boolean;
 }
 const NavBar: FC<Props> = observer(({ showBar }) => {
-  const { mainAppStore, userProfileStore } = useStores();
+  const { mainAppStore, userProfileStore, educationStore } = useStores();
   const urlParams = new URLSearchParams();
   const { t } = useTranslation();
   const [parsedParams, setParsedParams] = useState('');
@@ -112,17 +113,38 @@ const NavBar: FC<Props> = observer(({ showBar }) => {
     }
   }, [userProfileStore.isBonus, parsedParams]);
 
+  useEffect(() => {
+    if (
+      mainAppStore.token &&
+      mainAppStore.isAuthorized &&
+      !mainAppStore.promo &&
+      !mainAppStore.isPromoAccount &&
+      !mainAppStore.activeACCLoading
+    ) {
+      educationStore.getCourserList();
+    }
+  }, [
+    mainAppStore.lang,
+    mainAppStore.isAuthorized,
+    mainAppStore.token,
+    mainAppStore.isPromoAccount,
+    mainAppStore.promo,
+    mainAppStore.activeACCLoading,
+  ]);
+
   return (
     <>
       {showBar && (
         <FlexContainer
           width="100vw"
+          maxWidth="414px"
           position="relative"
           alignItems="center"
           justifyContent="space-between"
           height="48px"
           padding="0 16px"
           backgroundColor="#1C1F26"
+          margin="0 auto"
         >
           <FlexContainer flexDirection="row">
             <AccountLabel />
@@ -144,8 +166,14 @@ const NavBar: FC<Props> = observer(({ showBar }) => {
         </FlexContainer>
       )}
 
-      {userProfileStore.isBonusPopup && userProfileStore.isBonus && !mainAppStore.isPromoAccount && (
-        <BonusPopup handleDeposit={handleOpenDeposit} />
+      {userProfileStore.isBonusPopup &&
+        userProfileStore.isBonus &&
+        !mainAppStore.isPromoAccount && (
+          <BonusPopup handleDeposit={handleOpenDeposit} />
+        )}
+
+      {!mainAppStore.isPromoAccount && educationStore.showPopup && (
+        <EducationSuccessPopup />
       )}
     </>
   );

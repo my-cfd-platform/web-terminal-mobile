@@ -1,17 +1,30 @@
 import styled from '@emotion/styled';
+import { observer } from 'mobx-react-lite';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
+import { useHistory } from 'react-router';
+import { useStores } from '../hooks/useStores';
 import { ButtonWithoutStyles } from '../styles/ButtonWithoutStyles';
 import { FlexContainer } from '../styles/FlexContainer';
 import { PrimaryTextSpan } from '../styles/TextsElements';
 import LoaderComponent from './LoaderComponent';
 import Modal from './Modal';
 
-const ServerErrorPopup = () => {
+const ServerErrorPopup = observer(() => {
+  const { serverErrorPopupStore } = useStores();
+  const { push } = useHistory();
   const { t } = useTranslation();
+
   const reloadPage = () => {
+    if (serverErrorPopupStore.reloadPayload) {
+      push(serverErrorPopupStore.reloadPayload);
+      serverErrorPopupStore.setReloadPayload('');
+      serverErrorPopupStore.closeModal();
+      return
+    }
     window.location.reload();
   };
+
   return (
     <Modal>
       <ModalBody zIndex="103">
@@ -37,7 +50,7 @@ const ServerErrorPopup = () => {
               textAlign="center"
             >
               {t(
-                'Please wait while we processing your request or click "Reload"'
+                `Please wait while we processing your request or click 'Reload'`
               )}
               .
             </PrimaryTextSpan>
@@ -58,7 +71,7 @@ const ServerErrorPopup = () => {
       </ModalBody>
     </Modal>
   );
-};
+});
 
 export default ServerErrorPopup;
 
