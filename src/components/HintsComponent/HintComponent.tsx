@@ -33,7 +33,13 @@ const HintComponent = observer(({ hintType }: Props) => {
   const getHintData = (hintType: HintEnum) => {
     let data = HINT_DATA[hintType] || null;
     let filterData = data;
-    if (!educationStore.coursesList && !educationStore.educationIsLoaded) {
+    if (
+      !educationStore.coursesList ||
+      !educationStore.educationIsLoaded ||
+      educationStore.coursesList.filter(
+        (item) => item.id && item.totalQuestions > 0
+      ).length === 0
+    ) {
       switch (hintType) {
         case HintEnum.Deposit:
         case HintEnum.DemoACC:
