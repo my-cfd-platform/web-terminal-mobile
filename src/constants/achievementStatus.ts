@@ -3,6 +3,7 @@ const AchievementStatus = {
   SILVER: 'silver',
   GOLD: 'gold',
   PLATINUM: 'platinum',
+  DIAMOND: 'diamond',
   VIP: 'vip',
   ULTRA: 'ultra'
 }
