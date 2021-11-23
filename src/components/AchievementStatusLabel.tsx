@@ -17,6 +17,10 @@ const listStatus = [
   AchievementStatus.SILVER,
   AchievementStatus.GOLD,
   AchievementStatus.PLATINUM,
+  AchievementStatus.ULTRA,
+  AchievementStatus.VIP,
+  AchievementStatus.DIAMOND,
+  AchievementStatus.BASIC,
 ];
 
 const AchievementStatusLabel = observer(() => {
