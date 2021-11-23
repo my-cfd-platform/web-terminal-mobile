@@ -161,7 +161,7 @@ const ApplyButton = styled(ButtonWithoutStyles)`
   margin-bottom: 8px;
   @supports ((-webkit-backdrop-filter: none) or (backdrop-filter: none)) {
     background-color: rgba(37, 37, 37, 0.78);
-    backdrop-filter: blur(4px);
+    backdrop-filter: blur(12px);
   }
 `;
 
