@@ -29,9 +29,11 @@ import mixapanelProps from '../constants/mixpanelProps';
 import useRedirectMiddleware from '../hooks/useRedirectMiddleware';
 import { CountriesEnum } from '../enums/CountriesEnum';
 import AccProfileCarousel from '../components/AccProfileCarousel/AccProfileCarousel';
+import ConfirmationBottomModal from '../components/Modals/ConfirmationBottomModal';
 
 const AccountProfile = observer(() => {
   const { mainAppStore, userProfileStore } = useStores();
+  const [showLogOutConfirm, setShowLogOutConfirm] = useState<boolean>(false);
   const { t } = useTranslation();
   const { redirectWithUpdateRefreshToken } = useRedirectMiddleware();
   const handleLogout = () => {
@@ -40,6 +42,9 @@ const AccountProfile = observer(() => {
     });
     mainAppStore.signOut();
   };
+
+  const handleClickLogOut = () => setShowLogOutConfirm(true);
+  const handleClickLogOutCancel = () => setShowLogOutConfirm(false);
 
   const urlParams = new URLSearchParams();
 
@@ -70,6 +75,13 @@ const AccountProfile = observer(() => {
   return (
     // TODO: Refactor Safari
     <FlexContainer flexDirection="column" minHeight="600px" overflow="auto">
+      <ConfirmationBottomModal
+        applyLabel="Log Out"
+        handleApply={handleLogout}
+        handleCancel={handleClickLogOutCancel}
+        show={showLogOutConfirm}
+      />
+
       <AchievementStatusLabel />
       <FlexContainer padding="16px" marginBottom="16px">
         <FlexContainer width="64px">
@@ -132,7 +144,9 @@ const AccountProfile = observer(() => {
         </FlexContainer>
       </FlexContainer>
 
-      {userProfileStore.isBonus && !mainAppStore.isPromoAccount && <AccProfileCarousel />}
+      {userProfileStore.isBonus && !mainAppStore.isPromoAccount && (
+        <AccProfileCarousel />
+      )}
 
       {!mainAppStore.isPromoAccount &&
         userProfileStore.userProfile?.kyc ===
@@ -385,7 +399,7 @@ const AccountProfile = observer(() => {
           </>
         )}
 
-        <ProfileMenuButton onClick={handleLogout}>
+        <ProfileMenuButton onClick={handleClickLogOut}>
           <FlexContainer alignItems="center">
             <FlexContainer
               width="28px"
