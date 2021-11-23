@@ -138,10 +138,10 @@ const translateFadeOut = keyframes`
 const ModalWrapper = styled(FlexContainer)<{ show: boolean }>`
   animation: ${(props) => (props.show ? translateFadeIn : translateFadeOut)}
     0.5s ease;
-
+/* 
   @supports ((-webkit-backdrop-filter: none) or (backdrop-filter: none)) {
     backdrop-filter: blur(1px);
-  }
+  } */
 `;
 
 const ButtonsWrapper = styled(FlexContainer)<{ show: boolean }>`
@@ -161,7 +161,7 @@ const ApplyButton = styled(ButtonWithoutStyles)`
   margin-bottom: 8px;
   @supports ((-webkit-backdrop-filter: none) or (backdrop-filter: none)) {
     background-color: rgba(37, 37, 37, 0.78);
-    backdrop-filter: blur(12px);
+    backdrop-filter: blur(4px);
   }
 `;
 
