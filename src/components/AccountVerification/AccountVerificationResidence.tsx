@@ -84,10 +84,6 @@ const AccountVerificationResidence: FC<Props> = (props) => {
       setFile(new Blob());
       setImage('');
       setLoader(false);
-
-      notificationStore.notificationMessage = t(apiResponseCodeMessages[16]);
-      notificationStore.isSuccessfull = false;
-      notificationStore.openNotification();
     }
   };
 

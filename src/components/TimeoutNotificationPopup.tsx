@@ -48,7 +48,7 @@ const TimeoutNotificationPopup: FC<Props> = ({
       position="fixed"
       padding="16px"
       onAnimationEnd={onAnimationEnd}
-      zIndex="999"
+      zIndex="1001"
       alignItems="center"
     >
       {!isSuccessfull && <ErrorTitie>Oooopsss</ErrorTitie>}

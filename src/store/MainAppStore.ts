@@ -136,7 +136,7 @@ export class MainAppStore implements MainAppStoreProps {
   @observable promo = '';
   @observable showAccountSwitcher: boolean = false;
   @observable onboardingJustClosed: boolean = false;
-  @observable connectTimeOut = 5000;
+  @observable connectTimeOut = 10000;
   @observable activeACCLoading = true;
 
   websocketConnectionTries = 0;
@@ -202,9 +202,10 @@ export class MainAppStore implements MainAppStoreProps {
       this.initModel = initModel;
       this.setInterceptors();
     } catch (error) {
-      this.isInitLoading = false;
-      this.rootStore.badRequestPopupStore.openModal();
-      this.rootStore.badRequestPopupStore.setMessage(`${error}`);
+      await this.initApp();
+      // this.isInitLoading = false;
+      // this.rootStore.badRequestPopupStore.openModal();
+      // this.rootStore.badRequestPopupStore.setMessage(`${error}`);
     }
   };
 

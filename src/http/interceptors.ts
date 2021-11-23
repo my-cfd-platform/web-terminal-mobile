@@ -16,6 +16,7 @@ import AUTH_API_LIST from '../helpers/apiListAuth';
 import mixpanel from 'mixpanel-browser';
 import mixpanelEvents from '../constants/mixpanelEvents';
 import mixapanelProps from '../constants/mixpanelProps';
+import Page from '../constants/Pages';
 
 const openNotification = (errorText: string, mainAppStore: MainAppStore, isReload?: boolean) => {
   mainAppStore.rootStore.badRequestPopupStore.setMessage(errorText);
@@ -229,6 +230,13 @@ const injectInerceptors = (mainAppStore: MainAppStore) => {
       }
 
       if (
+        getApiUrl(requestUrl).includes(API_LIST.PRICE_HISTORY.CANDLES) &&
+        location.pathname !== '/'
+      ) {
+        location.replace(Page.DASHBOARD);
+      }
+
+      if (
         (
           getApiUrl(requestUrl).includes(API_LIST.ONBOARDING.STEPS) ||
           getApiUrl(requestUrl).includes(API_LIST.WELCOME_BONUS.GET) ||
@@ -436,7 +444,9 @@ const injectInerceptors = (mainAppStore: MainAppStore) => {
                     originalRequest._retry = false;
 
                     processQueue(null, mainAppStore.token);
-                    resolve(axios(originalRequest));
+                    if (!getApiUrl(requestUrl).includes(API_LIST.WELCOME_BONUS.GET)) {
+                      resolve(axios(originalRequest));
+                    }
                   })
                   .catch((err) => {
                     mainAppStore.setRefreshToken('');
