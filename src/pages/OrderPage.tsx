@@ -457,6 +457,7 @@ const OrderPage = observer(() => {
                     instrumentsStore.activeInstrument?.instrumentItem.id
                 )?.name || '',
               instrumentId: instrumentsStore.activeInstrument.instrumentItem.id,
+              positionId: response.position?.id,
               type: 'open',
             };
             activePositionNotificationStore.isSuccessfull = true;
