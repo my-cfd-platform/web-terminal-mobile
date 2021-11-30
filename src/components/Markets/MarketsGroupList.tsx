@@ -1,4 +1,4 @@
-import React, {useEffect, useRef} from 'react';
+import React, { useEffect, useRef } from 'react';
 import styled from '@emotion/styled';
 import { FlexContainer } from '../../styles/FlexContainer';
 import { useStores } from '../../hooks/useStores';
@@ -10,13 +10,11 @@ import { autorun } from 'mobx';
 import { InstrumentGroupWSDTO } from '../../types/InstrumentsTypes';
 
 const MarketsGroupList = observer(() => {
-  const {
-    instrumentsStore,
-    sortingStore,
-    mainAppStore
-  } = useStores();
+  const { instrumentsStore, sortingStore, mainAppStore } = useStores();
 
-  const activeAssetRef = useRef<HTMLButtonElement>(document.createElement('button'));
+  const activeAssetRef = useRef<HTMLButtonElement>(
+    document.createElement('button')
+  );
 
   const setActiveInstrumentGroup = (groupId: string) => () => {
     instrumentsStore.activeInstrumentGroupId = groupId;
@@ -31,17 +29,14 @@ const MarketsGroupList = observer(() => {
       mainAppStore.paramsMarkets &&
       instrumentsStore.instrumentGroups.length > 0
     ) {
-      const instrumentId = instrumentsStore.instrumentGroups
-        .find(
+      const instrumentId =
+        instrumentsStore.instrumentGroups.find(
           (item) => item.id === mainAppStore.paramsMarkets
         )?.id || instrumentsStore.instrumentGroups[0].id;
       instrumentsStore.setActiveInstrumentGroupId(instrumentId);
       mainAppStore.setParamsMarkets(null);
     }
-  }, [
-    mainAppStore.paramsMarkets,
-    instrumentsStore.instrumentGroups
-  ]);
+  }, [mainAppStore.paramsMarkets, instrumentsStore.instrumentGroups]);
 
   return (
     <ListWrap>
@@ -53,9 +48,10 @@ const MarketsGroupList = observer(() => {
                 key={item.id}
                 isActive={instrumentsStore.activeInstrumentGroupId === item.id}
                 onClick={setActiveInstrumentGroup(item.id)}
-                ref={instrumentsStore.activeInstrumentGroupId === item.id
-                  ? activeAssetRef
-                  : null
+                ref={
+                  instrumentsStore.activeInstrumentGroupId === item.id
+                    ? activeAssetRef
+                    : null
                 }
               >
                 <PrimaryTextSpan
@@ -83,6 +79,11 @@ export default MarketsGroupList;
 const ListWrap = styled(FlexContainer)`
   padding: 24px 16px 0 0;
   overflow-x: auto;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 `;
 
 const MarketButton = styled(ButtonWithoutStyles)<{ isActive: boolean }>`
