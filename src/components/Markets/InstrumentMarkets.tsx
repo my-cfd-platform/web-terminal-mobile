@@ -65,9 +65,11 @@ const InstrumentMarkets: FC<Props> = observer((props) => {
         justifyContent="center"
       >
         <PrimaryTextSpan fontSize="16px" color="#fffccc" marginBottom="4px">
-          {quotesStore.quotes[id] && <Observer>
-            {() => <>{quotesStore.quotes[id].bid.c.toFixed(digits)}</>}
-          </Observer>}
+          {quotesStore.quotes[id] && (
+            <Observer>
+              {() => <>{quotesStore.quotes[id].bid.c.toFixed(digits)}</>}
+            </Observer>
+          )}
         </PrimaryTextSpan>
         {!!instrumentsStore.pricesChange[id] && (
           <QuoteTextLabel isGrowth={instrumentsStore.pricesChange[id] >= 0}>
@@ -96,10 +98,7 @@ const InstrumentItem = styled(FlexContainer)`
 `;
 
 const QuoteTextLabel = styled(FlexContainer)<{ isGrowth?: boolean }>`
-  background-color: ${(props) =>
-    props.isGrowth ? Colors.ACCENT_BLUE : Colors.RED};
-  color: ${(props) => (props.isGrowth ? '#000000' : '#ffffff')};
-  border-radius: 4px;
+  color: ${(props) => (props.isGrowth ? Colors.ACCENT_BLUE : Colors.RED)};
   padding: 2px 4px;
   font-size: 13px;
 `;
