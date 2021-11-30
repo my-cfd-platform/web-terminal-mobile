@@ -76,7 +76,7 @@ const SignIn = () => {
       }
     } catch (error) {
       badRequestPopupStore.openModal();
-      badRequestPopupStore.setMessage(error);
+      badRequestPopupStore.setMessage(`${error}`);
       mainAppStore.isLoading = false;
     }
   };
