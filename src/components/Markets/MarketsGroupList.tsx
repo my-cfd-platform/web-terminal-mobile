@@ -8,6 +8,9 @@ import { ButtonWithoutStyles } from '../../styles/ButtonWithoutStyles';
 import Colors from '../../constants/Colors';
 import { autorun } from 'mobx';
 import { InstrumentGroupWSDTO } from '../../types/InstrumentsTypes';
+import SvgIcon from '../SvgIcon';
+import groupIconById from '../../constants/groupIconById';
+import IndexIcon from '../../assets/svg/groups/icon-index.svg';
 
 const MarketsGroupList = observer(() => {
   const { instrumentsStore, sortingStore, mainAppStore } = useStores();
@@ -18,6 +21,16 @@ const MarketsGroupList = observer(() => {
 
   const setActiveInstrumentGroup = (groupId: string) => () => {
     instrumentsStore.activeInstrumentGroupId = groupId;
+  };
+
+  const getIcon = (groupId: string) => {
+    // @ts-ignore
+    const neededIcon = groupIconById[groupId] || IndexIcon;
+    return <SvgIcon {...neededIcon} fillColor={
+      instrumentsStore.activeInstrumentGroupId === groupId
+        ? Colors.ACCENT
+        : 'rgba(196, 196, 196, 0.5)'
+    } />
   };
 
   useEffect(() => {
@@ -36,7 +49,10 @@ const MarketsGroupList = observer(() => {
       instrumentsStore.setActiveInstrumentGroupId(instrumentId);
       mainAppStore.setParamsMarkets(null);
     }
-  }, [mainAppStore.paramsMarkets, instrumentsStore.instrumentGroups]);
+  }, [
+    mainAppStore.paramsMarkets,
+    instrumentsStore.instrumentGroups
+  ]);
 
   return (
     <ListWrap>
@@ -54,6 +70,9 @@ const MarketsGroupList = observer(() => {
                     : null
                 }
               >
+                <FlexContainer marginRight="8px">
+                  {getIcon(item.id)}
+                </FlexContainer>
                 <PrimaryTextSpan
                   color={
                     instrumentsStore.activeInstrumentGroupId === item.id
@@ -87,10 +106,13 @@ const ListWrap = styled(FlexContainer)`
 `;
 
 const MarketButton = styled(ButtonWithoutStyles)<{ isActive: boolean }>`
+  display: flex;
+  align-items: center;
+  justify-content: center;
   background-color: ${(props) =>
     props.isActive ? '#494C53' : Colors.NOTIFICATION_BG};
   border-radius: 8px;
-  padding: 8px 12px;
-  margin-left: 16px;
+  padding: 8px 16px;
+  margin-left: 8px;
   transition: all 0.4s ease;
 `;
