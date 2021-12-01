@@ -88,12 +88,12 @@ const InstrumentItem = styled(FlexContainer)`
   width: 100%;
   padding: 16px;
   flex-wrap: nowrap;
-  transition: all 0.4s ease;
+  transition: background 0.4s ease;
   min-height: 80px;
-
+  
   &:hover,
   &:focus {
-    background-color: rgba(42, 45, 56, 0.9);
+    background: linear-gradient(0deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.1)), rgba(42, 45, 56, 0.5);
   }
 `;
 
