@@ -410,21 +410,15 @@ const ProfileMenuLink = styled(Link)`
   text-decoration: none;
   background-color: rgba(42, 45, 56, 0.5);
   margin-bottom: 1px;
+  &:active,
   &:hover {
-    text-decoration: none;
-  }
-`;
-
-const ProfileMenuA = styled.a`
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  height: 50px;
-  padding: 8px 16px;
-  text-decoration: none;
-  background-color: rgba(42, 45, 56, 0.5);
-  margin-bottom: 1px;
-  &:hover {
+    cursor: pointer;
+    background: linear-gradient(
+        0deg,
+        rgba(255, 255, 255, 0.1),
+        rgba(255, 255, 255, 0.1)
+      ),
+      rgba(42, 45, 56, 0.5);
     text-decoration: none;
   }
 `;
@@ -438,7 +432,15 @@ const ProfileMenuButton = styled(ButtonWithoutStyles)`
   text-decoration: none;
   background-color: rgba(42, 45, 56, 0.5);
   margin-bottom: 1px;
+  &:active,
   &:hover {
+    cursor: pointer;
+    background: linear-gradient(
+        0deg,
+        rgba(255, 255, 255, 0.1),
+        rgba(255, 255, 255, 0.1)
+      ),
+      rgba(42, 45, 56, 0.5);
     text-decoration: none;
   }
 `;
