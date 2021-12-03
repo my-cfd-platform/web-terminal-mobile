@@ -36,6 +36,8 @@ import EducationCourse from '../pages/EducationCourse';
 import EducationListPage from '../pages/EducationListPage';
 import EducationQuestionPage from '../pages/EducationQuestionPage';
 import PageNotFound from '../pages/PageNotFound';
+import PositionCreateSL from '../pages/PositionCreateSL';
+import PositionCreateTP from '../pages/PositionCreateTP';
 
 export enum RouteLayoutType {
   Authorized,
@@ -229,6 +231,20 @@ const routesList = [
   {
     component: PositionEditTP,
     path: Page.TP_EDIT,
+    exact: false,
+    strict: true,
+    layoutType: RouteLayoutType.Authorized,
+  },
+  {
+    component: PositionCreateSL,
+    path: Page.SL_CREATE_MAIN,
+    exact: false,
+    strict: true,
+    layoutType: RouteLayoutType.Authorized,
+  },
+  {
+    component: PositionCreateTP,
+    path: Page.TP_CREATE_MAIN,
     exact: false,
     strict: true,
     layoutType: RouteLayoutType.Authorized,

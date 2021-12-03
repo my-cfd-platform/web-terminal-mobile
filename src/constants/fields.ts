@@ -29,6 +29,7 @@ const Fields = {
   CUSTON_PASSPORT_ID: 'customPassportId',
   CUSTOM_PROOF_OF_ADDRESS: 'customProofOfAddress',
   NEW_PASSWORD: 'newPassword',
+  IS_TOPPING_UP_ACTIVE: 'isToppingUpActive',
 };
 
 Object.freeze(Fields);

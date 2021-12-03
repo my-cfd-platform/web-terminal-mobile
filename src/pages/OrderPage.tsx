@@ -36,6 +36,7 @@ import mixpanelValues from '../constants/mixpanelValues';
 import AutosizeInput from 'react-input-autosize';
 import KeysInApi from '../constants/keysInApi';
 import LoaderForComponents from '../components/LoaderForComponents';
+import useInstrument from '../hooks/useInstrument';
 
 const PRECISION_USD = 2;
 const DEFAULT_INVEST_AMOUNT_LIVE = 50;
@@ -44,6 +45,7 @@ const DEFAULT_INVEST_AMOUNT_DEMO = 1000;
 const OrderPage = observer(() => {
   const { type } = useParams<{ type: string }>();
   const { t } = useTranslation();
+  const { getPressision } = useInstrument();
   const purchaseField = useRef<HTMLInputElement | null>(null);
   const orderWrapper = useRef<HTMLDivElement>(document.createElement('div'));
   const [isKeyboard, setIsKeyboard] = useState<boolean>(false);
@@ -55,6 +57,7 @@ const OrderPage = observer(() => {
     activePositionNotificationStore,
     notificationStore,
     markersOnChartStore,
+    SLTPStore,
   } = useStores();
   const { push } = useHistory();
 
@@ -83,6 +86,7 @@ const OrderPage = observer(() => {
       sl: null,
       slType: null,
       tpType: null,
+      isToppingUpActive: false,
     }),
     [instrumentsStore.activeInstrument, mainAppStore.activeAccount?.id]
   );
@@ -189,104 +193,12 @@ const OrderPage = observer(() => {
 
           .required(t('Please fill Invest amount')),
         multiplier: yup.number().required(t('Required amount')),
-        tp: yup
-          .number()
-          .nullable()
-          .when([Fields.OPERATION, Fields.TAKE_PROFIT_TYPE], {
-            is: (operation, tpType) =>
-              operation === AskBidEnum.Buy &&
-              tpType === TpSlTypeEnum.Price &&
-              quotesStore.quotes[
-                instrumentsStore.activeInstrument!.instrumentItem.id
-              ],
-            then: yup
-              .number()
-              .nullable()
-              .test(
-                Fields.TAKE_PROFIT,
-                `${t('Error message')}: ${t(
-                  'This level is higher or lower than the one currently allowed'
-                )}`,
-                (value) => value > currentPriceAsk()
-              ),
-          })
-          .when([Fields.OPERATION, Fields.TAKE_PROFIT_TYPE], {
-            is: (operation, tpType) =>
-              operation === AskBidEnum.Sell &&
-              tpType === TpSlTypeEnum.Price &&
-              quotesStore.quotes[
-                instrumentsStore.activeInstrument!.instrumentItem.id
-              ],
-            then: yup
-              .number()
-              .nullable()
-              .test(
-                Fields.TAKE_PROFIT,
-                `${t('Error message')}: ${t(
-                  'This level is higher or lower than the one currently allowed'
-                )}`,
-                (value) => value < currentPriceBid()
-              ),
-          }),
-        sl: yup
-          .number()
-          .nullable()
-          .when([Fields.OPERATION, Fields.STOP_LOSS_TYPE], {
-            is: (operation, slType) =>
-              operation === AskBidEnum.Buy &&
-              slType === TpSlTypeEnum.Price &&
-              quotesStore.quotes[
-                instrumentsStore.activeInstrument!.instrumentItem.id
-              ],
-            then: yup
-              .number()
-              .nullable()
-              .test(
-                Fields.STOP_LOSS,
-                `${t('Error message')}: ${t(
-                  'This level is higher or lower than the one currently allowed'
-                )}`,
-                (value) => value < currentPriceAsk()
-              ),
-          })
-          .when([Fields.OPERATION, Fields.STOP_LOSS_TYPE], {
-            is: (operation, slType) =>
-              operation === AskBidEnum.Sell &&
-              slType === TpSlTypeEnum.Price &&
-              quotesStore.quotes[
-                instrumentsStore.activeInstrument!.instrumentItem.id
-              ],
-            then: yup
-              .number()
-              .nullable()
-              .test(
-                Fields.STOP_LOSS,
-                `${t('Error message')}: ${t(
-                  'This level is higher or lower than the one currently allowed'
-                )}`,
-                (value) => value > currentPriceBid()
-              ),
-          })
-          .when([Fields.STOP_LOSS_TYPE], {
-            is: (slType) => slType === TpSlTypeEnum.Currency,
-            then: yup
-              .number()
-              .nullable()
-              .test(
-                Fields.STOP_LOSS,
-                t('Stop loss level can not be lower than the Invest amount'),
-                function (value) {
-                  return value < this.parent[Fields.AMOUNT];
-                }
-              ),
-          }),
         openPrice: yup
           .number()
           .test(
             Fields.PURCHASE_AT,
             t('Open price can not be zero'),
             (value) => {
-              console.log(value);
               return value !== 0;
             }
           ),
@@ -323,6 +235,11 @@ const OrderPage = observer(() => {
           operation: type === 'buy' ? AskBidEnum.Buy : AskBidEnum.Sell,
           multiplier: otherValues.multiplier,
           openPrice: +otherValues.openPrice,
+          sl: otherValues.sl,
+          tp: otherValues.tp,
+          slType: otherValues.slType,
+          tpType: otherValues.tpType,
+          isToppingUpActive: otherValues.isToppingUpActive,
         };
         const balanceBeforeOrder = getActiveAccountBalance();
         const response = await API.openPendingOrder(modelToPendingOrder);
@@ -662,6 +579,24 @@ const OrderPage = observer(() => {
     setIsKeyboard(false);
   };
 
+  const handleSLTPClick = (isSL: boolean) => () => {
+    SLTPStore.setIsSLTPMode(true);
+    setTimeout(() => {
+      const { operation, ...otherValues } = values;
+      const modelToSubmit = {
+        ...otherValues,
+        operation: type === 'buy' ? AskBidEnum.Buy : AskBidEnum.Sell,
+        investmentAmount: +otherValues.investmentAmount,
+      };
+      SLTPStore.setCreatingPosition(modelToSubmit);
+      if (isSL) {
+        push(Page.SL_CREATE_MAIN);
+      } else {
+        push(Page.TP_CREATE_MAIN);
+      }
+    }, 0);
+  };
+
   useEffect(() => {
     setIsLoading(true);
     async function fetchDefaultInvestAmount() {
@@ -704,6 +639,34 @@ const OrderPage = observer(() => {
     instrumentsStore.activeInstrument,
     mainAppStore.initModel,
   ]);
+
+  useEffect(() => {
+    setTimeout(() => {
+      if (SLTPStore.creatingPosition && !SLTPStore.isSLTPMode) {
+        setFieldValue(Fields.OPERATION, SLTPStore.creatingPosition.operation);
+        setFieldValue(Fields.MULTIPLIER, SLTPStore.creatingPosition.multiplier);
+        setFieldValue(Fields.AMOUNT, SLTPStore.creatingPosition.investmentAmount);
+        setFieldValue(Fields.STOP_LOSS, SLTPStore.creatingPosition.sl);
+        setFieldValue(Fields.TAKE_PROFIT, SLTPStore.creatingPosition.tp);
+        setFieldValue(Fields.STOP_LOSS_TYPE, SLTPStore.creatingPosition.slType);
+        setFieldValue(Fields.TAKE_PROFIT_TYPE, SLTPStore.creatingPosition.tpType);
+        setFieldValue(Fields.IS_TOPPING_UP_ACTIVE, SLTPStore.creatingPosition.isToppingUpActive);
+        SLTPStore.setCreatingPosition(null);
+      }
+    }, 500);
+  }, [
+    SLTPStore.creatingPosition,
+    SLTPStore.isSLTPMode,
+  ]);
+
+  useEffect(() => {
+    SLTPStore.setIsSLTPMode(false);
+    return () => {
+      if (!SLTPStore.isSLTPMode) {
+        SLTPStore.setCreatingPosition(null);
+      }
+    }
+  }, []);
 
   const {
     values,
@@ -907,9 +870,7 @@ const OrderPage = observer(() => {
                 backgroundColor="rgba(42, 45, 56, 0.5)"
                 padding="14px 16px"
                 position="relative"
-                marginBottom={
-                  touched.openPrice && errors.openPrice ? '4px' : '12px'
-                }
+                marginBottom="2px"
                 hasError={!!(touched.openPrice && errors.openPrice)}
               >
                 <FlexContainer
@@ -950,6 +911,88 @@ const OrderPage = observer(() => {
                   )}
                 </Observer>
               </InputWrap>
+              <FlexContainer
+                backgroundColor="rgba(42, 45, 56, 0.5)"
+                height="50px"
+                justifyContent="space-between"
+                alignItems="center"
+                padding="0 16px"
+                marginBottom="2px"
+              >
+                <PrimaryTextSpan color="#ffffff" fontSize="16px">
+                  {t('Stop Loss')}
+                </PrimaryTextSpan>
+
+                <FlexContainer onClick={handleSLTPClick(true)}>
+                  <PrimaryTextSpan
+                    color={
+                      values.sl !== null
+                        ? '#fffccc'
+                        : 'rgba(196, 196, 196, 0.5)'
+                    }
+                    fontSize="16px"
+                  >
+                    {values.sl !== null ? (
+                      <>
+                        {values.slType !== TpSlTypeEnum.Price &&
+                        values.sl < 0 &&
+                        '-'}
+                        {values.slType !== TpSlTypeEnum.Price &&
+                        mainAppStore.activeAccount?.symbol}
+                        {values.slType === TpSlTypeEnum.Price
+                          ? Math.abs(values.sl).toFixed(
+                            getPressision(values.instrumentId)
+                          )
+                          : Math.abs(values.sl).toFixed(2)}
+                      </>
+                    ) : (
+                      t('Add')
+                    )}
+                  </PrimaryTextSpan>
+                </FlexContainer>
+              </FlexContainer>
+
+              <FlexContainer
+                backgroundColor="rgba(42, 45, 56, 0.5)"
+                height="50px"
+                justifyContent="space-between"
+                alignItems="center"
+                padding="0 16px"
+                marginBottom={
+                  touched.openPrice && errors.openPrice ? '4px' : '12px'
+                }
+              >
+                <PrimaryTextSpan color="#ffffff" fontSize="16px">
+                  {t('Take Profit')}
+                </PrimaryTextSpan>
+                <FlexContainer onClick={handleSLTPClick(false)}>
+                  <PrimaryTextSpan
+                    color={
+                      values.tp !== null
+                        ? '#fffccc'
+                        : 'rgba(196, 196, 196, 0.5)'
+                    }
+                    fontSize="16px"
+                  >
+                    {values.tp !== null ? (
+                      <>
+                        {values.tpType !== TpSlTypeEnum.Price &&
+                        values.tp < 0 &&
+                        '-'}
+                        {values.tpType !== TpSlTypeEnum.Price &&
+                        mainAppStore.activeAccount?.symbol}
+                        {values.tpType === TpSlTypeEnum.Price
+                          ? Math.abs(values.tp).toFixed(
+                            getPressision(values.instrumentId)
+                          )
+                          : Math.abs(values.tp).toFixed(2)}
+                      </>
+                    ) : (
+                      t('Add')
+                    )}
+                  </PrimaryTextSpan>
+                </FlexContainer>
+              </FlexContainer>
               {touched.openPrice && errors.openPrice && (
                 <FlexContainer marginBottom="12px" padding="0 16px">
                   <PrimaryTextSpan fontSize="11px" color={Colors.RED}>
