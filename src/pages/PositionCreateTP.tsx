@@ -258,7 +258,7 @@ const PositionCreateTP = observer(() => {
         setFieldValue(
           'price',
           e.target.value
-            ? Number(e.target.value).toFixed(instrument?.digits || 2)
+            ? +(+e.target.value).toFixed(instrument?.digits || 2)
             : null
         );
         break;

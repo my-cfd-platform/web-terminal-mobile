@@ -52,8 +52,8 @@ const PositionCreateSL = observer(() => {
 
       case TpSlTypeEnum.Price:
         price =
-          position.sl !== null
-            ? +position.sl.toFixed(instrument?.digits || 2)
+          position?.sl !== null
+            ? +Math.abs(position.sl).toFixed(instrument?.digits || 2)
             : null;
         break;
 
