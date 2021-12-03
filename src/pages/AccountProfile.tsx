@@ -30,6 +30,7 @@ import useRedirectMiddleware from '../hooks/useRedirectMiddleware';
 import { CountriesEnum } from '../enums/CountriesEnum';
 import AccProfileCarousel from '../components/AccProfileCarousel/AccProfileCarousel';
 import ConfirmationBottomModal from '../components/Modals/ConfirmationBottomModal';
+import AccountKYCProfileLabel from '../components/AccountVerification/AccountKYCProfileLabel';
 
 const AccountProfile = observer(() => {
   const { mainAppStore, userProfileStore } = useStores();
@@ -148,38 +149,7 @@ const AccountProfile = observer(() => {
         <AccProfileCarousel />
       )}
 
-      {!mainAppStore.isPromoAccount &&
-        userProfileStore.userProfile?.kyc ===
-          PersonalDataKYCEnum.NotVerified && (
-          <FlexContainer flexDirection="column" marginBottom="24px">
-            <ProfileMenuLink to={Page.ACCOUNT_VERIFICATION}>
-              <FlexContainer alignItems="center">
-                <FlexContainer
-                  width="28px"
-                  height="28px"
-                  backgroundColor="#00000000"
-                  borderRadius="50%"
-                  justifyContent="center"
-                  alignItems="center"
-                  marginRight="14px"
-                >
-                  <SvgIcon {...IconVerify} fillColor="#ED145B" />
-                </FlexContainer>
-                <PrimaryTextSpan
-                  color="#ffffff"
-                  fontSize="16px"
-                  fontWeight="normal"
-                >
-                  {t('Fill in personal details')}
-                </PrimaryTextSpan>
-              </FlexContainer>
-              <SvgIcon
-                {...IconArrowLink}
-                fillColor="rgba(196, 196, 196, 0.5)"
-              />
-            </ProfileMenuLink>
-          </FlexContainer>
-        )}
+      {!mainAppStore.isPromoAccount && <AccountKYCProfileLabel />}
 
       {!mainAppStore.isPromoAccount && (
         <FlexContainer flexDirection="column" marginBottom="24px">
@@ -440,21 +410,15 @@ const ProfileMenuLink = styled(Link)`
   text-decoration: none;
   background-color: rgba(42, 45, 56, 0.5);
   margin-bottom: 1px;
+  &:active,
   &:hover {
-    text-decoration: none;
-  }
-`;
-
-const ProfileMenuA = styled.a`
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  height: 50px;
-  padding: 8px 16px;
-  text-decoration: none;
-  background-color: rgba(42, 45, 56, 0.5);
-  margin-bottom: 1px;
-  &:hover {
+    cursor: pointer;
+    background: linear-gradient(
+        0deg,
+        rgba(255, 255, 255, 0.1),
+        rgba(255, 255, 255, 0.1)
+      ),
+      rgba(42, 45, 56, 0.5);
     text-decoration: none;
   }
 `;
@@ -468,7 +432,15 @@ const ProfileMenuButton = styled(ButtonWithoutStyles)`
   text-decoration: none;
   background-color: rgba(42, 45, 56, 0.5);
   margin-bottom: 1px;
+  &:active,
   &:hover {
+    cursor: pointer;
+    background: linear-gradient(
+        0deg,
+        rgba(255, 255, 255, 0.1),
+        rgba(255, 255, 255, 0.1)
+      ),
+      rgba(42, 45, 56, 0.5);
     text-decoration: none;
   }
 `;

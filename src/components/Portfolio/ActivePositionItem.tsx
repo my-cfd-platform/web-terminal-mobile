@@ -101,7 +101,7 @@ const InstrumentItem = styled(Link)`
   text-decoration: none;
   &:hover,
   &:focus {
-    background-color: rgba(42, 45, 56, 0.9);
+    background: linear-gradient(0deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.1)), rgba(42, 45, 56, 0.5);
     text-decoration: none;
   }
 `;
