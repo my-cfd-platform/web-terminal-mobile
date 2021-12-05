@@ -59,6 +59,10 @@ const Page = {
   TP_EDIT_MAIN: '/edit-tp',
   TP_EDIT: '/edit-tp/:id',
 
+  SL_CREATE_MAIN: '/create-sl',
+
+  TP_CREATE_MAIN: '/create-tp',
+
 
   PAGE_NOT_FOUND: '/page-not-found',
 };

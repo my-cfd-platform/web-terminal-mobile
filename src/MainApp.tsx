@@ -259,7 +259,7 @@ const MainApp: FC = () => {
           html {
             font-size: 14px;
             line-height: 1.4;
-            font-family: 'sf_ui_text';
+            font-family: 'sf_ui_text', Arial, Helvetica, sans-serif;
             font-weight: normal;
             height: 100%;
             height: calc(${FULL_VH});

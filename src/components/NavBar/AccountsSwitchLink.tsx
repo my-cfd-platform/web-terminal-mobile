@@ -12,6 +12,7 @@ import {
   getNumberSign,
   getNumberSignNegative,
 } from '../../helpers/getNumberSign';
+import { LOCAL_HIDDEN_BALANCE } from '../../constants/global';
 
 const AccountsSwitchLink = observer(() => {
   const { mainAppStore } = useStores();
@@ -40,6 +41,10 @@ const AccountsSwitchLink = observer(() => {
 
   useEffect(() => {
     let cleanupFunction = false;
+    const wasHiddenBalance = localStorage.getItem(LOCAL_HIDDEN_BALANCE);
+    if (wasHiddenBalance === 'true') {
+      mainAppStore.setIsBalanceHidden(true);
+    }
     if (mainAppStore.accounts) {
       const newBalance =
         mainAppStore.accounts.find(
@@ -76,18 +81,24 @@ const AccountsSwitchLink = observer(() => {
             marginRight="8px"
             lineHeight="1"
           >
-            {getNumberSignNegative(balance)}
-            {mainAppStore.activeAccount?.symbol}
-            {moneyFormatPart(Math.abs(balance)).int}
+            {
+              mainAppStore.isBalanceHidden
+                ? '••••••••'
+                : <>
+                  {getNumberSignNegative(balance)}
+                  {mainAppStore.activeAccount?.symbol}
+                  {moneyFormatPart(Math.abs(balance)).int}
 
-            <PrimaryTextSpan
-              color="#FFFCCC"
-              fontSize="12px"
-              fontWeight="bold"
-              lineHeight="1"
-            >
-              .{moneyFormatPart(Math.abs(balance)).decimal}
-            </PrimaryTextSpan>
+                  <PrimaryTextSpan
+                    color="#FFFCCC"
+                    fontSize="12px"
+                    fontWeight="bold"
+                    lineHeight="1"
+                  >
+                    .{moneyFormatPart(Math.abs(balance)).decimal}
+                  </PrimaryTextSpan>
+                </>
+            }
           </PrimaryTextSpan>
         )}
       </Observer>

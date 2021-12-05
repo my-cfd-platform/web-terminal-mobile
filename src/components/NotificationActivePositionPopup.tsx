@@ -10,6 +10,8 @@ import { PrimaryTextSpan } from '../styles/TextsElements';
 import { useTranslation } from 'react-i18next';
 import { getNumberSign } from '../helpers/getNumberSign';
 import { useSwipeable } from 'react-swipeable';
+import Page from '../constants/Pages';
+import { useHistory } from 'react-router-dom';
 
 interface Props {}
 
@@ -18,6 +20,7 @@ interface Props {}
 const NotificationActivePositionPopup: FC<Props> = observer(() => {
   const { activePositionNotificationStore, mainAppStore } = useStores();
   const { t } = useTranslation();
+  const { push } = useHistory();
 
   const [shouldRender, setRender] = useState(
     activePositionNotificationStore.isActiveNotification
@@ -46,6 +49,12 @@ const NotificationActivePositionPopup: FC<Props> = observer(() => {
     activePositionNotificationStore.closeNotification();
   };
 
+  const handleOpenPosition = () => {
+    push(`${Page.PORTFOLIO_MAIN}/active/${
+      activePositionNotificationStore.notificationMessageData.positionId
+    }`);
+  };
+
   useEffect(() => {
     if (activePositionNotificationStore.isActiveNotification) {
       if (activePositionNotificationStore.timer) {
@@ -60,14 +69,14 @@ const NotificationActivePositionPopup: FC<Props> = observer(() => {
 
   return shouldRender ? (
     <NotificationWrapper
-      boxShadow="0px 4px 8px rgba(41, 42, 57, 0.09), 0px 8px 16px rgba(37, 38, 54, 0.24)"
-      borderRadius="4px"
+      boxShadow="0px 12px 26px #12151C"
+      borderRadius="5px"
       isSuccessfull={activePositionNotificationStore.isSuccessfull}
-      padding="12px 16px"
+      padding="10px 16px"
       position="fixed"
       top="8px"
-      right="8px"
-      left="8px"
+      right="16px"
+      left="16px"
       flexDirection="column"
       alignItems="flex-start"
       zIndex="101"
@@ -75,9 +84,13 @@ const NotificationActivePositionPopup: FC<Props> = observer(() => {
       onAnimationEnd={onAnimationEnd}
       {...handlers}
     >
-      <FlexContainer flexDirection="column">
-        <FlexContainer marginBottom="8px">
-          <FlexContainer width="24px" height="24px" marginRight="8px">
+      <FlexContainer
+        flexDirection="column"
+        position="relative"
+        width="100%"
+      >
+        <FlexContainer marginBottom="6px">
+          <FlexContainer width="36px" height="36px" marginRight="12px">
             <ImageContainer
               instrumentId={
                 activePositionNotificationStore.notificationMessageData
@@ -86,16 +99,17 @@ const NotificationActivePositionPopup: FC<Props> = observer(() => {
             />
           </FlexContainer>
           <FlexContainer flexDirection="column" justifyContent="center">
-            <PrimaryTextSpan color="#ffffff" fontSize="10px">
+            <PrimaryTextSpan color="#ffffff" fontSize="12px" lineHeight="18px">
               {
                 activePositionNotificationStore.notificationMessageData
                   .instrumentName
               }
             </PrimaryTextSpan>
             <PrimaryTextSpan
-              fontSize="10px"
+              fontSize="12px"
               color="rgba(255, 255, 255, 0.4)"
               textTransform="capitalize"
+              lineHeight="18px"
             >
               {
                 activePositionNotificationStore.notificationMessageData
@@ -108,11 +122,12 @@ const NotificationActivePositionPopup: FC<Props> = observer(() => {
           {activePositionNotificationStore.notificationMessageData.type ===
           'close' ? (
             <>
-              <PrimaryTextSpan color="#ffffff" fontSize="13px">
+              <PrimaryTextSpan color="#ffffff" fontSize="12px" lineHeight="18px">
                 {t('Position Closed')}:&nbsp;
               </PrimaryTextSpan>
               <PrimaryTextSpan
-                fontSize="13px"
+                fontSize="12px"
+                lineHeight="18px"
                 color={
                   activePositionNotificationStore.notificationMessageData
                     .equity > 0
@@ -137,9 +152,28 @@ const NotificationActivePositionPopup: FC<Props> = observer(() => {
             </>
           ) : (
             <>
-              <PrimaryTextSpan color="#ffffff" fontSize="13px">
+              <PrimaryTextSpan color="#ffffff" fontSize="12px" lineHeight="18px">
                 {t('Position opened')}.
               </PrimaryTextSpan>
+              <FlexContainer
+                position="absolute"
+                top="10px"
+                right="0"
+                width="30px"
+                height="30px"
+                alignItems="center"
+                justifyContent="center"
+              >
+                <NotificationButton
+                  color="#77797D"
+                  fontSize="18px"
+                  lineHeight="24px"
+                  fontWeight={600}
+                  onClick={handleOpenPosition}
+                >
+                  {'>'}
+                </NotificationButton>
+              </FlexContainer>
             </>
           )}
         </FlexContainer>
@@ -172,16 +206,20 @@ const NotificationWrapper = styled(FlexContainer)<{
   isSuccessfull: boolean;
   show: boolean;
 }>`
-  width: 100%;
+  width: calc(100% - 32px);
   max-width: 400px;
   animation: ${(props) =>
       props.show ? translateAnimationIn : translateAnimationOut}
     0.5s ease;
 
-  background-color: ${Colors.NOTIFICATION_BG};
+  background-color: #2F323C;
 
   @supports ((-webkit-backdrop-filter: none) or (backdrop-filter: none)) {
     background-color: rgba(35, 38, 47, 0.9);
     backdrop-filter: blur(12px);
   }
+`;
+
+const NotificationButton = styled(PrimaryTextSpan)`
+  font-feature-settings: 'ss15' on;
 `;

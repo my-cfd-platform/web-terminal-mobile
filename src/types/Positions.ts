@@ -24,6 +24,7 @@ export interface OpenPendingOrder {
   operation: AskBidEnum;
   multiplier: number;
   openPrice: number;
+  isToppingUpActive?: boolean;
 }
 
 export interface OpenPositionModelFormik {
@@ -38,6 +39,7 @@ export interface OpenPositionModelFormik {
   tpType: TpSlTypeEnum | null;
   slType: TpSlTypeEnum | null;
   openPrice?: number | null;
+  isToppingUpActive?: boolean;
 }
 
 export interface OpenPositionResponseDTO {

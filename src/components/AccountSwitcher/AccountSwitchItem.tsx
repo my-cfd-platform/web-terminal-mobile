@@ -20,6 +20,9 @@ import { useHistory } from 'react-router';
 import Page from '../../constants/Pages';
 import InformationPopup from '../InformationPopup';
 import { observer } from 'mobx-react-lite';
+import IconEye from '../../assets/svg/accounts/icon-eye.svg';
+import IconCloseEye from '../../assets/svg/accounts/icon-close-eye.svg';
+import { LOCAL_HIDDEN_BALANCE } from '../../constants/global';
 
 interface IAccountSwitchItemProps {
   onSwitch: (accId: string) => void;
@@ -130,6 +133,11 @@ const AccountSwitchItem = observer(
       onSwitch(account.id);
     };
 
+    const handleHideShowBalance = () => {
+      localStorage.setItem(LOCAL_HIDDEN_BALANCE, `${!mainAppStore.isBalanceHidden}`);
+      mainAppStore.setIsBalanceHidden(!mainAppStore.isBalanceHidden);
+    };
+
     return (
       <FlexContainer
         className={className}
@@ -153,13 +161,23 @@ const AccountSwitchItem = observer(
               alignItems="flex-end"
               justifyContent="space-between"
             >
-              <PrimaryTextSpan
-                fontWeight={700}
-                fontSize="18px"
-                color={isActive ? '#ffffff' : 'rgba(255, 255, 255, 0.4)'}
-              >
-                {t(user.isLive ? 'Real' : 'Demo')}
-              </PrimaryTextSpan>
+              <FlexContainer>
+                <PrimaryTextSpan
+                  fontWeight={700}
+                  fontSize="18px"
+                  color={isActive ? '#ffffff' : 'rgba(255, 255, 255, 0.4)'}
+                  marginRight="10px"
+                >
+                  {t(user.isLive ? 'Real' : 'Demo')}
+                </PrimaryTextSpan>
+                <ButtonWithoutStyles onClick={handleHideShowBalance}>
+                  {
+                    mainAppStore.isBalanceHidden
+                      ? <SvgIcon {...IconCloseEye} fillColor="rgba(255, 255, 255, 0.64)" />
+                      : <SvgIcon {...IconEye} fillColor="rgba(255, 255, 255, 0.64)" />
+                  }
+                </ButtonWithoutStyles>
+              </FlexContainer>
 
               <FlexContainer alignItems="flex-end">
                 <PrimaryTextSpan
@@ -196,21 +214,27 @@ const AccountSwitchItem = observer(
                 fontSize="28px"
                 fontWeight={700}
               >
-                {isActive && getNumberSignNegative(total)}
-                {account?.symbol}
-                {isActive
-                  ? moneyFormatPart(Math.abs(total)).int
-                  : moneyFormatPart(user.balance).int}
-                <PrimaryTextSpan
-                  fontSize="18px"
-                  fontWeight={700}
-                  color={isActive ? '#ffffff' : 'rgba(255, 255, 255, 0.4)'}
-                >
-                  .
-                  {isActive
-                    ? moneyFormatPart(Math.abs(total)).decimal
-                    : moneyFormatPart(user.balance).decimal}
-                </PrimaryTextSpan>
+                {
+                  mainAppStore.isBalanceHidden
+                    ? '••••••••'
+                    : <>
+                      {isActive && getNumberSignNegative(total)}
+                      {account?.symbol}
+                      {isActive
+                        ? moneyFormatPart(Math.abs(total)).int
+                        : moneyFormatPart(user.balance).int}
+                      <PrimaryTextSpan
+                        fontSize="18px"
+                        fontWeight={700}
+                        color={isActive ? '#ffffff' : 'rgba(255, 255, 255, 0.4)'}
+                      >
+                        .
+                        {isActive
+                          ? moneyFormatPart(Math.abs(total)).decimal
+                          : moneyFormatPart(user.balance).decimal}
+                      </PrimaryTextSpan>
+                    </>
+                }
               </PrimaryTextSpan>
             </FlexContainer>
           </FlexContainer>
@@ -231,14 +255,20 @@ const AccountSwitchItem = observer(
                   >
                     {t('Invested')}
                   </PrimaryTextSpan>
-                  <PrimaryTextSpan fontSize="16px" color="#FFFCCC">
-                    {account?.symbol}
-                    {moneyFormatPart(quotesStore.invest).int}
+                  {
+                    mainAppStore.isBalanceHidden
+                      ? <PrimaryTextSpan fontSize="16px" color="#FFFCCC">
+                        ••••••••
+                      </PrimaryTextSpan>
+                      : <PrimaryTextSpan fontSize="16px" color="#FFFCCC">
+                        {account?.symbol}
+                        {moneyFormatPart(quotesStore.invest).int}
 
-                    <PrimaryTextSpan fontSize="10px" color="#fffccc">
-                      .{moneyFormatPart(quotesStore.invest).decimal}
-                    </PrimaryTextSpan>
-                  </PrimaryTextSpan>
+                        <PrimaryTextSpan fontSize="10px" color="#fffccc">
+                          .{moneyFormatPart(quotesStore.invest).decimal}
+                        </PrimaryTextSpan>
+                      </PrimaryTextSpan>
+                  }
                 </FlexContainer>
 
                 <FlexContainer
@@ -253,14 +283,20 @@ const AccountSwitchItem = observer(
                     {t('Profit')}
                   </PrimaryTextSpan>
                   <PrimaryTextSpan>
-                    <QuoteText fontSize="16px" isGrowth={profit >= 0}>
-                      {getNumberSign(profit)}
-                      {account?.symbol}
-                      {moneyFormatPart(Math.abs(profit)).int}
-                      <QuoteText fontSize="10px" isGrowth={profit >= 0}>
-                        .{moneyFormatPart(Math.abs(profit)).decimal}
-                      </QuoteText>
-                    </QuoteText>
+                    {
+                      mainAppStore.isBalanceHidden
+                        ? <PrimaryTextSpan fontSize="16px" color="#FFFCCC">
+                          ••••••••
+                        </PrimaryTextSpan>
+                        : <QuoteText fontSize="16px" isGrowth={profit >= 0}>
+                          {getNumberSign(profit)}
+                          {account?.symbol}
+                          {moneyFormatPart(Math.abs(profit)).int}
+                          <QuoteText fontSize="10px" isGrowth={profit >= 0}>
+                            .{moneyFormatPart(Math.abs(profit)).decimal}
+                          </QuoteText>
+                        </QuoteText>
+                    }
                   </PrimaryTextSpan>
                 </FlexContainer>
 
@@ -274,14 +310,19 @@ const AccountSwitchItem = observer(
                   >
                     {t('Available')}
                   </PrimaryTextSpan>
-
-                  <PrimaryTextSpan fontSize="16px" color="#FFFCCC">
-                    {account?.symbol}
-                    {moneyFormatPart(user.balance).int}
-                    <PrimaryTextSpan fontSize="10px" color="#fffccc">
-                      .{moneyFormatPart(user.balance).decimal}
-                    </PrimaryTextSpan>
-                  </PrimaryTextSpan>
+                  {
+                    mainAppStore.isBalanceHidden
+                      ? <PrimaryTextSpan fontSize="16px" color="#FFFCCC">
+                        ••••••••
+                      </PrimaryTextSpan>
+                      : <PrimaryTextSpan fontSize="16px" color="#FFFCCC">
+                        {account?.symbol}
+                        {moneyFormatPart(user.balance).int}
+                        <PrimaryTextSpan fontSize="10px" color="#fffccc">
+                          .{moneyFormatPart(user.balance).decimal}
+                        </PrimaryTextSpan>
+                      </PrimaryTextSpan>
+                  }
                 </FlexContainer>
 
                 {user.bonus > 0 && (
@@ -311,15 +352,20 @@ const AccountSwitchItem = observer(
                           )}
                         />
                       </FlexContainer>
+                      {
+                        mainAppStore.isBalanceHidden
+                          ? <PrimaryTextSpan fontSize="16px" color="#FFFCCC">
+                            ••••••••
+                          </PrimaryTextSpan>
+                          : <PrimaryTextSpan fontSize="16px" color="#FFFCCC">
+                            {account?.symbol}
+                            {moneyFormatPart(user.bonus).int}
 
-                      <PrimaryTextSpan fontSize="16px" color="#FFFCCC">
-                        {account?.symbol}
-                        {moneyFormatPart(user.bonus).int}
-
-                        <PrimaryTextSpan fontSize="10px" color="#fffccc">
-                          .{moneyFormatPart(user.bonus).decimal}
-                        </PrimaryTextSpan>
-                      </PrimaryTextSpan>
+                            <PrimaryTextSpan fontSize="10px" color="#fffccc">
+                              .{moneyFormatPart(user.bonus).decimal}
+                            </PrimaryTextSpan>
+                          </PrimaryTextSpan>
+                      }
                     </FlexContainer>
                   </>
                 )}

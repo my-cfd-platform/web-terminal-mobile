@@ -29,9 +29,12 @@ import mixapanelProps from '../constants/mixpanelProps';
 import useRedirectMiddleware from '../hooks/useRedirectMiddleware';
 import { CountriesEnum } from '../enums/CountriesEnum';
 import AccProfileCarousel from '../components/AccProfileCarousel/AccProfileCarousel';
+import ConfirmationBottomModal from '../components/Modals/ConfirmationBottomModal';
+import AccountKYCProfileLabel from '../components/AccountVerification/AccountKYCProfileLabel';
 
 const AccountProfile = observer(() => {
   const { mainAppStore, userProfileStore } = useStores();
+  const [showLogOutConfirm, setShowLogOutConfirm] = useState<boolean>(false);
   const { t } = useTranslation();
   const { redirectWithUpdateRefreshToken } = useRedirectMiddleware();
   const handleLogout = () => {
@@ -40,6 +43,9 @@ const AccountProfile = observer(() => {
     });
     mainAppStore.signOut();
   };
+
+  const handleClickLogOut = () => setShowLogOutConfirm(true);
+  const handleClickLogOutCancel = () => setShowLogOutConfirm(false);
 
   const urlParams = new URLSearchParams();
 
@@ -70,6 +76,13 @@ const AccountProfile = observer(() => {
   return (
     // TODO: Refactor Safari
     <FlexContainer flexDirection="column" minHeight="600px" overflow="auto">
+      <ConfirmationBottomModal
+        applyLabel="Log Out"
+        handleApply={handleLogout}
+        handleCancel={handleClickLogOutCancel}
+        show={showLogOutConfirm}
+      />
+
       <AchievementStatusLabel />
       <FlexContainer padding="16px" marginBottom="16px">
         <FlexContainer width="64px">
@@ -132,40 +145,11 @@ const AccountProfile = observer(() => {
         </FlexContainer>
       </FlexContainer>
 
-      {userProfileStore.isBonus && !mainAppStore.isPromoAccount && <AccProfileCarousel />}
+      {userProfileStore.isBonus && !mainAppStore.isPromoAccount && (
+        <AccProfileCarousel />
+      )}
 
-      {!mainAppStore.isPromoAccount &&
-        userProfileStore.userProfile?.kyc ===
-          PersonalDataKYCEnum.NotVerified && (
-          <FlexContainer flexDirection="column" marginBottom="24px">
-            <ProfileMenuLink to={Page.ACCOUNT_VERIFICATION}>
-              <FlexContainer alignItems="center">
-                <FlexContainer
-                  width="28px"
-                  height="28px"
-                  backgroundColor="#00000000"
-                  borderRadius="50%"
-                  justifyContent="center"
-                  alignItems="center"
-                  marginRight="14px"
-                >
-                  <SvgIcon {...IconVerify} fillColor="#ED145B" />
-                </FlexContainer>
-                <PrimaryTextSpan
-                  color="#ffffff"
-                  fontSize="16px"
-                  fontWeight="normal"
-                >
-                  {t('Fill in personal details')}
-                </PrimaryTextSpan>
-              </FlexContainer>
-              <SvgIcon
-                {...IconArrowLink}
-                fillColor="rgba(196, 196, 196, 0.5)"
-              />
-            </ProfileMenuLink>
-          </FlexContainer>
-        )}
+      {!mainAppStore.isPromoAccount && <AccountKYCProfileLabel />}
 
       {!mainAppStore.isPromoAccount && (
         <FlexContainer flexDirection="column" marginBottom="24px">
@@ -385,7 +369,7 @@ const AccountProfile = observer(() => {
           </>
         )}
 
-        <ProfileMenuButton onClick={handleLogout}>
+        <ProfileMenuButton onClick={handleClickLogOut}>
           <FlexContainer alignItems="center">
             <FlexContainer
               width="28px"
@@ -426,21 +410,15 @@ const ProfileMenuLink = styled(Link)`
   text-decoration: none;
   background-color: rgba(42, 45, 56, 0.5);
   margin-bottom: 1px;
+  &:active,
   &:hover {
-    text-decoration: none;
-  }
-`;
-
-const ProfileMenuA = styled.a`
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  height: 50px;
-  padding: 8px 16px;
-  text-decoration: none;
-  background-color: rgba(42, 45, 56, 0.5);
-  margin-bottom: 1px;
-  &:hover {
+    cursor: pointer;
+    background: linear-gradient(
+        0deg,
+        rgba(255, 255, 255, 0.1),
+        rgba(255, 255, 255, 0.1)
+      ),
+      rgba(42, 45, 56, 0.5);
     text-decoration: none;
   }
 `;
@@ -454,7 +432,15 @@ const ProfileMenuButton = styled(ButtonWithoutStyles)`
   text-decoration: none;
   background-color: rgba(42, 45, 56, 0.5);
   margin-bottom: 1px;
+  &:active,
   &:hover {
+    cursor: pointer;
+    background: linear-gradient(
+        0deg,
+        rgba(255, 255, 255, 0.1),
+        rgba(255, 255, 255, 0.1)
+      ),
+      rgba(42, 45, 56, 0.5);
     text-decoration: none;
   }
 `;

@@ -34,17 +34,18 @@ const BuyButton: FC<Props> = observer(({ handleClick }) => {
         >
           {t('Buy')}
         </PrimaryTextSpan>
-        {(instrumentsStore.activeInstrument &&
-          quotesStore.quotes[instrumentsStore.activeInstrument.instrumentItem.id])
-        && (
-          <PrimaryTextSpan fontSize="13px" color="#232830">
-            {
-              quotesStore.quotes[
+        {instrumentsStore.activeInstrument &&
+          quotesStore.quotes[
+            instrumentsStore.activeInstrument.instrumentItem.id
+          ] && (
+            <PrimaryTextSpan fontSize="13px" color="#232830">
+              {quotesStore.quotes[
                 instrumentsStore.activeInstrument.instrumentItem.id
-              ].ask.c.toFixed(instrumentsStore.activeInstrument.instrumentItem.digits)
-            }
-          </PrimaryTextSpan>
-        )}
+              ].ask.c.toFixed(
+                instrumentsStore.activeInstrument.instrumentItem.digits
+              )}
+            </PrimaryTextSpan>
+          )}
       </FlexContainer>
     </BuyButtonWrapper>
   );
@@ -59,4 +60,14 @@ const BuyButtonWrapper = styled(ButtonWithoutStyles)`
   border-radius: 10px;
   background-color: ${Colors.ACCENT_BLUE};
   padding: 8px 16px;
+
+  &:active,
+  &:hover {
+    background: linear-gradient(
+        0deg,
+        rgba(28, 31, 38, 0.2),
+        rgba(28, 31, 38, 0.2)
+      ),
+      #00ffdd;
+  }
 `;

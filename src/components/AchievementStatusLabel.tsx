@@ -4,55 +4,55 @@ import React, { useCallback } from 'react';
 import AchievementStatus from '../constants/achievementStatus';
 import { useStores } from '../hooks/useStores';
 import { FlexContainer } from '../styles/FlexContainer';
-import { PrimaryTextSpan } from '../styles/TextsElements';
 
-import SilverBG from '../assets/images/achievement_status_bg/silver.png';
-import GoldBG from '../assets/images/achievement_status_bg/gold.png';
-import PlatinumBG from '../assets/images/achievement_status_bg/platinum.png';
-import UltraBG from '../assets/images/achievement_status_bg/ultra.png';
+import BasicIMG from '../assets/images/achievement_status_bg/new/basic.png';
+import SilverIMG from '../assets/images/achievement_status_bg/new/silver.png';
+import GoldIMG from '../assets/images/achievement_status_bg/new/gold.png';
+import PlatinumIMG from '../assets/images/achievement_status_bg/new/platinum.png';
+import DiamondIMG from '../assets/images/achievement_status_bg/new/diamond.png';
+import VipIMG from '../assets/images/achievement_status_bg/new/vip.png';
+import UltraIMG from '../assets/images/achievement_status_bg/new/ultra.png';
 
 const listStatus = [
   AchievementStatus.SILVER,
   AchievementStatus.GOLD,
   AchievementStatus.PLATINUM,
+  AchievementStatus.ULTRA,
+  AchievementStatus.VIP,
+  AchievementStatus.DIAMOND,
+  AchievementStatus.BASIC,
 ];
 
 const AchievementStatusLabel = observer(() => {
   const { mainAppStore } = useStores();
 
-  const labelBackground = useCallback(() => {
-    const key = mainAppStore.accounts.find((acc) => acc.isLive)?.achievementStatus;
+  const labelImage = useCallback(() => {
+    const key = mainAppStore.accounts.find((acc) => acc.isLive)
+      ?.achievementStatus;
     switch (key) {
-      case AchievementStatus.SILVER:
-        return SilverBG;
       case AchievementStatus.GOLD:
-        return GoldBG;
+        return GoldIMG;
+      case AchievementStatus.SILVER:
+        return SilverIMG;
+      case AchievementStatus.VIP:
+        return VipIMG;
       case AchievementStatus.PLATINUM:
-        // return PlatinumBG;
-        return UltraBG;
-      default:
-        return SilverBG;
-    }
-  }, [mainAppStore.accounts]);
+        return PlatinumIMG;
+      case AchievementStatus.DIAMOND:
+        return DiamondIMG;
+      case AchievementStatus.ULTRA:
+        return UltraIMG;
 
-  const labelColor = useCallback(() => {
-    const key = mainAppStore.accounts.find((acc) => acc.isLive)?.achievementStatus;
-    switch (key) {
-      case AchievementStatus.SILVER:
-        return '#C5DDF1';
-      case AchievementStatus.GOLD:
-        return '#FFFCCC';
-      case AchievementStatus.PLATINUM:
-        // return '#00FFDD';
-        return '#AE88FF';
       default:
-        return '#ffffff';
+        return BasicIMG;
     }
   }, [mainAppStore.accounts]);
 
   if (
     !mainAppStore.accounts.find((acc) => acc.isLive)?.achievementStatus ||
-    !listStatus.includes(mainAppStore.accounts.find((acc) => acc.isLive)?.achievementStatus || '')
+    !listStatus.includes(
+      mainAppStore.accounts.find((acc) => acc.isLive)?.achievementStatus || ''
+    )
   ) {
     return null;
   }
@@ -61,23 +61,12 @@ const AchievementStatusLabel = observer(() => {
     <Wrap width="100%" justifyContent="center" alignItems="center">
       <Label
         width="124px"
-        padding="5px"
+        height="24px"
         borderRadius="0 0 12px 12px"
         alignItems="center"
         justifyContent="center"
-        backgroundImage={`url(${labelBackground()})`}
       >
-        <PrimaryTextSpan
-          color={labelColor()}
-          fontSize="12px"
-          lineHeight="1"
-          textTransform="uppercase"
-        >
-          {mainAppStore.accounts.find((acc) => acc.isLive)
-            ?.achievementStatus === AchievementStatus.PLATINUM
-            ? AchievementStatus.ULTRA
-            : mainAppStore.accounts.find((acc) => acc.isLive)?.achievementStatus}
-        </PrimaryTextSpan>
+        <img src={labelImage()} width="123px" height="24px" />
       </Label>
     </Wrap>
   );

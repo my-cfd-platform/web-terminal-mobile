@@ -6,6 +6,7 @@ import {
   LAST_PAGE_VISITED,
   LOCAL_IS_NEW_USER,
   LOCAL_TARGET,
+  LOCAL_HIDDEN_BALANCE,
 } from './../constants/global';
 import axios, { AxiosRequestConfig } from 'axios';
 import {
@@ -77,6 +78,7 @@ interface MainAppStoreProps {
   showAccountSwitcher: boolean;
   connectTimeOut: number;
   dataLoading: boolean;
+  isBalanceHidden: boolean;
 }
 
 // TODO: think about application initialization
@@ -138,6 +140,7 @@ export class MainAppStore implements MainAppStoreProps {
   @observable onboardingJustClosed: boolean = false;
   @observable connectTimeOut = 10000;
   @observable activeACCLoading = true;
+  @observable isBalanceHidden = false;
 
   websocketConnectionTries = 0;
 
@@ -847,6 +850,7 @@ export class MainAppStore implements MainAppStoreProps {
     localStorage.removeItem(LOCAL_STORAGE_REFRESH_TOKEN_KEY);
     localStorage.removeItem(LAST_PAGE_VISITED);
     localStorage.removeItem(LOCAL_TARGET);
+    localStorage.removeItem(LOCAL_HIDDEN_BALANCE);
     this.isPromoAccount = false;
     this.activeSession?.stop();
     this.activeSession = undefined;
@@ -867,6 +871,7 @@ export class MainAppStore implements MainAppStoreProps {
     this.rootStore.badRequestPopupStore.stopRecconect();
     this.requestErrorStack = [];
     this.rootStore.educationStore.resetStore();
+    this.isBalanceHidden = false;
 
     if (this.activeAccount) {
       this.setParamsAsset(null);
@@ -961,6 +966,11 @@ export class MainAppStore implements MainAppStoreProps {
   @action
   setDataLoading = (on: boolean) => {
     this.dataLoading = on;
+  };
+
+  @action
+  setIsBalanceHidden = (on: boolean) => {
+    this.isBalanceHidden = on;
   };
 
   @action

@@ -1,3 +1,4 @@
+import { observer } from 'mobx-react-lite';
 import React, { useEffect, useState } from 'react';
 import { FULL_VH } from '../../constants/global';
 import { HINT_DATA } from '../../constants/hintsData';
@@ -12,7 +13,7 @@ interface Props {
   hintType: HintEnum;
 }
 
-const HintComponent = ({ hintType }: Props) => {
+const HintComponent = observer(({ hintType }: Props) => {
   const { educationStore } = useStores();
   const [step, setStep] = useState<number>(0);
   const [activeFlowData, setData] = useState<IHint[] | null>(null);
@@ -32,7 +33,13 @@ const HintComponent = ({ hintType }: Props) => {
   const getHintData = (hintType: HintEnum) => {
     let data = HINT_DATA[hintType] || null;
     let filterData = data;
-    if (!educationStore.coursesList || !educationStore.educationIsLoaded) {
+    if (
+      !educationStore.coursesList ||
+      !educationStore.educationIsLoaded ||
+      educationStore.coursesList.filter(
+        (item) => item.id && item.totalQuestions > 0
+      ).length === 0
+    ) {
       switch (hintType) {
         case HintEnum.Deposit:
         case HintEnum.DemoACC:
@@ -83,6 +90,6 @@ const HintComponent = ({ hintType }: Props) => {
       </FlexContainer>
     </Modal>
   );
-};
+});
 
 export default HintComponent;

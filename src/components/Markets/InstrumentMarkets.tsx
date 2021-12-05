@@ -65,9 +65,11 @@ const InstrumentMarkets: FC<Props> = observer((props) => {
         justifyContent="center"
       >
         <PrimaryTextSpan fontSize="16px" color="#fffccc" marginBottom="4px">
-          {quotesStore.quotes[id] && <Observer>
-            {() => <>{quotesStore.quotes[id].bid.c.toFixed(digits)}</>}
-          </Observer>}
+          {quotesStore.quotes[id] && (
+            <Observer>
+              {() => <>{quotesStore.quotes[id].bid.c.toFixed(digits)}</>}
+            </Observer>
+          )}
         </PrimaryTextSpan>
         {!!instrumentsStore.pricesChange[id] && (
           <QuoteTextLabel isGrowth={instrumentsStore.pricesChange[id] >= 0}>
@@ -86,20 +88,17 @@ const InstrumentItem = styled(FlexContainer)`
   width: 100%;
   padding: 16px;
   flex-wrap: nowrap;
-  transition: all 0.4s ease;
+  transition: background 0.4s ease;
   min-height: 80px;
-
+  
   &:hover,
   &:focus {
-    background-color: rgba(42, 45, 56, 0.9);
+    background: linear-gradient(0deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.1)), rgba(42, 45, 56, 0.5);
   }
 `;
 
 const QuoteTextLabel = styled(FlexContainer)<{ isGrowth?: boolean }>`
-  background-color: ${(props) =>
-    props.isGrowth ? Colors.ACCENT_BLUE : Colors.RED};
-  color: ${(props) => (props.isGrowth ? '#000000' : '#ffffff')};
-  border-radius: 4px;
+  color: ${(props) => (props.isGrowth ? Colors.ACCENT_BLUE : Colors.RED)};
   padding: 2px 4px;
   font-size: 13px;
 `;
