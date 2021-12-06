@@ -20,7 +20,7 @@ import { ButtonWithoutStyles } from '../styles/ButtonWithoutStyles';
 import { FlexContainer } from '../styles/FlexContainer';
 import { PrimaryTextSpan } from '../styles/TextsElements';
 import { InstrumentModelWSDTO } from '../types/InstrumentsTypes';
-import { OpenPositionModel, UpdateSLTP } from '../types/Positions';
+import { OpenPositionModelFormik, UpdateSLTP } from '../types/Positions';
 import { observer } from 'mobx-react-lite';
 
 const PositionCreateTP = observer(() => {
@@ -34,7 +34,7 @@ const PositionCreateTP = observer(() => {
     SLTPStore,
   } = useStores();
 
-  const [position, setPosition] = useState<OpenPositionModel>();
+  const [position, setPosition] = useState<OpenPositionModelFormik>();
   const [instrument, setInstrument] = useState<InstrumentModelWSDTO>();
   const [activeSL, setActiveSL] = useState(true);
   const [loading, setLoading] = useState(false);

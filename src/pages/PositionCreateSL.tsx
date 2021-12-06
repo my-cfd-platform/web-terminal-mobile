@@ -16,7 +16,7 @@ import { useStores } from '../hooks/useStores';
 import { FlexContainer } from '../styles/FlexContainer';
 import { PrimaryTextSpan } from '../styles/TextsElements';
 import { useHistory, useParams } from 'react-router-dom';
-import { OpenPositionModel, UpdateSLTP } from '../types/Positions';
+import { OpenPositionModelFormik, UpdateSLTP } from '../types/Positions';
 import LoaderForComponents from '../components/LoaderForComponents';
 import { InstrumentModelWSDTO } from '../types/InstrumentsTypes';
 import { AskBidEnum } from '../enums/AskBid';
@@ -36,7 +36,7 @@ const PositionCreateSL = observer(() => {
     SLTPStore,
   } = useStores();
 
-  const [position, setPosition] = useState<OpenPositionModel>();
+  const [position, setPosition] = useState<OpenPositionModelFormik>();
   const [instrument, setInstrument] = useState<InstrumentModelWSDTO>();
   const [activeSL, setActiveSL] = useState(true);
   const [loading, setLoading] = useState(false);
