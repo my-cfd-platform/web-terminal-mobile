@@ -914,87 +914,87 @@ const OrderPage = observer(() => {
                   )}
                 </Observer>
               </InputWrap>
-              <FlexContainer
-                backgroundColor="rgba(42, 45, 56, 0.5)"
-                height="50px"
-                justifyContent="space-between"
-                alignItems="center"
-                padding="0 16px"
-                marginBottom="2px"
-              >
-                <PrimaryTextSpan color="#ffffff" fontSize="16px">
-                  {t('Stop Loss')}
-                </PrimaryTextSpan>
+              {/*<FlexContainer*/}
+              {/*  backgroundColor="rgba(42, 45, 56, 0.5)"*/}
+              {/*  height="50px"*/}
+              {/*  justifyContent="space-between"*/}
+              {/*  alignItems="center"*/}
+              {/*  padding="0 16px"*/}
+              {/*  marginBottom="2px"*/}
+              {/*>*/}
+              {/*  <PrimaryTextSpan color="#ffffff" fontSize="16px">*/}
+              {/*    {t('Stop Loss')}*/}
+              {/*  </PrimaryTextSpan>*/}
 
-                <FlexContainer onClick={handleSLTPClick(true)}>
-                  <PrimaryTextSpan
-                    color={
-                      values.sl !== null
-                        ? '#fffccc'
-                        : 'rgba(196, 196, 196, 0.5)'
-                    }
-                    fontSize="16px"
-                  >
-                    {values.sl !== null ? (
-                      <>
-                        {values.slType !== TpSlTypeEnum.Price &&
-                        '-'}
-                        {values.slType !== TpSlTypeEnum.Price &&
-                        mainAppStore.activeAccount?.symbol}
-                        {values.slType === TpSlTypeEnum.Price
-                          ? Math.abs(values.sl).toFixed(
-                            getPressision(values.instrumentId)
-                          )
-                          : Math.abs(values.sl).toFixed(2)}
-                      </>
-                    ) : (
-                      t('Add')
-                    )}
-                  </PrimaryTextSpan>
-                </FlexContainer>
-              </FlexContainer>
+              {/*  <FlexContainer onClick={handleSLTPClick(true)}>*/}
+              {/*    <PrimaryTextSpan*/}
+              {/*      color={*/}
+              {/*        values.sl !== null*/}
+              {/*          ? '#fffccc'*/}
+              {/*          : 'rgba(196, 196, 196, 0.5)'*/}
+              {/*      }*/}
+              {/*      fontSize="16px"*/}
+              {/*    >*/}
+              {/*      {values.sl !== null ? (*/}
+              {/*        <>*/}
+              {/*          {values.slType !== TpSlTypeEnum.Price &&*/}
+              {/*          '-'}*/}
+              {/*          {values.slType !== TpSlTypeEnum.Price &&*/}
+              {/*          mainAppStore.activeAccount?.symbol}*/}
+              {/*          {values.slType === TpSlTypeEnum.Price*/}
+              {/*            ? Math.abs(values.sl).toFixed(*/}
+              {/*              getPressision(values.instrumentId)*/}
+              {/*            )*/}
+              {/*            : Math.abs(values.sl).toFixed(2)}*/}
+              {/*        </>*/}
+              {/*      ) : (*/}
+              {/*        t('Add')*/}
+              {/*      )}*/}
+              {/*    </PrimaryTextSpan>*/}
+              {/*  </FlexContainer>*/}
+              {/*</FlexContainer>*/}
 
-              <FlexContainer
-                backgroundColor="rgba(42, 45, 56, 0.5)"
-                height="50px"
-                justifyContent="space-between"
-                alignItems="center"
-                padding="0 16px"
-                marginBottom={
-                  touched.openPrice && errors.openPrice ? '4px' : '12px'
-                }
-              >
-                <PrimaryTextSpan color="#ffffff" fontSize="16px">
-                  {t('Take Profit')}
-                </PrimaryTextSpan>
-                <FlexContainer onClick={handleSLTPClick(false)}>
-                  <PrimaryTextSpan
-                    color={
-                      values.tp !== null
-                        ? '#fffccc'
-                        : 'rgba(196, 196, 196, 0.5)'
-                    }
-                    fontSize="16px"
-                  >
-                    {values.tp !== null ? (
-                      <>
-                        {values.tpType !== TpSlTypeEnum.Price &&
-                        values.tp < 0 &&
-                        '-'}
-                        {values.tpType !== TpSlTypeEnum.Price &&
-                        mainAppStore.activeAccount?.symbol}
-                        {values.tpType === TpSlTypeEnum.Price
-                          ? Math.abs(values.tp).toFixed(
-                            getPressision(values.instrumentId)
-                          )
-                          : Math.abs(values.tp).toFixed(2)}
-                      </>
-                    ) : (
-                      t('Add')
-                    )}
-                  </PrimaryTextSpan>
-                </FlexContainer>
-              </FlexContainer>
+              {/*<FlexContainer*/}
+              {/*  backgroundColor="rgba(42, 45, 56, 0.5)"*/}
+              {/*  height="50px"*/}
+              {/*  justifyContent="space-between"*/}
+              {/*  alignItems="center"*/}
+              {/*  padding="0 16px"*/}
+              {/*  marginBottom={*/}
+              {/*    touched.openPrice && errors.openPrice ? '4px' : '12px'*/}
+              {/*  }*/}
+              {/*>*/}
+              {/*  <PrimaryTextSpan color="#ffffff" fontSize="16px">*/}
+              {/*    {t('Take Profit')}*/}
+              {/*  </PrimaryTextSpan>*/}
+              {/*  <FlexContainer onClick={handleSLTPClick(false)}>*/}
+              {/*    <PrimaryTextSpan*/}
+              {/*      color={*/}
+              {/*        values.tp !== null*/}
+              {/*          ? '#fffccc'*/}
+              {/*          : 'rgba(196, 196, 196, 0.5)'*/}
+              {/*      }*/}
+              {/*      fontSize="16px"*/}
+              {/*    >*/}
+              {/*      {values.tp !== null ? (*/}
+              {/*        <>*/}
+              {/*          {values.tpType !== TpSlTypeEnum.Price &&*/}
+              {/*          values.tp < 0 &&*/}
+              {/*          '-'}*/}
+              {/*          {values.tpType !== TpSlTypeEnum.Price &&*/}
+              {/*          mainAppStore.activeAccount?.symbol}*/}
+              {/*          {values.tpType === TpSlTypeEnum.Price*/}
+              {/*            ? Math.abs(values.tp).toFixed(*/}
+              {/*              getPressision(values.instrumentId)*/}
+              {/*            )*/}
+              {/*            : Math.abs(values.tp).toFixed(2)}*/}
+              {/*        </>*/}
+              {/*      ) : (*/}
+              {/*        t('Add')*/}
+              {/*      )}*/}
+              {/*    </PrimaryTextSpan>*/}
+              {/*  </FlexContainer>*/}
+              {/*</FlexContainer>*/}
               {touched.openPrice && errors.openPrice && (
                 <FlexContainer marginBottom="12px" padding="0 16px">
                   <PrimaryTextSpan fontSize="11px" color={Colors.RED}>
