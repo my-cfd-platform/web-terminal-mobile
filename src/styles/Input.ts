@@ -45,9 +45,6 @@ export const Input = styled.input<InputProps>`
   &:-webkit-autofill:active {
     font-size: ${(props) => props.fontSize || '16px'} !important;
     -webkit-text-fill-color: #fffccc !important;
-    box-shadow: 0 0 0px 1000px #1d2026 inset !important;
-    -webkit-box-shadow: 0 0 0px 1000px #1d2026 inset !important;
     transition: background-color 5000s linear 0s !important;
-    background-clip: content-box !important;
   }
 `;

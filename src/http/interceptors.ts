@@ -18,9 +18,10 @@ import mixpanelEvents from '../constants/mixpanelEvents';
 import mixapanelProps from '../constants/mixpanelProps';
 import Page from '../constants/Pages';
 
-const openNotification = (errorText: string, mainAppStore: MainAppStore, isReload?: boolean) => {
+const openNotification = (errorText: string, mainAppStore: MainAppStore, isReload?: boolean, needTranslate?: boolean) => {
   mainAppStore.rootStore.badRequestPopupStore.setMessage(errorText);
   mainAppStore.rootStore.notificationStore.setNotification(errorText);
+  mainAppStore.rootStore.notificationStore.setNeedTranslate(!!needTranslate);
   if (isReload) {
     mainAppStore.rootStore.badRequestPopupStore.openModalReload();
   } else {
@@ -334,7 +335,7 @@ const injectInerceptors = (mainAppStore: MainAppStore) => {
 
       if (isTimeOutError && !isReconnectedRequest) {
         mainAppStore.rootStore.notificationStore.isSuccessfull = false;
-        openNotification('Timeout connection error', mainAppStore);
+        openNotification('Timeout connection error', mainAppStore, false, true);
       }
 
       if (isTimeOutError && isReconnectedRequest) {

@@ -5,6 +5,7 @@ interface ContextProps {
   isActiveNotification: boolean;
   isSuccessfull: boolean;
   timer?: NodeJS.Timeout;
+  needTranslate: boolean;
 }
 
 export class NotificationStore implements ContextProps {
@@ -12,6 +13,7 @@ export class NotificationStore implements ContextProps {
   @observable isActiveNotification: boolean = false;
   @observable isSuccessfull: boolean = false;
   @observable timer?: NodeJS.Timeout;
+  @observable needTranslate: boolean = false;
 
   @action
   closeNotification = () => {
@@ -26,5 +28,10 @@ export class NotificationStore implements ContextProps {
   @action
   setNotification = (notification: string) => {
     this.notificationMessage = notification;
+  };
+
+  @action
+  setNeedTranslate = (newValue: boolean) => {
+    this.needTranslate = newValue;
   };
 }

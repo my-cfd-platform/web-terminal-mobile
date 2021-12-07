@@ -545,5 +545,6 @@
     "In review": "In review",
     "Completed": "Completed",
     "Restricted": "Restricted",
-    "Please enter a different Stop Loss amount": "Please enter a different Stop Loss amount"
+    "Please enter a different Stop Loss amount": "Please enter a different Stop Loss amount",
+    "Timeout connection error": "Timeout connection error"
 }

@@ -81,13 +81,12 @@ const ReloadPopup: FC<Props> = ({
           lineHeight="21px"
           textAlign="center"
         >
-          {t('Please wait while we processing your request or click “Reload”')}
+          {t('Please wait while we processing your request or click \'Reload\'')}
         </PrimaryTextParagraph>
         <LoaderComponent />
         <CustomButton
           onClick={() => {
             badRequestPopupStore.closeModalReload();
-            badRequestPopupStore.setMessage('');
             window.location.reload();
           }}
         >
@@ -146,9 +145,6 @@ const NotificationPopupWrap = styled(FlexContainer)<{
   transform: translateY(-50%);
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
   border-radius: 15px;
-  animation: ${props =>
-      props.show ? translateAnimationIn : translateAnimationOut}
-    0.5s ease;
 `;
 
 const NotificationBackground = styled(FlexContainer)`

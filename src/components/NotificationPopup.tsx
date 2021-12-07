@@ -92,7 +92,9 @@ const NotificationPopup: FC<Props> = observer(() => {
         </PrimaryTextSpan>
       )}
       <PrimaryTextSpan fontSize="13px" color="#fff">
-        {notificationStore.notificationMessage}
+        {notificationStore.needTranslate
+          ? t(notificationStore.notificationMessage)
+          : notificationStore.notificationMessage}
       </PrimaryTextSpan>
     </NotificationWrapper>
   ) : null;

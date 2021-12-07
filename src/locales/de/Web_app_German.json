@@ -471,5 +471,6 @@
     "Support_HP": "https://handelpro.com/contact-us/",
     "Support_M": "https://www.monfex.com/de/contact-us",
     "Trading is temporarily disabled": "Der Handel ist vorübergehend deaktiviert",
-    "System Error": "Systemfehler"
+    "System Error": "Systemfehler",
+    "Timeout connection error": "Zeitüberschreitung Verbindungsfehler"
 }
