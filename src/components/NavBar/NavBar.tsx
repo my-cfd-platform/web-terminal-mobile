@@ -17,6 +17,9 @@ import BonusPopup from '../BonusPopup';
 import { useCallback } from 'react';
 import { FC } from 'react';
 import EducationSuccessPopup from '../Education/EducationSuccessPopup';
+import AccountStatusBar from './AccountStatusBar';
+import { AccountStatusEnum } from '../../enums/AccountStatusEnum';
+import AccountStatusNextStepInfoModal from './AccountStatusNextStepInfoModal';
 
 interface Props {
   showBar: boolean;
@@ -27,8 +30,13 @@ const NavBar: FC<Props> = observer(({ showBar }) => {
   const { t } = useTranslation();
   const [parsedParams, setParsedParams] = useState('');
 
+  const [showStatusDescription, setShowSD] = useState(false);
+
   const { redirectWithUpdateRefreshToken } = useRedirectMiddleware();
 
+  const handleOpenSD = () => {
+    setShowSD(true);
+  };
   useEffect(() => {
     urlParams.set('token', mainAppStore.token);
     urlParams.set(
@@ -146,10 +154,27 @@ const NavBar: FC<Props> = observer(({ showBar }) => {
           backgroundColor="#1C1F26"
           margin="0 auto"
         >
-          <FlexContainer flexDirection="row">
+          <FlexContainer flexDirection="column" alignItems="flex-start">
             <AccountLabel />
             <AccountsSwitchLink />
           </FlexContainer>
+
+          {!mainAppStore.isPromoAccount && (
+            <>
+              <AccountStatusBar
+                donePercent={20}
+                onClick={handleOpenSD}
+                activeStatus={AccountStatusEnum.PLATINUM}
+              />
+
+              {showStatusDescription && (
+                <AccountStatusNextStepInfoModal
+                  activeStatus={AccountStatusEnum.PLATINUM}
+                />
+              )}
+            </>
+          )}
+
           <FlexContainer>
             {!mainAppStore.isPromoAccount && (
               <DepositLink onClick={handleClickDeposit}>

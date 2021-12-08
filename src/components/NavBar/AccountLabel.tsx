@@ -11,17 +11,16 @@ const AccountLabel = observer(() => {
   const { t } = useTranslation();
   return (
     <FlexContainer alignItems="center" justifyContent="center">
-      {!mainAppStore.activeAccount?.isLive && (
-        <PrimaryTextSpan
-          color="rgba(255, 255, 255, 0.4)"
-          fontWeight={500}
-          fontSize="16px"
-          textTransform="uppercase"
-          marginRight="14px"
-        >
-          Demo
-        </PrimaryTextSpan>
-      )}
+      <PrimaryTextSpan
+        color="rgba(255, 255, 255, 0.4)"
+        fontWeight={500}
+        fontSize="14px"
+        lineHeight="18px"
+        textTransform="uppercase"
+        marginRight="14px"
+      >
+        {mainAppStore.activeAccount?.isLive ? 'Real' : 'Demo'}
+      </PrimaryTextSpan>
     </FlexContainer>
   );
 });
