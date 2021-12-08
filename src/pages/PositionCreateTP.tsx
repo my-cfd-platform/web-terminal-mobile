@@ -105,7 +105,7 @@ const PositionCreateTP = observer(() => {
                 `${t(
                   'This level is higher or lower than the one currently allowed'
                 )}`,
-                (value) => value === null || value > currentPriceBid()
+                (value) => value === null || value > currentPriceAsk()
               ),
           })
           .when(['operation', 'value'], {
@@ -119,7 +119,7 @@ const PositionCreateTP = observer(() => {
                 `${t(
                   'This level is higher or lower than the one currently allowed'
                 )}`,
-                (value) => value === null || value < currentPriceAsk()
+                (value) => value === null || value < currentPriceBid()
               ),
           }),
       }),
@@ -400,8 +400,8 @@ const PositionCreateTP = observer(() => {
                 onBlur={handleBlurInput}
                 placeholder={
                   position.operation === AskBidEnum.Buy
-                    ? currentPriceBid().toFixed(instrument?.digits)
-                    : currentPriceAsk().toFixed(instrument?.digits)
+                    ? currentPriceAsk().toFixed(instrument?.digits)
+                    : currentPriceBid().toFixed(instrument?.digits)
                 }
                 readOnly={!activeSL}
                 value={values.price || ''}
@@ -422,8 +422,8 @@ const PositionCreateTP = observer(() => {
                 >
                   {t('Current price')}&nbsp;
                   {position.operation === AskBidEnum.Buy
-                    ? currentPriceBid().toFixed(instrument?.digits)
-                    : currentPriceAsk().toFixed(instrument?.digits)}
+                    ? currentPriceAsk().toFixed(instrument?.digits)
+                    : currentPriceBid().toFixed(instrument?.digits)}
                 </PrimaryTextSpan>
               )}
             </FlexContainer>

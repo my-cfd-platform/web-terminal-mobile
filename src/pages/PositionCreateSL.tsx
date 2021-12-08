@@ -92,7 +92,7 @@ const PositionCreateSL = observer(() => {
     // SL Rate = Current Price + ($SL - Comission) * Сurrent Price /Invest amount *direction*multiplier
     if (position) {
       const isBuy = position.operation === AskBidEnum.Buy;
-      const currentPrice = isBuy ? currentPriceBid() : currentPriceAsk();
+      const currentPrice = isBuy ? currentPriceAsk() : currentPriceBid();
       const direction = isBuy ? 1 : -1;
 
       // = Current Price + ($SL - Comission) * Сurrent Price /Invest amount *direction*multiplier
@@ -118,7 +118,7 @@ const PositionCreateSL = observer(() => {
       if (position) {
         let currentPrice, so_level, so_percent, direction, isBuy;
         isBuy = position.operation === AskBidEnum.Buy;
-        currentPrice =  isBuy ? currentPriceBid() : currentPriceAsk();
+        currentPrice =  isBuy ? currentPriceAsk() : currentPriceBid();
         so_level = -1 * postitionStopOut();
         so_percent = (instrument?.stopOutPercent || 0) / 100;
         direction = isBuy ? 1 : -1;
@@ -162,7 +162,7 @@ const PositionCreateSL = observer(() => {
                 `${t(
                   'This level is higher or lower than the one currently allowed'
                 )}`,
-                (value) => value === null || value < currentPriceBid()
+                (value) => value === null || value < currentPriceAsk()
               ),
           })
           .when(['operation', 'value'], {
@@ -176,7 +176,7 @@ const PositionCreateSL = observer(() => {
                 `${t(
                   'This level is higher or lower than the one currently allowed'
                 )}`,
-                (value) => value === null || value > currentPriceAsk()
+                (value) => value === null || value > currentPriceBid()
               ),
           }),
       }),
@@ -528,8 +528,8 @@ const PositionCreateSL = observer(() => {
                 onBlur={handleBlurInput}
                 placeholder={
                   position.operation === AskBidEnum.Buy
-                    ? currentPriceBid().toFixed(instrument?.digits)
-                    : currentPriceAsk().toFixed(instrument?.digits)
+                    ? currentPriceAsk().toFixed(instrument?.digits)
+                    : currentPriceBid().toFixed(instrument?.digits)
                 }
                 readOnly={!activeSL}
                 value={values.price || ''}
