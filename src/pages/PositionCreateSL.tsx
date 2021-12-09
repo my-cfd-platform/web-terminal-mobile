@@ -220,6 +220,32 @@ const PositionCreateSL = observer(() => {
     validateOnChange: false,
   });
 
+  const valueWithPrecision = () => {
+    switch (position?.slType) {
+      case TpSlTypeEnum.Currency:
+        setFieldValue('value', position?.sl !== null
+          ? Math.abs(position.sl).toFixed(2)
+          : position?.sl);
+        break;
+
+      case TpSlTypeEnum.Price:
+        setFieldValue(
+          'price',
+          position?.sl !== null
+            ? Math.abs(position.sl).toFixed(instrument?.digits || 2)
+            : position?.sl
+        );
+        break;
+
+      default:
+        break;
+    }
+  };
+
+  useEffect(() => {
+    valueWithPrecision();
+  }, [position, instrument]);
+
   const handleToggleSlideSLTP = (on: boolean) => {
     setActiveSL(on);
     if (!on) {
@@ -550,8 +576,8 @@ const PositionCreateSL = observer(() => {
                 >
                   {t('Current price')}&nbsp;
                   {position.operation === AskBidEnum.Buy
-                    ? currentPriceBid().toFixed(instrument?.digits)
-                    : currentPriceAsk().toFixed(instrument?.digits)}
+                    ? currentPriceAsk().toFixed(instrument?.digits)
+                    : currentPriceBid().toFixed(instrument?.digits)}
                 </PrimaryTextSpan>
               )}
             </FlexContainer>

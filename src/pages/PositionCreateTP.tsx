@@ -50,7 +50,7 @@ const PositionCreateTP = observer(() => {
     if (position?.tpType === TpSlTypeEnum.Price) {
       price =
         position.tp !== null
-          ? +position.tp.toFixed(instrument?.digits || 2)
+          ? +Math.abs(position.tp).toFixed(instrument?.digits || 2)
           : null;
     }
 
@@ -161,6 +161,32 @@ const PositionCreateTP = observer(() => {
     validateOnBlur: false,
     validateOnChange: false,
   });
+
+  const valueWithPrecision = () => {
+    switch (position?.tpType) {
+      case TpSlTypeEnum.Currency:
+        setFieldValue('value', position?.tp !== null
+          ? Math.abs(position.tp).toFixed(2)
+          : position?.tp);
+        break;
+
+      case TpSlTypeEnum.Price:
+        setFieldValue(
+          'price',
+          position?.tp !== null
+            ? Math.abs(position.tp).toFixed(instrument?.digits || 2)
+            : position?.tp
+        );
+        break;
+
+      default:
+        break;
+    }
+  };
+
+  useEffect(() => {
+    valueWithPrecision();
+  }, [position, instrument]);
 
   const handleToggleSlideSLTP = (on: boolean) => {
     setActiveSL(on);
