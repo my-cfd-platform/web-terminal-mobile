@@ -100,7 +100,6 @@ const PositionCreateSL = observer(() => {
         currentPrice +
         ((stopLoss) * currentPrice) /
         (position.investmentAmount * direction * position.multiplier);
-      console.log(posPriceByValue);
     }
   };
 
@@ -128,7 +127,6 @@ const PositionCreateSL = observer(() => {
           position.investmentAmount *
           position.multiplier *
           direction;
-        console.log(+Number(result).toFixed(2));
         return +Number(result).toFixed(2);
       }
       return 0;
