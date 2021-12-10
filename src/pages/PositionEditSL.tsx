@@ -132,7 +132,6 @@ const PositionEditSL = observer(() => {
         currentPrice +
         ((stopLoss - commission) * currentPrice) /
         (position.investmentAmount * direction * position.multiplier);
-      console.log(posPriceByValue);
     }
   };
 
@@ -161,7 +160,6 @@ const PositionEditSL = observer(() => {
           position.multiplier *
           direction +
           (position.swap + position.commission);
-        console.log(+Number(result).toFixed(2));
         return +Number(result).toFixed(2);
       }
       return 0;

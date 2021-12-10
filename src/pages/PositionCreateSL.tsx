@@ -16,7 +16,7 @@ import { useStores } from '../hooks/useStores';
 import { FlexContainer } from '../styles/FlexContainer';
 import { PrimaryTextSpan } from '../styles/TextsElements';
 import { useHistory, useParams } from 'react-router-dom';
-import { OpenPositionModel, UpdateSLTP } from '../types/Positions';
+import { OpenPositionModelFormik, UpdateSLTP } from '../types/Positions';
 import LoaderForComponents from '../components/LoaderForComponents';
 import { InstrumentModelWSDTO } from '../types/InstrumentsTypes';
 import { AskBidEnum } from '../enums/AskBid';
@@ -36,7 +36,7 @@ const PositionCreateSL = observer(() => {
     SLTPStore,
   } = useStores();
 
-  const [position, setPosition] = useState<OpenPositionModel>();
+  const [position, setPosition] = useState<OpenPositionModelFormik>();
   const [instrument, setInstrument] = useState<InstrumentModelWSDTO>();
   const [activeSL, setActiveSL] = useState(true);
   const [loading, setLoading] = useState(false);
@@ -92,7 +92,7 @@ const PositionCreateSL = observer(() => {
     // SL Rate = Current Price + ($SL - Comission) * Сurrent Price /Invest amount *direction*multiplier
     if (position) {
       const isBuy = position.operation === AskBidEnum.Buy;
-      const currentPrice = isBuy ? currentPriceBid() : currentPriceAsk();
+      const currentPrice = isBuy ? currentPriceAsk() : currentPriceBid();
       const direction = isBuy ? 1 : -1;
 
       // = Current Price + ($SL - Comission) * Сurrent Price /Invest amount *direction*multiplier
@@ -100,7 +100,6 @@ const PositionCreateSL = observer(() => {
         currentPrice +
         ((stopLoss) * currentPrice) /
         (position.investmentAmount * direction * position.multiplier);
-      console.log(posPriceByValue);
     }
   };
 
@@ -118,7 +117,7 @@ const PositionCreateSL = observer(() => {
       if (position) {
         let currentPrice, so_level, so_percent, direction, isBuy;
         isBuy = position.operation === AskBidEnum.Buy;
-        currentPrice =  isBuy ? currentPriceBid() : currentPriceAsk();
+        currentPrice =  isBuy ? currentPriceAsk() : currentPriceBid();
         so_level = -1 * postitionStopOut();
         so_percent = (instrument?.stopOutPercent || 0) / 100;
         direction = isBuy ? 1 : -1;
@@ -128,7 +127,6 @@ const PositionCreateSL = observer(() => {
           position.investmentAmount *
           position.multiplier *
           direction;
-        console.log(+Number(result).toFixed(2));
         return +Number(result).toFixed(2);
       }
       return 0;
@@ -162,7 +160,7 @@ const PositionCreateSL = observer(() => {
                 `${t(
                   'This level is higher or lower than the one currently allowed'
                 )}`,
-                (value) => value === null || value < currentPriceBid()
+                (value) => value === null || value < currentPriceAsk()
               ),
           })
           .when(['operation', 'value'], {
@@ -176,7 +174,7 @@ const PositionCreateSL = observer(() => {
                 `${t(
                   'This level is higher or lower than the one currently allowed'
                 )}`,
-                (value) => value === null || value > currentPriceAsk()
+                (value) => value === null || value > currentPriceBid()
               ),
           }),
       }),
@@ -219,6 +217,32 @@ const PositionCreateSL = observer(() => {
     validateOnBlur: false,
     validateOnChange: false,
   });
+
+  const valueWithPrecision = () => {
+    switch (position?.slType) {
+      case TpSlTypeEnum.Currency:
+        setFieldValue('value', position?.sl !== null
+          ? Math.abs(position.sl).toFixed(2)
+          : position?.sl);
+        break;
+
+      case TpSlTypeEnum.Price:
+        setFieldValue(
+          'price',
+          position?.sl !== null
+            ? Math.abs(position.sl).toFixed(instrument?.digits || 2)
+            : position?.sl
+        );
+        break;
+
+      default:
+        break;
+    }
+  };
+
+  useEffect(() => {
+    valueWithPrecision();
+  }, [position, instrument]);
 
   const handleToggleSlideSLTP = (on: boolean) => {
     setActiveSL(on);
@@ -528,8 +552,8 @@ const PositionCreateSL = observer(() => {
                 onBlur={handleBlurInput}
                 placeholder={
                   position.operation === AskBidEnum.Buy
-                    ? currentPriceBid().toFixed(instrument?.digits)
-                    : currentPriceAsk().toFixed(instrument?.digits)
+                    ? currentPriceAsk().toFixed(instrument?.digits)
+                    : currentPriceBid().toFixed(instrument?.digits)
                 }
                 readOnly={!activeSL}
                 value={values.price || ''}
@@ -550,8 +574,8 @@ const PositionCreateSL = observer(() => {
                 >
                   {t('Current price')}&nbsp;
                   {position.operation === AskBidEnum.Buy
-                    ? currentPriceBid().toFixed(instrument?.digits)
-                    : currentPriceAsk().toFixed(instrument?.digits)}
+                    ? currentPriceAsk().toFixed(instrument?.digits)
+                    : currentPriceBid().toFixed(instrument?.digits)}
                 </PrimaryTextSpan>
               )}
             </FlexContainer>

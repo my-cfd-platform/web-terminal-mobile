@@ -1,6 +1,6 @@
 import { observable, action } from 'mobx';
 import { TpSlTypeEnum } from '../enums/TpSlTypeEnum';
-import { OpenPositionModel } from '../types/Positions';
+import { OpenPositionModelFormik } from '../types/Positions';
 
 interface ContextProps {
   autoCloseTPType: TpSlTypeEnum | null;
@@ -8,7 +8,7 @@ interface ContextProps {
   takeProfitValue: string;
   stopLossValue: string;
   purchaseAtValue: string;
-  creatingPosition: OpenPositionModel | null;
+  creatingPosition: OpenPositionModelFormik | null;
   isSLTPMode: boolean;
 }
 
@@ -18,11 +18,11 @@ export class SLTPStore implements ContextProps {
   @observable takeProfitValue: string = '';
   @observable stopLossValue: string = '';
   @observable purchaseAtValue: string = '';
-  @observable creatingPosition: OpenPositionModel | null = null;
+  @observable creatingPosition: OpenPositionModelFormik | null = null;
   @observable isSLTPMode: boolean = false;
 
   @action
-  setCreatingPosition = (newPosition: OpenPositionModel | null) => {
+  setCreatingPosition = (newPosition: OpenPositionModelFormik | null) => {
     this.creatingPosition = newPosition;
   }
 

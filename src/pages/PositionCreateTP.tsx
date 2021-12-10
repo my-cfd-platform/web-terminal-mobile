@@ -20,7 +20,7 @@ import { ButtonWithoutStyles } from '../styles/ButtonWithoutStyles';
 import { FlexContainer } from '../styles/FlexContainer';
 import { PrimaryTextSpan } from '../styles/TextsElements';
 import { InstrumentModelWSDTO } from '../types/InstrumentsTypes';
-import { OpenPositionModel, UpdateSLTP } from '../types/Positions';
+import { OpenPositionModelFormik, UpdateSLTP } from '../types/Positions';
 import { observer } from 'mobx-react-lite';
 
 const PositionCreateTP = observer(() => {
@@ -34,7 +34,7 @@ const PositionCreateTP = observer(() => {
     SLTPStore,
   } = useStores();
 
-  const [position, setPosition] = useState<OpenPositionModel>();
+  const [position, setPosition] = useState<OpenPositionModelFormik>();
   const [instrument, setInstrument] = useState<InstrumentModelWSDTO>();
   const [activeSL, setActiveSL] = useState(true);
   const [loading, setLoading] = useState(false);
@@ -50,7 +50,7 @@ const PositionCreateTP = observer(() => {
     if (position?.tpType === TpSlTypeEnum.Price) {
       price =
         position.tp !== null
-          ? +position.tp.toFixed(instrument?.digits || 2)
+          ? +Math.abs(position.tp).toFixed(instrument?.digits || 2)
           : null;
     }
 
@@ -105,7 +105,7 @@ const PositionCreateTP = observer(() => {
                 `${t(
                   'This level is higher or lower than the one currently allowed'
                 )}`,
-                (value) => value === null || value > currentPriceBid()
+                (value) => value === null || value > currentPriceAsk()
               ),
           })
           .when(['operation', 'value'], {
@@ -119,7 +119,7 @@ const PositionCreateTP = observer(() => {
                 `${t(
                   'This level is higher or lower than the one currently allowed'
                 )}`,
-                (value) => value === null || value < currentPriceAsk()
+                (value) => value === null || value < currentPriceBid()
               ),
           }),
       }),
@@ -161,6 +161,32 @@ const PositionCreateTP = observer(() => {
     validateOnBlur: false,
     validateOnChange: false,
   });
+
+  const valueWithPrecision = () => {
+    switch (position?.tpType) {
+      case TpSlTypeEnum.Currency:
+        setFieldValue('value', position?.tp !== null
+          ? Math.abs(position.tp).toFixed(2)
+          : position?.tp);
+        break;
+
+      case TpSlTypeEnum.Price:
+        setFieldValue(
+          'price',
+          position?.tp !== null
+            ? Math.abs(position.tp).toFixed(instrument?.digits || 2)
+            : position?.tp
+        );
+        break;
+
+      default:
+        break;
+    }
+  };
+
+  useEffect(() => {
+    valueWithPrecision();
+  }, [position, instrument]);
 
   const handleToggleSlideSLTP = (on: boolean) => {
     setActiveSL(on);
@@ -400,8 +426,8 @@ const PositionCreateTP = observer(() => {
                 onBlur={handleBlurInput}
                 placeholder={
                   position.operation === AskBidEnum.Buy
-                    ? currentPriceBid().toFixed(instrument?.digits)
-                    : currentPriceAsk().toFixed(instrument?.digits)
+                    ? currentPriceAsk().toFixed(instrument?.digits)
+                    : currentPriceBid().toFixed(instrument?.digits)
                 }
                 readOnly={!activeSL}
                 value={values.price || ''}
@@ -422,8 +448,8 @@ const PositionCreateTP = observer(() => {
                 >
                   {t('Current price')}&nbsp;
                   {position.operation === AskBidEnum.Buy
-                    ? currentPriceBid().toFixed(instrument?.digits)
-                    : currentPriceAsk().toFixed(instrument?.digits)}
+                    ? currentPriceAsk().toFixed(instrument?.digits)
+                    : currentPriceBid().toFixed(instrument?.digits)}
                 </PrimaryTextSpan>
               )}
             </FlexContainer>

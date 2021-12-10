@@ -651,6 +651,9 @@ const OrderPage = observer(() => {
         setFieldValue(Fields.STOP_LOSS_TYPE, SLTPStore.creatingPosition.slType);
         setFieldValue(Fields.TAKE_PROFIT_TYPE, SLTPStore.creatingPosition.tpType);
         setFieldValue(Fields.IS_TOPPING_UP_ACTIVE, SLTPStore.creatingPosition.isToppingUpActive);
+        if (SLTPStore.creatingPosition?.openPrice) {
+          setFieldValue(Fields.PURCHASE_AT, SLTPStore.creatingPosition.openPrice);
+        }
         SLTPStore.setCreatingPosition(null);
       }
     }, 500);
@@ -935,7 +938,6 @@ const OrderPage = observer(() => {
                     {values.sl !== null ? (
                       <>
                         {values.slType !== TpSlTypeEnum.Price &&
-                        values.sl < 0 &&
                         '-'}
                         {values.slType !== TpSlTypeEnum.Price &&
                         mainAppStore.activeAccount?.symbol}
