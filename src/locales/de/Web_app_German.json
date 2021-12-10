@@ -472,5 +472,6 @@
     "Support_M": "https://www.monfex.com/de/contact-us",
     "Trading is temporarily disabled": "Der Handel ist vorübergehend deaktiviert",
     "System Error": "Systemfehler",
-    "Timeout connection error": "Zeitüberschreitung Verbindungsfehler"
+    "Timeout connection error": "Zeitüberschreitung Verbindungsfehler",
+    "Please wait while we processing your request or click 'Reload'": "Bitte warten Sie, während wir Ihre Anfrage bearbeiten oder klicken Sie auf \"Neu laden\"."
 }
