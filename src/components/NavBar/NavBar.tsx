@@ -17,6 +17,10 @@ import BonusPopup from '../BonusPopup';
 import { useCallback } from 'react';
 import { FC } from 'react';
 import EducationSuccessPopup from '../Education/EducationSuccessPopup';
+import AccountStatusBar from './AccountStatusBar';
+import { AccountStatusEnum } from '../../enums/AccountStatusEnum';
+import AccountStatusNextStepInfoModal from '../AccountStatus/AccountStatusNextStepInfoModal';
+import NewStatusPopup from '../AccountStatus/NewStatusPopup';
 
 interface Props {
   showBar: boolean;
@@ -27,7 +31,17 @@ const NavBar: FC<Props> = observer(({ showBar }) => {
   const { t } = useTranslation();
   const [parsedParams, setParsedParams] = useState('');
 
+  const [showStatusDescription, setShowSD] = useState(false);
+
   const { redirectWithUpdateRefreshToken } = useRedirectMiddleware();
+
+  const handleOpenSD = () => {
+    setShowSD(true);
+  };
+
+  const handleCloseSD = () => {
+    setShowSD(false);
+  };
 
   useEffect(() => {
     urlParams.set('token', mainAppStore.token);
@@ -146,10 +160,42 @@ const NavBar: FC<Props> = observer(({ showBar }) => {
           backgroundColor="#1C1F26"
           margin="0 auto"
         >
-          <FlexContainer flexDirection="row">
+          <FlexContainer flexDirection="column" alignItems="flex-start">
             <AccountLabel />
             <AccountsSwitchLink />
           </FlexContainer>
+
+          {!mainAppStore.isPromoAccount && (
+            <>
+              <AccountStatusBar
+                donePercent={20}
+                onClick={handleOpenSD}
+                activeStatus={userProfileStore.userStatus}
+              />
+
+              {showStatusDescription && (
+                <>
+                  {userProfileStore.userStatus ===
+                  userProfileStore.userNextStatus ? (
+                    <NewStatusPopup
+                      activeStatus={userProfileStore.userStatus}
+                    />
+                  ) : (
+                    <AccountStatusNextStepInfoModal
+                      closeModal={handleCloseSD}
+                      prevStatusType={userProfileStore.userStatus}
+                      activeStatus={userProfileStore.userNextStatus}
+                    />
+                  )}
+                </>
+              )}
+
+              {userProfileStore.isCongratModal && !showStatusDescription && (
+                <NewStatusPopup activeStatus={userProfileStore.userStatus} />
+              )}
+            </>
+          )}
+
           <FlexContainer>
             {!mainAppStore.isPromoAccount && (
               <DepositLink onClick={handleClickDeposit}>

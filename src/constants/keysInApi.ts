@@ -9,6 +9,7 @@ const KeysInApi = {
   DEFAULT_INVEST_AMOUNT_DEMO: 'dia_d',
   SHOW_ONBOARDING: 'Onboarding',
   SHOW_HINT: 'educationHint',
+  ACTIVE_ACCOUNT_STATUS: 'activeAccStatus',
 };
 
 Object.freeze(KeysInApi);

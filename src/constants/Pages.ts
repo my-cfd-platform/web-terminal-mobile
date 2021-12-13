@@ -63,7 +63,7 @@ const Page = {
 
   TP_CREATE_MAIN: '/create-tp',
 
-
+  ABOUT_STATUS: '/about-status',
   PAGE_NOT_FOUND: '/page-not-found',
 };
 

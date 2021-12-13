@@ -38,6 +38,7 @@ import EducationQuestionPage from '../pages/EducationQuestionPage';
 import PageNotFound from '../pages/PageNotFound';
 import PositionCreateSL from '../pages/PositionCreateSL';
 import PositionCreateTP from '../pages/PositionCreateTP';
+import AboutStatusPage from '../pages/AboutStatusPage';
 
 export enum RouteLayoutType {
   Authorized,
@@ -308,6 +309,14 @@ const routesList = [
   {
     component: PageNotFound,
     path: Page.PAGE_NOT_FOUND,
+    exact: true,
+    strict: true,
+    layoutType: RouteLayoutType.Authorized,
+  },
+
+  {
+    component: AboutStatusPage,
+    path: Page.ABOUT_STATUS,
     exact: true,
     strict: true,
     layoutType: RouteLayoutType.Authorized,

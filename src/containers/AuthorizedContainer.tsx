@@ -48,6 +48,7 @@ const AuthorizedContainer: FC = observer(({ children }) => {
     Page.DEMO_REAL_PAGE,
     Page.EDUCATION_LIST,
     Page.PAGE_NOT_FOUND,
+    Page.ABOUT_STATUS,
   ]);
 
   const { push } = useHistory();
@@ -72,6 +73,7 @@ const AuthorizedContainer: FC = observer(({ children }) => {
     Page.DEMO_REAL_PAGE,
     Page.EDUCATION,
     Page.EDUCATION_LIST,
+    Page.ABOUT_STATUS,
   ]);
 
   const isHiddenPromoPage = hidenPromoPageList?.isExact;
