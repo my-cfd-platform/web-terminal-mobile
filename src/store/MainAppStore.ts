@@ -512,12 +512,16 @@ export class MainAppStore implements MainAppStoreProps {
           response.data.currentAccountTypeId
         );
 
-        this.rootStore.userProfileStore.checkActiveAccount(
-          response.data.currentAccountTypeId
-        );
-
-        // set default status
-        this.rootStore.userProfileStore.setKVActiveStatus(response.data.currentAccountTypeId, true);
+        if (response.data.currentAccountTypeId) {
+          this.rootStore.userProfileStore.checkActiveAccount(
+            response.data.currentAccountTypeId
+          );
+          // set default status
+          this.rootStore.userProfileStore.setKVActiveStatus(
+            response.data.currentAccountTypeId,
+            true
+          );
+        }
       }
     );
   };

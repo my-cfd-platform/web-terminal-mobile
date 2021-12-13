@@ -14,7 +14,6 @@ interface Props {
 const AccountStatusBar = ({ onClick, donePercent, activeStatus }: Props) => {
   return (
     <ButtonWithoutStyles onClick={onClick}>
-      {console.log('active account status: ', activeStatus)}
       <FlexContainer
         height="36px"
         alignItems="center"
