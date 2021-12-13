@@ -165,36 +165,38 @@ const NavBar: FC<Props> = observer(({ showBar }) => {
             <AccountsSwitchLink />
           </FlexContainer>
 
-          {!mainAppStore.isPromoAccount && (
-            <>
-              <AccountStatusBar
-                donePercent={20}
-                onClick={handleOpenSD}
-                activeStatus={userProfileStore.userStatus}
-              />
+          {!mainAppStore.isPromoAccount &&
+            userProfileStore.currentAccountTypeId !== null &&
+            userProfileStore.statusTypes !== null && (
+              <>
+                <AccountStatusBar
+                  donePercent={20}
+                  onClick={handleOpenSD}
+                  activeStatus={userProfileStore.userStatus}
+                />
 
-              {showStatusDescription && (
-                <>
-                  {userProfileStore.userStatus ===
-                  userProfileStore.userNextStatus ? (
-                    <NewStatusPopup
-                      activeStatus={userProfileStore.userStatus}
-                    />
-                  ) : (
-                    <AccountStatusNextStepInfoModal
-                      closeModal={handleCloseSD}
-                      prevStatusType={userProfileStore.userStatus}
-                      activeStatus={userProfileStore.userNextStatus}
-                    />
-                  )}
-                </>
-              )}
+                {showStatusDescription && (
+                  <>
+                    {userProfileStore.userStatus ===
+                    userProfileStore.userNextStatus ? (
+                      <NewStatusPopup
+                        activeStatus={userProfileStore.userStatus}
+                      />
+                    ) : (
+                      <AccountStatusNextStepInfoModal
+                        closeModal={handleCloseSD}
+                        prevStatusType={userProfileStore.userStatus}
+                        activeStatus={userProfileStore.userNextStatus}
+                      />
+                    )}
+                  </>
+                )}
 
-              {userProfileStore.isCongratModal && !showStatusDescription && (
-                <NewStatusPopup activeStatus={userProfileStore.userStatus} />
-              )}
-            </>
-          )}
+                {userProfileStore.isCongratModal && !showStatusDescription && (
+                  <NewStatusPopup activeStatus={userProfileStore.userStatus} />
+                )}
+              </>
+            )}
 
           <FlexContainer>
             {!mainAppStore.isPromoAccount && (
