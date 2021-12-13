@@ -64,7 +64,7 @@ export class RootStore {
     this.activePositionNotificationStore = new ActivePositionNotificationStore();
     this.pendingPositionNotificationStore = new PendingPositionNotificationStore();
     this.serverErrorPopupStore = new ServerErrorPopupStore();
-    this.userProfileStore = new UserProfileStore();
+    this.userProfileStore = new UserProfileStore(this);
     this.portfolioNavLinksStore = new PortfolioNavLinksStore();
     this.markersOnChartStore = new MarkersOnChartStore(this);
     this.educationStore = new EducationStore(this);

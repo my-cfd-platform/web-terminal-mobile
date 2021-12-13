@@ -19,7 +19,8 @@ import { FC } from 'react';
 import EducationSuccessPopup from '../Education/EducationSuccessPopup';
 import AccountStatusBar from './AccountStatusBar';
 import { AccountStatusEnum } from '../../enums/AccountStatusEnum';
-import AccountStatusNextStepInfoModal from './AccountStatusNextStepInfoModal';
+import AccountStatusNextStepInfoModal from '../AccountStatus/AccountStatusNextStepInfoModal';
+import NewStatusPopup from '../AccountStatus/NewStatusPopup';
 
 interface Props {
   showBar: boolean;
@@ -37,6 +38,11 @@ const NavBar: FC<Props> = observer(({ showBar }) => {
   const handleOpenSD = () => {
     setShowSD(true);
   };
+
+  const handleCloseSD = () => {
+    setShowSD(false);
+  };
+
   useEffect(() => {
     urlParams.set('token', mainAppStore.token);
     urlParams.set(
@@ -164,13 +170,28 @@ const NavBar: FC<Props> = observer(({ showBar }) => {
               <AccountStatusBar
                 donePercent={20}
                 onClick={handleOpenSD}
-                activeStatus={AccountStatusEnum.PLATINUM}
+                activeStatus={userProfileStore.userStatus}
               />
 
               {showStatusDescription && (
-                <AccountStatusNextStepInfoModal
-                  activeStatus={AccountStatusEnum.PLATINUM}
-                />
+                <>
+                  {userProfileStore.userStatus ===
+                  userProfileStore.userNextStatus ? (
+                    <NewStatusPopup
+                      activeStatus={userProfileStore.userStatus}
+                    />
+                  ) : (
+                    <AccountStatusNextStepInfoModal
+                      closeModal={handleCloseSD}
+                      prevStatusType={userProfileStore.userStatus}
+                      activeStatus={userProfileStore.userNextStatus}
+                    />
+                  )}
+                </>
+              )}
+
+              {userProfileStore.isCongratModal && !showStatusDescription && (
+                <NewStatusPopup activeStatus={userProfileStore.userStatus} />
               )}
             </>
           )}

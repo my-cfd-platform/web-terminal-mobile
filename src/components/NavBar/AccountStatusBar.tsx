@@ -2,8 +2,6 @@ import styled from '@emotion/styled-base';
 import React from 'react';
 import { AccountStatusEnum } from '../../enums/AccountStatusEnum';
 import { FlexContainer } from '../../styles/FlexContainer';
-import SvgIcon from '../SvgIcon';
-import IconStar from '../../assets/svg_no_compress/icon-status-star.svg';
 import { ButtonWithoutStyles } from '../../styles/ButtonWithoutStyles';
 import AccStatusData from '../../constants/AccountStatusData';
 
@@ -92,7 +90,7 @@ const StarIconComponent = ({ color }: StarIconComponentProps) => {
         d="M4.00958 19.6808L10.3814 22.1822L9.87799 28.6727L9.6279 31.8973L11.6544 29.3766L27.0294 10.2516L25.7773 8.74377L16.9727 13.4664L17.7427 12.122L18.0503 11.5851L17.7071 11.0703L13.4571 4.6953L12.1023 2.66317L11.6429 5.06188L10.2424 12.3735L3.72219 17.9925L2.46613 19.0749L4.00958 19.6808ZM23.0613 17.8989L22.4576 16.2889L21.3568 17.6098L18.2318 21.3598L17.4644 22.2807L18.5079 22.8706L24.2579 26.1206L26.6519 27.4737L25.6863 24.8989L23.0613 17.8989Z"
         fill={color}
         stroke="#1C1F26"
-        stroke-width="2"
+        strokeWidth="2"
       />
     </svg>
   );

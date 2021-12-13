@@ -1,20 +1,38 @@
+import { AccountStatusEnum } from './../enums/AccountStatusEnum';
 import { IWelcomeBonusExpirations } from './../types/UserInfo';
-import { observable, action } from 'mobx';
+import { observable, action, computed } from 'mobx';
 import { WelcomeBonusResponseEnum } from '../enums/WelcomeBonusResponseEnum';
 import API from '../helpers/API';
 import { PersonalDataDTO } from '../types/PersonalDataTypes';
 import moment from 'moment';
+import {
+  AccountUserStatusInfo,
+  UserActiveStatus,
+} from '../types/AccountsTypes';
+import KeysInApi from '../constants/keysInApi';
+import { RootStore } from './RootStore';
 
 interface ContextProps {
+  rootStore: RootStore;
   userProfile: PersonalDataDTO | null;
   userProfileId: string;
   loadingBonus: boolean;
   isBonus: boolean;
   bonusPercent: number;
   bonusExpirationDate: number;
+
+  statusTypes: AccountUserStatusInfo[] | null;
+  userStatus: AccountStatusEnum;
+  userNextStatus: AccountStatusEnum;
+
+  currentAccountTypeId: string | null;
+  percentageToNextAccountType: number | null;
+  amountToNextAccountType: number | null;
+  isCongratModal: boolean;
 }
 
 export class UserProfileStore implements ContextProps {
+  rootStore: RootStore;
   @observable userProfile: PersonalDataDTO | null = null;
   @observable userProfileId: string = '';
 
@@ -24,6 +42,20 @@ export class UserProfileStore implements ContextProps {
 
   @observable bonusPercent = 0;
   @observable bonusExpirationDate = 0;
+
+  @observable statusTypes: AccountUserStatusInfo[] | null = null;
+  @observable userStatus = AccountStatusEnum.BASIC;
+  @observable userNextStatus: AccountStatusEnum = AccountStatusEnum.BASIC;
+
+  @observable currentAccountTypeId: string | null = null;
+  @observable percentageToNextAccountType: number | null = null;
+  @observable amountToNextAccountType: number | null = null;
+
+  @observable isCongratModal: boolean = false;
+
+  constructor(rootStore: RootStore) {
+    this.rootStore = rootStore;
+  }
 
   @action
   setUser = (userData: PersonalDataDTO) => {
@@ -52,7 +84,7 @@ export class UserProfileStore implements ContextProps {
     this.bonusPercent = 0;
     this.bonusExpirationDate = 0;
   };
-  
+
   @action
   getUserBonus = async (miscUrl: string) => {
     this.setBonusLoading();
@@ -86,5 +118,100 @@ export class UserProfileStore implements ContextProps {
     } catch (error) {
       this.stopBonusLoading();
     }
+  };
+
+  @action
+  updateStatusTypes = (data: AccountUserStatusInfo[] | null) => {
+    if (data !== null && data !== undefined && data.length > 0) {
+      this.statusTypes = data.sort((a, b) => a.order - b.order);
+    }
+  };
+
+  @action
+  setNextStatus = (currentType: AccountStatusEnum) => {
+    let nextStatus = currentType;
+    if (this.statusTypes === null) {
+      return;
+    }
+    let currentIndex = this.statusTypes?.findIndex(
+      (el) => el.type === currentType
+    );
+    if (currentIndex !== -1) {
+      nextStatus = this.statusTypes[currentIndex + 1].type || currentType;
+    }
+    console.log('next status ', nextStatus);
+    this.userNextStatus = nextStatus;
+  };
+
+  @action
+  setActiveStatus = (currentAccountTypeId: string) => {
+    let type: AccountStatusEnum = AccountStatusEnum.BASIC;
+    if (this.statusTypes !== null) {
+      let satusInfo = this.statusTypes.find(
+        (status) => status.id === currentAccountTypeId
+      );
+      if (satusInfo?.type) {
+        type = satusInfo.type;
+      }
+    }
+    this.userStatus = type;
+    console.log('current status ', type);
+    this.setNextStatus(type);
+  };
+
+  @action
+  openCongratModal = () => (this.isCongratModal = true);
+  @action
+  closeCongratModal = () => (this.isCongratModal = false);
+
+  @action
+  checkActiveAccount = async (currentAccountTypeId: string) => {
+    try {
+      const activeStatusId = await API.getKeyValue(
+        KeysInApi.ACTIVE_ACCOUNT_STATUS,
+        this.rootStore.mainAppStore.initModel.tradingUrl
+      );
+
+      if (activeStatusId && activeStatusId !== currentAccountTypeId) {
+        this.openCongratModal();
+      }
+    } catch (error) {}
+  };
+
+  @action
+  setKVActiveStatus = async (
+    currentAccountTypeId: string,
+    init: boolean = false
+  ) => {
+    try {
+      if (init) {
+        // on new user init KV Status
+        const activeStatusId = await API.getKeyValue(
+          KeysInApi.ACTIVE_ACCOUNT_STATUS,
+          this.rootStore.mainAppStore.initModel.tradingUrl
+        );
+
+        if (!activeStatusId) {
+          await API.setKeyValue(
+            {
+              key: KeysInApi.ACTIVE_ACCOUNT_STATUS,
+              value: currentAccountTypeId,
+            },
+            this.rootStore.mainAppStore.initModel.tradingUrl
+          );
+        }
+      } else {
+        // custom save KV
+        if (currentAccountTypeId) {
+          await API.setKeyValue(
+            {
+              key: KeysInApi.ACTIVE_ACCOUNT_STATUS,
+              value: currentAccountTypeId,
+            },
+            this.rootStore.mainAppStore.initModel.tradingUrl
+          );
+        }
+      }
+    } catch (error) {}
   };
 }
