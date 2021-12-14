@@ -24,7 +24,6 @@ interface IOpenedFeatures {
   isNew: boolean;
 }
 
-
 export interface AccountStatusInfo {
   name: string;
   depositValue: string;
@@ -84,7 +83,7 @@ const AccStatusData: IData = {
 
     description: {
       deposit: 'from $250',
-      instruments: '150+ instruments',
+      instruments: '150+ Instruments',
       personal_session: 'Introductory session',
       webinars: 'No',
       analystics: 'Basic indicators',
@@ -94,19 +93,19 @@ const AccStatusData: IData = {
 
     openedFeatures: [
       {
-        label: "150+ Instruments",
+        label: '150+ Instruments',
         icon: AccStautsFeatureIconEnum.CANDLES,
-        isNew: true
+        isNew: true,
       },
       {
-        label: "Introductory Session",
+        label: 'Introductory Session',
         icon: AccStautsFeatureIconEnum.EDUCATION,
-        isNew: true
+        isNew: true,
       },
       {
-        label: "Basic Trading Conditions",
+        label: 'Basic Trading Conditions',
         icon: AccStautsFeatureIconEnum.DIAGRAM,
-        isNew: true
+        isNew: true,
       },
     ],
   },
@@ -123,7 +122,7 @@ const AccStatusData: IData = {
       },
       {
         icon: AccStautsFeatureIconEnum.EDUCATION,
-        label: 'Education Course',
+        label: 'Education course',
       },
       {
         icon: AccStautsFeatureIconEnum.VIDEO,
@@ -143,7 +142,7 @@ const AccStatusData: IData = {
       deposit: 'from $2,500',
       instruments: '150+ instruments',
       personal_session: 'Education course',
-      webinars: 'Live webinar',
+      webinars: 'Live Webinar',
       analystics: 'Advance tools',
       spread: '-20%',
       swap: 'No',
@@ -151,29 +150,29 @@ const AccStatusData: IData = {
 
     openedFeatures: [
       {
-        label: "150+ Instruments",
+        label: '150+ Instruments',
         icon: AccStautsFeatureIconEnum.CANDLES,
-        isNew: true
+        isNew: true,
       },
       {
-        label: "Education Course",
+        label: 'Education course',
         icon: AccStautsFeatureIconEnum.CANDLES,
-        isNew: true
+        isNew: true,
       },
       {
-        label: "Live Webinar",
+        label: 'Live Webinar',
         icon: AccStautsFeatureIconEnum.VIDEO,
-        isNew: true
+        isNew: true,
       },
       {
-        label: "Advanced Analytics Tools",
+        label: 'Advanced Analytics Tools',
         icon: AccStautsFeatureIconEnum.DIAGRAM,
-        isNew: true
+        isNew: true,
       },
       {
-        label: "Spread -20%",
+        label: 'Spread -20%',
         icon: AccStautsFeatureIconEnum.SPREAD,
-        isNew: true
+        isNew: true,
       },
     ],
   },
@@ -213,44 +212,44 @@ const AccStatusData: IData = {
 
     description: {
       deposit: 'from $10,000',
-      instruments: '150+ instruments',
-      personal_session: 'Advanced education',
-      webinars: 'Weekly webinars',
-      analystics: 'Custom analytics',
+      instruments: '150+ Instruments',
+      personal_session: 'Advanced Education',
+      webinars: 'Weekly Webinars',
+      analystics: 'Custom Analytics',
       spread: '-30%',
       swap: '-30%',
     },
 
     openedFeatures: [
       {
-        label: "150+ Instruments",
+        label: '150+ Instruments',
         icon: AccStautsFeatureIconEnum.CANDLES,
-        isNew: false
+        isNew: false,
       },
       {
-        label: "Advanced Education",
+        label: 'Advanced Education',
         icon: AccStautsFeatureIconEnum.EDUCATION,
-        isNew: true
+        isNew: true,
       },
       {
-        label: "Weekly Webinar",
+        label: 'Weekly Webinar',
         icon: AccStautsFeatureIconEnum.VIDEO,
-        isNew: true
+        isNew: true,
       },
       {
-        label: "Custom Analytics",
+        label: 'Custom Analytics',
         icon: AccStautsFeatureIconEnum.DIAGRAM,
-        isNew: true
+        isNew: true,
       },
       {
-        label: "Spread -30%",
+        label: 'Spread -30%',
         icon: AccStautsFeatureIconEnum.SPREAD,
-        isNew: true
+        isNew: true,
       },
       {
-        label: "Swap -30%",
+        label: 'Swap -30%',
         icon: AccStautsFeatureIconEnum.SWAP,
-        isNew: true
+        isNew: true,
       },
     ],
   },
@@ -289,44 +288,44 @@ const AccStatusData: IData = {
 
     description: {
       deposit: 'from $25,000',
-      instruments: '150+ instruments',
+      instruments: '150+ Instruments',
       personal_session: 'Tutorials at request',
-      webinars: 'All webinars',
-      analystics: 'TOP analytics',
+      webinars: 'All Webinars',
+      analystics: 'TOP Analytics',
       spread: '-50%',
       swap: '-50%',
     },
 
     openedFeatures: [
       {
-        label: "150+ Instruments",
+        label: '150+ Instruments',
         icon: AccStautsFeatureIconEnum.CANDLES,
-        isNew: false
+        isNew: false,
       },
       {
-        label: "Tutorials at request",
+        label: 'Tutorials at Request',
         icon: AccStautsFeatureIconEnum.EDUCATION,
-        isNew: true
+        isNew: true,
       },
       {
-        label: "All webinars",
+        label: 'All Webinars',
         icon: AccStautsFeatureIconEnum.VIDEO,
-        isNew: true
+        isNew: true,
       },
       {
-        label: "TOP analytics",
+        label: 'TOP Analytics',
         icon: AccStautsFeatureIconEnum.DIAGRAM,
-        isNew: true
+        isNew: true,
       },
       {
-        label: "Spread -50%",
+        label: 'Spread -50%',
         icon: AccStautsFeatureIconEnum.SPREAD,
-        isNew: true
+        isNew: true,
       },
       {
-        label: "Swap -50%",
+        label: 'Swap -50%',
         icon: AccStautsFeatureIconEnum.SWAP,
-        isNew: true
+        isNew: true,
       },
     ],
   },
@@ -365,44 +364,44 @@ const AccStatusData: IData = {
 
     description: {
       deposit: 'from $75,000',
-      instruments: '150+ instruments',
+      instruments: '150+ Instruments',
       personal_session: 'Personal trading assistance',
-      webinars: 'All webinars',
-      analystics: 'TOP analytics',
+      webinars: 'All Webinars',
+      analystics: 'TOP Analytics',
       spread: '-70%',
       swap: '-70%',
     },
 
     openedFeatures: [
       {
-        label: "150+ Instruments",
+        label: '150+ Instruments',
         icon: AccStautsFeatureIconEnum.CANDLES,
-        isNew: false
+        isNew: false,
       },
       {
-        label: "Personal trading assistance",
+        label: 'Personal trading assistance',
         icon: AccStautsFeatureIconEnum.EDUCATION,
-        isNew: true
+        isNew: true,
       },
       {
-        label: "All webinars",
+        label: 'All Webinars',
         icon: AccStautsFeatureIconEnum.VIDEO,
-        isNew: false
+        isNew: false,
       },
       {
-        label: "TOP analytics",
+        label: 'TOP Analytics',
         icon: AccStautsFeatureIconEnum.DIAGRAM,
-        isNew: false
+        isNew: false,
       },
       {
-        label: "Spread -70%",
+        label: 'Spread -70%',
         icon: AccStautsFeatureIconEnum.SPREAD,
-        isNew: true
+        isNew: true,
       },
       {
-        label: "Swap -70%",
+        label: 'Swap -70%',
         icon: AccStautsFeatureIconEnum.SWAP,
-        isNew: true
+        isNew: true,
       },
     ],
   },
