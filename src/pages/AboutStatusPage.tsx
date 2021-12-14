@@ -3,10 +3,8 @@ import { useTranslation } from 'react-i18next';
 import BackFlowLayout from '../components/BackFlowLayout';
 import { PrimaryButton } from '../styles/Buttons';
 import { FlexContainer } from '../styles/FlexContainer';
-import { PrimaryTextSpan } from '../styles/TextsElements';
 import { useStores } from '../hooks/useStores';
 import { observer } from 'mobx-react-lite';
-import AccStatusData from '../constants/AccountStatusData';
 import AccountStatusProgress from '../components/AccountStatus/AccountStatusProgress';
 import AboutStatusTable from '../components/AccountStatus/AboutStatusTable';
 

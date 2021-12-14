@@ -98,7 +98,7 @@ const AccountStatusNextStepInfoModal = (props: Props) => {
               {`${t('Deposit')} ${statusInfo.depositValue}`}
             </PrimaryTextSpan>
             <PrimaryTextSpan color="#1C1F26" fontWeight="bold" fontSize="16px">
-              {`${t('to unlock')} ${statusInfo.name} Status!`}
+              {`${t('to unlock')} ${statusInfo.name} ${t('Status')}!`}
             </PrimaryTextSpan>
           </ModalHeader>
           <FlexContainer padding="16px" flexDirection="column">

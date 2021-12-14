@@ -40,16 +40,18 @@ const NewStatusPopup = ({ activeStatus }: Props) => {
   const [statusInfo] = useState<AccountStatusInfo>(
     AccStatusData[AccountStatusEnum.DIAMOND]
   );
-  
+
   const countFeatures = useMemo(() => {
     return statusInfo.openedFeatures.filter((item) => item.isNew).length;
   }, [statusInfo]);
 
   const handleClickTrade = () => {
-    userProfileStore.setKVActiveStatus(userProfileStore.currentAccountTypeId || "");
+    userProfileStore.setKVActiveStatus(
+      userProfileStore.currentAccountTypeId || ''
+    );
     userProfileStore.closeCongratModal();
     push(Page.DASHBOARD);
-  }
+  };
 
   const getIcon = (icon: AccStautsFeatureIconEnum) => {
     switch (icon) {
