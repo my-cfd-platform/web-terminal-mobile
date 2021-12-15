@@ -54,7 +54,26 @@ const MainApp: FC = () => {
           type: accountType,
           accountId: mainAppStore.activeAccountId,
         });
-        instrumentsStore.setActiveInstrumentsIds(response.reverse());
+
+        let responseToCheck = response.reverse();
+        if (
+          !responseToCheck.some((instrumentId) =>
+            instrumentsStore.instruments.find(
+              (item) => item.instrumentItem.id === instrumentId
+            )
+          )
+        ) {
+          const newInstruments = [];
+          for (let i = 0; i < 5; i++) {
+            if (instrumentsStore.instruments[i]) {
+              newInstruments.push(
+                instrumentsStore.instruments[i].instrumentItem.id
+              );
+            }
+          }
+          responseToCheck = newInstruments;
+        }
+        instrumentsStore.setActiveInstrumentsIds(responseToCheck);
 
         // https://monfex.atlassian.net/browse/WEBT-475
         // if app is reinitializing, we should wait widget first
