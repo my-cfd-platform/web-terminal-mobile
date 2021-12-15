@@ -11,49 +11,36 @@ import GoldIMG from '../assets/images/achievement_status_bg/new/gold.png';
 import PlatinumIMG from '../assets/images/achievement_status_bg/new/platinum.png';
 import DiamondIMG from '../assets/images/achievement_status_bg/new/diamond.png';
 import VipIMG from '../assets/images/achievement_status_bg/new/vip.png';
-import UltraIMG from '../assets/images/achievement_status_bg/new/ultra.png';
+// import UltraIMG from '../assets/images/achievement_status_bg/new/ultra.png';
 
-const listStatus = [
-  AchievementStatus.SILVER,
-  AchievementStatus.GOLD,
-  AchievementStatus.PLATINUM,
-  AchievementStatus.ULTRA,
-  AchievementStatus.VIP,
-  AchievementStatus.DIAMOND,
-  AchievementStatus.BASIC,
-];
+import { AccountStatusEnum } from '../enums/AccountStatusEnum';
 
 const AchievementStatusLabel = observer(() => {
-  const { mainAppStore } = useStores();
+  const { userProfileStore } = useStores();
 
   const labelImage = useCallback(() => {
-    const key = mainAppStore.accounts.find((acc) => acc.isLive)
-      ?.achievementStatus;
+    const key = userProfileStore.statusTypes?.find(
+      (status) => status.id === userProfileStore.currentAccountTypeId
+    )?.type;
+
     switch (key) {
-      case AchievementStatus.GOLD:
+      case AccountStatusEnum.GOLD:
         return GoldIMG;
-      case AchievementStatus.SILVER:
+      case AccountStatusEnum.SILVER:
         return SilverIMG;
-      case AchievementStatus.VIP:
+      case AccountStatusEnum.VIP:
         return VipIMG;
-      case AchievementStatus.PLATINUM:
+      case AccountStatusEnum.PLATINUM:
         return PlatinumIMG;
-      case AchievementStatus.DIAMOND:
+      case AccountStatusEnum.DIAMOND:
         return DiamondIMG;
-      case AchievementStatus.ULTRA:
-        return UltraIMG;
 
       default:
         return BasicIMG;
     }
-  }, [mainAppStore.accounts]);
+  }, [userProfileStore.currentAccountTypeId]);
 
-  if (
-    !mainAppStore.accounts.find((acc) => acc.isLive)?.achievementStatus ||
-    !listStatus.includes(
-      mainAppStore.accounts.find((acc) => acc.isLive)?.achievementStatus || ''
-    )
-  ) {
+  if (!userProfileStore.currentAccountTypeId || !userProfileStore.statusTypes) {
     return null;
   }
 
