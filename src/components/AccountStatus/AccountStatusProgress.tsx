@@ -62,7 +62,7 @@ const AccountStatusProgress = observer(() => {
           <PrimaryTextSpan color="#fff" fontSize="14px">
             {`${t('Deposit')} $${
               userProfileStore.amountToNextAccountType
-            } ${'to unlock'}`}
+            } ${t('to unlock')}`}
           </PrimaryTextSpan>
           <PrimaryTextSpan
             fontSize="14px"

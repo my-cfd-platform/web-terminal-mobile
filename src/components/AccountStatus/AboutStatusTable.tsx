@@ -120,7 +120,7 @@ const AboutStatusTable = () => {
                   }
                 >
                   <PrimaryTextSpan color="#fff" fontSize="14px">
-                    {desc}
+                    {t(`${desc}`)}
                   </PrimaryTextSpan>
                 </FlexContainer>
               ))}

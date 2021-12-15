@@ -118,7 +118,7 @@ const AccountStatusNextStepInfoModal = (props: Props) => {
                       />
                     </FlexContainer>
                     <PrimaryTextSpan color="#ffffff" fontSize="14px">
-                      {item.label}
+                      {t(`${item.label}`)}
                     </PrimaryTextSpan>
                   </FlexContainer>
                 ))}
