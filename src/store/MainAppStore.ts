@@ -506,7 +506,7 @@ export class MainAppStore implements MainAppStoreProps {
         this.rootStore.userProfileStore.currentAccountTypeId =
           response.data.currentAccountTypeId;
         this.rootStore.userProfileStore.percentageToNextAccountType =
-          response.data.percentageToNextAccountType;
+          response.data.currentAccountTypeProgressPercentage;
 
         this.rootStore.userProfileStore.setActiveStatus(
           response.data.currentAccountTypeId

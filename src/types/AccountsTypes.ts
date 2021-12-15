@@ -41,12 +41,12 @@ export interface AccountUserStatusInfo {
 export interface AccountUserStatusDTO {
   accountTypeModels: AccountUserStatusInfo[];
   currentAccountTypeId: string;
-  percentageToNextAccountType: number,
+  currentAccountTypeProgressPercentage: number,
   amountToNextAccountType: number;
 }
 
 export interface UserActiveStatus {
   currentAccountTypeId: string;
-  percentageToNextAccountType: number,
+  currentAccountTypeProgressPercentage: number,
   amountToNextAccountType: number;
 }
