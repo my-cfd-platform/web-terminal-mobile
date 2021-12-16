@@ -38,7 +38,7 @@ const NewStatusPopup = ({ activeStatus }: Props) => {
   const { push } = useHistory();
 
   const [statusInfo] = useState<AccountStatusInfo>(
-    AccStatusData[AccountStatusEnum.DIAMOND]
+    AccStatusData[activeStatus]
   );
 
   const countFeatures = useMemo(() => {
