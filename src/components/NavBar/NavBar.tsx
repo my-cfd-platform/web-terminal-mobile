@@ -170,7 +170,7 @@ const NavBar: FC<Props> = observer(({ showBar }) => {
             userProfileStore.statusTypes !== null && (
               <>
                 <AccountStatusBar
-                  donePercent={20}
+                  donePercent={userProfileStore.percentageToNextAccountType || 3}
                   onClick={handleOpenSD}
                   activeStatus={userProfileStore.userStatus}
                 />
