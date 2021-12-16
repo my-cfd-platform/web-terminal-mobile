@@ -62,24 +62,25 @@ const AccountStatusProgress = observer(() => {
         </ProgressWrapper>
       </FlexContainer>
 
-      {userProfileStore.userStatus !== AccountStatusEnum.VIP || userProfileStore.userStatus !== userProfileStore.userNextStatus && (
-        <FlexContainer>
-          <PrimaryTextSpan color="#fff" fontSize="14px">
-            {`${t('Deposit')} $${userProfileStore.amountToNextAccountType} ${t(
-              'to unlock'
-            )}`}
-          </PrimaryTextSpan>
-          <PrimaryTextSpan
-            fontSize="14px"
-            color={AccStatusData[userProfileStore.userStatus].color}
-          >
-            &nbsp;
-            {`${AccStatusData[userProfileStore.userNextStatus].name} ${t(
-              'Status'
-            )}`}
-          </PrimaryTextSpan>
-        </FlexContainer>
-      )}
+      {userProfileStore.userStatus !== AccountStatusEnum.VIP &&
+        userProfileStore.userStatus !== userProfileStore.userNextStatus && (
+          <FlexContainer>
+            <PrimaryTextSpan color="#fff" fontSize="14px">
+              {`${t('Deposit')} $${
+                userProfileStore.amountToNextAccountType
+              } ${t('to unlock')}`}
+            </PrimaryTextSpan>
+            <PrimaryTextSpan
+              fontSize="14px"
+              color={AccStatusData[userProfileStore.userStatus].color}
+            >
+              &nbsp;
+              {`${AccStatusData[userProfileStore.userNextStatus].name} ${t(
+                'Status'
+              )}`}
+            </PrimaryTextSpan>
+          </FlexContainer>
+        )}
     </FlexContainer>
   );
 });

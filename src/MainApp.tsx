@@ -54,14 +54,18 @@ const MainApp: FC = () => {
           accountId: mainAppStore.activeAccountId,
         });
 
-        let responseToCheck = response.reverse();
-        if (
-          !responseToCheck.some((instrumentId) =>
+        let responseToCheck: string[] = [];
+        response.map((instrumentId) => {
+          if (
             instrumentsStore.instruments.find(
               (item) => item.instrumentItem.id === instrumentId
             )
-          )
-        ) {
+          ) {
+            responseToCheck.push(instrumentId);
+          }
+          return instrumentId;
+        });
+        if (responseToCheck.length === 0) {
           const newInstruments = [];
           for (let i = 0; i < 5; i++) {
             if (instrumentsStore.instruments[i]) {
