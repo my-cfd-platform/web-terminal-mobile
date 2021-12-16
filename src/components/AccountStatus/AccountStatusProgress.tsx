@@ -12,6 +12,7 @@ import { useTranslation } from 'react-i18next';
 
 import SvgIcon from '../SvgIcon';
 import IconProgressStar from '../../assets/svg/account-status/icon-star-progress.svg';
+import { AccountStatusEnum } from '../../enums/AccountStatusEnum';
 
 const AccountStatusProgress = observer(() => {
   const { userProfileStore } = useStores();
@@ -33,7 +34,11 @@ const AccountStatusProgress = observer(() => {
           position="relative"
         >
           <CircularProgressbar
-            value={userProfileStore.percentageToNextAccountType || 0.1}
+            value={
+              userProfileStore.userStatus === AccountStatusEnum.VIP
+                ? 100
+                : userProfileStore.percentageToNextAccountType || 0.1
+            }
             styles={buildStyles({
               pathColor: AccStatusData[userProfileStore.userStatus].color,
               trailColor: 'transparent',
@@ -57,12 +62,12 @@ const AccountStatusProgress = observer(() => {
         </ProgressWrapper>
       </FlexContainer>
 
-      {userProfileStore.userStatus !== userProfileStore.userNextStatus && (
+      {userProfileStore.userStatus !== AccountStatusEnum.VIP || userProfileStore.userStatus !== userProfileStore.userNextStatus && (
         <FlexContainer>
           <PrimaryTextSpan color="#fff" fontSize="14px">
-            {`${t('Deposit')} $${
-              userProfileStore.amountToNextAccountType
-            } ${t('to unlock')}`}
+            {`${t('Deposit')} $${userProfileStore.amountToNextAccountType} ${t(
+              'to unlock'
+            )}`}
           </PrimaryTextSpan>
           <PrimaryTextSpan
             fontSize="14px"
