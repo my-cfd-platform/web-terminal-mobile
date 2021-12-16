@@ -18,8 +18,7 @@ import { OperationApiResponseCodes } from './enums/OperationApiResponseCodes';
 import { FULL_VH } from './constants/global';
 import 'react-smartbanner/dist/main.css';
 import SmartBanner from 'react-smartbanner';
-import { observer, Observer } from 'mobx-react-lite';
-import HelmetMetaHeader from './components/HelmetMetaHeader';
+import { Observer } from 'mobx-react-lite';
 
 declare const window: any;
 

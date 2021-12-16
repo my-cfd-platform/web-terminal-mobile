@@ -3,6 +3,6 @@ export enum CountriesEnum {
   PL = 'pl',
   ES = 'es',
   DE = 'de',
-  RU = 'ru',
+ // RU = 'ru',
   //PT = 'pt',
 }

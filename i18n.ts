@@ -22,9 +22,9 @@ const resources = {
   [CountriesEnum.DE]: {
     translation: de,
   },
-  [CountriesEnum.RU]: {
-    translation: ru,
-  },
+  // [CountriesEnum.RU]: {
+  //   translation: ru,
+  // },
   // [CountriesEnum.PT]: {
   //   translation: pt,
   // },
@@ -44,7 +44,7 @@ i18n
       CountriesEnum.PL,
       CountriesEnum.DE,
       CountriesEnum.ES,
-      CountriesEnum.RU,
+      //CountriesEnum.RU,
       //CountriesEnum.PT,
     ],
     interpolation: {
