@@ -30,11 +30,12 @@ import Page from '../../constants/Pages';
 interface Props {
   prevStatusType: AccountStatusEnum;
   activeStatus: AccountStatusEnum;
+  depositValue: number;
   closeModal: () => void;
 }
 
 const AccountStatusNextStepInfoModal = (props: Props) => {
-  const { activeStatus, prevStatusType, closeModal } = props;
+  const { activeStatus, prevStatusType, depositValue, closeModal } = props;
   const { t } = useTranslation();
   const { push } = useHistory();
   const modalRef = useRef<HTMLDivElement>(null);
@@ -128,7 +129,7 @@ const AccountStatusNextStepInfoModal = (props: Props) => {
                   fontWeight="bold"
                   fontSize="16px"
                 >
-                  {`${t('Deposit')} ${statusInfo.depositValue}`}
+                  {`${t('Deposit')} $${depositValue}`}
                 </PrimaryTextSpan>
                 <PrimaryTextSpan
                   color="#1C1F26"

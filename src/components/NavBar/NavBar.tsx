@@ -184,6 +184,7 @@ const NavBar: FC<Props> = observer(({ showBar }) => {
                     closeModal={handleCloseSD}
                     prevStatusType={userProfileStore.userStatus}
                     activeStatus={userProfileStore.userNextStatus}
+                    depositValue={userProfileStore.amountToNextAccountType || 0}
                   />
                 )}
 
