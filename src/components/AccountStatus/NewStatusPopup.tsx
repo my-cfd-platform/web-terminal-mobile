@@ -29,17 +29,18 @@ import { useStores } from '../../hooks/useStores';
 import { useHistory } from 'react-router';
 import Page from '../../constants/Pages';
 
+const noop = () => {};
+
 interface Props {
   activeStatus: AccountStatusEnum;
+  closeModal?: () => void;
 }
-const NewStatusPopup = ({ activeStatus }: Props) => {
+const NewStatusPopup = ({ activeStatus, closeModal = noop }: Props) => {
   const { t } = useTranslation();
   const { userProfileStore } = useStores();
   const { push } = useHistory();
 
-  const [statusInfo] = useState<AccountStatusInfo>(
-    AccStatusData[activeStatus]
-  );
+  const [statusInfo] = useState<AccountStatusInfo>(AccStatusData[activeStatus]);
 
   const countFeatures = useMemo(() => {
     return statusInfo.openedFeatures.filter((item) => item.isNew).length;
@@ -50,7 +51,7 @@ const NewStatusPopup = ({ activeStatus }: Props) => {
     userProfileStore.setKVActiveStatus(
       userProfileStore.currentAccountTypeId || ''
     );
-    
+    closeModal();
     push(Page.DASHBOARD);
   };
 

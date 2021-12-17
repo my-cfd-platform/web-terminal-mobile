@@ -185,6 +185,7 @@ const NavBar: FC<Props> = observer(({ showBar }) => {
                     userProfileStore.userNextStatus ? (
                       <NewStatusPopup
                         activeStatus={userProfileStore.userStatus}
+                        closeModal={handleCloseSD}
                       />
                     ) : (
                       <AccountStatusNextStepInfoModal
