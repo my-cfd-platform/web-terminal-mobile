@@ -134,10 +134,10 @@ export class UserProfileStore implements ContextProps {
       return;
     }
     let currentIndex = this.statusTypes?.findIndex(
-      (el) => el.type === currentType
+      (el) => el.type === currentType + 1
     );
     if (currentIndex !== -1) {
-      nextStatus = this.statusTypes[currentIndex + 1].type || currentType;
+      nextStatus = this.statusTypes[currentIndex].type;
     }
     console.log('next status ', nextStatus);
     this.userNextStatus = nextStatus;
