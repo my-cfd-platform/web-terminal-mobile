@@ -160,9 +160,13 @@ export class UserProfileStore implements ContextProps {
   };
 
   @action
-  openCongratModal = () => (this.isCongratModal = true);
+  openCongratModal = () => {
+    this.isCongratModal = true;
+  };
   @action
-  closeCongratModal = () => (this.isCongratModal = false);
+  closeCongratModal = () => {
+    this.isCongratModal = false;
+  };
 
   @action
   checkActiveAccount = async (currentAccountTypeId: string) => {

@@ -46,10 +46,11 @@ const NewStatusPopup = ({ activeStatus }: Props) => {
   }, [statusInfo]);
 
   const handleClickTrade = () => {
+    userProfileStore.closeCongratModal();
     userProfileStore.setKVActiveStatus(
       userProfileStore.currentAccountTypeId || ''
     );
-    userProfileStore.closeCongratModal();
+    
     push(Page.DASHBOARD);
   };
 
