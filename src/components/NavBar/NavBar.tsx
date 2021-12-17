@@ -180,21 +180,11 @@ const NavBar: FC<Props> = observer(({ showBar }) => {
                 />
 
                 {showStatusDescription && (
-                  <>
-                    {userProfileStore.userStatus ===
-                    userProfileStore.userNextStatus ? (
-                      <NewStatusPopup
-                        activeStatus={userProfileStore.userStatus}
-                        closeModal={handleCloseSD}
-                      />
-                    ) : (
-                      <AccountStatusNextStepInfoModal
-                        closeModal={handleCloseSD}
-                        prevStatusType={userProfileStore.userStatus}
-                        activeStatus={userProfileStore.userNextStatus}
-                      />
-                    )}
-                  </>
+                  <AccountStatusNextStepInfoModal
+                    closeModal={handleCloseSD}
+                    prevStatusType={userProfileStore.userStatus}
+                    activeStatus={userProfileStore.userNextStatus}
+                  />
                 )}
 
                 {userProfileStore.isCongratModal && !showStatusDescription && (

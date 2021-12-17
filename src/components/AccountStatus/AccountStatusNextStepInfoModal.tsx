@@ -77,6 +77,18 @@ const AccountStatusNextStepInfoModal = (props: Props) => {
     }
   };
 
+  const descriptionInfo = () => {
+    if (!statusInfo?.newFeatures) {
+      return [];
+    }
+    if (prevStatusType === AccountStatusEnum.VIP) {
+      let arr = statusInfo.newFeatures;
+      arr.shift();
+      return arr;
+    }
+    return statusInfo.newFeatures;
+  };
+
   useEffect(() => {
     document.addEventListener('mousedown', handleClickOutside);
     return () => {
@@ -90,38 +102,65 @@ const AccountStatusNextStepInfoModal = (props: Props) => {
         <ModalContainer ref={modalRef}>
           <ModalHeader
             padding="16px"
-            backgroundColor={currentStatusInfo.color}
+            backgroundColor={
+              prevStatusType === AccountStatusEnum.VIP
+                ? statusInfo.color
+                : currentStatusInfo.color
+            }
             flexDirection="column"
             backgroundImage={`url(${ImageDesriptionBg})`}
+            minHeight="80px"
+            justifyContent="center"
           >
-            <PrimaryTextSpan color="#1C1F26" fontWeight="bold" fontSize="16px">
-              {`${t('Deposit')} ${statusInfo.depositValue}`}
-            </PrimaryTextSpan>
-            <PrimaryTextSpan color="#1C1F26" fontWeight="bold" fontSize="16px">
-              {`${t('to unlock')} ${statusInfo.name} ${t('Status')}!`}
-            </PrimaryTextSpan>
+            {prevStatusType === AccountStatusEnum.VIP ? (
+              <PrimaryTextSpan
+                color="#1C1F26"
+                fontWeight="bold"
+                textAlign="center"
+                fontSize="16px"
+              >
+                {`${statusInfo.name} ${t('Status')}`}
+              </PrimaryTextSpan>
+            ) : (
+              <>
+                <PrimaryTextSpan
+                  color="#1C1F26"
+                  fontWeight="bold"
+                  fontSize="16px"
+                >
+                  {`${t('Deposit')} ${statusInfo.depositValue}`}
+                </PrimaryTextSpan>
+                <PrimaryTextSpan
+                  color="#1C1F26"
+                  fontWeight="bold"
+                  fontSize="16px"
+                >
+                  {`${t('to unlock')} ${statusInfo.name} ${t('Status')}!`}
+                </PrimaryTextSpan>
+              </>
+            )}
           </ModalHeader>
+
           <FlexContainer padding="16px" flexDirection="column">
             <FlexContainer flexDirection="column" width="100%">
-              {statusInfo.newFeatures !== null &&
-                statusInfo.newFeatures.map((item) => (
-                  <FlexContainer
-                    key={item.label}
-                    width="100%"
-                    marginBottom="16px"
-                    alignItems="center"
-                  >
-                    <FlexContainer width="30px">
-                      <SvgIcon
-                        {...getIcon(item.icon)}
-                        fillColor={statusInfo.color}
-                      />
-                    </FlexContainer>
-                    <PrimaryTextSpan color="#ffffff" fontSize="14px">
-                      {t(`${item.label}`)}
-                    </PrimaryTextSpan>
+              {descriptionInfo().map((item) => (
+                <FlexContainer
+                  key={item.label}
+                  width="100%"
+                  marginBottom="16px"
+                  alignItems="center"
+                >
+                  <FlexContainer width="30px">
+                    <SvgIcon
+                      {...getIcon(item.icon)}
+                      fillColor={statusInfo.color}
+                    />
                   </FlexContainer>
-                ))}
+                  <PrimaryTextSpan color="#ffffff" fontSize="14px">
+                    {t(`${item.label}`)}
+                  </PrimaryTextSpan>
+                </FlexContainer>
+              ))}
             </FlexContainer>
             <PrimaryButton width="100%" onClick={handleClickAboutStatus}>
               <PrimaryTextSpan color="#252636" fontWeight={700} fontSize="16px">
