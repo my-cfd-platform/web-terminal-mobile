@@ -16,11 +16,11 @@ export const ListForEN = {
     originName: 'Español',
     shortName: 'ES',
   },
-  [CountriesEnum.DE]: {
-    name: 'German',
-    originName: 'Deutsch',
-    shortName: 'DE',
-  },
+  // [CountriesEnum.DE]: {
+  //   name: 'German',
+  //   originName: 'Deutsch',
+  //   shortName: 'DE',
+  // },
   // [CountriesEnum.RU]: {
   //   name: 'Russian',
   //   originName: 'Русский',
@@ -50,11 +50,11 @@ export const ListForPL = {
     originName: 'Español',
     shortName: 'ES',
   },
-  [CountriesEnum.DE]: {
-    name: 'Niemiecki',
-    originName: 'Deutsch',
-    shortName: 'DE',
-  },
+  // [CountriesEnum.DE]: {
+  //   name: 'Niemiecki',
+  //   originName: 'Deutsch',
+  //   shortName: 'DE',
+  // },
   // [CountriesEnum.RU]: {
   //   name: 'Rosyjski',
   //   originName: 'Русский',
@@ -84,11 +84,11 @@ export const ListForES = {
     originName: 'Español',
     shortName: 'ES',
   },
-  [CountriesEnum.DE]: {
-    name: 'Alemán',
-    originName: 'Deutsch',
-    shortName: 'DE',
-  },
+  // [CountriesEnum.DE]: {
+  //   name: 'Alemán',
+  //   originName: 'Deutsch',
+  //   shortName: 'DE',
+  // },
   // [CountriesEnum.RU]: {
   //   name: 'Ruso',
   //   originName: 'Русский',
@@ -103,39 +103,39 @@ export const ListForES = {
 };
 
 
-export const ListForDE = {
-  [CountriesEnum.EN]: {
-    name: 'Inglés',
-    originName: 'English',
-    shortName: 'EN',
-  },
-  [CountriesEnum.PL]: {
-    name: 'Polieren',
-    originName: 'Polski',
-    shortName: 'PL',
-  },
-  [CountriesEnum.ES]: {
-    name: 'Español',
-    originName: 'Español',
-    shortName: 'ES',
-  },
-  [CountriesEnum.DE]: {
-    name: 'Deutsch',
-    originName: 'Deutsch',
-    shortName: 'DE',
-  },
-  // [CountriesEnum.RU]: {
-  //   name: 'Russisch',
-  //   originName: 'Русский',
-  //   shortName: 'RU',
-  // },
+// export const ListForDE = {
+//   [CountriesEnum.EN]: {
+//     name: 'Inglés',
+//     originName: 'English',
+//     shortName: 'EN',
+//   },
+//   [CountriesEnum.PL]: {
+//     name: 'Polieren',
+//     originName: 'Polski',
+//     shortName: 'PL',
+//   },
+//   [CountriesEnum.ES]: {
+//     name: 'Español',
+//     originName: 'Español',
+//     shortName: 'ES',
+//   },
+//   [CountriesEnum.DE]: {
+//     name: 'Deutsch',
+//     originName: 'Deutsch',
+//     shortName: 'DE',
+//   },
+//   // [CountriesEnum.RU]: {
+//   //   name: 'Russisch',
+//   //   originName: 'Русский',
+//   //   shortName: 'RU',
+//   // },
 
-  // [CountriesEnum.PT]: {
-  //   name: 'Portugiesisch',
-  //   originName: 'Português',
-  //   shortName: 'PT',
-  // },
-};
+//   // [CountriesEnum.PT]: {
+//   //   name: 'Portugiesisch',
+//   //   originName: 'Português',
+//   //   shortName: 'PT',
+//   // },
+// };
 
 // export const ListForRU = {
 //   [CountriesEnum.EN]: {

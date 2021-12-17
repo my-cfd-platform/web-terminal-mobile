@@ -10,7 +10,6 @@ import {
   ListForEN,
   ListForPL,
   ListForES,
-  ListForDE,
 } from '../constants/listOfLanguages';
 import { useStores } from '../hooks/useStores';
 import { useTranslation } from 'react-i18next';
@@ -49,13 +48,13 @@ const AccountLanguage = () => {
         });
         setList(ListForES);
         break;
-      case CountriesEnum.DE:
-        setActiveLanguage({
-          id: CountriesEnum.DE,
-          name: ListForDE[CountriesEnum.DE],
-        });
-        setList(ListForDE);
-        break;
+      // case CountriesEnum.DE:
+      //   setActiveLanguage({
+      //     id: CountriesEnum.DE,
+      //     name: ListForDE[CountriesEnum.DE],
+      //   });
+      //   setList(ListForDE);
+      //   break;
       // case CountriesEnum.RU:
       //   setActiveLanguage({
       //     id: CountriesEnum.RU,

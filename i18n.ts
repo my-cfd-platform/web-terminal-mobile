@@ -19,9 +19,9 @@ const resources = {
   [CountriesEnum.ES]: {
     translation: es,
   },
-  [CountriesEnum.DE]: {
-    translation: de,
-  },
+  // [CountriesEnum.DE]: {
+  //   translation: de,
+  // },
   // [CountriesEnum.RU]: {
   //   translation: ru,
   // },
@@ -42,7 +42,7 @@ i18n
     supportedLngs: [
       CountriesEnum.EN,
       CountriesEnum.PL,
-      CountriesEnum.DE,
+      //CountriesEnum.DE,
       CountriesEnum.ES,
       //CountriesEnum.RU,
       //CountriesEnum.PT,
