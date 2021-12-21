@@ -7,6 +7,7 @@ import { useStores } from '../hooks/useStores';
 import { observer } from 'mobx-react-lite';
 import AccountStatusProgress from '../components/AccountStatus/AccountStatusProgress';
 import AboutStatusTable from '../components/AccountStatus/AboutStatusTable';
+import { PrimaryTextSpan } from '../styles/TextsElements';
 
 const AboutStatusPage = observer(() => {
   const { t } = useTranslation();
@@ -57,9 +58,11 @@ const AboutStatusPage = observer(() => {
         </FlexContainer>
         <FlexContainer backgroundColor="#1C1F26" padding="16px" width="100%">
           <PrimaryButton width="100%" onClick={hadnleClickDeposit}>
-            {userProfileStore.userStatus === userProfileStore.userNextStatus
-              ? t('Deposit')
-              : t('Deposit to Get Status')}
+            <PrimaryTextSpan color="#1C1F26" fontWeight="bold">
+              {userProfileStore.userStatus === userProfileStore.userNextStatus
+                ? t('Deposit')
+                : t('Deposit to Get Status')}
+            </PrimaryTextSpan>
           </PrimaryButton>
         </FlexContainer>
       </FlexContainer>
