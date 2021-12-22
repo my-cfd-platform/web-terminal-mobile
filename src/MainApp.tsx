@@ -26,7 +26,7 @@ const DAYS_HIDDEN = IS_LIVE ? 30 : 1;
 const DAYS_VIEW_HIDDEN = IS_LIVE ? 90 : 1;
 
 const MainApp: FC = () => {
-  const { mainAppStore, instrumentsStore, userProfileStore } = useStores();
+  const { mainAppStore, instrumentsStore } = useStores();
   const { t, i18n } = useTranslation();
 
   const isPromoAccountView = useCallback(() => {
@@ -193,13 +193,13 @@ const MainApp: FC = () => {
       const error = new Error('Socket close error');
       mainAppStore.handleSocketCloseError(error);
     };
-
-    autorun(() => {
-      if (mainAppStore.activeAccountId) {
-        fetchFavoriteInstruments();
-      }
-    });
   }, []);
+
+  useEffect(() => {
+    if (mainAppStore.activeAccountId && instrumentsStore.instruments.length) {
+      fetchFavoriteInstruments();
+    }
+  }, [instrumentsStore.instruments]);
 
   return (
     <>
