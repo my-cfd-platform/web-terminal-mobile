@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useState } from 'react';
+import React, { FC, useCallback, useEffect, useState } from 'react';
 import { FlexContainer } from '../styles/FlexContainer';
 import { observer, Observer } from 'mobx-react-lite';
 import NotificationPopup from '../components/NotificationPopup';
@@ -21,6 +21,11 @@ import LoaderFullscreen from '../components/LoaderFullscreen';
 import NetworkErrorPopup from '../components/NetworkErrorPopup';
 import ServerErrorPopup from '../components/ServerErrorPopup';
 import mixpanelEvents from '../constants/mixpanelEvents';
+import { autorun } from 'mobx';
+import apiResponseCodeMessages from '../constants/apiResponseCodeMessages';
+import { AccountTypeEnum } from '../enums/AccountTypeEnum';
+import { OperationApiResponseCodes } from '../enums/OperationApiResponseCodes';
+import { useTranslation } from 'react-i18next';
 
 const AuthorizedContainer: FC = observer(({ children }) => {
   const match = useRouteMatch([
@@ -52,7 +57,13 @@ const AuthorizedContainer: FC = observer(({ children }) => {
   ]);
 
   const { push } = useHistory();
-  const { mainAppStore, userProfileStore, serverErrorPopupStore } = useStores();
+  const { t } = useTranslation();
+  const {
+    mainAppStore,
+    userProfileStore,
+    serverErrorPopupStore,
+    instrumentsStore,
+  } = useStores();
   const [waitingData, setWaitingData] = useState<boolean>(true);
   const showNavbarAndNav = !match?.isExact;
 
@@ -77,6 +88,83 @@ const AuthorizedContainer: FC = observer(({ children }) => {
   ]);
 
   const isHiddenPromoPage = hidenPromoPageList?.isExact;
+
+  const fetchFavoriteInstruments = useCallback(async () => {
+    if (mainAppStore.activeAccount) {
+      mainAppStore.setDataLoading(true);
+
+      const accountType = mainAppStore.activeAccount?.isLive
+        ? AccountTypeEnum.Live
+        : AccountTypeEnum.Demo;
+
+      try {
+        const response = await API.getFavoriteInstrumets({
+          type: accountType,
+          accountId: mainAppStore.activeAccountId,
+        });
+
+        let responseToCheck: string[] = [];
+        response.reverse().map((instrumentId) => {
+          if (
+            instrumentsStore.instruments.find(
+              (item) => item.instrumentItem.id === instrumentId
+            )
+          ) {
+            responseToCheck.push(instrumentId);
+          }
+          return instrumentId;
+        });
+        if (responseToCheck.length === 0) {
+          const newInstruments = [];
+          for (let i = 0; i < 5; i++) {
+            if (instrumentsStore.instruments[i]) {
+              newInstruments.push(
+                instrumentsStore.instruments[i].instrumentItem.id
+              );
+            }
+          }
+          responseToCheck = newInstruments;
+        }
+        instrumentsStore.setActiveInstrumentsIds(responseToCheck);
+
+        // https://monfex.atlassian.net/browse/WEBT-475
+        // if app is reinitializing, we should wait widget first
+
+        if (!response.length) {
+          throw new Error(
+            t(apiResponseCodeMessages[OperationApiResponseCodes.TechnicalError])
+          );
+        }
+        await instrumentsStore.switchInstrument(response[response.length - 1]);
+        mainAppStore.setDataLoading(false);
+      } catch (error) {
+        mainAppStore.setDataLoading(false);
+        instrumentsStore.setActiveInstrumentsIds(
+          instrumentsStore.instruments
+            .slice(0, 5)
+            .map((instr) => instr.instrumentItem.id)
+        );
+        instrumentsStore.switchInstrument(
+          instrumentsStore.instruments[0].instrumentItem.id,
+          false
+        );
+      }
+    }
+  }, [
+    instrumentsStore.activeInstrument,
+    instrumentsStore.activeInstrumentsIds,
+    instrumentsStore.instruments,
+    mainAppStore.activeAccount,
+    mainAppStore.activeAccountId,
+    mainAppStore.isLoading,
+  ]);
+  useEffect(() => {
+    autorun(() => {
+      if (instrumentsStore.instruments.length) {
+        fetchFavoriteInstruments();
+      }
+    });
+  }, [instrumentsStore.instruments]);
 
   useEffect(() => {
     if (mainAppStore.isPromoAccount && isHiddenPromoPage) {
