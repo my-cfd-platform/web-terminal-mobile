@@ -346,6 +346,15 @@ export class MainAppStore implements MainAppStoreProps {
         this.accounts = this.accounts.map((account) =>
           account.id === response.data.id ? response.data : account
         );
+        if (
+          response.data.balance !== 0 &&
+          this.rootStore.userProfileStore.isBonus &&
+          !this.isPromoAccount
+        ) {
+          try {
+            this.rootStore.userProfileStore.getUserBonus(this.initModel.miscUrl);
+          } catch (error) {}
+        }
       }
     );
 
