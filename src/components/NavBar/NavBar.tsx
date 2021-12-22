@@ -12,15 +12,11 @@ import { ButtonWithoutStyles } from '../../styles/ButtonWithoutStyles';
 import AccountSwitcher from '../AccountSwitcher/AccountSwitcher';
 import SvgIcon from '../SvgIcon';
 import IconGift from '../../assets/svg_no_compress/icon-deposit-gift.svg';
-import PopupContainer from '../../containers/PopupContainer';
 import BonusPopup from '../BonusPopup';
 import { useCallback } from 'react';
 import { FC } from 'react';
 import EducationSuccessPopup from '../Education/EducationSuccessPopup';
-import AccountStatusBar from './AccountStatusBar';
-import { AccountStatusEnum } from '../../enums/AccountStatusEnum';
-import AccountStatusNextStepInfoModal from '../AccountStatus/AccountStatusNextStepInfoModal';
-import NewStatusPopup from '../AccountStatus/NewStatusPopup';
+import AccountStatusComponent from './AccountStatusComponent';
 
 interface Props {
   showBar: boolean;
@@ -31,17 +27,7 @@ const NavBar: FC<Props> = observer(({ showBar }) => {
   const { t } = useTranslation();
   const [parsedParams, setParsedParams] = useState('');
 
-  const [showStatusDescription, setShowSD] = useState(false);
-
   const { redirectWithUpdateRefreshToken } = useRedirectMiddleware();
-
-  const handleOpenSD = () => {
-    setShowSD(true);
-  };
-
-  const handleCloseSD = () => {
-    setShowSD(false);
-  };
 
   useEffect(() => {
     urlParams.set('token', mainAppStore.token);
@@ -165,40 +151,7 @@ const NavBar: FC<Props> = observer(({ showBar }) => {
             <AccountsSwitchLink />
           </FlexContainer>
 
-          {!mainAppStore.isPromoAccount &&
-            userProfileStore.currentAccountTypeId !== null &&
-            userProfileStore.statusTypes !== null && (
-              <>
-                {!userProfileStore.isCongratModal && (
-                  <>
-                    <AccountStatusBar
-                      donePercent={
-                        userProfileStore.userStatus === AccountStatusEnum.VIP
-                          ? 100
-                          : userProfileStore.percentageToNextAccountType || 3
-                      }
-                      onClick={handleOpenSD}
-                      activeStatus={userProfileStore.userStatus}
-                    />
-
-                    {showStatusDescription && (
-                      <AccountStatusNextStepInfoModal
-                        closeModal={handleCloseSD}
-                        prevStatusType={userProfileStore.userStatus}
-                        activeStatus={userProfileStore.userNextStatus}
-                        depositValue={
-                          userProfileStore.amountToNextAccountType || 0
-                        }
-                      />
-                    )}
-                  </>
-                )}
-
-                {userProfileStore.isCongratModal && (
-                  <NewStatusPopup activeStatus={userProfileStore.userStatus} />
-                )}
-              </>
-            )}
+          <AccountStatusComponent />
 
           <FlexContainer>
             {!mainAppStore.isPromoAccount && (

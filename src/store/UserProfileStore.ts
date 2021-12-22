@@ -29,6 +29,7 @@ interface ContextProps {
   percentageToNextAccountType: number | null;
   amountToNextAccountType: number | null;
   isCongratModal: boolean;
+  isStatusDescription: boolean;
 }
 
 export class UserProfileStore implements ContextProps {
@@ -52,6 +53,7 @@ export class UserProfileStore implements ContextProps {
   @observable amountToNextAccountType: number | null = null;
 
   @observable isCongratModal: boolean = false;
+  @observable isStatusDescription: boolean = false;
 
   constructor(rootStore: RootStore) {
     this.rootStore = rootStore;
@@ -167,6 +169,21 @@ export class UserProfileStore implements ContextProps {
   closeCongratModal = () => {
     this.isCongratModal = false;
   };
+
+  @action 
+  toggleStatusDescription = () => {
+    this.isStatusDescription = !this.isStatusDescription;
+  }
+
+  @action 
+  openStatusDescription = () => {
+    this.isStatusDescription = true;
+  }
+
+  @action 
+  closeStatusDescription = () => {
+    this.isStatusDescription = false;
+  }
 
   @action
   checkActiveAccount = async (currentAccountTypeId: string) => {

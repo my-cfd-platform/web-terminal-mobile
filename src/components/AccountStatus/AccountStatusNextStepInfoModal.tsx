@@ -31,11 +31,18 @@ interface Props {
   prevStatusType: AccountStatusEnum;
   activeStatus: AccountStatusEnum;
   depositValue: number;
+  statusBarRef: any;
   closeModal: () => void;
 }
 
 const AccountStatusNextStepInfoModal = (props: Props) => {
-  const { activeStatus, prevStatusType, depositValue, closeModal } = props;
+  const {
+    activeStatus,
+    prevStatusType,
+    depositValue,
+    statusBarRef,
+    closeModal,
+  } = props;
   const { t } = useTranslation();
   const { push } = useHistory();
   const modalRef = useRef<HTMLDivElement>(null);
@@ -52,7 +59,12 @@ const AccountStatusNextStepInfoModal = (props: Props) => {
   };
 
   const handleClickOutside = (e: any) => {
-    if (modalRef.current && !modalRef.current.contains(e.target)) {
+    if (
+      modalRef.current &&
+      !modalRef.current.contains(e.target) &&
+      statusBarRef.current &&
+      !statusBarRef.current.contains(e.target)
+    ) {
       closeModal();
     }
   };

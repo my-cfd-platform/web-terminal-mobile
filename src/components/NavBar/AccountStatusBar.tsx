@@ -6,14 +6,20 @@ import { ButtonWithoutStyles } from '../../styles/ButtonWithoutStyles';
 import AccStatusData from '../../constants/AccountStatusData';
 
 interface Props {
+  customRef: any;
   donePercent: number;
   onClick: () => void;
   activeStatus: AccountStatusEnum;
 }
 
-const AccountStatusBar = ({ onClick, donePercent, activeStatus }: Props) => {
+const AccountStatusBar = ({
+  onClick,
+  donePercent,
+  activeStatus,
+  customRef,
+}: Props) => {
   return (
-    <ButtonWithoutStyles onClick={onClick}>
+    <ButtonWithoutStyles onClick={onClick} ref={customRef}>
       <FlexContainer
         height="36px"
         alignItems="center"
