@@ -196,9 +196,11 @@ const MainApp: FC = () => {
   }, []);
 
   useEffect(() => {
-    if (mainAppStore.activeAccountId && instrumentsStore.instruments.length) {
-      fetchFavoriteInstruments();
-    }
+    autorun(() => {
+      if (instrumentsStore.instruments.length) {
+        fetchFavoriteInstruments();
+      }
+    });
   }, [instrumentsStore.instruments]);
 
   return (
