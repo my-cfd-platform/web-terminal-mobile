@@ -104,6 +104,7 @@ const MainApp: FC = () => {
   }, [
     instrumentsStore.activeInstrument,
     instrumentsStore.activeInstrumentsIds,
+    instrumentsStore.instruments,
     mainAppStore.activeAccount,
     mainAppStore.activeAccountId,
     mainAppStore.isLoading,
