@@ -169,26 +169,32 @@ const NavBar: FC<Props> = observer(({ showBar }) => {
             userProfileStore.currentAccountTypeId !== null &&
             userProfileStore.statusTypes !== null && (
               <>
-                <AccountStatusBar
-                  donePercent={
-                    userProfileStore.userStatus === AccountStatusEnum.VIP
-                      ? 100
-                      : userProfileStore.percentageToNextAccountType || 3
-                  }
-                  onClick={handleOpenSD}
-                  activeStatus={userProfileStore.userStatus}
-                />
+                {!userProfileStore.isCongratModal && (
+                  <>
+                    <AccountStatusBar
+                      donePercent={
+                        userProfileStore.userStatus === AccountStatusEnum.VIP
+                          ? 100
+                          : userProfileStore.percentageToNextAccountType || 3
+                      }
+                      onClick={handleOpenSD}
+                      activeStatus={userProfileStore.userStatus}
+                    />
 
-                {showStatusDescription && (
-                  <AccountStatusNextStepInfoModal
-                    closeModal={handleCloseSD}
-                    prevStatusType={userProfileStore.userStatus}
-                    activeStatus={userProfileStore.userNextStatus}
-                    depositValue={userProfileStore.amountToNextAccountType || 0}
-                  />
+                    {showStatusDescription && (
+                      <AccountStatusNextStepInfoModal
+                        closeModal={handleCloseSD}
+                        prevStatusType={userProfileStore.userStatus}
+                        activeStatus={userProfileStore.userNextStatus}
+                        depositValue={
+                          userProfileStore.amountToNextAccountType || 0
+                        }
+                      />
+                    )}
+                  </>
                 )}
 
-                {userProfileStore.isCongratModal && !showStatusDescription && (
+                {userProfileStore.isCongratModal && (
                   <NewStatusPopup activeStatus={userProfileStore.userStatus} />
                 )}
               </>

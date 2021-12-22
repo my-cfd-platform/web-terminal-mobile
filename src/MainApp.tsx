@@ -55,7 +55,7 @@ const MainApp: FC = () => {
         });
 
         let responseToCheck: string[] = [];
-        response.map((instrumentId) => {
+        response.reverse().map((instrumentId) => {
           if (
             instrumentsStore.instruments.find(
               (item) => item.instrumentItem.id === instrumentId
