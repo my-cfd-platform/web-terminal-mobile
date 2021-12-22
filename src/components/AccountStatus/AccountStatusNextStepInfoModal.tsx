@@ -95,8 +95,8 @@ const AccountStatusNextStepInfoModal = (props: Props) => {
       return [];
     }
     if (prevStatusType === AccountStatusEnum.VIP) {
-      let arr = statusInfo.newFeatures;
-      arr.shift();
+      // global object copy
+      let arr = statusInfo.openedFeatures;
       return arr;
     }
     return statusInfo.newFeatures;
