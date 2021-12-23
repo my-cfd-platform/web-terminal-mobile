@@ -18,8 +18,7 @@ import { OperationApiResponseCodes } from './enums/OperationApiResponseCodes';
 import { FULL_VH } from './constants/global';
 import 'react-smartbanner/dist/main.css';
 import SmartBanner from 'react-smartbanner';
-import { observer, Observer } from 'mobx-react-lite';
-import HelmetMetaHeader from './components/HelmetMetaHeader';
+import { Observer } from 'mobx-react-lite';
 
 declare const window: any;
 
@@ -27,7 +26,7 @@ const DAYS_HIDDEN = IS_LIVE ? 30 : 1;
 const DAYS_VIEW_HIDDEN = IS_LIVE ? 90 : 1;
 
 const MainApp: FC = () => {
-  const { mainAppStore, instrumentsStore, userProfileStore } = useStores();
+  const { mainAppStore, instrumentsStore } = useStores();
   const { t, i18n } = useTranslation();
 
   const isPromoAccountView = useCallback(() => {
@@ -39,52 +38,6 @@ const MainApp: FC = () => {
     mainAppStore.promo,
     mainAppStore.isPromoAccount,
     mainAppStore.isInitLoading,
-  ]);
-
-  const fetchFavoriteInstruments = useCallback(async () => {
-    if (mainAppStore.activeAccount) {
-      mainAppStore.setDataLoading(true);
-
-      const accountType = mainAppStore.activeAccount?.isLive
-        ? AccountTypeEnum.Live
-        : AccountTypeEnum.Demo;
-
-      try {
-        const response = await API.getFavoriteInstrumets({
-          type: accountType,
-          accountId: mainAppStore.activeAccountId,
-        });
-        instrumentsStore.setActiveInstrumentsIds(response.reverse());
-
-        // https://monfex.atlassian.net/browse/WEBT-475
-        // if app is reinitializing, we should wait widget first
-
-        if (!response.length) {
-          throw new Error(
-            t('Something went wrong.')
-          );
-        }
-        await instrumentsStore.switchInstrument(response[response.length - 1]);
-        mainAppStore.setDataLoading(false);
-      } catch (error) {
-        mainAppStore.setDataLoading(false);
-        instrumentsStore.setActiveInstrumentsIds(
-          instrumentsStore.instruments
-            .slice(0, 5)
-            .map((instr) => instr.instrumentItem.id)
-        );
-        instrumentsStore.switchInstrument(
-          instrumentsStore.instruments[0].instrumentItem.id,
-          false
-        );
-      }
-    }
-  }, [
-    instrumentsStore.activeInstrument,
-    instrumentsStore.activeInstrumentsIds,
-    mainAppStore.activeAccount,
-    mainAppStore.activeAccountId,
-    mainAppStore.isLoading,
   ]);
 
   const setFullHeightProperty = () => {
@@ -170,12 +123,6 @@ const MainApp: FC = () => {
       const error = new Error('Socket close error');
       mainAppStore.handleSocketCloseError(error);
     };
-
-    autorun(() => {
-      if (mainAppStore.activeAccountId) {
-        fetchFavoriteInstruments();
-      }
-    });
   }, []);
 
   return (

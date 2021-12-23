@@ -379,6 +379,32 @@ const PositionEditTP = observer(() => {
     }
   };
 
+  const valueWithPrecision = () => {
+    switch (position?.tpType) {
+      case TpSlTypeEnum.Currency:
+        setFieldValue('value', position?.tp !== null
+          ? Math.abs(position.tp).toFixed(2)
+          : position?.tp);
+        break;
+
+      case TpSlTypeEnum.Price:
+        setFieldValue(
+          'price',
+          position?.tp !== null
+            ? Math.abs(position.tp).toFixed(instrument?.digits || 2)
+            : position?.tp
+        );
+        break;
+
+      default:
+        break;
+    }
+  };
+
+  useEffect(() => {
+    valueWithPrecision();
+  }, [position, instrument]);
+
   useEffect(() => {
     const pos = quotesStore.activePositions.find(
       (pos) => pos.id === positionId

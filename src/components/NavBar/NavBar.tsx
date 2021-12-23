@@ -12,11 +12,11 @@ import { ButtonWithoutStyles } from '../../styles/ButtonWithoutStyles';
 import AccountSwitcher from '../AccountSwitcher/AccountSwitcher';
 import SvgIcon from '../SvgIcon';
 import IconGift from '../../assets/svg_no_compress/icon-deposit-gift.svg';
-import PopupContainer from '../../containers/PopupContainer';
 import BonusPopup from '../BonusPopup';
 import { useCallback } from 'react';
 import { FC } from 'react';
 import EducationSuccessPopup from '../Education/EducationSuccessPopup';
+import AccountStatusComponent from './AccountStatusComponent';
 
 interface Props {
   showBar: boolean;
@@ -146,10 +146,13 @@ const NavBar: FC<Props> = observer(({ showBar }) => {
           backgroundColor="#1C1F26"
           margin="0 auto"
         >
-          <FlexContainer flexDirection="row">
+          <FlexContainer flexDirection="column" alignItems="flex-start">
             <AccountLabel />
             <AccountsSwitchLink />
           </FlexContainer>
+
+          <AccountStatusComponent />
+
           <FlexContainer>
             {!mainAppStore.isPromoAccount && (
               <DepositLink onClick={handleClickDeposit}>

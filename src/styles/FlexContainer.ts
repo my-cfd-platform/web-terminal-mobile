@@ -39,10 +39,10 @@ export interface FlexContainerProps {
   order?: string;
   backgroundImage?: string;
   transition?: string;
+  overflowX?: string;
 }
 
 export const FlexContainer = styled.div<FlexContainerProps>`
-
   display: flex;
   flex: ${(props) => props.flex};
   position: ${(props) => props.position};
@@ -69,6 +69,7 @@ export const FlexContainer = styled.div<FlexContainerProps>`
   left: ${(props) => props.left};
   z-index: ${(props) => props.zIndex};
   overflow: ${(props) => props.overflow};
+  overflow-x: ${(props) => props.overflowX};
   border-radius: ${(props) => props.borderRadius};
   border: ${(props) => props.border};
   box-shadow: ${(props) => props.boxShadow};

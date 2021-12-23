@@ -645,22 +645,31 @@ const OrderPage = observer(() => {
       if (SLTPStore.creatingPosition && !SLTPStore.isSLTPMode) {
         setFieldValue(Fields.OPERATION, SLTPStore.creatingPosition.operation);
         setFieldValue(Fields.MULTIPLIER, SLTPStore.creatingPosition.multiplier);
-        setFieldValue(Fields.AMOUNT, SLTPStore.creatingPosition.investmentAmount);
+        setFieldValue(
+          Fields.AMOUNT,
+          SLTPStore.creatingPosition.investmentAmount
+        );
         setFieldValue(Fields.STOP_LOSS, SLTPStore.creatingPosition.sl);
         setFieldValue(Fields.TAKE_PROFIT, SLTPStore.creatingPosition.tp);
         setFieldValue(Fields.STOP_LOSS_TYPE, SLTPStore.creatingPosition.slType);
-        setFieldValue(Fields.TAKE_PROFIT_TYPE, SLTPStore.creatingPosition.tpType);
-        setFieldValue(Fields.IS_TOPPING_UP_ACTIVE, SLTPStore.creatingPosition.isToppingUpActive);
+        setFieldValue(
+          Fields.TAKE_PROFIT_TYPE,
+          SLTPStore.creatingPosition.tpType
+        );
+        setFieldValue(
+          Fields.IS_TOPPING_UP_ACTIVE,
+          SLTPStore.creatingPosition.isToppingUpActive
+        );
         if (SLTPStore.creatingPosition?.openPrice) {
-          setFieldValue(Fields.PURCHASE_AT, SLTPStore.creatingPosition.openPrice);
+          setFieldValue(
+            Fields.PURCHASE_AT,
+            SLTPStore.creatingPosition.openPrice
+          );
         }
         SLTPStore.setCreatingPosition(null);
       }
     }, 500);
-  }, [
-    SLTPStore.creatingPosition,
-    SLTPStore.isSLTPMode,
-  ]);
+  }, [SLTPStore.creatingPosition, SLTPStore.isSLTPMode]);
 
   useEffect(() => {
     SLTPStore.setIsSLTPMode(false);
@@ -668,7 +677,7 @@ const OrderPage = observer(() => {
       if (!SLTPStore.isSLTPMode) {
         SLTPStore.setCreatingPosition(null);
       }
-    }
+    };
   }, []);
 
   const {
@@ -937,14 +946,13 @@ const OrderPage = observer(() => {
                   >
                     {values.sl !== null ? (
                       <>
+                        {values.slType !== TpSlTypeEnum.Price && '-'}
                         {values.slType !== TpSlTypeEnum.Price &&
-                        '-'}
-                        {values.slType !== TpSlTypeEnum.Price &&
-                        mainAppStore.activeAccount?.symbol}
+                          mainAppStore.activeAccount?.symbol}
                         {values.slType === TpSlTypeEnum.Price
                           ? Math.abs(values.sl).toFixed(
-                            getPressision(values.instrumentId)
-                          )
+                              getPressision(values.instrumentId)
+                            )
                           : Math.abs(values.sl).toFixed(2)}
                       </>
                     ) : (
@@ -979,14 +987,14 @@ const OrderPage = observer(() => {
                     {values.tp !== null ? (
                       <>
                         {values.tpType !== TpSlTypeEnum.Price &&
-                        values.tp < 0 &&
-                        '-'}
+                          values.tp < 0 &&
+                          '-'}
                         {values.tpType !== TpSlTypeEnum.Price &&
-                        mainAppStore.activeAccount?.symbol}
+                          mainAppStore.activeAccount?.symbol}
                         {values.tpType === TpSlTypeEnum.Price
                           ? Math.abs(values.tp).toFixed(
-                            getPressision(values.instrumentId)
-                          )
+                              getPressision(values.instrumentId)
+                            )
                           : Math.abs(values.tp).toFixed(2)}
                       </>
                     ) : (

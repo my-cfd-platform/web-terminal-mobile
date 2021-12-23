@@ -15,7 +15,10 @@ import {
   LpLoginParams,
 } from '../types/UserInfo';
 import { HubConnection } from '@aspnet/signalr';
-import { AccountModelWebSocketDTO } from '../types/AccountsTypes';
+import {
+  AccountModelWebSocketDTO,
+  AccountUserStatusDTO,
+} from '../types/AccountsTypes';
 import { action, observable, computed } from 'mobx';
 import API from '../helpers/API';
 import { OperationApiResponseCodes } from '../enums/OperationApiResponseCodes';
@@ -354,6 +357,15 @@ export class MainAppStore implements MainAppStoreProps {
         this.accounts = this.accounts.map((account) =>
           account.id === response.data.id ? response.data : account
         );
+        if (
+          response.data.balance !== 0 &&
+          this.rootStore.userProfileStore.isBonus &&
+          !this.isPromoAccount
+        ) {
+          try {
+            this.rootStore.userProfileStore.getUserBonus(this.initModel.miscUrl);
+          } catch (error) {}
+        }
       }
     );
 
@@ -501,6 +513,37 @@ export class MainAppStore implements MainAppStoreProps {
         this.rootStore.badRequestPopupStore.stopRecconect();
       }
     });
+
+    connection.on(
+      Topics.ACCOUNT_TYPE_UPDATE,
+      (response: ResponseFromWebsocket<AccountUserStatusDTO>) => {
+        console.log(response.data);
+        this.rootStore.userProfileStore.updateStatusTypes(
+          response.data.accountTypeModels
+        );
+        this.rootStore.userProfileStore.amountToNextAccountType =
+          response.data.amountToNextAccountType;
+        this.rootStore.userProfileStore.currentAccountTypeId =
+          response.data.currentAccountTypeId;
+        this.rootStore.userProfileStore.percentageToNextAccountType =
+          response.data.currentAccountTypeProgressPercentage;
+
+        this.rootStore.userProfileStore.setActiveStatus(
+          response.data.currentAccountTypeId
+        );
+
+        if (response.data.currentAccountTypeId) {
+          this.rootStore.userProfileStore.checkActiveAccount(
+            response.data.currentAccountTypeId
+          );
+          // set default status
+          this.rootStore.userProfileStore.setKVActiveStatus(
+            response.data.currentAccountTypeId,
+            true
+          );
+        }
+      }
+    );
   };
 
   handleInitConnection = async (token = this.token) => {

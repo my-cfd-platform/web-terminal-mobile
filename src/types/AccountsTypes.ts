@@ -1,3 +1,5 @@
+import { AccountStatusEnum } from '../enums/AccountStatusEnum';
+import { AccountTypeEnum } from '../enums/AccountTypeEnum';
 import { InstrumentModelWSDTO } from './InstrumentsTypes';
 
 export interface AccountModelDTO {
@@ -27,3 +29,24 @@ export interface AccountModelWebSocketDTO {
 }
 
 
+export interface AccountUserStatusInfo {
+  id: string;
+  name: string;
+  order: number;
+  type: AccountStatusEnum;
+  depositsSumFrom: number;
+  depositsSomTo: number;
+}
+
+export interface AccountUserStatusDTO {
+  accountTypeModels: AccountUserStatusInfo[];
+  currentAccountTypeId: string;
+  currentAccountTypeProgressPercentage: number,
+  amountToNextAccountType: number;
+}
+
+export interface UserActiveStatus {
+  currentAccountTypeId: string;
+  currentAccountTypeProgressPercentage: number,
+  amountToNextAccountType: number;
+}

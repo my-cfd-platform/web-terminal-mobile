@@ -19,12 +19,12 @@ const resources = {
   [CountriesEnum.ES]: {
     translation: es,
   },
-  [CountriesEnum.DE]: {
-    translation: de,
-  },
-  [CountriesEnum.RU]: {
-    translation: ru,
-  },
+  // [CountriesEnum.DE]: {
+  //   translation: de,
+  // },
+  // [CountriesEnum.RU]: {
+  //   translation: ru,
+  // },
   // [CountriesEnum.PT]: {
   //   translation: pt,
   // },
@@ -42,9 +42,9 @@ i18n
     supportedLngs: [
       CountriesEnum.EN,
       CountriesEnum.PL,
-      CountriesEnum.DE,
+      //CountriesEnum.DE,
       CountriesEnum.ES,
-      CountriesEnum.RU,
+      //CountriesEnum.RU,
       //CountriesEnum.PT,
     ],
     interpolation: {

@@ -401,6 +401,33 @@ const PositionEditSL = observer(() => {
     validateOnChange: false,
   });
 
+
+  const valueWithPrecision = () => {
+    switch (position?.slType) {
+      case TpSlTypeEnum.Currency:
+        setFieldValue('value', position?.sl !== null
+          ? Math.abs(position.sl).toFixed(2)
+          : position?.sl);
+        break;
+
+      case TpSlTypeEnum.Price:
+        setFieldValue(
+          'price',
+          position?.sl !== null
+            ? Math.abs(position.sl).toFixed(instrument?.digits || 2)
+            : position?.sl
+        );
+        break;
+
+      default:
+        break;
+    }
+  };
+
+  useEffect(() => {
+    valueWithPrecision();
+  }, [position, instrument]);
+
   const handleToggleSlideSLTP = (on: boolean) => {
     setActiveSL(on);
     if (!on) {
