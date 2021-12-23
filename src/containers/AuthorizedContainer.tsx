@@ -135,7 +135,7 @@ const AuthorizedContainer: FC = observer(({ children }) => {
 
         if (!response.length) {
           throw new Error(
-            t(apiResponseCodeMessages[OperationApiResponseCodes.TechnicalError])
+            t('Something went wrong.')
           );
         }
         await instrumentsStore.switchInstrument(response[response.length - 1]);
