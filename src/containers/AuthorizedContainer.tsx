@@ -68,6 +68,7 @@ const AuthorizedContainer: FC = observer(({ children }) => {
     badRequestPopupStore
   } = useStores();
   const [waitingData, setWaitingData] = useState<boolean>(true);
+  const [isBonusGotten, setIsBonusGotten] = useState<boolean>(false);
   const showNavbarAndNav = !match?.isExact;
 
   const hidenPromoPageList = useRouteMatch([
@@ -303,8 +304,10 @@ const AuthorizedContainer: FC = observer(({ children }) => {
       mainAppStore.token &&
       !mainAppStore.isPromoAccount &&
       !mainAppStore.promo &&
-      !mainAppStore.activeACCLoading
+      !mainAppStore.activeACCLoading &&
+      !isBonusGotten
     ) {
+      setIsBonusGotten(true);
       userProfileStore.getUserBonus(mainAppStore.initModel.miscUrl);
     }
   }, [

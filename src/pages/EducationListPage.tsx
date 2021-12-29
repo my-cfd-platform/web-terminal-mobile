@@ -85,7 +85,6 @@ const EducationListPage = observer(() => {
               );
             }
 
-            console.log('loaded course');
             break;
           }
           default:
@@ -93,7 +92,6 @@ const EducationListPage = observer(() => {
             break;
         }
 
-        console.log('loaded course');
         educationStore.setEducationIsLoaded(false);
       } catch (error) {
         educationStore.setEducationIsLoaded(false);

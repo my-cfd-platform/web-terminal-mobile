@@ -141,7 +141,6 @@ export class UserProfileStore implements ContextProps {
     if (currentIndex !== -1) {
       nextStatus = this.statusTypes[currentIndex].type;
     }
-    console.log('next status ', nextStatus);
     this.userNextStatus = nextStatus;
   };
 
@@ -157,7 +156,6 @@ export class UserProfileStore implements ContextProps {
       }
     }
     this.userStatus = type;
-    console.log('current status ', type);
     this.setNextStatus(type);
   };
 

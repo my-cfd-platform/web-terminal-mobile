@@ -517,7 +517,6 @@ export class MainAppStore implements MainAppStoreProps {
     connection.on(
       Topics.ACCOUNT_TYPE_UPDATE,
       (response: ResponseFromWebsocket<AccountUserStatusDTO>) => {
-        console.log(response.data);
         this.rootStore.userProfileStore.updateStatusTypes(
           response.data.accountTypeModels
         );
