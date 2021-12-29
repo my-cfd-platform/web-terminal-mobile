@@ -1,0 +1,6 @@
+export enum KYCdocumentTypeEnum {
+  IDENTITY_DOCUMENT,
+  PROOF_OF_ADRESS,
+  BANK_CARD,
+  ADDITIONAL_DOCUMENT
+}
