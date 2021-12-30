@@ -606,5 +606,8 @@
     "A discount on the commission that occurs from the difference between Bid and Ask prices": "A discount on the commission that occurs from the difference between Bid and Ask prices",
     "A discount on the over-the-night transactions": "A discount on the over-the-night transactions",
     "Please enter a different Stop Loss amount": "Please enter a different Stop Loss amount",
-    "Timeout connection error": "Timeout connection error"
+    "Timeout connection error": "Timeout connection error",
+    "We are trying to connect to the server": "We are trying to connect to the server",
+    "Oooopsss": "Oooopsss",
+    "Reconnecting…": "Reconnecting…"
 }

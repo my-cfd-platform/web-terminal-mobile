@@ -532,9 +532,6 @@ export class MainAppStore implements MainAppStoreProps {
         );
 
         if (response.data.currentAccountTypeId) {
-          this.rootStore.userProfileStore.checkActiveAccount(
-            response.data.currentAccountTypeId
-          );
           // set default status
           this.rootStore.userProfileStore.setKVActiveStatus(
             response.data.currentAccountTypeId,

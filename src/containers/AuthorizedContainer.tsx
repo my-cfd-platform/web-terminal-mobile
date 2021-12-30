@@ -21,10 +21,7 @@ import LoaderFullscreen from '../components/LoaderFullscreen';
 import NetworkErrorPopup from '../components/NetworkErrorPopup';
 import ServerErrorPopup from '../components/ServerErrorPopup';
 import mixpanelEvents from '../constants/mixpanelEvents';
-import { autorun } from 'mobx';
-import apiResponseCodeMessages from '../constants/apiResponseCodeMessages';
 import { AccountTypeEnum } from '../enums/AccountTypeEnum';
-import { OperationApiResponseCodes } from '../enums/OperationApiResponseCodes';
 import { useTranslation } from 'react-i18next';
 import TimeoutNotificationPopup from '../components/TimeoutNotificationPopup';
 import ReloadPopup from '../components/ReloadPopup';
@@ -94,7 +91,10 @@ const AuthorizedContainer: FC = observer(({ children }) => {
   const isHiddenPromoPage = hidenPromoPageList?.isExact;
 
   const fetchFavoriteInstruments = useCallback(async () => {
-    if (mainAppStore.activeAccount) {
+    if (
+      mainAppStore.activeAccount &&
+      instrumentsStore.instruments.length
+    ) {
       mainAppStore.setDataLoading(true);
 
       const accountType = mainAppStore.activeAccount?.isLive
@@ -162,13 +162,13 @@ const AuthorizedContainer: FC = observer(({ children }) => {
     mainAppStore.activeAccountId,
     mainAppStore.isLoading,
   ]);
+
   useEffect(() => {
-    autorun(() => {
-      if (instrumentsStore.instruments.length) {
-        fetchFavoriteInstruments();
-      }
-    });
-  }, [instrumentsStore.instruments]);
+    fetchFavoriteInstruments();
+  }, [
+    instrumentsStore.instruments,
+    mainAppStore.activeAccountId,
+  ]);
 
   useEffect(() => {
     if (mainAppStore.isPromoAccount && isHiddenPromoPage) {

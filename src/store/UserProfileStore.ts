@@ -194,6 +194,7 @@ export class UserProfileStore implements ContextProps {
       if (activeStatusId && activeStatusId !== currentAccountTypeId) {
         this.openCongratModal();
       }
+      return activeStatusId;
     } catch (error) {}
   };
 
@@ -205,11 +206,7 @@ export class UserProfileStore implements ContextProps {
     try {
       if (init) {
         // on new user init KV Status
-        const activeStatusId = await API.getKeyValue(
-          KeysInApi.ACTIVE_ACCOUNT_STATUS,
-          this.rootStore.mainAppStore.initModel.tradingUrl
-        );
-
+        const activeStatusId = await this.checkActiveAccount(currentAccountTypeId);
         if (!activeStatusId) {
           await API.setKeyValue(
             {

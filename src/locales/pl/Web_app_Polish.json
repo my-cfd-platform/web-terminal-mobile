@@ -606,5 +606,8 @@
     "Live sessions with a professional trader during market events or promotions": "Sesje na żywo z profesjonalnym traderem podczas wydarzeń rynkowych lub promocji",
     "Access to assisted trading software, indicators, analytics  and special charting tools": "Dostęp do wspomaganego oprogramowania handlowego, wskaźników, analiz i specjalnych narzędzi do tworzenia wykresów",
     "A discount on the commission that occurs from the difference between Bid and Ask prices": "Zniżka na prowizję wynikającą z różnicy między cenami Kupna i Sprzedaży",
-    "A discount on the over-the-night transactions": "Zniżka na transakcje dokonywane w nocy"
+    "A discount on the over-the-night transactions": "Zniżka na transakcje dokonywane w nocy",
+    "We are trying to connect to the server": "Próbujemy połączyć się z serwerem",
+    "Oooopsss": "Uuuupsss",
+    "Reconnecting…": "Ponowne łączenie..."
 }

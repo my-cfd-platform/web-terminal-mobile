@@ -51,7 +51,7 @@ const TimeoutNotificationPopup: FC<Props> = ({
       zIndex="1001"
       alignItems="center"
     >
-      {!isSuccessfull && <ErrorTitie>Oooopsss</ErrorTitie>}
+      {!isSuccessfull && <ErrorTitie>{t('Oooopsss')}</ErrorTitie>}
       <NotifyText data-testid={testIds.NOTIFICATION_POPUP_MESSAGE}>
         {t('We are trying to connect to the server')} <br />
         {t('Reconnecting…')}
