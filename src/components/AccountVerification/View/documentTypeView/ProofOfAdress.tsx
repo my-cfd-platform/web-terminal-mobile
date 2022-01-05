@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { PrimaryButton } from '../../../../styles/Buttons';
 import {
@@ -16,25 +16,36 @@ import Image1 from '../../../../assets/images/kyc/document-images-requirement/pr
 import Image2 from '../../../../assets/images/kyc/document-images-requirement/proof-of-adress/2.png';
 import Image3 from '../../../../assets/images/kyc/document-images-requirement/proof-of-adress/3.png';
 import Image4 from '../../../../assets/images/kyc/document-images-requirement/proof-of-adress/4.png';
+import { DocumentTypeEnum } from '../../../../enums/DocumentTypeEnum';
+import { KYCdocumentTypeEnum } from '../../../../enums/KYC/KYCdocumentTypeEnum';
+import { useStores } from '../../../../hooks/useStores';
+import { observer } from 'mobx-react-lite';
 
-const ProofOfAdress = () => {
+const ProofOfAdress = observer(() => {
   const { t } = useTranslation();
+  const { kycStore } = useStores();
 
-  const [file, setFile] = useState<File | null>(null);
+  const [file, setFile] = useState<File | null>(
+    kycStore.formKYCData[DocumentTypeEnum.ProofOfAddress]
+  );
   const [image, setImage] = useState('');
 
+  const [error, setError] = useState('');
+
   const handlerUploadImage = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setError('');
     if (!e.target.files || !e.target.files.length) {
       return;
     }
     if (e.target.files[0].size > MAX_FILE_UPLOAD_5_MB) {
-      console.log('no file uploaded');
+      setError('Allowed maximum size 5MB');
       return;
     } else {
+      kycStore.setFiledData(DocumentTypeEnum.ProofOfAddress, e.target.files[0]);
+
       setFile(e.target.files[0]);
       const reader = new FileReader();
       reader.onload = (event: any) => {
-        console.log('stopped file read');
         if (event.target) {
           setImage(event.target.result);
         }
@@ -44,9 +55,29 @@ const ProofOfAdress = () => {
   };
 
   const handleRemoveImage = (inputName: string) => {
+    const docType = Number(inputName.split('kyc-image-')[1]);
     setFile(null);
     setImage('');
+    kycStore.setFiledData(docType, null);
   };
+
+  const handleSubmit = () => {
+    kycStore.setFilledStep(KYCdocumentTypeEnum.PROOF_OF_ADRESS);
+    kycStore.closeDocumentStep();
+  };
+
+  useEffect(() => {
+    const photo1 = kycStore.formKYCData[DocumentTypeEnum.ProofOfAddress];
+    if (photo1 !== null) {
+      const reader = new FileReader();
+      reader.onload = (event: any) => {
+        if (event.target) {
+          setImage(event.target.result);
+        }
+      };
+      reader.readAsDataURL(photo1);
+    }
+  }, [kycStore.formKYCData]);
 
   return (
     <FlexContainer flex="1" flexDirection="column" padding="0 0 80px 0">
@@ -82,12 +113,14 @@ const ProofOfAdress = () => {
         </FlexContainer>
 
         <InputPhoto
-          name="driving-licence-front-image"
+          name={`kyc-image-${DocumentTypeEnum.ProofOfAddress}`}
           label={t('Upload the Proof of Address')}
           file={file}
           image={image}
           onUpload={handlerUploadImage}
           onRemoveImage={handleRemoveImage}
+          hasError={!!error}
+          errorText={error}
         />
 
         <FlexContainer width="100%" flexDirection="column" padding="16px">
@@ -106,7 +139,7 @@ const ProofOfAdress = () => {
               flexDirection="column"
               alignItems="center"
             >
-              <ResponsiveImage src={Image1} />
+              <ResponsiveImage width="48px" marginBottom="8px" src={Image1} />
               <PrimaryTextSpan color="#ffffff" fontSize="12px">
                 {t('Good')}
               </PrimaryTextSpan>
@@ -116,7 +149,7 @@ const ProofOfAdress = () => {
               flexDirection="column"
               alignItems="center"
             >
-              <ResponsiveImage src={Image2} />
+              <ResponsiveImage width="48px" marginBottom="8px" src={Image2} />
               <PrimaryTextSpan color="#ffffff" fontSize="12px">
                 {t('Not cut')}
               </PrimaryTextSpan>
@@ -126,7 +159,7 @@ const ProofOfAdress = () => {
               flexDirection="column"
               alignItems="center"
             >
-              <ResponsiveImage src={Image3} />
+              <ResponsiveImage width="48px" marginBottom="8px" src={Image3} />
               <PrimaryTextSpan color="#ffffff" fontSize="12px">
                 {t('Not blurry')}
               </PrimaryTextSpan>
@@ -136,7 +169,7 @@ const ProofOfAdress = () => {
               flexDirection="column"
               alignItems="center"
             >
-              <ResponsiveImage src={Image4} />
+              <ResponsiveImage width="48px" marginBottom="8px" src={Image4} />
               <PrimaryTextSpan color="#ffffff" fontSize="12px">
                 {t('Not reflective')}
               </PrimaryTextSpan>
@@ -200,12 +233,12 @@ const ProofOfAdress = () => {
         right="0"
         backgroundColor="#1C1F26"
       >
-        <PrimaryButton disabled={!image} width="100%">
+        <PrimaryButton disabled={!image} width="100%" onClick={handleSubmit}>
           {t('Continue')}
         </PrimaryButton>
       </FlexContainer>
     </FlexContainer>
   );
-};
+});
 
 export default ProofOfAdress;
