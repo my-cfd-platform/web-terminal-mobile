@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { PrimaryButton } from '../../../../styles/Buttons';
 import {
@@ -16,37 +16,110 @@ import Image1 from '../../../../assets/images/kyc/document-images-requirement/id
 import Image2 from '../../../../assets/images/kyc/document-images-requirement/id-card/2.png';
 import Image3 from '../../../../assets/images/kyc/document-images-requirement/id-card/3.png';
 import Image4 from '../../../../assets/images/kyc/document-images-requirement/id-card/4.png';
+import { observer } from 'mobx-react-lite';
+import { useStores } from '../../../../hooks/useStores';
+import { DocumentTypeEnum } from '../../../../enums/DocumentTypeEnum';
+import { KYCdocumentTypeEnum } from '../../../../enums/KYC/KYCdocumentTypeEnum';
 
-const IdentityIDCard = () => {
+const IdentityIDCard = observer(() => {
   const { t } = useTranslation();
+  const { kycStore } = useStores();
 
-  const [file, setFile] = useState<File | null>(null);
-  const [image, setImage] = useState('');
+  const [file1, setFile1] = useState<File | null>(
+    kycStore.formKYCData[DocumentTypeEnum.FrontCard]
+  );
+  const [file2, setFile2] = useState<File | null>(
+    kycStore.formKYCData[DocumentTypeEnum.BackCard]
+  );
+  const [image1, setImage1] = useState('');
+  const [image2, setImage2] = useState('');
+
+  const [error1, setError1] = useState('');
+  const [error2, setError2] = useState('');
 
   const handlerUploadImage = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const docType = Number(e.target.name.split('image-')[1]);
+
     if (!e.target.files || !e.target.files.length) {
       return;
     }
+
     if (e.target.files[0].size > MAX_FILE_UPLOAD_5_MB) {
-      console.log('no file uploaded');
+      if (docType === DocumentTypeEnum.FrontCard) {
+        setError1('Allowed maximum size 5MB');
+      } else {
+        setError2('Allowed maximum size 5MB');
+      }
       return;
     } else {
-      setFile(e.target.files[0]);
-      const reader = new FileReader();
-      reader.onload = (event: any) => {
-        console.log('stopped file read');
-        if (event.target) {
-          setImage(event.target.result);
-        }
-      };
-      reader.readAsDataURL(e.target.files[0]);
+      if (docType === DocumentTypeEnum.FrontCard) {
+        setFile1(e.target.files[0]);
+        const reader = new FileReader();
+        reader.onload = (event: any) => {
+          console.log('stopped file read');
+          if (event.target) {
+            setImage1(event.target.result);
+          }
+        };
+        reader.readAsDataURL(e.target.files[0]);
+      } else {
+        setFile2(e.target.files[0]);
+        const reader = new FileReader();
+        reader.onload = (event: any) => {
+          console.log('stopped file read');
+          if (event.target) {
+            setImage2(event.target.result);
+          }
+        };
+        reader.readAsDataURL(e.target.files[0]);
+      }
+      kycStore.setFiledData(docType, e.target.files[0]);
     }
   };
 
-  const handleRemoveImage = (inputName: string) => {
-    setFile(null);
-    setImage('');
+  const handleSubmit = () => {
+    kycStore.setFilledStep(KYCdocumentTypeEnum.IDENTITY_DOCUMENT);
+    kycStore.closeDocumentStep();
   };
+
+  const handleRemoveImage = (inputName: string) => {
+    const docType = Number(inputName.split('kyc-image-')[1]);
+
+    if (docType === DocumentTypeEnum.FrontCard) {
+      setFile1(null);
+      setImage1('');
+    } else {
+      setFile2(null);
+      setImage2('');
+    }
+
+    kycStore.setFiledData(docType, null);
+  };
+
+  useEffect(() => {
+    const photo1 = kycStore.formKYCData[DocumentTypeEnum.FrontCard];
+    const photo2 = kycStore.formKYCData[DocumentTypeEnum.BackCard];
+
+    if (photo1 !== null) {
+      const reader = new FileReader();
+      reader.onload = (event: any) => {
+        if (event.target) {
+          setImage1(event.target.result);
+        }
+      };
+      reader.readAsDataURL(photo1);
+    }
+
+    if (photo2 !== null) {
+      const reader = new FileReader();
+      reader.onload = (event: any) => {
+        if (event.target) {
+          setImage2(event.target.result);
+        }
+      };
+      reader.readAsDataURL(photo2);
+    }
+  }, [kycStore.formKYCData]);
 
   return (
     <FlexContainer flex="1" flexDirection="column" padding="0 0 80px 0">
@@ -82,21 +155,25 @@ const IdentityIDCard = () => {
         </FlexContainer>
 
         <InputPhoto
-          name="driving-licence-front-image"
+          name={`kyc-image-${DocumentTypeEnum.FrontCard}`}
           label={t('Upload Front Side')}
-          file={file}
-          image={image}
+          file={file1}
+          image={image1}
           onUpload={handlerUploadImage}
           onRemoveImage={handleRemoveImage}
+          hasError={!!error1}
+          errorText={error1}
         />
 
         <InputPhoto
-          name="driving-licence-back-image"
+          name={`kyc-image-${DocumentTypeEnum.BackCard}`}
           label={t('Upload Back Side')}
-          file={file}
-          image={image}
+          file={file2}
+          image={image2}
           onUpload={handlerUploadImage}
           onRemoveImage={handleRemoveImage}
+          hasError={!!error2}
+          errorText={error2}
         />
 
         <FlexContainer width="100%" flexDirection="column" padding="16px">
@@ -114,7 +191,7 @@ const IdentityIDCard = () => {
               flexDirection="column"
               alignItems="center"
             >
-              <ResponsiveImage src={Image1} />
+              <ResponsiveImage marginBottom="8px" src={Image1} />
               <PrimaryTextSpan color="#ffffff" fontSize="12px">
                 {t('Good')}
               </PrimaryTextSpan>
@@ -124,7 +201,7 @@ const IdentityIDCard = () => {
               flexDirection="column"
               alignItems="center"
             >
-              <ResponsiveImage src={Image2} />
+              <ResponsiveImage marginBottom="8px" src={Image2} />
               <PrimaryTextSpan color="#ffffff" fontSize="12px">
                 {t('Not cut')}
               </PrimaryTextSpan>
@@ -134,7 +211,7 @@ const IdentityIDCard = () => {
               flexDirection="column"
               alignItems="center"
             >
-              <ResponsiveImage src={Image3} />
+              <ResponsiveImage marginBottom="8px" src={Image3} />
               <PrimaryTextSpan color="#ffffff" fontSize="12px">
                 {t('Not blurry')}
               </PrimaryTextSpan>
@@ -144,7 +221,7 @@ const IdentityIDCard = () => {
               flexDirection="column"
               alignItems="center"
             >
-              <ResponsiveImage src={Image4} />
+              <ResponsiveImage marginBottom="8px" src={Image4} />
               <PrimaryTextSpan color="#ffffff" fontSize="12px">
                 {t('Not reflective')}
               </PrimaryTextSpan>
@@ -200,12 +277,16 @@ const IdentityIDCard = () => {
         right="0"
         backgroundColor="#1C1F26"
       >
-        <PrimaryButton disabled={!image} width="100%">
+        <PrimaryButton
+          disabled={!(image1 && image2)}
+          onClick={handleSubmit}
+          width="100%"
+        >
           {t('Continue')}
         </PrimaryButton>
       </FlexContainer>
     </FlexContainer>
   );
-};
+});
 
 export default IdentityIDCard;
