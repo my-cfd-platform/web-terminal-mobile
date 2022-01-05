@@ -121,6 +121,7 @@ const InputPhoto = ({
           flexDirection="column"
           width="100%"
           position="fixed"
+          zIndex="2"
           bottom="0px"
           left="0px"
           padding="12px 16px"
