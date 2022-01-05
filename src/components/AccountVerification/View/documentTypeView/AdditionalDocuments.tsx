@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { PrimaryButton } from '../../../../styles/Buttons';
 import {
@@ -16,37 +16,138 @@ import Image1 from '../../../../assets/images/kyc/document-images-requirement/ad
 import Image2 from '../../../../assets/images/kyc/document-images-requirement/additional-doc/2.png';
 import Image3 from '../../../../assets/images/kyc/document-images-requirement/additional-doc/3.png';
 import Image4 from '../../../../assets/images/kyc/document-images-requirement/additional-doc/4.png';
+import { observer } from 'mobx-react-lite';
+import { DocumentTypeEnum } from '../../../../enums/DocumentTypeEnum';
+import { KYCdocumentTypeEnum } from '../../../../enums/KYC/KYCdocumentTypeEnum';
+import { useStores } from '../../../../hooks/useStores';
 
-const AdditionalDocuments = () => {
+const AdditionalDocuments = observer(() => {
   const { t } = useTranslation();
+  const { kycStore } = useStores();
 
-  const [file, setFile] = useState<File | null>(null);
-  const [image, setImage] = useState('');
+  const [file1, setFile1] = useState<File | null>(
+    kycStore.formKYCData[DocumentTypeEnum.ProofOfPayment]
+  );
+  const [file2, setFile2] = useState<File | null>(
+    kycStore.formKYCData[DocumentTypeEnum.ProofOfWireTransfer]
+  );
+  const [file3, setFile3] = useState<File | null>(
+    kycStore.formKYCData[DocumentTypeEnum.CardAuthorizationForm]
+  );
+  const [image1, setImage1] = useState('');
+  const [image2, setImage2] = useState('');
+  const [image3, setImage3] = useState('');
+
+  const [error1, setError1] = useState('');
+  const [error2, setError2] = useState('');
+  const [error3, setError3] = useState('');
 
   const handlerUploadImage = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const docType = Number(e.target.name.split('image-')[1]);
+
     if (!e.target.files || !e.target.files.length) {
       return;
     }
+
     if (e.target.files[0].size > MAX_FILE_UPLOAD_5_MB) {
-      console.log('no file uploaded');
+      if (docType === DocumentTypeEnum.ProofOfPayment) {
+        setError1('Allowed maximum size 5MB');
+      } else if (docType === DocumentTypeEnum.ProofOfWireTransfer) {
+        setError2('Allowed maximum size 5MB');
+      } else {
+        setError3('Allowed maximum size 5MB');
+      }
       return;
     } else {
-      setFile(e.target.files[0]);
-      const reader = new FileReader();
-      reader.onload = (event: any) => {
-        console.log('stopped file read');
-        if (event.target) {
-          setImage(event.target.result);
-        }
-      };
-      reader.readAsDataURL(e.target.files[0]);
+      if (docType === DocumentTypeEnum.ProofOfPayment) {
+        setFile1(e.target.files[0]);
+        const reader = new FileReader();
+        reader.onload = (event: any) => {
+          if (event.target) {
+            setImage1(event.target.result);
+          }
+        };
+        reader.readAsDataURL(e.target.files[0]);
+      } else if (docType === DocumentTypeEnum.ProofOfWireTransfer) {
+        setFile2(e.target.files[0]);
+        const reader = new FileReader();
+        reader.onload = (event: any) => {
+          if (event.target) {
+            setImage2(event.target.result);
+          }
+        };
+        reader.readAsDataURL(e.target.files[0]);
+      } else {
+        setFile3(e.target.files[0]);
+        const reader = new FileReader();
+        reader.onload = (event: any) => {
+          if (event.target) {
+            setImage3(event.target.result);
+          }
+        };
+        reader.readAsDataURL(e.target.files[0]);
+      }
+      kycStore.setFiledData(docType, e.target.files[0]);
     }
   };
 
-  const handleRemoveImage = (inputName: string) => {
-    setFile(null);
-    setImage('');
+  const handleSubmit = () => {
+    kycStore.setFilledStep(KYCdocumentTypeEnum.ADDITIONAL_DOCUMENT);
+    kycStore.closeDocumentStep();
   };
+
+  const handleRemoveImage = (inputName: string) => {
+    const docType = Number(inputName.split('kyc-image-')[1]);
+
+    if (docType === DocumentTypeEnum.ProofOfPayment) {
+      setFile1(null);
+      setImage1('');
+    } else if (docType === DocumentTypeEnum.ProofOfWireTransfer) {
+      setFile2(null);
+      setImage2('');
+    } else {
+      setFile3(null);
+      setImage3('');
+    }
+
+    kycStore.setFiledData(docType, null);
+  };
+
+  useEffect(() => {
+    const photo1 = kycStore.formKYCData[DocumentTypeEnum.ProofOfPayment];
+    const photo2 = kycStore.formKYCData[DocumentTypeEnum.ProofOfWireTransfer];
+    const photo3 = kycStore.formKYCData[DocumentTypeEnum.CardAuthorizationForm];
+
+    if (photo1 !== null) {
+      const reader = new FileReader();
+      reader.onload = (event: any) => {
+        if (event.target) {
+          setImage1(event.target.result);
+        }
+      };
+      reader.readAsDataURL(photo1);
+    }
+
+    if (photo2 !== null) {
+      const reader = new FileReader();
+      reader.onload = (event: any) => {
+        if (event.target) {
+          setImage2(event.target.result);
+        }
+      };
+      reader.readAsDataURL(photo2);
+    }
+
+    if (photo3 !== null) {
+      const reader = new FileReader();
+      reader.onload = (event: any) => {
+        if (event.target) {
+          setImage3(event.target.result);
+        }
+      };
+      reader.readAsDataURL(photo3);
+    }
+  }, [kycStore.formKYCData]);
 
   return (
     <FlexContainer flex="1" flexDirection="column" padding="0 0 80px 0">
@@ -88,30 +189,36 @@ const AdditionalDocuments = () => {
         </FlexContainer>
 
         <InputPhoto
-          name="driving-licence-front-image"
+          name={`kyc-image-${DocumentTypeEnum.ProofOfPayment}`}
           label={t('Upload Proof of Payment')}
-          file={file}
-          image={image}
+          file={file1}
+          image={image1}
           onUpload={handlerUploadImage}
           onRemoveImage={handleRemoveImage}
+          hasError={!!error1}
+          errorText={error1}
         />
 
         <InputPhoto
-          name="driving-licence-back-image"
+          name={`kyc-image-${DocumentTypeEnum.ProofOfWireTransfer}`}
           label={t('Upload Proof of Wire Transfer (Invoice)')}
-          file={file}
-          image={image}
+          file={file2}
+          image={image2}
           onUpload={handlerUploadImage}
           onRemoveImage={handleRemoveImage}
+          hasError={!!error2}
+          errorText={error2}
         />
 
         <InputPhoto
-          name="driving-licence-back-image"
+          name={`kyc-image-${DocumentTypeEnum.CardAuthorizationForm}`}
           label={t('Upload Card Authorization Form')}
-          file={file}
-          image={image}
+          file={file3}
+          image={image3}
           onUpload={handlerUploadImage}
           onRemoveImage={handleRemoveImage}
+          hasError={!!error3}
+          errorText={error3}
         />
 
         <FlexContainer width="100%" flexDirection="column" padding="16px">
@@ -122,6 +229,7 @@ const AdditionalDocuments = () => {
           <FlexContainer
             width="100%"
             justifyContent="space-between"
+            alignItems="flex-end"
             padding="12px 0"
           >
             <FlexContainer
@@ -129,7 +237,7 @@ const AdditionalDocuments = () => {
               flexDirection="column"
               alignItems="center"
             >
-              <ResponsiveImage src={Image1} />
+              <ResponsiveImage width="48px" marginBottom="8px" src={Image1} />
               <PrimaryTextSpan color="#ffffff" fontSize="12px">
                 {t('Good')}
               </PrimaryTextSpan>
@@ -139,7 +247,7 @@ const AdditionalDocuments = () => {
               flexDirection="column"
               alignItems="center"
             >
-              <ResponsiveImage src={Image2} />
+              <ResponsiveImage width="48px" marginBottom="8px" src={Image2} />
               <PrimaryTextSpan color="#ffffff" fontSize="12px">
                 {t('Not cut')}
               </PrimaryTextSpan>
@@ -149,7 +257,7 @@ const AdditionalDocuments = () => {
               flexDirection="column"
               alignItems="center"
             >
-              <ResponsiveImage src={Image3} />
+              <ResponsiveImage width="48px" marginBottom="8px" src={Image3} />
               <PrimaryTextSpan color="#ffffff" fontSize="12px">
                 {t('Not blurry')}
               </PrimaryTextSpan>
@@ -159,7 +267,7 @@ const AdditionalDocuments = () => {
               flexDirection="column"
               alignItems="center"
             >
-              <ResponsiveImage src={Image4} />
+              <ResponsiveImage width="48px" marginBottom="8px" src={Image4} />
               <PrimaryTextSpan color="#ffffff" fontSize="12px">
                 {t('Not reflective')}
               </PrimaryTextSpan>
@@ -215,12 +323,16 @@ const AdditionalDocuments = () => {
         right="0"
         backgroundColor="#1C1F26"
       >
-        <PrimaryButton disabled={!image} width="100%">
+        <PrimaryButton
+          disabled={!(image1 && image2 && image3)}
+          onClick={handleSubmit}
+          width="100%"
+        >
           {t('Continue')}
         </PrimaryButton>
       </FlexContainer>
     </FlexContainer>
   );
-};
+});
 
 export default AdditionalDocuments;

@@ -43,7 +43,6 @@ const AccountVerificationsList = observer(() => {
 
   const isFilledItem = useCallback(
     (type: KYCdocumentTypeEnum) => {
-      console.log('change list');
       return (
         kycStore.filledSteps !== null && kycStore.filledSteps.includes(type)
       );

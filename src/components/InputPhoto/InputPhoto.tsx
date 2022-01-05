@@ -45,7 +45,7 @@ const InputPhoto = ({
 
   const fileSizeText = (size: number) => {
     const size_in_kb = Math.round(size / 1000);
-    if (size < 1000) {
+    if (size_in_kb < 1000) {
       return `${size_in_kb} kb`;
     }
     return `${Math.round(size_in_kb / 1000)} mb`;

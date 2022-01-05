@@ -75,7 +75,6 @@ export class KYCstore implements Props {
   // KYC FORM
   @action
   setFiledData = (filed: DocumentTypeEnum, data: File | null) => {
-    console.log(filed, data)
     this.formKYCData[filed] = data;
   };
 

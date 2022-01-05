@@ -15,6 +15,7 @@ import BankCard from '../components/AccountVerification/View/documentTypeView/Ba
 import IdentityDocument from '../components/AccountVerification/View/documentTypeView/IdentityDocument';
 import ProofOfAdress from '../components/AccountVerification/View/documentTypeView/ProofOfAdress';
 import AdditionalDocuments from '../components/AccountVerification/View/documentTypeView/AdditionalDocuments';
+import { DocumentTypeEnum } from '../enums/DocumentTypeEnum';
 
 const AccountVerification = observer(() => {
   const { t } = useTranslation();
@@ -44,6 +45,19 @@ const AccountVerification = observer(() => {
     kycStore.closeDocumentStep();
   };
 
+  const isSubmited = useCallback(() => {
+    if (kycStore.filledSteps !== null) {
+      return (
+        kycStore.filledSteps.filter(
+          (el) =>
+            el === KYCdocumentTypeEnum.IDENTITY_DOCUMENT ||
+            el === KYCdocumentTypeEnum.PROOF_OF_ADRESS
+        ).length === 2
+      );
+    }
+    return false;
+  }, [kycStore.filledSteps]);
+
   return (
     <BackFlowLayout
       pageTitle={t('Account verification')}
@@ -56,7 +70,7 @@ const AccountVerification = observer(() => {
         </FlexContainer>
         {kycStore.isVisibleButton && (
           <FlexContainer width="100%" padding="12px 16px">
-            <PrimaryButton disabled={true} width="100%">
+            <PrimaryButton disabled={!isSubmited()} width="100%">
               {t('Send to Verification')}
             </PrimaryButton>
           </FlexContainer>
