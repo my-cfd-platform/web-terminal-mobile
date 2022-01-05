@@ -11,10 +11,10 @@ import { useStores } from '../hooks/useStores';
 import { PrimaryButton } from '../styles/Buttons';
 import { FlexContainer } from '../styles/FlexContainer';
 
-import AdditionalDocuments from '../components/AccountVerification/View/documentTypeView/AdditionalDocuments';
 import BankCard from '../components/AccountVerification/View/documentTypeView/BankCard';
 import IdentityDocument from '../components/AccountVerification/View/documentTypeView/IdentityDocument';
 import ProofOfAdress from '../components/AccountVerification/View/documentTypeView/ProofOfAdress';
+import AdditionalDocuments from '../components/AccountVerification/View/documentTypeView/AdditionalDocuments';
 
 const AccountVerification = observer(() => {
   const { t } = useTranslation();
@@ -54,11 +54,13 @@ const AccountVerification = observer(() => {
         <FlexContainer flexDirection="column" flex="1" overflow="auto">
           {renderView()}
         </FlexContainer>
-        <FlexContainer width="100%" padding="12px 16px">
-          <PrimaryButton disabled={true} width="100%">
-            {t('Send to Verification')}
-          </PrimaryButton>
-        </FlexContainer>
+        {kycStore.isVisibleButton && (
+          <FlexContainer width="100%" padding="12px 16px">
+            <PrimaryButton disabled={true} width="100%">
+              {t('Send to Verification')}
+            </PrimaryButton>
+          </FlexContainer>
+        )}
       </FlexContainer>
     </BackFlowLayout>
   );

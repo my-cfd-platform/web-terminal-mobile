@@ -141,7 +141,6 @@ export class UserProfileStore implements ContextProps {
     if (currentIndex !== -1) {
       nextStatus = this.statusTypes[currentIndex].type;
     }
-    console.log('next status ', nextStatus);
     this.userNextStatus = nextStatus;
   };
 
@@ -157,7 +156,6 @@ export class UserProfileStore implements ContextProps {
       }
     }
     this.userStatus = type;
-    console.log('current status ', type);
     this.setNextStatus(type);
   };
 
@@ -170,20 +168,20 @@ export class UserProfileStore implements ContextProps {
     this.isCongratModal = false;
   };
 
-  @action 
+  @action
   toggleStatusDescription = () => {
     this.isStatusDescription = !this.isStatusDescription;
-  }
+  };
 
-  @action 
+  @action
   openStatusDescription = () => {
     this.isStatusDescription = true;
-  }
+  };
 
-  @action 
+  @action
   closeStatusDescription = () => {
     this.isStatusDescription = false;
-  }
+  };
 
   @action
   checkActiveAccount = async (currentAccountTypeId: string) => {

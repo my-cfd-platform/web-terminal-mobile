@@ -7,17 +7,17 @@ import {
 } from '../../../../styles/FlexContainer';
 import SvgIcon from '../../../SvgIcon';
 
-import IconPassport from '../../../../assets/svg_no_compress/kyc/icons-document/form-view/icon-bank-card.svg';
+import IconPassport from '../../../../assets/svg_no_compress/kyc/icons-document/form-view/icon-passport.svg';
 import { PrimaryTextSpan } from '../../../../styles/TextsElements';
 import InputPhoto from '../../../InputPhoto/InputPhoto';
 import { MAX_FILE_UPLOAD_5_MB } from '../../../../constants/global';
 
-import Image1 from '../../../../assets/images/kyc/document-images-requirement/bank-card/1.png';
-import Image2 from '../../../../assets/images/kyc/document-images-requirement/bank-card/2.png';
-import Image3 from '../../../../assets/images/kyc/document-images-requirement/bank-card/3.png';
-import Image4 from '../../../../assets/images/kyc/document-images-requirement/bank-card/4.png';
+import Image1 from '../../../../assets/images/kyc/document-images-requirement/passport/1.png';
+import Image2 from '../../../../assets/images/kyc/document-images-requirement/passport/2.png';
+import Image3 from '../../../../assets/images/kyc/document-images-requirement/passport/3.png';
+import Image4 from '../../../../assets/images/kyc/document-images-requirement/passport/4.png';
 
-const BankCard = () => {
+const IdentityPassport = () => {
   const { t } = useTranslation();
 
   const [file, setFile] = useState<File | null>(null);
@@ -65,7 +65,7 @@ const BankCard = () => {
           marginBottom="32px"
         >
           <FlexContainer marginBottom="4px">
-            <SvgIcon {...IconPassport} fillColor="#ffffff" />
+            <SvgIcon {...IconPassport} />
           </FlexContainer>
           <PrimaryTextSpan
             color="#ffffff"
@@ -74,25 +74,16 @@ const BankCard = () => {
             textAlign="center"
             marginBottom="4px"
           >
-            {t('Bank Card (For card payments only)')}
+            {`${t('Passport')} ${t('(Required)')}`}
           </PrimaryTextSpan>
           <PrimaryTextSpan color="#ffffff" fontSize="13px" textAlign="center">
-            {t('Upload a photo of the front and back sides of your ID Card')}
+            {t('Upload a full-size photo of the first page of your passport')}
           </PrimaryTextSpan>
         </FlexContainer>
 
         <InputPhoto
-          name="driving-licence-front-image"
-          label={t('Upload Front Side')}
-          file={file}
-          image={image}
-          onUpload={handlerUploadImage}
-          onRemoveImage={handleRemoveImage}
-        />
-
-        <InputPhoto
-          name="driving-licence-back-image"
-          label={t('Upload Back Side')}
+          name="passport-image"
+          label={t('Upload Passport Photo')}
           file={file}
           image={image}
           onUpload={handlerUploadImage}
@@ -208,4 +199,4 @@ const BankCard = () => {
   );
 };
 
-export default BankCard;
+export default IdentityPassport;

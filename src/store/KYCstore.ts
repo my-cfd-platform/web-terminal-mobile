@@ -7,6 +7,8 @@ interface Props {
   filledStep: KYCstepsEnum;
   activeDocumentStep: KYCdocumentTypeEnum | null;
 
+  isVisibleButton: boolean;
+
   filledSteps: KYCdocumentTypeEnum[] | null;
 }
 
@@ -16,7 +18,18 @@ export class KYCstore implements Props {
 
   @observable filledSteps: KYCdocumentTypeEnum[] | null = null;
   @observable activeDocumentStep: KYCdocumentTypeEnum | null = null;
+  @observable isVisibleButton = true;
 
+  @action 
+  showConfirmButton = () => {
+    this.isVisibleButton = true;
+  }
+
+  @action 
+  hideConfirmButton = () => {
+    this.isVisibleButton = false;
+  }
+  
   @action
   setActiveStep = (type: KYCdocumentTypeEnum) => {
     this.activeDocumentStep = type;

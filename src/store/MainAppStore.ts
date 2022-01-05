@@ -352,7 +352,9 @@ export class MainAppStore implements MainAppStoreProps {
           !this.isPromoAccount
         ) {
           try {
-            this.rootStore.userProfileStore.getUserBonus(this.initModel.miscUrl);
+            this.rootStore.userProfileStore.getUserBonus(
+              this.initModel.miscUrl
+            );
           } catch (error) {}
         }
       }
@@ -506,7 +508,6 @@ export class MainAppStore implements MainAppStoreProps {
     connection.on(
       Topics.ACCOUNT_TYPE_UPDATE,
       (response: ResponseFromWebsocket<AccountUserStatusDTO>) => {
-        console.log(response.data);
         this.rootStore.userProfileStore.updateStatusTypes(
           response.data.accountTypeModels
         );

@@ -7,17 +7,17 @@ import {
 } from '../../../../styles/FlexContainer';
 import SvgIcon from '../../../SvgIcon';
 
-import IconPassport from '../../../../assets/svg_no_compress/kyc/icons-document/form-view/icon-bank-card.svg';
+import IconPassport from '../../../../assets/svg_no_compress/kyc/icons-document/form-view/icon-driving-licence.svg';
 import { PrimaryTextSpan } from '../../../../styles/TextsElements';
 import InputPhoto from '../../../InputPhoto/InputPhoto';
 import { MAX_FILE_UPLOAD_5_MB } from '../../../../constants/global';
 
-import Image1 from '../../../../assets/images/kyc/document-images-requirement/bank-card/1.png';
-import Image2 from '../../../../assets/images/kyc/document-images-requirement/bank-card/2.png';
-import Image3 from '../../../../assets/images/kyc/document-images-requirement/bank-card/3.png';
-import Image4 from '../../../../assets/images/kyc/document-images-requirement/bank-card/4.png';
+import Image1 from '../../../../assets/images/kyc/document-images-requirement/driving-licence/1.png';
+import Image2 from '../../../../assets/images/kyc/document-images-requirement/driving-licence/2.png';
+import Image3 from '../../../../assets/images/kyc/document-images-requirement/driving-licence/3.png';
+import Image4 from '../../../../assets/images/kyc/document-images-requirement/driving-licence/4.png';
 
-const BankCard = () => {
+const IdentityDrivingLicence = () => {
   const { t } = useTranslation();
 
   const [file, setFile] = useState<File | null>(null);
@@ -74,10 +74,12 @@ const BankCard = () => {
             textAlign="center"
             marginBottom="4px"
           >
-            {t('Bank Card (For card payments only)')}
+            {`${t('Driving Licence')} ${t('(Required)')}`}
           </PrimaryTextSpan>
           <PrimaryTextSpan color="#ffffff" fontSize="13px" textAlign="center">
-            {t('Upload a photo of the front and back sides of your ID Card')}
+            {t(
+              'Upload photos of the front and back sides of your driving licence'
+            )}
           </PrimaryTextSpan>
         </FlexContainer>
 
@@ -208,4 +210,4 @@ const BankCard = () => {
   );
 };
 
-export default BankCard;
+export default IdentityDrivingLicence;
