@@ -19,7 +19,6 @@ import Image4 from '../../../../assets/images/kyc/document-images-requirement/pa
 import { useStores } from '../../../../hooks/useStores';
 import { DocumentTypeEnum } from '../../../../enums/DocumentTypeEnum';
 import { observer } from 'mobx-react-lite';
-import { getImagePreview } from '../../../../helpers/getImagePreview';
 import { KYCdocumentTypeEnum } from '../../../../enums/KYC/KYCdocumentTypeEnum';
 
 const IdentityPassport = observer(() => {

@@ -133,12 +133,14 @@ const InputPhoto = ({
               accept="image/*"
               capture="camera"
               id={`fileFromCamera-${name}`}
+              name={`fileFromCamera-${name}`}
             />
             <input
               type="file"
               onChange={handleChangeInput}
               accept="image/*"
               id={`fileWithoutCamera-${name}`}
+              name={`fileWithoutCamera-${name}`}
             />
             <MenuToUploadItem>
               <label htmlFor={`fileFromCamera-${name}`}>
