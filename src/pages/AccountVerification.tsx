@@ -1,5 +1,5 @@
 import { observer } from 'mobx-react-lite';
-import React, { useCallback } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
 import AccountVerificationsList from '../components/AccountVerification/View/AccountVerificationsList';
@@ -16,10 +16,16 @@ import IdentityDocument from '../components/AccountVerification/View/documentTyp
 import ProofOfAdress from '../components/AccountVerification/View/documentTypeView/ProofOfAdress';
 import AdditionalDocuments from '../components/AccountVerification/View/documentTypeView/AdditionalDocuments';
 import { DocumentTypeEnum } from '../enums/DocumentTypeEnum';
+import API from '../helpers/API';
+import { getProcessId } from '../helpers/getProcessId';
+import { PersonalDataKYCEnum } from '../enums/PersonalDataKYCEnum';
+import SvgIcon from '../components/SvgIcon';
+import IconCheck from '../assets/svg_no_compress/kyc/icon-send-kyc.svg';
+import { PrimaryTextSpan } from '../styles/TextsElements';
 
 const AccountVerification = observer(() => {
   const { t } = useTranslation();
-  const { kycStore } = useStores();
+  const { mainAppStore, userProfileStore, kycStore } = useStores();
   const { push } = useHistory();
 
   const renderView = useCallback(() => {
@@ -45,6 +51,56 @@ const AccountVerification = observer(() => {
     kycStore.closeDocumentStep();
   };
 
+  const sendFile = async (type: DocumentTypeEnum, file: File) => {
+    try {
+      const response = await API.postDocument(
+        type,
+        file,
+        mainAppStore.initModel.authUrl
+      );
+      return response;
+    } catch (error) {}
+  };
+
+  const postPersonalData = async () => {
+    try {
+      await API.verifyUser(
+        { processId: getProcessId() },
+        mainAppStore.initModel.authUrl
+      );
+
+      const response = await API.getPersonalData(
+        getProcessId(),
+        mainAppStore.initModel.authUrl
+      );
+      userProfileStore.setUser(response.data);
+    } catch (error) {}
+  };
+
+  const handleSubmitKYC = async () => {
+    const fileTypesKeys: DocumentTypeEnum[] = Object.keys(
+      kycStore.formKYCData
+    ).map((el) => +el);
+    const filesForSend = fileTypesKeys.filter(
+      (el: DocumentTypeEnum) => kycStore.formKYCData[el] !== null
+    );
+    let response: any[] = [];
+
+    if (filesForSend.length > 0) {
+      filesForSend.map(async (fileType) => {
+        const file = kycStore.formKYCData[fileType];
+        if (file !== null) {
+          const res = await sendFile(fileType, file);
+          response.push(res);
+        }
+      });
+    }
+
+    try {
+      await postPersonalData();
+    } catch (error) {}
+  };
+
   const isSubmited = useCallback(() => {
     if (kycStore.filledSteps !== null) {
       return (
@@ -58,6 +114,58 @@ const AccountVerification = observer(() => {
     return false;
   }, [kycStore.filledSteps]);
 
+  useEffect(() => {
+    if (mainAppStore.isPromoAccount) {
+      push(Page.DASHBOARD);
+    }
+  }, [mainAppStore.isPromoAccount]);
+
+  if (
+    userProfileStore.userProfile?.kyc !== PersonalDataKYCEnum.NotVerified &&
+    userProfileStore.userProfile?.kyc !== PersonalDataKYCEnum.Restricted
+  ) {
+    return (
+      <BackFlowLayout pageTitle="" type="close">
+        <FlexContainer
+          flexDirection="column"
+          flex="1"
+          padding="16px"
+          overflow="auto"
+          alignItems="center"
+        >
+          <FlexContainer flexDirection="column" flex="1" alignItems="center">
+            <FlexContainer marginBottom="32px">
+              <SvgIcon {...IconCheck} />
+            </FlexContainer>
+            <PrimaryTextSpan
+              textAlign="center"
+              color="#fff"
+              fontSize="18px"
+              marginBottom="16px"
+            >
+              {t('Your documents were successfuly send')}
+            </PrimaryTextSpan>
+
+            <PrimaryTextSpan
+              textAlign="center"
+              color="rgba(255, 255, 255, 0.64)"
+              fontSize="16px"
+              lineHeight="150%"
+            >
+              {t(
+                'Our Compliance Department will review your data in a timely manner. This process usually takes no more than 48 business hours.'
+              )}
+            </PrimaryTextSpan>
+          </FlexContainer>
+
+          <PrimaryButton width="100%" onClick={handleClose}>
+            {t('Close')}
+          </PrimaryButton>
+        </FlexContainer>
+      </BackFlowLayout>
+    );
+  }
+
   return (
     <BackFlowLayout
       pageTitle={t('Account verification')}
@@ -70,7 +178,11 @@ const AccountVerification = observer(() => {
         </FlexContainer>
         {kycStore.isVisibleButton && (
           <FlexContainer width="100%" padding="12px 16px">
-            <PrimaryButton disabled={!isSubmited()} width="100%">
+            <PrimaryButton
+              disabled={!isSubmited()}
+              width="100%"
+              onClick={handleSubmitKYC}
+            >
               {t('Send to Verification')}
             </PrimaryButton>
           </FlexContainer>
