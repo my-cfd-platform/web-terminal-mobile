@@ -118,7 +118,7 @@ const AccountVerification = observer(() => {
     if (mainAppStore.isPromoAccount) {
       push(Page.DASHBOARD);
     }
-  }, [mainAppStore.isPromoAccount]);
+  }, [mainAppStore.isPromoAccount, userProfileStore.userProfile]);
 
   if (
     userProfileStore.userProfile?.kyc !== PersonalDataKYCEnum.NotVerified &&

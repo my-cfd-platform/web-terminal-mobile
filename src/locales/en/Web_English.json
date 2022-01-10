@@ -649,5 +649,8 @@
     "(Upon the request)": "(Upon the request)",
     "Allowed maximum size 5MB": "Allowed maximum size 5MB",
     "Your documents were successfuly send": "Your documents were successfuly send",
-    "Our Compliance Department will review your data in a timely manner. This process usually takes no more than 48 business hours.": "Our Compliance Department will review your data in a timely manner. This process usually takes no more than 48 business hours."
+    "Our Compliance Department will review your data in a timely manner. This process usually takes no more than 48 business hours.": "Our Compliance Department will review your data in a timely manner. This process usually takes no more than 48 business hours.",
+    "Take a photo of a bank card from the front and back sides, covering part of the data:": "Take a photo of a bank card from the front and back sides, covering part of the data:",
+    "Leave the first 6 digits and the last 4 digits of your card number open. Example 1111 22** **** 4444": "Leave the first 6 digits and the last 4 digits of your card number open. Example 1111 22** **** 4444",
+    "On the back of the card, you must close the СVV code (three digits)": "On the back of the card, you must close the СVV code (three digits)"
 }

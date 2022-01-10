@@ -234,6 +234,38 @@ const BankCard = observer(() => {
               fontSize="13px"
               color="rgba(255, 255, 255, 0.64)"
             >
+              {t(
+                'Take a photo of a bank card from the front and back sides, covering part of the data:'
+              )}
+            </PrimaryTextSpan>
+
+            <PrimaryTextSpan
+              marginBottom="8px"
+              fontSize="13px"
+              color="rgba(255, 255, 255, 0.64)"
+            >
+              -&nbsp;
+              {t(
+                'Leave the first 6 digits and the last 4 digits of your card number open. Example 1111 22** **** 4444'
+              )}
+            </PrimaryTextSpan>
+
+            <PrimaryTextSpan
+              marginBottom="8px"
+              fontSize="13px"
+              color="rgba(255, 255, 255, 0.64)"
+            >
+              -&nbsp;
+              {t(
+                'On the back of the card, you must close the СVV code (three digits)'
+              )}
+            </PrimaryTextSpan>
+
+            <PrimaryTextSpan
+              marginBottom="8px"
+              fontSize="13px"
+              color="rgba(255, 255, 255, 0.64)"
+            >
               + {t('Original full-size, unedited documents')}
             </PrimaryTextSpan>
             <PrimaryTextSpan
