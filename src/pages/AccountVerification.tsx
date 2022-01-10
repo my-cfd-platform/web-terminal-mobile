@@ -103,6 +103,18 @@ const AccountVerification = observer(() => {
 
   const isSubmited = useCallback(() => {
     if (kycStore.filledSteps !== null) {
+      if (
+        userProfileStore.userProfile?.kyc === PersonalDataKYCEnum.Restricted
+      ) {
+        return (
+          kycStore.filledSteps.filter(
+            (el) =>
+              el === KYCdocumentTypeEnum.IDENTITY_DOCUMENT ||
+              el === KYCdocumentTypeEnum.PROOF_OF_ADRESS
+          ).length > 0
+        );
+      }
+      
       return (
         kycStore.filledSteps.filter(
           (el) =>
@@ -112,7 +124,7 @@ const AccountVerification = observer(() => {
       );
     }
     return false;
-  }, [kycStore.filledSteps]);
+  }, [kycStore.filledSteps, userProfileStore.userProfile]);
 
   useEffect(() => {
     if (mainAppStore.isPromoAccount) {
