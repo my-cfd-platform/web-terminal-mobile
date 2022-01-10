@@ -22,10 +22,16 @@ import { PersonalDataKYCEnum } from '../enums/PersonalDataKYCEnum';
 import SvgIcon from '../components/SvgIcon';
 import IconCheck from '../assets/svg_no_compress/kyc/icon-send-kyc.svg';
 import { PrimaryTextSpan } from '../styles/TextsElements';
+import apiResponseCodeMessages from '../constants/apiResponseCodeMessages';
 
 const AccountVerification = observer(() => {
   const { t } = useTranslation();
-  const { mainAppStore, userProfileStore, kycStore } = useStores();
+  const {
+    mainAppStore,
+    notificationStore,
+    userProfileStore,
+    kycStore,
+  } = useStores();
   const { push } = useHistory();
 
   const renderView = useCallback(() => {
@@ -59,7 +65,9 @@ const AccountVerification = observer(() => {
         mainAppStore.initModel.authUrl
       );
       return response;
-    } catch (error) {}
+    } catch (error) {
+      return error;
+    }
   };
 
   const postPersonalData = async () => {
@@ -78,27 +86,30 @@ const AccountVerification = observer(() => {
   };
 
   const handleSubmitKYC = async () => {
-    const fileTypesKeys: DocumentTypeEnum[] = Object.keys(
-      kycStore.formKYCData
-    ).map((el) => +el);
-    const filesForSend = fileTypesKeys.filter(
-      (el: DocumentTypeEnum) => kycStore.formKYCData[el] !== null
-    );
-    let response: any[] = [];
-
-    if (filesForSend.length > 0) {
-      filesForSend.map(async (fileType) => {
-        const file = kycStore.formKYCData[fileType];
-        if (file !== null) {
-          const res = await sendFile(fileType, file);
-          response.push(res);
-        }
-      });
-    }
-
     try {
+      const fileTypesKeys: DocumentTypeEnum[] = Object.keys(
+        kycStore.formKYCData
+      ).map((el) => +el);
+      const filesForSend = fileTypesKeys.filter(
+        (el: DocumentTypeEnum) => kycStore.formKYCData[el] !== null
+      );
+      let response: any[] = [];
+
+      if (filesForSend.length > 0) {
+        filesForSend.map(async (fileType) => {
+          const file = kycStore.formKYCData[fileType];
+          if (file !== null) {
+            const res = await sendFile(fileType, file);
+            response.push(res);
+          }
+        });
+      }
       await postPersonalData();
-    } catch (error) {}
+    } catch (error) {
+      notificationStore.notificationMessage = t(apiResponseCodeMessages[16]);
+      notificationStore.isSuccessfull = false;
+      notificationStore.openNotification();
+    }
   };
 
   const isSubmited = useCallback(() => {
