@@ -114,7 +114,7 @@ const AccountVerification = observer(() => {
           ).length > 0
         );
       }
-      
+
       return (
         kycStore.filledSteps.filter(
           (el) =>
@@ -127,7 +127,11 @@ const AccountVerification = observer(() => {
   }, [kycStore.filledSteps, userProfileStore.userProfile]);
 
   useEffect(() => {
-    if (mainAppStore.isPromoAccount) {
+    if (
+      mainAppStore.isPromoAccount ||
+      (userProfileStore.userProfile?.kyc !== PersonalDataKYCEnum.NotVerified &&
+        userProfileStore.userProfile?.kyc !== PersonalDataKYCEnum.Restricted)
+    ) {
       push(Page.DASHBOARD);
     }
   }, [mainAppStore.isPromoAccount, userProfileStore.userProfile]);
