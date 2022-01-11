@@ -308,7 +308,7 @@ const AdditionalDocuments = observer(() => {
               fontSize="13px"
               color="rgba(255, 255, 255, 0.64)"
             >
-              {t('File size must be less 5 MB in PNG, JPEG, PDF format')}
+              {t('File size must be less 5 MB in PNG, JPEG')}
             </PrimaryTextSpan>
           </FlexContainer>
         </FlexContainer>
