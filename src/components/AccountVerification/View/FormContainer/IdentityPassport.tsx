@@ -58,6 +58,7 @@ const IdentityPassport = observer(() => {
     const docType = Number(inputName.split('kyc-image-')[1]);
     setFile(null);
     setImage('');
+    kycStore.removeFilledStep(KYCdocumentTypeEnum.IDENTITY_DOCUMENT);
     kycStore.setFiledData(docType, null);
   };
 

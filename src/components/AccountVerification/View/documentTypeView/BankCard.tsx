@@ -92,7 +92,7 @@ const BankCard = observer(() => {
       setFile2(null);
       setImage2('');
     }
-
+    kycStore.removeFilledStep(KYCdocumentTypeEnum.BANK_CARD);
     kycStore.setFiledData(docType, null);
   };
 

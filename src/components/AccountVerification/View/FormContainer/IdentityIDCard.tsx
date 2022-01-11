@@ -93,6 +93,7 @@ const IdentityIDCard = observer(() => {
       setImage2('');
     }
 
+    kycStore.removeFilledStep(KYCdocumentTypeEnum.IDENTITY_DOCUMENT);
     kycStore.setFiledData(docType, null);
   };
 

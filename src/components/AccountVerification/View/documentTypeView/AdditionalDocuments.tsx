@@ -109,7 +109,7 @@ const AdditionalDocuments = observer(() => {
       setFile3(null);
       setImage3('');
     }
-
+    kycStore.removeFilledStep(KYCdocumentTypeEnum.ADDITIONAL_DOCUMENT);
     kycStore.setFiledData(docType, null);
   };
 

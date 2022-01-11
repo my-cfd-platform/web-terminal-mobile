@@ -58,6 +58,7 @@ const ProofOfAdress = observer(() => {
     const docType = Number(inputName.split('kyc-image-')[1]);
     setFile(null);
     setImage('');
+    kycStore.removeFilledStep(KYCdocumentTypeEnum.PROOF_OF_ADRESS);
     kycStore.setFiledData(docType, null);
   };
 

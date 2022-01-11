@@ -72,11 +72,26 @@ export class KYCstore implements Props {
     }
   };
 
+  @action
+  removeFilledStep = (type: KYCdocumentTypeEnum) => {
+    if (this.filledSteps !== null) {
+      const index = this.filledSteps.findIndex((el) => el === type);
+      if (index !== -1) {
+        const result = [
+          ...this.filledSteps.slice(0, index),
+          ...this.filledSteps.slice(index + 1),
+        ];
+        this.filledSteps = result;
+      }
+    }
+  };
+
   // KYC FORM
   @action
   setFiledData = (filed: DocumentTypeEnum, data: File | null) => {
     this.formKYCData[filed] = data;
   };
+
 
   @action
   resetFormData = () => {
