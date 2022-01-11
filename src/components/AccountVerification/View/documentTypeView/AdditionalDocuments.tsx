@@ -324,7 +324,7 @@ const AdditionalDocuments = observer(() => {
         backgroundColor="#1C1F26"
       >
         <PrimaryButton
-          disabled={!(image1 && image2 && image3)}
+          disabled={!(image1 || image2 || image3)}
           onClick={handleSubmit}
           width="100%"
         >
