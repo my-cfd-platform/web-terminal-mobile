@@ -3,7 +3,7 @@ import { FlexContainer } from '../styles/FlexContainer';
 import BackFlowLayout from '../components/BackFlowLayout';
 import { useTranslation } from 'react-i18next';
 import styled from '@emotion/styled';
-import { NavLink, useHistory, useRouteMatch } from 'react-router-dom';
+import { Link, NavLink, useHistory, useRouteMatch } from 'react-router-dom';
 import Colors from '../constants/Colors';
 import Page from '../constants/Pages';
 import { useStores } from '../hooks/useStores';
@@ -114,7 +114,7 @@ const NotVerifiedView = () => {
           </FailDescription>
         </FlexContainer>
         <FlexContainer padding="16px" width="100%">
-          <OtherMethodsButton href={Page.ACCOUNT_VERIFICATION}>
+          <OtherMethodsButton to={Page.ACCOUNT_VERIFICATION}>
             {t('Proceed to Verification')}
           </OtherMethodsButton>
         </FlexContainer>
@@ -158,7 +158,7 @@ const PendingVerifiedView = () => {
           </FailDescription>
         </FlexContainer>
         <FlexContainer padding="16px" width="100%">
-          <OtherMethodsButton href={Page.ACCOUNT_PROFILE}>
+          <OtherMethodsButton to={Page.ACCOUNT_PROFILE}>
             {t('Close')}
           </OtherMethodsButton>
         </FlexContainer>
@@ -200,7 +200,7 @@ const CustomNavLink = styled(NavLink)`
   }
 `;
 
-const OtherMethodsButton = styled.a`
+const OtherMethodsButton = styled(Link)`
   background-color: #00ffdd;
   border-radius: 10px;
   width: 100%;
