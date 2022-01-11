@@ -39,6 +39,7 @@ import PageNotFound from '../pages/PageNotFound';
 import PositionCreateSL from '../pages/PositionCreateSL';
 import PositionCreateTP from '../pages/PositionCreateTP';
 import AboutStatusPage from '../pages/AboutStatusPage';
+import AccountKYCSuccessPage from '../pages/AccountKYCSuccessPage';
 
 export enum RouteLayoutType {
   Authorized,
@@ -274,6 +275,13 @@ const routesList = [
   {
     component: AccountVerification,
     path: Page.ACCOUNT_VERIFICATION,
+    exact: true,
+    strict: true,
+    layoutType: RouteLayoutType.Authorized,
+  },
+  {
+    component: AccountKYCSuccessPage,
+    path: Page.VERIFICATION_SUCCESS_SEND,
     exact: true,
     strict: true,
     layoutType: RouteLayoutType.Authorized,

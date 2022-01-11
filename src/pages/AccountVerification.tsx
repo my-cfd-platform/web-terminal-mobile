@@ -20,7 +20,7 @@ import API from '../helpers/API';
 import { getProcessId } from '../helpers/getProcessId';
 import { PersonalDataKYCEnum } from '../enums/PersonalDataKYCEnum';
 import SvgIcon from '../components/SvgIcon';
-import IconCheck from '../assets/svg_no_compress/kyc/icon-send-kyc.svg';
+
 import { PrimaryTextSpan } from '../styles/TextsElements';
 import apiResponseCodeMessages from '../constants/apiResponseCodeMessages';
 
@@ -105,6 +105,7 @@ const AccountVerification = observer(() => {
         });
       }
       await postPersonalData();
+      push(Page.VERIFICATION_SUCCESS_SEND);
     } catch (error) {
       notificationStore.notificationMessage = t(apiResponseCodeMessages[16]);
       notificationStore.isSuccessfull = false;
@@ -146,52 +147,6 @@ const AccountVerification = observer(() => {
       push(Page.DASHBOARD);
     }
   }, [mainAppStore.isPromoAccount, userProfileStore.userProfile]);
-
-  if (
-    userProfileStore.userProfile?.kyc !== PersonalDataKYCEnum.NotVerified &&
-    userProfileStore.userProfile?.kyc !== PersonalDataKYCEnum.Restricted
-  ) {
-    return (
-      <BackFlowLayout pageTitle="" type="close">
-        <FlexContainer
-          flexDirection="column"
-          flex="1"
-          padding="16px"
-          overflow="auto"
-          alignItems="center"
-        >
-          <FlexContainer flexDirection="column" flex="1" alignItems="center">
-            <FlexContainer marginBottom="32px">
-              <SvgIcon {...IconCheck} />
-            </FlexContainer>
-            <PrimaryTextSpan
-              textAlign="center"
-              color="#fff"
-              fontSize="18px"
-              marginBottom="16px"
-            >
-              {t('Your documents were successfuly send')}
-            </PrimaryTextSpan>
-
-            <PrimaryTextSpan
-              textAlign="center"
-              color="rgba(255, 255, 255, 0.64)"
-              fontSize="16px"
-              lineHeight="150%"
-            >
-              {t(
-                'Our Compliance Department will review your data in a timely manner. This process usually takes no more than 48 business hours.'
-              )}
-            </PrimaryTextSpan>
-          </FlexContainer>
-
-          <PrimaryButton width="100%" onClick={handleClose}>
-            {t('Close')}
-          </PrimaryButton>
-        </FlexContainer>
-      </BackFlowLayout>
-    );
-  }
 
   return (
     <BackFlowLayout
