@@ -130,7 +130,7 @@ const InputPhoto = ({
             <input
               type="file"
               onChange={handleChangeInput}
-              accept="image/*"
+              accept="image/*, .pdf"
               capture="camera"
               id={`fileFromCamera-${name}`}
               name={`fileFromCamera-${name}`}
@@ -138,7 +138,7 @@ const InputPhoto = ({
             <input
               type="file"
               onChange={handleChangeInput}
-              accept="image/*"
+              accept="image/*, .pdf"
               id={`fileWithoutCamera-${name}`}
               name={`fileWithoutCamera-${name}`}
             />
