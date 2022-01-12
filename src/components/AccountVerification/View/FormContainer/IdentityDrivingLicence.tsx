@@ -265,7 +265,7 @@ const IdentityDrivingLicence = observer(() => {
               fontSize="13px"
               color="rgba(255, 255, 255, 0.64)"
             >
-              {t('File size must be less 5 MB in PNG, JPEG')}
+              {t('File size must be less 5 MB in PNG, JPEG, PDF format')}
             </PrimaryTextSpan>
           </FlexContainer>
         </FlexContainer>
