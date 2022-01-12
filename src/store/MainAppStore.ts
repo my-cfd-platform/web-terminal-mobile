@@ -902,7 +902,7 @@ export class MainAppStore implements MainAppStoreProps {
     this.rootStore.userProfileStore.resetBonusStore();
     this.rootStore.educationStore.resetStore();
     this.isBalanceHidden = false;
-
+    this.rootStore.kycStore.resetStore();
     if (this.activeAccount) {
       this.setParamsAsset(null);
       this.setParamsMarkets(null);

@@ -112,4 +112,11 @@ export class KYCstore implements Props {
     };
   };
   // END KYC FORM
+
+  @action
+  resetStore = () => {
+    this.resetFormData();
+    this.filledSteps = null;
+    this.activeDocumentStep = null;
+  }
 }
