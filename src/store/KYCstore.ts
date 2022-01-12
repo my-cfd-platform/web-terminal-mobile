@@ -92,7 +92,6 @@ export class KYCstore implements Props {
     this.formKYCData[filed] = data;
   };
 
-
   @action
   resetFormData = () => {
     this.formKYCData = {
@@ -118,5 +117,5 @@ export class KYCstore implements Props {
     this.resetFormData();
     this.filledSteps = null;
     this.activeDocumentStep = null;
-  }
+  };
 }

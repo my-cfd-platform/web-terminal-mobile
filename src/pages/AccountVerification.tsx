@@ -1,5 +1,5 @@
 import { observer } from 'mobx-react-lite';
-import React, { useCallback, useEffect } from 'react';
+import React, { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
 import AccountVerificationsList from '../components/AccountVerification/View/AccountVerificationsList';
@@ -19,10 +19,10 @@ import { DocumentTypeEnum } from '../enums/DocumentTypeEnum';
 import API from '../helpers/API';
 import { getProcessId } from '../helpers/getProcessId';
 import { PersonalDataKYCEnum } from '../enums/PersonalDataKYCEnum';
-import SvgIcon from '../components/SvgIcon';
 
-import { PrimaryTextSpan } from '../styles/TextsElements';
 import apiResponseCodeMessages from '../constants/apiResponseCodeMessages';
+import Axios from 'axios';
+import { OperationApiResponseCodes } from '../enums/OperationApiResponseCodes';
 
 const AccountVerification = observer(() => {
   const { t } = useTranslation();
@@ -81,31 +81,51 @@ const AccountVerification = observer(() => {
         getProcessId(),
         mainAppStore.initModel.authUrl
       );
-      userProfileStore.setUser(response.data);
+      if (response.result === OperationApiResponseCodes.Ok) {
+        userProfileStore.setUser(response.data);
+        push(Page.VERIFICATION_SUCCESS_SEND);
+      }
     } catch (error) {}
   };
 
   const handleSubmitKYC = async () => {
+    const fileTypesKeys: DocumentTypeEnum[] = Object.keys(
+      kycStore.formKYCData
+    ).map((el) => +el);
+    const filesForSend = fileTypesKeys.filter(
+      (el: DocumentTypeEnum) => kycStore.formKYCData[el] !== null
+    );
     try {
-      const fileTypesKeys: DocumentTypeEnum[] = Object.keys(
-        kycStore.formKYCData
-      ).map((el) => +el);
-      const filesForSend = fileTypesKeys.filter(
-        (el: DocumentTypeEnum) => kycStore.formKYCData[el] !== null
+      if (filesForSend.length === 0) {
+        return;
+      }
+      const response: any = await Axios.all(
+        filesForSend.map((item) => {
+          return API.postDocument(
+            item,
+            // @ts-ignore
+            kycStore.formKYCData[item],
+            mainAppStore.initModel.authUrl
+          );
+        })
       );
-      let response: any[] = [];
 
-      if (filesForSend.length > 0) {
-        filesForSend.map(async (fileType) => {
-          const file = kycStore.formKYCData[fileType];
-          if (file !== null) {
-            const res = await sendFile(fileType, file);
-            response.push(res);
-          }
-        });
+      const fileWrongExtension = response.some(
+        (res: any) =>
+          res.result === OperationApiResponseCodes.FileWrongExtension
+      );
+
+      if (fileWrongExtension) {
+        notificationStore.notificationMessage = t(
+          apiResponseCodeMessages[OperationApiResponseCodes.FileWrongExtension]
+        );
+        notificationStore.isSuccessfull = false;
+        notificationStore.openNotification();
+
+        return;
       }
       await postPersonalData();
-      push(Page.VERIFICATION_SUCCESS_SEND);
+      //
     } catch (error) {
       notificationStore.notificationMessage = t(apiResponseCodeMessages[16]);
       notificationStore.isSuccessfull = false;
@@ -137,16 +157,6 @@ const AccountVerification = observer(() => {
     }
     return false;
   }, [kycStore.filledSteps, userProfileStore.userProfile]);
-
-  useEffect(() => {
-    if (
-      mainAppStore.isPromoAccount ||
-      (userProfileStore.userProfile?.kyc !== PersonalDataKYCEnum.NotVerified &&
-        userProfileStore.userProfile?.kyc !== PersonalDataKYCEnum.Restricted)
-    ) {
-      push(Page.DASHBOARD);
-    }
-  }, [mainAppStore.isPromoAccount, userProfileStore.userProfile]);
 
   return (
     <BackFlowLayout
