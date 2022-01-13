@@ -227,7 +227,9 @@ const IdentityPassport = observer(() => {
         backgroundColor="#1C1F26"
       >
         <PrimaryButton disabled={!image} width="100%" onClick={handleSubmit}>
-          {t('Continue')}
+          <PrimaryTextSpan color="#1C1F26" fontWeight={700} fontSize="16px">
+            {t('Continue')}
+          </PrimaryTextSpan>
         </PrimaryButton>
       </FlexContainer>
     </FlexContainer>

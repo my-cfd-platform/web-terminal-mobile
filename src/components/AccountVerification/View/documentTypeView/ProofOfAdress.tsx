@@ -109,7 +109,9 @@ const ProofOfAdress = observer(() => {
             {`${t('Proof of Address')} ${t('(Required)')}`}
           </PrimaryTextSpan>
           <PrimaryTextSpan color="#ffffff" fontSize="13px" textAlign="center">
-            {t('You need to upload proof of address. It can be your bank statement or utility bill.')}
+            {t(
+              'You need to upload proof of address. It can be your bank statement or utility bill.'
+            )}
           </PrimaryTextSpan>
         </FlexContainer>
 
@@ -235,7 +237,9 @@ const ProofOfAdress = observer(() => {
         backgroundColor="#1C1F26"
       >
         <PrimaryButton disabled={!image} width="100%" onClick={handleSubmit}>
-          {t('Continue')}
+          <PrimaryTextSpan color="#1C1F26" fontWeight={700} fontSize="16px">
+            {t('Continue')}
+          </PrimaryTextSpan>
         </PrimaryButton>
       </FlexContainer>
     </FlexContainer>

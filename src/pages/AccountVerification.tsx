@@ -23,6 +23,7 @@ import { PersonalDataKYCEnum } from '../enums/PersonalDataKYCEnum';
 import apiResponseCodeMessages from '../constants/apiResponseCodeMessages';
 import Axios from 'axios';
 import { OperationApiResponseCodes } from '../enums/OperationApiResponseCodes';
+import { PrimaryTextSpan } from '../styles/TextsElements';
 
 const AccountVerification = observer(() => {
   const { t } = useTranslation();
@@ -175,7 +176,9 @@ const AccountVerification = observer(() => {
               width="100%"
               onClick={handleSubmitKYC}
             >
-              {t('Send to Verification')}
+              <PrimaryTextSpan color="#1C1F26" fontWeight={700} fontSize="16px">
+                {t('Send to Verification')}
+              </PrimaryTextSpan>
             </PrimaryButton>
           </FlexContainer>
         )}

@@ -314,7 +314,9 @@ const BankCard = observer(() => {
           onClick={handleSubmit}
           width="100%"
         >
-          {t('Continue')}
+          <PrimaryTextSpan color="#1C1F26" fontWeight={700} fontSize="16px">
+            {t('Continue')}
+          </PrimaryTextSpan>
         </PrimaryButton>
       </FlexContainer>
     </FlexContainer>
