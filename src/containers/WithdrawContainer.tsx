@@ -16,6 +16,7 @@ import mixpanelEvents from '../constants/mixpanelEvents';
 import mixapanelProps from '../constants/mixpanelProps';
 import { observer } from 'mobx-react-lite';
 import LoaderForComponents from '../components/LoaderForComponents';
+import { PrimaryTextSpan } from '../styles/TextsElements';
 
 interface Props {
   backBtn?: string;
@@ -115,7 +116,9 @@ const NotVerifiedView = () => {
         </FlexContainer>
         <FlexContainer padding="16px" width="100%">
           <OtherMethodsButton to={Page.ACCOUNT_VERIFICATION}>
-            {t('Proceed to Verification')}
+            <PrimaryTextSpan color="#1C1F26" fontWeight={700} fontSize="16px">
+              {t('Proceed to Verification')}
+            </PrimaryTextSpan>
           </OtherMethodsButton>
         </FlexContainer>
       </FlexContainer>
@@ -159,7 +162,9 @@ const PendingVerifiedView = () => {
         </FlexContainer>
         <FlexContainer padding="16px" width="100%">
           <OtherMethodsButton to={Page.ACCOUNT_PROFILE}>
-            {t('Close')}
+            <PrimaryTextSpan color="#1C1F26" fontWeight={700} fontSize="16px">
+              {t('Close')}
+            </PrimaryTextSpan>
           </OtherMethodsButton>
         </FlexContainer>
       </FlexContainer>
