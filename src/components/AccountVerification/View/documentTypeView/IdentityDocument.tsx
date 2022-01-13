@@ -133,8 +133,7 @@ const ProfileMenuButton = styled(ButtonWithoutStyles)`
   text-decoration: none;
   background-color: rgba(42, 45, 56, 0.5);
   margin-bottom: 1px;
-  &:active,
-  &:hover {
+  &:active {
     cursor: pointer;
     background: linear-gradient(
         0deg,
