@@ -50,7 +50,9 @@ const AccountKYCSuccessPage = () => {
         </FlexContainer>
 
         <PrimaryButton width="100%" onClick={handleClose}>
-          {t('Close')}
+          <PrimaryTextSpan color="#1C1F26" fontWeight={700} fontSize="16px">
+            {t('Close')}
+          </PrimaryTextSpan>
         </PrimaryButton>
       </FlexContainer>
     </BackFlowLayout>
