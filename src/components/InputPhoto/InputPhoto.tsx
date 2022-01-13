@@ -103,7 +103,7 @@ const InputPhoto = ({
           alignItems="center"
           padding="4px 16px"
         >
-          <PrimaryTextSpan color="#00FFDD" fontSize="16px">
+          <PrimaryTextSpan textAlign="left" color="#00FFDD" fontSize="16px">
             {label}
           </PrimaryTextSpan>
         </InputLabel>

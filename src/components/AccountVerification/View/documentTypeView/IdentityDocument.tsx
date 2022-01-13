@@ -112,6 +112,7 @@ const DocumentList = ({ onSelectDocument }: Props) => {
               color="#ffffff"
               fontSize="16px"
               fontWeight="normal"
+              textTransform="capitalize"
             >
               {t(button.name)}
             </PrimaryTextSpan>

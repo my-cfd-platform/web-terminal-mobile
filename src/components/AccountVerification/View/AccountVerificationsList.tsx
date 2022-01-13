@@ -96,14 +96,14 @@ const AccountVerificationsList = observer(() => {
                 fontSize="16px"
                 marginBottom="8px"
               >
-                {item.title}
+                {t(item.title)}
               </PrimaryTextSpan>
               <PrimaryTextSpan
                 color="#ffffff"
                 fontSize="13px"
                 marginBottom="16px"
               >
-                {item.description}
+                {t(item.description)}
               </PrimaryTextSpan>
             </TextBlock>
 
