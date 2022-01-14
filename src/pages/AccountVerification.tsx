@@ -1,5 +1,5 @@
 import { observer } from 'mobx-react-lite';
-import React, { useCallback } from 'react';
+import React, { useCallback, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
 import AccountVerificationsList from '../components/AccountVerification/View/AccountVerificationsList';
@@ -34,6 +34,7 @@ const AccountVerification = observer(() => {
     kycStore,
   } = useStores();
   const { push } = useHistory();
+  const KYCWrapper = useRef<HTMLDivElement>(null);
 
   const renderView = useCallback(() => {
     switch (kycStore.activeDocumentStep) {
@@ -159,6 +160,12 @@ const AccountVerification = observer(() => {
     return false;
   }, [kycStore.filledSteps, userProfileStore.userProfile]);
 
+  useEffect(() => {
+    if (KYCWrapper.current) {
+      KYCWrapper.current.scrollTop = 0;
+    }
+  }, [kycStore.activeDocumentStep])
+
   return (
     <BackFlowLayout
       pageTitle={t('Account verification')}
@@ -166,7 +173,7 @@ const AccountVerification = observer(() => {
       type="close"
     >
       <FlexContainer flexDirection="column" flex="1">
-        <FlexContainer flexDirection="column" flex="1" overflow="auto">
+        <FlexContainer flexDirection="column" flex="1" overflow="auto" ref={KYCWrapper}>
           {renderView()}
         </FlexContainer>
         {kycStore.isVisibleButton && (
