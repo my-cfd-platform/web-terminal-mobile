@@ -1,5 +1,5 @@
 import { observer } from 'mobx-react-lite';
-import React, { useCallback, useEffect, useRef } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
 import AccountVerificationsList from '../components/AccountVerification/View/AccountVerificationsList';
@@ -24,6 +24,7 @@ import apiResponseCodeMessages from '../constants/apiResponseCodeMessages';
 import Axios from 'axios';
 import { OperationApiResponseCodes } from '../enums/OperationApiResponseCodes';
 import { PrimaryTextSpan } from '../styles/TextsElements';
+import PreloaderButtonMask from '../components/PreloaderButtonMask';
 
 const AccountVerification = observer(() => {
   const { t } = useTranslation();
@@ -35,6 +36,7 @@ const AccountVerification = observer(() => {
   } = useStores();
   const { push } = useHistory();
   const KYCWrapper = useRef<HTMLDivElement>(null);
+  const [loading, setLoad] = useState(false);
 
   const renderView = useCallback(() => {
     switch (kycStore.activeDocumentStep) {
@@ -59,19 +61,6 @@ const AccountVerification = observer(() => {
     kycStore.closeDocumentStep();
   };
 
-  const sendFile = async (type: DocumentTypeEnum, file: File) => {
-    try {
-      const response = await API.postDocument(
-        type,
-        file,
-        mainAppStore.initModel.authUrl
-      );
-      return response;
-    } catch (error) {
-      return error;
-    }
-  };
-
   const postPersonalData = async () => {
     try {
       await API.verifyUser(
@@ -87,7 +76,10 @@ const AccountVerification = observer(() => {
         userProfileStore.setUser(response.data);
         push(Page.VERIFICATION_SUCCESS_SEND);
       }
-    } catch (error) {}
+      setLoad(false);
+    } catch (error) {
+      setLoad(false);
+    }
   };
 
   const handleSubmitKYC = async () => {
@@ -101,6 +93,7 @@ const AccountVerification = observer(() => {
       if (filesForSend.length === 0) {
         return;
       }
+      setLoad(true);
       const response: any = await Axios.all(
         filesForSend.map((item) => {
           return API.postDocument(
@@ -123,12 +116,13 @@ const AccountVerification = observer(() => {
         );
         notificationStore.isSuccessfull = false;
         notificationStore.openNotification();
-
+        setLoad(false);
         return;
       }
       await postPersonalData();
       //
     } catch (error) {
+      setLoad(false);
       notificationStore.notificationMessage = t(apiResponseCodeMessages[16]);
       notificationStore.isSuccessfull = false;
       notificationStore.openNotification();
@@ -164,7 +158,7 @@ const AccountVerification = observer(() => {
     if (KYCWrapper.current) {
       KYCWrapper.current.scrollTop = 0;
     }
-  }, [kycStore.activeDocumentStep])
+  }, [kycStore.activeDocumentStep]);
 
   return (
     <BackFlowLayout
@@ -173,20 +167,39 @@ const AccountVerification = observer(() => {
       type="close"
     >
       <FlexContainer flexDirection="column" flex="1">
-        <FlexContainer flexDirection="column" flex="1" overflow="auto" ref={KYCWrapper}>
+        <FlexContainer
+          flexDirection="column"
+          flex="1"
+          overflow="auto"
+          ref={KYCWrapper}
+        >
           {renderView()}
         </FlexContainer>
-        {kycStore.isVisibleButton && (
+        {kycStore.activeDocumentStep === null && (
           <FlexContainer width="100%" padding="12px 16px">
-            <PrimaryButton
-              disabled={!isSubmited()}
+            <FlexContainer
               width="100%"
-              onClick={handleSubmitKYC}
+              flexWrap="wrap"
+              flexDirection="column"
+              position="relative"
+              overflow="hidden"
+              borderRadius="8px"
             >
-              <PrimaryTextSpan color="#1C1F26" fontWeight={700} fontSize="16px">
-                {t('Send to Verification')}
-              </PrimaryTextSpan>
-            </PrimaryButton>
+              <PreloaderButtonMask loading={loading} />
+              <PrimaryButton
+                disabled={!isSubmited()}
+                width="100%"
+                onClick={handleSubmitKYC}
+              >
+                <PrimaryTextSpan
+                  color="#1C1F26"
+                  fontWeight={700}
+                  fontSize="16px"
+                >
+                  {t('Send to Verification')}
+                </PrimaryTextSpan>
+              </PrimaryButton>
+            </FlexContainer>
           </FlexContainer>
         )}
       </FlexContainer>
