@@ -36,7 +36,6 @@ const AccountVerification = observer(() => {
   } = useStores();
   const { push } = useHistory();
   const KYCWrapper = useRef<HTMLDivElement>(null);
-  const [loading, setLoad] = useState(false);
 
   const renderView = useCallback(() => {
     switch (kycStore.activeDocumentStep) {
@@ -76,9 +75,9 @@ const AccountVerification = observer(() => {
         userProfileStore.setUser(response.data);
         push(Page.VERIFICATION_SUCCESS_SEND);
       }
-      setLoad(false);
+      kycStore.setIsFileLoading(false);
     } catch (error) {
-      setLoad(false);
+      kycStore.setIsFileLoading(false);
     }
   };
 
@@ -93,7 +92,7 @@ const AccountVerification = observer(() => {
       if (filesForSend.length === 0) {
         return;
       }
-      setLoad(true);
+      kycStore.setIsFileLoading(true);
       const response: any = await Axios.all(
         filesForSend.map((item) => {
           return API.postDocument(
@@ -116,13 +115,13 @@ const AccountVerification = observer(() => {
         );
         notificationStore.isSuccessfull = false;
         notificationStore.openNotification();
-        setLoad(false);
+        kycStore.setIsFileLoading(false);
         return;
       }
       await postPersonalData();
       //
     } catch (error) {
-      setLoad(false);
+      kycStore.setIsFileLoading(false);
       notificationStore.notificationMessage = t(apiResponseCodeMessages[16]);
       notificationStore.isSuccessfull = false;
       notificationStore.openNotification();
@@ -185,7 +184,7 @@ const AccountVerification = observer(() => {
               overflow="hidden"
               borderRadius="8px"
             >
-              <PreloaderButtonMask loading={loading} />
+              <PreloaderButtonMask loading={kycStore.isFileLoading} />
               <PrimaryButton
                 disabled={!isSubmited()}
                 width="100%"

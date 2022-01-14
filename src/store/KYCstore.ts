@@ -8,6 +8,7 @@ interface Props {
   currentStep: KYCstepsEnum;
   filledStep: KYCstepsEnum;
   activeDocumentStep: KYCdocumentTypeEnum | null;
+  isFileLoading: boolean;
 
   isVisibleButton: boolean;
 
@@ -23,6 +24,7 @@ export class KYCstore implements Props {
   @observable filledSteps: KYCdocumentTypeEnum[] | null = null;
   @observable activeDocumentStep: KYCdocumentTypeEnum | null = null;
   @observable isVisibleButton = true;
+  @observable isFileLoading = false;
 
   @observable formKYCData: KYCFormDataType = {
     [DocumentTypeEnum.Id]: null,
@@ -38,6 +40,11 @@ export class KYCstore implements Props {
     [DocumentTypeEnum.ProofOfPayment]: null,
     [DocumentTypeEnum.ProofOfWireTransfer]: null,
     [DocumentTypeEnum.CardAuthorizationForm]: null,
+  };
+
+  @action
+  setIsFileLoading = (newValue: boolean) => {
+    this.isFileLoading = newValue;
   };
 
   @action
