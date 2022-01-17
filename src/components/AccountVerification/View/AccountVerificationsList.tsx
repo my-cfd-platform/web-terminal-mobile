@@ -57,11 +57,12 @@ const AccountVerificationsList = observer(() => {
   return (
     <FlexContainer flex="1" flexDirection="column" padding="16px">
       {items.map((item, index) => (
-        <FlexContainer
+        <TypeDocumentWrapper
           key={item.title}
           backgroundColor="#384250"
           borderRadius="10px"
           marginBottom="16px"
+          isSubmitting={kycStore.isFileLoading}
         >
           <FlexContainer padding="12px">
             {isFilledItem(item.type) ? (
@@ -119,7 +120,7 @@ const AccountVerificationsList = observer(() => {
               </ButtonWithoutStyles>
             </FlexContainer>
           </FlexContainer>
-        </FlexContainer>
+        </TypeDocumentWrapper>
       ))}
     </FlexContainer>
   );
@@ -131,4 +132,8 @@ const TextBlock = styled(FlexContainer)`
   flex-direction: column;
   padding-right: 16px;
   border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+`;
+
+const TypeDocumentWrapper = styled(FlexContainer)<{isSubmitting: boolean}>`
+  pointer-events: ${(props) => props.isSubmitting ? 'none' : 'all'};
 `;
