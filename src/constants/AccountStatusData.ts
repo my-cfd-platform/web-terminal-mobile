@@ -140,7 +140,7 @@ const AccStatusData: IData = {
 
     description: {
       deposit: 'from $2,500',
-      instruments: '150+ instruments',
+      instruments: '150+ Instruments',
       personal_session: 'Education course',
       webinars: 'Live Webinar',
       analystics: 'Advance tools',
