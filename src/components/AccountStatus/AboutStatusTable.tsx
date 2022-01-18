@@ -11,7 +11,6 @@ import { ButtonWithoutStyles } from '../../styles/ButtonWithoutStyles';
 import { AccountStatusTableTooltip } from '../../constants/AccountStatusTableTooltip';
 import ConfirmationPopup from '../ConfirmationPopup';
 
-import IconGoldTag from '../../assets/svg_no_compress/account-status/icon-gold-status-tag.svg';
 import IconTooltip from '../../assets/svg_no_compress/account-status/icon-tooltip.svg';
 import IconScroll from '../../assets/svg_no_compress/account-status/icon-scroll-btn.svg';
 
@@ -29,7 +28,7 @@ const AboutStatusTable = () => {
     }
   };
   return (
-    <FlexContainer width="100vw" position="relative">
+    <FlexContainer width="100vw" position="relative" marginBottom="16px">
       <ScrollViewOverlay>
         {isScrollBtn && (
           <ScrollToEndBtn onClick={handleClickScroll}>
@@ -56,28 +55,37 @@ const AboutStatusTable = () => {
             {t('Status')}
           </PrimaryTextSpan>
         </TitleCell>
-        {statusData.map((el) => (
-          <TitleCell
-            key={uuid()}
-            height="54px"
-            width="112px"
-            alignItems="center"
-            padding="16px 6px 16px 16px"
-            justifyContent="space-between"
-            marginBottom="2px"
-            background={
-              el.name === 'Gold'
-                ? 'linear-gradient(90deg, rgba(255, 252, 204, 0.2) 0%, rgba(255, 252, 204, 0) 100%), #252933;'
-                : '#252933'
-            }
-          >
-            <PrimaryTextSpan fontWeight="bold" fontSize="16px" color={el.color}>
-              {t(el.name)}
-            </PrimaryTextSpan>
+        {statusData
+          .filter((el) => el.name !== 'Basic')
+          .map((el) => (
+            <TitleCell
+              key={uuid()}
+              minHeight="54px"
+              width="112px"
+              padding="4px 6px 4px 16px"
+              flexDirection="column"
+              alignItems="flex-start"
+              justifyContent="center"
+              marginBottom="2px"
+              background={
+                el.name === 'Platinum'
+                  ? 'linear-gradient(90deg, rgba(0, 255, 221, 0.2) 0%, rgba(0, 255, 221, 0) 100%), #252933'
+                  : '#252933'
+              }
+            >
+              <PrimaryTextSpan
+                fontWeight="bold"
+                fontSize="16px"
+                color={el.color}
+              >
+                {t(el.name)}
+              </PrimaryTextSpan>
 
-            {el.name === 'Gold' && <SvgIcon {...IconGoldTag} />}
-          </TitleCell>
-        ))}
+              {el.name === 'Platinum' && (
+                <PopularLabel>{t('Popular')}</PopularLabel>
+              )}
+            </TitleCell>
+          ))}
       </FlexContainer>
 
       <FlexContainer
@@ -96,36 +104,38 @@ const AboutStatusTable = () => {
               <TableHeaderCellItem key={item.id} item={item} />
             ))}
           </CellRowContainer>
-          {statusData.map((el) => (
-            <CellRowContainer
-              backgroundColor="#252933"
-              marginBottom="2px"
-              height="54px"
-              alignItems="center"
-              key={uuid()}
-            >
-              {Object.values(el.description).map((desc, index) => (
-                <FlexContainer
-                  key={uuid()}
-                  justifyContent="flex-start"
-                  alignItems="center"
-                  padding="4px 0 4px 12px"
-                  width="144px"
-                  className={
-                    [5, 6].includes(index)
-                      ? 'short'
-                      : [2].includes(index)
-                      ? 'long'
-                      : ''
-                  }
-                >
-                  <PrimaryTextSpan color="#fff" fontSize="14px">
-                    {t(`${desc}`)}
-                  </PrimaryTextSpan>
-                </FlexContainer>
-              ))}
-            </CellRowContainer>
-          ))}
+          {statusData
+            .filter((el) => el.name !== 'Basic')
+            .map((el) => (
+              <CellRowContainer
+                backgroundColor="#252933"
+                marginBottom="2px"
+                height="54px"
+                alignItems="center"
+                key={uuid()}
+              >
+                {Object.values(el.description).map((desc, index) => (
+                  <FlexContainer
+                    key={uuid()}
+                    justifyContent="flex-start"
+                    alignItems="center"
+                    padding="4px 0 4px 12px"
+                    width="144px"
+                    className={
+                      [5, 6].includes(index)
+                        ? 'short'
+                        : [2].includes(index)
+                        ? 'long'
+                        : ''
+                    }
+                  >
+                    <PrimaryTextSpan color="#fff" fontSize="14px">
+                      {t(`${desc}`)}
+                    </PrimaryTextSpan>
+                  </FlexContainer>
+                ))}
+              </CellRowContainer>
+            ))}
         </FlexContainer>
       </FlexContainer>
     </FlexContainer>
@@ -133,6 +143,17 @@ const AboutStatusTable = () => {
 };
 
 export default AboutStatusTable;
+
+const PopularLabel = styled(PrimaryTextSpan)`
+  background-color: #00ffdd;
+  margin-top: 2px;
+  color: #1c1f26;
+  border-radius: 4px;
+  text-transform: uppercase;
+  font-weight: 500;
+  font-size: 10px;
+  padding: 2px 4px;
+`;
 
 const ScrollViewOverlay = styled(FlexContainer)`
   position: absolute;
