@@ -17,7 +17,7 @@ import { DocumentTypeEnum } from '../../enums/DocumentTypeEnum';
 import API from '../../helpers/API';
 import mixpanel from 'mixpanel-browser';
 import mixpanelEvents from '../../constants/mixpanelEvents';
-import LoaderForComponents from '../../components/LoaderForComponents';
+import LoaderForComponents from '../LoaderForComponents';
 import { MAX_FILE_UPLOAD_5_MB } from '../../constants/global';
 import apiResponseCodeMessages from '../../constants/apiResponseCodeMessages';
 

@@ -25,6 +25,7 @@ const Page = {
   ACCOUNT_CHANGE_LANGUAGE: '/account-change-language',
   ACCOUNT_CHANGE_PASSWORD: '/account-change-password',
   ACCOUNT_VERIFICATION: '/account-verification',
+  VERIFICATION_SUCCESS_SEND: '/account-verification-sended',
   PAYMENTS: '/payments/:status',
   ONBOARDING: '/onboarding',
   BONUS_FAQ: '/bonus-faq',

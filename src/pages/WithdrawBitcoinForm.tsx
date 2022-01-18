@@ -53,7 +53,8 @@ const WithdrawBitcoinForm = () => {
           .number()
           .min(10, `${t('min')}: $10`)
           .max(
-            mainAppStore.accounts.find((item) => item.isLive)?.freeToWithdrawal || 0,
+            mainAppStore.accounts.find((item) => item.isLive)
+              ?.freeToWithdrawal || 0,
             `${t('max')}: $${
               mainAppStore.accounts
                 .find((item) => item.isLive)
@@ -310,7 +311,9 @@ const WithdrawBitcoinForm = () => {
                 )
               }
             >
-              {t('Next')}
+              <PrimaryTextSpan color="#1C1F26" fontWeight={700} fontSize="16px">
+                {t('Next')}
+              </PrimaryTextSpan>
             </PrimaryButton>
           </FlexContainer>
         </FlexContainer>

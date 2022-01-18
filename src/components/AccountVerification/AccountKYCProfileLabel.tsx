@@ -21,7 +21,6 @@ const AccountKYCProfileLabel = observer(() => {
   const { userProfileStore } = useStores();
   const { t } = useTranslation();
   const { push } = useHistory();
-  // userProfileStore.userProfile?.kyc === PersonalDataKYCEnum.NotVerified
 
   const handlePushToKYC = () => push(Page.ACCOUNT_VERIFICATION);
 
@@ -80,7 +79,7 @@ const AccountKYCProfileLabel = observer(() => {
     //
     case PersonalDataKYCEnum.Restricted:
       return (
-        <KYCLabel>
+        <KYCLabel onClick={handlePushToKYC} className="isLink">
           <FlexContainer alignItems="center">
             <FlexContainer marginRight="12px">
               <SvgIcon {...IconRestricted} />
@@ -89,14 +88,18 @@ const AccountKYCProfileLabel = observer(() => {
               {t('Verification')}
             </PrimaryTextSpan>
           </FlexContainer>
-          <PrimaryTextSpan
-            color="#ED145B"
-            fontSize="14px"
-            fontWeight={500}
-            textTransform="capitalize"
-          >
-            {t('Restricted')}
-          </PrimaryTextSpan>
+          <FlexContainer alignItems="center">
+            <PrimaryTextSpan
+              color="#ED145B"
+              fontSize="14px"
+              fontWeight={500}
+              marginRight="12px"
+              textTransform="capitalize"
+            >
+              {t('Restricted')}
+            </PrimaryTextSpan>
+            <SvgIcon {...IconArrowLink} fillColor="rgba(196, 196, 196, 0.5)" />
+          </FlexContainer>
         </KYCLabel>
       );
     //

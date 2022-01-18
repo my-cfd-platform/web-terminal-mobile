@@ -363,7 +363,9 @@ export class MainAppStore implements MainAppStoreProps {
           !this.isPromoAccount
         ) {
           try {
-            this.rootStore.userProfileStore.getUserBonus(this.initModel.miscUrl);
+            this.rootStore.userProfileStore.getUserBonus(
+              this.initModel.miscUrl
+            );
           } catch (error) {}
         }
       }
@@ -911,7 +913,7 @@ export class MainAppStore implements MainAppStoreProps {
     this.requestErrorStack = [];
     this.rootStore.educationStore.resetStore();
     this.isBalanceHidden = false;
-
+    this.rootStore.kycStore.resetStore();
     if (this.activeAccount) {
       this.setParamsAsset(null);
       this.setParamsMarkets(null);

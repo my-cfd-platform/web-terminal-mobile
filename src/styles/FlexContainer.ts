@@ -77,3 +77,16 @@ export const FlexContainer = styled.div<FlexContainerProps>`
   order: ${(props) => props.order};
   transition: ${(props) => props.transition};
 `;
+
+interface ResponsiveImageProps {
+  width?: string;
+  marginBottom?: string;
+}
+
+export const ResponsiveImage = styled.img<ResponsiveImageProps>`
+  max-width: 100%;
+  height: auto;
+  align-self: center;
+  width: ${props => props.width};
+  margin-bottom: ${props => props.marginBottom};
+`;

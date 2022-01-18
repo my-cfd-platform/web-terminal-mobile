@@ -53,6 +53,7 @@ const AuthorizedContainer: FC = observer(({ children }) => {
     Page.EDUCATION_LIST,
     Page.PAGE_NOT_FOUND,
     Page.ABOUT_STATUS,
+    Page.VERIFICATION_SUCCESS_SEND,
   ]);
 
   const { push } = useHistory();
@@ -86,6 +87,7 @@ const AuthorizedContainer: FC = observer(({ children }) => {
     Page.EDUCATION,
     Page.EDUCATION_LIST,
     Page.ABOUT_STATUS,
+    Page.VERIFICATION_SUCCESS_SEND,
   ]);
 
   const isHiddenPromoPage = hidenPromoPageList?.isExact;
@@ -122,25 +124,35 @@ const AuthorizedContainer: FC = observer(({ children }) => {
         });
         alreadyAdded = true;
         let responseToCheck: string[] = [];
-        response.reverse().map((instrumentId) => {
-          if (
-            instrumentsStore.instruments.find(
-              (item) => item.instrumentItem.id === instrumentId
-            )
-          ) {
-            responseToCheck.push(instrumentId);
-          }
-          return instrumentId;
-        });
+        if (response.length !== 0) {
+          response.reverse().map((instrumentId) => {
+            if (
+              instrumentsStore.instruments.find(
+                (item) => item.instrumentItem.id === instrumentId
+              )
+            ) {
+              responseToCheck.push(instrumentId);
+            }
+            return instrumentId;
+          });
+        }
+
         if (responseToCheck.length === 0) {
+          const maxInstrCount =
+            instrumentsStore.instruments.length > 5
+              ? 5
+              : instrumentsStore.instruments.length;
           const newInstruments = [];
-          for (let i = 0; i < 5; i++) {
-            if (instrumentsStore.instruments[i]) {
-              newInstruments.push(
-                instrumentsStore.instruments[i].instrumentItem.id
-              );
+          if (maxInstrCount > 0) {
+            for (let i = 0; i < maxInstrCount; i++) {
+              if (instrumentsStore.instruments[i]) {
+                newInstruments.push(
+                  instrumentsStore.instruments[i].instrumentItem.id
+                );
+              }
             }
           }
+
           responseToCheck = newInstruments;
         }
         instrumentsStore.setActiveInstrumentsIds(responseToCheck);

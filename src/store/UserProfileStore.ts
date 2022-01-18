@@ -168,20 +168,20 @@ export class UserProfileStore implements ContextProps {
     this.isCongratModal = false;
   };
 
-  @action 
+  @action
   toggleStatusDescription = () => {
     this.isStatusDescription = !this.isStatusDescription;
-  }
+  };
 
-  @action 
+  @action
   openStatusDescription = () => {
     this.isStatusDescription = true;
-  }
+  };
 
-  @action 
+  @action
   closeStatusDescription = () => {
     this.isStatusDescription = false;
-  }
+  };
 
   @action
   checkActiveAccount = async (currentAccountTypeId: string) => {

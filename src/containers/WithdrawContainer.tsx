@@ -3,18 +3,20 @@ import { FlexContainer } from '../styles/FlexContainer';
 import BackFlowLayout from '../components/BackFlowLayout';
 import { useTranslation } from 'react-i18next';
 import styled from '@emotion/styled';
-import { NavLink, useHistory, useRouteMatch } from 'react-router-dom';
+import { Link, NavLink, useHistory, useRouteMatch } from 'react-router-dom';
 import Colors from '../constants/Colors';
 import Page from '../constants/Pages';
 import { useStores } from '../hooks/useStores';
 import { PersonalDataKYCEnum } from '../enums/PersonalDataKYCEnum';
 
 import FailImage from '../assets/images/fail.png';
+import PendigImage from '../assets/images/icon-attention.png';
 import mixpanel from 'mixpanel-browser';
 import mixpanelEvents from '../constants/mixpanelEvents';
 import mixapanelProps from '../constants/mixpanelProps';
 import { observer } from 'mobx-react-lite';
 import LoaderForComponents from '../components/LoaderForComponents';
+import { PrimaryTextSpan } from '../styles/TextsElements';
 
 interface Props {
   backBtn?: string;
@@ -39,78 +41,136 @@ const WithdrawContainer: FC<Props> = observer(({ children, backBtn }) => {
 
   const match = useRouteMatch([Page.WITHDRAW_LIST, Page.WITHDRAW_HISTORY]);
 
+  if (
+    userProfileStore.userProfile?.kyc === PersonalDataKYCEnum.NotVerified ||
+    userProfileStore.userProfile?.kyc === PersonalDataKYCEnum.Restricted
+  ) {
+    return <NotVerifiedView />;
+  }
+
+  if (userProfileStore.userProfile?.kyc !== PersonalDataKYCEnum.Verified) {
+    return <PendingVerifiedView />;
+  }
+
   return (
     <BackFlowLayout pageTitle={t('Withdrawal')} backLink={backBtn}>
-      {![
-        PersonalDataKYCEnum.OnVerification,
-        PersonalDataKYCEnum.Verified,
-        PersonalDataKYCEnum.Restricted,
-      ].includes(
-        userProfileStore.userProfile?.kyc || PersonalDataKYCEnum.NotVerified
-      ) ? (
-        <FlexContainer
-          width="100%"
-          height="100%"
-          flexDirection="column"
-          justifyContent="space-between"
-        >
-          <FlexContainer
-            flexDirection="column"
-            alignItems="center"
-            padding="50px 0 0"
-            height="calc(100% - 96px)"
-          >
-            <FlexContainer
-              justifyContent={'center'}
-              alignItems={'center'}
-              marginBottom="40px"
+      <FlexContainer
+        width="100%"
+        height="100%"
+        flexDirection="column"
+        alignItems="center"
+      >
+        {match?.isExact && (
+          <NavWrap>
+            <CustomNavLink to={Page.WITHDRAW_LIST} activeClassName="selected">
+              {t('New Request')}
+            </CustomNavLink>
+            <CustomNavLink
+              to={Page.WITHDRAW_HISTORY}
+              activeClassName="selected"
             >
-              <img src={FailImage} width={138} />
-            </FlexContainer>
-            <FailText>{t('Verification Required')}</FailText>
-            <FailDescription>
-              {t('Something went wrong.')}
-              <br />
-              {t(
-                'Withdrawal request can only be submitted when all of KYC documents have been approved and  the account is Fully Verified'
-              )}
-            </FailDescription>
-          </FlexContainer>
-          <FlexContainer padding="16px" width="100%">
-            <OtherMethodsButton href={Page.ACCOUNT_VERIFICATION}>
-              {t('Proceed to Verification')}
-            </OtherMethodsButton>
-          </FlexContainer>
-        </FlexContainer>
-      ) : (
-        <FlexContainer
-          width="100%"
-          height="100%"
-          flexDirection="column"
-          alignItems="center"
-        >
-          {match?.isExact && (
-            <NavWrap>
-              <CustomNavLink to={Page.WITHDRAW_LIST} activeClassName="selected">
-                {t('New Request')}
-              </CustomNavLink>
-              <CustomNavLink
-                to={Page.WITHDRAW_HISTORY}
-                activeClassName="selected"
-              >
-                {t('History')}
-              </CustomNavLink>
-            </NavWrap>
-          )}
-          <LoaderForComponents isLoading={withdrawalStore.loading} />
-          {children}
-        </FlexContainer>
-      )}
+              {t('History')}
+            </CustomNavLink>
+          </NavWrap>
+        )}
+        <LoaderForComponents isLoading={withdrawalStore.loading} />
+        {children}
+      </FlexContainer>
     </BackFlowLayout>
   );
 });
 
 export default WithdrawContainer;
+
+const NotVerifiedView = () => {
+  const { t } = useTranslation();
+  return (
+    <BackFlowLayout
+      pageTitle={t('Withdrawal')}
+      backLink={Page.ACCOUNT_PROFILE}
+      type="close"
+    >
+      <FlexContainer
+        width="100%"
+        height="100%"
+        flexDirection="column"
+        justifyContent="space-between"
+      >
+        <FlexContainer
+          flexDirection="column"
+          alignItems="center"
+          padding="50px 0 0"
+          height="calc(100% - 96px)"
+        >
+          <FlexContainer
+            justifyContent={'center'}
+            alignItems={'center'}
+            marginBottom="40px"
+          >
+            <img src={FailImage} width={138} />
+          </FlexContainer>
+          <FailText>{t('Your account is not verified')}</FailText>
+          <FailDescription>
+            {t('Withdrawals are available once your account is fully verified')}
+          </FailDescription>
+        </FlexContainer>
+        <FlexContainer padding="16px" width="100%">
+          <OtherMethodsButton to={Page.ACCOUNT_VERIFICATION}>
+            <PrimaryTextSpan color="#1C1F26" fontWeight={700} fontSize="16px">
+              {t('Proceed to Verification')}
+            </PrimaryTextSpan>
+          </OtherMethodsButton>
+        </FlexContainer>
+      </FlexContainer>
+    </BackFlowLayout>
+  );
+};
+
+const PendingVerifiedView = () => {
+  const { t } = useTranslation();
+  return (
+    <BackFlowLayout
+      pageTitle={t('Withdrawal')}
+      backLink={Page.ACCOUNT_PROFILE}
+      type="close"
+    >
+      <FlexContainer
+        width="100%"
+        height="100%"
+        flexDirection="column"
+        justifyContent="space-between"
+      >
+        <FlexContainer
+          flexDirection="column"
+          alignItems="center"
+          padding="50px 0 0"
+          height="calc(100% - 96px)"
+        >
+          <FlexContainer
+            justifyContent={'center'}
+            alignItems={'center'}
+            marginBottom="40px"
+          >
+            <img src={PendigImage} width={138} />
+          </FlexContainer>
+          <FailText>{t('Withdrawal is temporarily unavailable')}</FailText>
+          <FailDescription>
+            {t(
+              'Your  documents is verified by our Compliance  department. This process usually takes no longer than 48 working hours.'
+            )}
+          </FailDescription>
+        </FlexContainer>
+        <FlexContainer padding="16px" width="100%">
+          <OtherMethodsButton to={Page.ACCOUNT_PROFILE}>
+            <PrimaryTextSpan color="#1C1F26" fontWeight={700} fontSize="16px">
+              {t('Close')}
+            </PrimaryTextSpan>
+          </OtherMethodsButton>
+        </FlexContainer>
+      </FlexContainer>
+    </BackFlowLayout>
+  );
+};
 
 const NavWrap = styled(FlexContainer)`
   margin-bottom: 30px;
@@ -145,7 +205,7 @@ const CustomNavLink = styled(NavLink)`
   }
 `;
 
-const OtherMethodsButton = styled.a`
+const OtherMethodsButton = styled(Link)`
   background-color: #00ffdd;
   border-radius: 10px;
   width: 100%;
