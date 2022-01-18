@@ -95,6 +95,20 @@ const AuthorizedContainer: FC = observer(({ children }) => {
       mainAppStore.activeAccount &&
       instrumentsStore.instruments.length
     ) {
+      let alreadyAdded = false;
+      setTimeout(() => {
+        if (!alreadyAdded) {
+          instrumentsStore.setActiveInstrumentsIds(
+            instrumentsStore.instruments
+              .slice(0, 5)
+              .map((instr) => instr.instrumentItem.id)
+          );
+          instrumentsStore.switchInstrument(
+            instrumentsStore.instruments[0].instrumentItem.id,
+            false
+          );
+        }
+      }, 5000);
       mainAppStore.setDataLoading(true);
 
       const accountType = mainAppStore.activeAccount?.isLive
@@ -106,7 +120,7 @@ const AuthorizedContainer: FC = observer(({ children }) => {
           type: accountType,
           accountId: mainAppStore.activeAccountId,
         });
-
+        alreadyAdded = true;
         let responseToCheck: string[] = [];
         response.reverse().map((instrumentId) => {
           if (

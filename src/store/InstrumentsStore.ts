@@ -196,7 +196,10 @@ export class InstrumentsStore implements ContextProps {
 
   // TODO: refactor, too heavy
   @action
-  switchInstrument = async (instrumentId: string, addToFavorites: boolean = true) => {
+  switchInstrument = async (
+    instrumentId: string,
+    addToFavorites: boolean = true
+  ) => {
     const newActiveInstrument = this.instruments.find(
       (item) => item.instrumentItem.id === instrumentId
     );

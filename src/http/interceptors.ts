@@ -266,7 +266,11 @@ const injectInerceptors = (mainAppStore: MainAppStore) => {
           !(excludeReconectList.includes(getApiUrl(requestUrl)) && error.config.method === 'get') &&
           mainAppStore.requestErrorStack.filter((elem) => elem === getApiUrl(requestUrl)).length > 2
         ) {
-          mainAppStore.rootStore.badRequestPopupStore.openModalTimeout();
+          if (getApiUrl(requestUrl).includes(AUTH_API_LIST.PERSONAL_DATA.GET)) {
+            mainAppStore.signOut();
+          } else {
+            mainAppStore.rootStore.badRequestPopupStore.openModalTimeout();
+          }
         }
         setTimeout(() => {
           callback(originalRequest);
@@ -338,7 +342,7 @@ const injectInerceptors = (mainAppStore: MainAppStore) => {
         openNotification('Timeout connection error', mainAppStore, false, true);
       }
 
-      if (isTimeOutError && isReconnectedRequest) {
+      if (isTimeOutError && isReconnectedRequest && error.response?.status !== 401) {
         return new Promise((resolve, reject) => {
           repeatRequest(() => {
             if (JSON.parse(finalJSON).isAuthorized === `${mainAppStore.isAuthorized}`) {
