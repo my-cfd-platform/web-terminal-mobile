@@ -434,7 +434,10 @@ class API {
         AUTH_API_LIST.DOCUMENT.POST
       }/${documentType}`,
       formData,
-      this.backgroundRequestOptions
+      {
+        ...this.backgroundRequestOptions,
+        timeout: 600000,
+      }
     );
     return response.data;
   };
@@ -586,7 +589,8 @@ class API {
     const needToAdd =
       (API_MISC_STRING || miscUrl).includes('/misc') || IS_LOCAL ? '' : '/misc';
     const response = await axios.get<IEducationCoursesDTO>(
-      `${API_MISC_STRING || miscUrl}${needToAdd}${API_LIST.EDUCATION.LIST}`
+      `${API_MISC_STRING || miscUrl}${needToAdd}${API_LIST.EDUCATION.LIST}`,
+      this.backgroundRequestOptions
     );
     return response.data;
   };
@@ -595,7 +599,8 @@ class API {
     const needToAdd =
       (API_MISC_STRING || miscUrl).includes('/misc') || IS_LOCAL ? '' : '/misc';
     const response = await axios.get<IEducationQuestionsDTO>(
-      `${API_MISC_STRING || miscUrl}${needToAdd}${API_LIST.EDUCATION.LIST}/${id}`
+      `${API_MISC_STRING || miscUrl}${needToAdd}${API_LIST.EDUCATION.LIST}/${id}`,
+      this.backgroundRequestOptions
     );
     return response.data;
   };
@@ -607,7 +612,8 @@ class API {
       `${API_MISC_STRING || miscUrl}${needToAdd}${API_LIST.EDUCATION.LIST}/${id}/saveProgress`,
       {
         lastQuestionId: index
-      }
+      },
+      this.backgroundRequestOptions
     );
     return response.data;
   };

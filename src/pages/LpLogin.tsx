@@ -8,6 +8,7 @@ import API from '../helpers/API';
 import { getProcessId } from '../helpers/getProcessId';
 import { observer } from 'mobx-react-lite';
 import { CountriesEnum } from '../enums/CountriesEnum';
+import LoaderFullscreen from '../components/LoaderFullscreen';
 
 interface QueryParams {
   lang: string;
@@ -99,7 +100,7 @@ const LpLogin = observer(() => {
     mainAppStore.isAuthorized,
   ]);
 
-  return <div></div>;
+  return <LoaderFullscreen isLoading={true} />;
 });
 
 export default LpLogin;
