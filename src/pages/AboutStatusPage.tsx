@@ -8,6 +8,7 @@ import { observer } from 'mobx-react-lite';
 import AccountStatusProgress from '../components/AccountStatus/AccountStatusProgress';
 import AboutStatusTable from '../components/AccountStatus/AboutStatusTable';
 import { PrimaryTextSpan } from '../styles/TextsElements';
+import StatusPersonalCondition from '../components/AccountStatus/StatusPersonalCondition';
 
 const AboutStatusPage = observer(() => {
   const { t } = useTranslation();
@@ -55,6 +56,8 @@ const AboutStatusPage = observer(() => {
         <FlexContainer flex="1" overflow="auto" flexDirection="column">
           <AccountStatusProgress />
           <AboutStatusTable />
+
+          <StatusPersonalCondition />
         </FlexContainer>
         <FlexContainer backgroundColor="#1C1F26" padding="16px" width="100%">
           <PrimaryButton width="100%" onClick={hadnleClickDeposit}>
