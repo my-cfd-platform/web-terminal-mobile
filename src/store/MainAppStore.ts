@@ -892,6 +892,7 @@ export class MainAppStore implements MainAppStoreProps {
     localStorage.removeItem(LAST_PAGE_VISITED);
     localStorage.removeItem(LOCAL_TARGET);
     localStorage.removeItem(LOCAL_HIDDEN_BALANCE);
+    this.activeACCLoading = true;
     this.isPromoAccount = false;
     this.activeSession?.stop();
     this.activeSession = undefined;

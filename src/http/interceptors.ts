@@ -17,6 +17,7 @@ import mixpanel from 'mixpanel-browser';
 import mixpanelEvents from '../constants/mixpanelEvents';
 import mixapanelProps from '../constants/mixpanelProps';
 import Page from '../constants/Pages';
+import KeysInApi from '../constants/keysInApi';
 
 const openNotification = (errorText: string, mainAppStore: MainAppStore, isReload?: boolean, needTranslate?: boolean) => {
   mainAppStore.rootStore.badRequestPopupStore.setMessage(errorText);
@@ -241,11 +242,33 @@ const injectInerceptors = (mainAppStore: MainAppStore) => {
         (
           getApiUrl(requestUrl).includes(API_LIST.ONBOARDING.STEPS) ||
           getApiUrl(requestUrl).includes(API_LIST.WELCOME_BONUS.GET) ||
-          getApiUrl(requestUrl).includes(API_LIST.EDUCATION.LIST)
+          (
+            getApiUrl(requestUrl).includes(API_LIST.EDUCATION.LIST) &&
+            !getApiUrl(requestUrl).includes(`${API_LIST.EDUCATION.LIST}/`) &&
+            error.config.method === 'get'
+          ) ||
+          (
+            getApiUrl(requestUrl).includes(API_LIST.KEY_VALUE.GET) &&
+            getApiUrl(requestUrl).includes(KeysInApi.SHOW_HINT) &&
+            error.config.method === 'get'
+          )
         ) &&
         error.response?.status !== 401 &&
         error.response?.status !== 403
       ) {
+        sendClientLog();
+        return Promise.reject(error);
+      }
+
+      if (
+        (
+          getApiUrl(requestUrl).includes(API_LIST.EDUCATION.LIST) &&
+          error.config.method === 'post'
+        ) &&
+        error.response?.status !== 401 &&
+        error.response?.status !== 403
+      ) {
+        openNotification('Something went wrong', mainAppStore, true);
         sendClientLog();
         return Promise.reject(error);
       }
@@ -449,9 +472,7 @@ const injectInerceptors = (mainAppStore: MainAppStore) => {
                     originalRequest._retry = false;
 
                     processQueue(null, mainAppStore.token);
-                    if (!getApiUrl(requestUrl).includes(API_LIST.WELCOME_BONUS.GET)) {
-                      resolve(axios(originalRequest));
-                    }
+                    resolve(axios(originalRequest));
                   })
                   .catch((err) => {
                     mainAppStore.setRefreshToken('');
