@@ -115,7 +115,6 @@ const NavBar: FC<Props> = observer(({ showBar }) => {
 
   useEffect(() => {
     if (
-      mainAppStore.token &&
       mainAppStore.isAuthorized &&
       !mainAppStore.promo &&
       !mainAppStore.isPromoAccount &&
@@ -126,7 +125,6 @@ const NavBar: FC<Props> = observer(({ showBar }) => {
   }, [
     mainAppStore.lang,
     mainAppStore.isAuthorized,
-    mainAppStore.token,
     mainAppStore.isPromoAccount,
     mainAppStore.promo,
     mainAppStore.activeACCLoading,
