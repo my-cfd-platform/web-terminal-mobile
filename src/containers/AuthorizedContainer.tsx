@@ -95,7 +95,8 @@ const AuthorizedContainer: FC = observer(({ children }) => {
   const fetchFavoriteInstruments = useCallback(async () => {
     if (
       mainAppStore.activeAccount &&
-      instrumentsStore.instruments.length
+      instrumentsStore.instruments.length &&
+      !mainAppStore.isVerification
     ) {
       let alreadyAdded = false;
       setTimeout(() => {
@@ -187,6 +188,7 @@ const AuthorizedContainer: FC = observer(({ children }) => {
     mainAppStore.activeAccount,
     mainAppStore.activeAccountId,
     mainAppStore.isLoading,
+    mainAppStore.isVerification,
   ]);
 
   useEffect(() => {
@@ -239,10 +241,15 @@ const AuthorizedContainer: FC = observer(({ children }) => {
           }
           mainAppStore.setSignUpFlag(false);
           mainAppStore.setLpLoginFlag(false);
-          if (!response.data.phone) {
+          if (
+            !response.data.phone &&
+            !mainAppStore.isAdditionalRequestSent
+          ) {
+            mainAppStore.setAdditionalRequest(true);
             const additionalResponse = await API.getAdditionalRegistrationFields(
               mainAppStore.initModel.authUrl
             );
+            mainAppStore.setAdditionalRequest(false);
             if (additionalResponse.includes('phone')) {
               mainAppStore.isVerification = true;
               push(Page.PHONE_VERIFICATION);

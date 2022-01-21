@@ -144,6 +144,7 @@ export class MainAppStore implements MainAppStoreProps {
   @observable connectTimeOut = 10000;
   @observable activeACCLoading = true;
   @observable isBalanceHidden = false;
+  @observable isAdditionalRequestSent = false;
 
   websocketConnectionTries = 0;
 
@@ -419,7 +420,7 @@ export class MainAppStore implements MainAppStoreProps {
       this.rootStore.badRequestPopupStore.openModal();
       this.rootStore.badRequestPopupStore.setMessage(
         error?.message ||
-          apiResponseCodeMessages[OperationApiResponseCodes.TechnicalError]
+          apiResponseCodeMessages[OperationApiResponseCodes.SystemError]
       );
 
       if (error) {
@@ -626,6 +627,11 @@ export class MainAppStore implements MainAppStoreProps {
   @action
   setSignUpFlag = (value: boolean) => {
     this.signUpFlag = value;
+  };
+
+  @action
+  setAdditionalRequest = (value: boolean) => {
+    this.isAdditionalRequestSent = value;
   };
 
   @action

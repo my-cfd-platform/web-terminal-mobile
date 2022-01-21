@@ -204,7 +204,7 @@ export class UserProfileStore implements ContextProps {
     init: boolean = false
   ) => {
     try {
-      if (init) {
+      if (init && !this.rootStore.mainAppStore.isVerification) {
         // on new user init KV Status
         const activeStatusId = await this.checkActiveAccount(currentAccountTypeId);
         if (!activeStatusId) {

@@ -121,14 +121,14 @@ const SignUp = () => {
               badRequestPopupStore.setMessage(
                 t(
                   apiResponseCodeMessages[
-                    OperationApiResponseCodes.TechnicalError
+                    OperationApiResponseCodes.SystemError
                   ]
                 )
               );
               setStatus(
                 t(
                   apiResponseCodeMessages[
-                    OperationApiResponseCodes.TechnicalError
+                    OperationApiResponseCodes.SystemError
                   ]
                 )
               );

@@ -122,7 +122,7 @@ const AccountVerification = observer(() => {
       //
     } catch (error) {
       kycStore.setIsFileLoading(false);
-      notificationStore.notificationMessage = t(apiResponseCodeMessages[16]);
+      notificationStore.notificationMessage = t(apiResponseCodeMessages[-8]);
       notificationStore.isSuccessfull = false;
       notificationStore.openNotification();
     }
