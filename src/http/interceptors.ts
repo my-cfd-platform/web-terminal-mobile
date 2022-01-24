@@ -128,11 +128,12 @@ const injectInerceptors = (mainAppStore: MainAppStore) => {
           }
           removeErrorUrl(requestUrl);
         }
-
-        if (mainAppStore.requestErrorStack.length === 0) {
-          mainAppStore.requestReconnectCounter = 0;
+        if (mainAppStore.requestErrorStack.length < 3) {
+          if (mainAppStore.requestErrorStack.length === 0) {
+            mainAppStore.requestReconnectCounter = 0;
+            mainAppStore.rootStore.badRequestPopupStore.stopRecconect();
+          }
           mainAppStore.rootStore.badRequestPopupStore.closeModalTimeout();
-          mainAppStore.rootStore.badRequestPopupStore.stopRecconect();
         }
         if (mainAppStore.rootStore.serverErrorPopupStore.isActive) {
           mainAppStore.rootStore.serverErrorPopupStore.closeModal();

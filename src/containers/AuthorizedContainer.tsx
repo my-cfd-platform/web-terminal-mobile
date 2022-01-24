@@ -101,6 +101,7 @@ const AuthorizedContainer: FC = observer(({ children }) => {
       let alreadyAdded = false;
       setTimeout(() => {
         if (!alreadyAdded) {
+          mainAppStore.setDataLoading(false);
           instrumentsStore.setActiveInstrumentsIds(
             instrumentsStore.instruments
               .slice(0, 5)
@@ -111,7 +112,7 @@ const AuthorizedContainer: FC = observer(({ children }) => {
             false
           );
         }
-      }, 5000);
+      }, 10000);
       mainAppStore.setDataLoading(true);
 
       const accountType = mainAppStore.activeAccount?.isLive
@@ -241,10 +242,7 @@ const AuthorizedContainer: FC = observer(({ children }) => {
           }
           mainAppStore.setSignUpFlag(false);
           mainAppStore.setLpLoginFlag(false);
-          if (
-            !response.data.phone &&
-            !mainAppStore.isAdditionalRequestSent
-          ) {
+          if (!response.data.phone) {
             mainAppStore.setAdditionalRequest(true);
             const additionalResponse = await API.getAdditionalRegistrationFields(
               mainAppStore.initModel.authUrl
@@ -268,7 +266,10 @@ const AuthorizedContainer: FC = observer(({ children }) => {
       }
     }
 
-    if (mainAppStore.token) {
+    if (
+      mainAppStore.token &&
+      !mainAppStore.isAdditionalRequestSent
+    ) {
       fetchPersonalData();
     }
 
@@ -386,7 +387,7 @@ const AuthorizedContainer: FC = observer(({ children }) => {
         )}
       </Observer>
       <LoaderFullscreen
-        isLoading={mainAppStore.isLoading || waitingData}
+        isLoading={mainAppStore.isLoading || waitingData || mainAppStore.dataLoading}
       ></LoaderFullscreen>
       <Observer>
         {() => <>{serverErrorPopupStore.isActive && <ServerErrorPopup />}</>}
