@@ -41,7 +41,7 @@ const RouteWrapper: FC<Props> = observer((props) => {
   if (layoutType !== RouteLayoutType.Public) {
     if (mainAppStore.isAuthorized && layoutType === RouteLayoutType.SignFlow) {
       const lastPage = localStorage.getItem(LAST_PAGE_VISITED);
-      return <Redirect to={lastPage || Page.DASHBOARD} />;
+      return <Redirect to={lastPage !== Page.SIGN_IN ? lastPage || Page.DASHBOARD : Page.DASHBOARD} />;
     } else if (
       !mainAppStore.isAuthorized &&
       [RouteLayoutType.Authorized, RouteLayoutType.KYC].includes(layoutType)

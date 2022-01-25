@@ -927,6 +927,8 @@ export class MainAppStore implements MainAppStoreProps {
     this.rootStore.educationStore.resetStore();
     this.isBalanceHidden = false;
     this.rootStore.kycStore.resetStore();
+    this.isAdditionalRequestSent = false;
+    this.isWithdrawRequestSent = false;
     if (this.activeAccount) {
       this.setParamsAsset(null);
       this.setParamsMarkets(null);
