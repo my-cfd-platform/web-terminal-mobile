@@ -145,6 +145,7 @@ export class MainAppStore implements MainAppStoreProps {
   @observable activeACCLoading = true;
   @observable isBalanceHidden = false;
   @observable isAdditionalRequestSent = false;
+  @observable isWithdrawRequestSent = false;
 
   websocketConnectionTries = 0;
 
@@ -632,6 +633,11 @@ export class MainAppStore implements MainAppStoreProps {
   @action
   setAdditionalRequest = (value: boolean) => {
     this.isAdditionalRequestSent = value;
+  };
+
+  @action
+  setWithdrawRequest = (value: boolean) => {
+    this.isWithdrawRequestSent = value;
   };
 
   @action

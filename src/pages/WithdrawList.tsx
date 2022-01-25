@@ -30,9 +30,11 @@ const WithdrawList = observer(() => {
     const initHistoryList = async () => {
       withdrawalStore.setLoad();
       try {
+        mainAppStore.setWithdrawRequest(true);
         const result = await API.getWithdrawalHistory(
           mainAppStore.initModel.tradingUrl
         );
+        mainAppStore.setWithdrawRequest(false);
         if (result.status === WithdrawalHistoryResponseStatus.Successful) {
           const isPending = result.history?.some(
             (item) =>
@@ -56,7 +58,8 @@ const WithdrawList = observer(() => {
         PersonalDataKYCEnum.Verified,
         PersonalDataKYCEnum.OnVerification,
         PersonalDataKYCEnum.Restricted
-      ].includes(userProfileStore.userProfile.kyc)
+      ].includes(userProfileStore.userProfile.kyc) &&
+      !mainAppStore.isWithdrawRequestSent
     ) {
       initHistoryList();
     }
