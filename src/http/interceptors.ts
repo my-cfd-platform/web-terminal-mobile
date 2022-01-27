@@ -269,7 +269,7 @@ const injectInerceptors = (mainAppStore: MainAppStore) => {
         error.response?.status !== 401 &&
         error.response?.status !== 403
       ) {
-        openNotification('Something went wrong', mainAppStore, true);
+        openNotification('Something went wrong', mainAppStore, false, true);
         sendClientLog();
         return Promise.reject(error);
       }
