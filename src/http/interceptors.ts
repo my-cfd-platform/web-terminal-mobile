@@ -438,6 +438,7 @@ const injectInerceptors = (mainAppStore: MainAppStore) => {
               });
             } else if (
               getApiUrl(requestUrl).includes(AUTH_API_LIST.PERSONAL_DATA.GET) ||
+              getApiUrl(requestUrl).includes(API_LIST.KEY_VALUE.GET) ||
               JSON.parse(finalJSON).isAuthorized !== `${mainAppStore.isAuthorized}`
             ){
               return Promise.reject(error);
