@@ -387,7 +387,7 @@ const AuthorizedContainer: FC = observer(({ children }) => {
         )}
       </Observer>
       <LoaderFullscreen
-        isLoading={mainAppStore.isLoading || waitingData || mainAppStore.dataLoading}
+        isLoading={mainAppStore.isLoading || waitingData || mainAppStore.dataLoading || mainAppStore.activeACCLoading}
       ></LoaderFullscreen>
       <Observer>
         {() => <>{serverErrorPopupStore.isActive && <ServerErrorPopup />}</>}
