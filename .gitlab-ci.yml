@@ -8,11 +8,14 @@ variables:
   K8S_UAT_CONTEXT: kubernetes-uat
   BUILD_FOLDER: wwwroot
   KUBERNETES_APP_SELECTOR_NAME: web-terminal-mobile
+  K8S_STG_SELECTOR_NAME: web-terminal-mobile-slot-b
+  K8S_STG_NAMESPACE: simple-trading
 
 stages:
   - build
   - publish
   - publish-kubernetes
+  - run-autotests
   - lock-image
 
 build-dev:
@@ -146,6 +149,38 @@ publish-kubernetes-uat:
     - kubectl patch deployment ${KUBERNETES_APP_SELECTOR_NAME} -p "{\"spec\":{\"template\":{\"metadata\":{\"labels\":{\"date\":\"`date +'%s'`\"}}}}}" --namespace=$KUBERNETES_TEST_NAMESPACE
   only:
     - uat
+
+publish-kubernetes-stg:
+  stage: publish-kubernetes
+  image: simpletrading.azurecr.io/monfex/helm:latest
+  services:
+    - docker:dind
+  variables:
+    GIT_STRATEGY: none
+    SUBSCRIPTION: Production-CSP
+    RG: SimpleTradingKubernetesRG
+    CLUSTER_NAME: Simple-Trading-Prod-Kube
+  before_script:
+    - az login --service-principal -u ${SERVICE_PRINCIPAL_LOGIN} -p ${SERVICE_PRINCIPAL_PASSWORD} --tenant ${SERVICE_PRINCIPAL_TENANT} > /dev/null
+    - az aks get-credentials --resource-group ${RG} --name ${CLUSTER_NAME} --subscription ${SUBSCRIPTION} --overwrite-existing
+  script:
+#    - kubectl delete pods -l app=${KUBERNETES_APP_STG_SELECTOR_NAME} --namespace=$KUBERNETES_TEST_NAMESPACE
+    - kubectl set image deployments/${K8S_STG_SELECTOR_NAME} ${K8S_STG_SELECTOR_NAME}=$DOCKER_REGISTRY_HOST/${DOCKER_IMAGE_TAG} --namespace=$K8S_STG_NAMESPACE
+    - kubectl patch deployment ${K8S_STG_SELECTOR_NAME} -p "{\"spec\":{\"template\":{\"metadata\":{\"labels\":{\"date\":\"`date +'%s'`\"}}}}}" --namespace=$K8S_STG_NAMESPACE
+  only:
+    - stg
+
+run-autotests-stg:
+  stage: run-autotests
+  image: simpletrading.azurecr.io/monfex/autotests-stage:latest
+  services:
+    - docker:dind
+  script:
+    - Xvfb -ac :99 -screen 0 1280x1024x16 &
+    - pytest tests/test_log_in.py
+  only:
+    - stg
+
 
 lock-image:
   stage: lock-image
