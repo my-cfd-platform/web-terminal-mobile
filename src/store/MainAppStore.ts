@@ -304,6 +304,7 @@ export class MainAppStore implements MainAppStoreProps {
           await connection.send(Topics.INIT, token);
           this.isAuthorized = true;
           this.activeSession = connection;
+          this.rootStore.serverErrorPopupStore.closeModal();
           this.pingPongConnection();
         } catch (error) {
           this.isAuthorized = false;
@@ -612,6 +613,8 @@ export class MainAppStore implements MainAppStoreProps {
       });
     }
     this.rootStore.serverErrorPopupStore.openModal();
+
+    this.handleNewInitConnection(this.token);
     // response.data.reason
   };
 
