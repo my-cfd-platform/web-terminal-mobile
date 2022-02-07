@@ -19,7 +19,7 @@ const ActivePositionItem: FC<Props> = ({ position, isInner }) => {
   const { mainAppStore, instrumentsStore } = useStores();
   const { type } = useParams<{ type: string }>();
   const { id, instrument, operation } = position;
-
+  console.log(position)
   const groupName = (instrument: string) => {
     const groupId =
       instrumentsStore.instruments.find(
