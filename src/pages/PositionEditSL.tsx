@@ -33,6 +33,9 @@ import mixpanel from 'mixpanel-browser';
 import mixpanelEvents from '../constants/mixpanelEvents';
 import mixapanelProps from '../constants/mixpanelProps';
 import mixpanelValues from '../constants/mixpanelValues';
+import SvgIcon from '../components/SvgIcon';
+import IconToppingUpActive from '../assets/svg_no_compress/topping-up/icon-topping-up-active.svg';
+import IconToppingUpInUse from '../assets/svg_no_compress/topping-up/icon-topping-up-active-in-use.svg';
 
 const PositionEditSL = observer(() => {
   const { id } = useParams<{ id: string }>();
@@ -131,7 +134,7 @@ const PositionEditSL = observer(() => {
       const posPriceByValue =
         currentPrice +
         ((stopLoss - commission) * currentPrice) /
-        (position.investmentAmount * direction * position.multiplier);
+          (position.investmentAmount * direction * position.multiplier);
     }
   };
 
@@ -156,9 +159,9 @@ const PositionEditSL = observer(() => {
 
         const result =
           (slPrice / currentPrice - 1) *
-          position.investmentAmount *
-          position.multiplier *
-          direction +
+            position.investmentAmount *
+            position.multiplier *
+            direction +
           (position.swap + position.commission);
         return +Number(result).toFixed(2);
       }
@@ -179,8 +182,8 @@ const PositionEditSL = observer(() => {
         values.value === null && values.price === null
           ? null
           : values.value !== null
-            ? TpSlTypeEnum.Currency
-            : TpSlTypeEnum.Price,
+          ? TpSlTypeEnum.Currency
+          : TpSlTypeEnum.Price,
       tpType: position?.tp ? position.tpType : null,
     };
     mixpanel.track(mixpanelEvents.EDIT_SLTP_FAILED, {
@@ -278,8 +281,8 @@ const PositionEditSL = observer(() => {
         values.value === null && values.price === null
           ? null
           : values.value !== null
-            ? TpSlTypeEnum.Currency
-            : TpSlTypeEnum.Price,
+          ? TpSlTypeEnum.Currency
+          : TpSlTypeEnum.Price,
 
       tpType: position?.tp ? position.tpType : null,
     };
@@ -299,7 +302,9 @@ const PositionEditSL = observer(() => {
           updateSavePosition.position.isToppingUpActive
         ) {
           setLoading(false);
-          notificationStore.notificationMessage = t('Please enter a different Stop Loss amount');
+          notificationStore.notificationMessage = t(
+            'Please enter a different Stop Loss amount'
+          );
           notificationStore.isSuccessfull = false;
           notificationStore.openNotification();
           return;
@@ -401,13 +406,15 @@ const PositionEditSL = observer(() => {
     validateOnChange: false,
   });
 
-
   const valueWithPrecision = () => {
     switch (position?.slType) {
       case TpSlTypeEnum.Currency:
-        setFieldValue('value', position?.sl !== null
-          ? Math.abs(position.sl).toFixed(2)
-          : position?.sl);
+        setFieldValue(
+          'value',
+          position?.sl !== null
+            ? Math.abs(position.sl).toFixed(2)
+            : position?.sl
+        );
         break;
 
       case TpSlTypeEnum.Price:
@@ -531,8 +538,8 @@ const PositionEditSL = observer(() => {
       e.target.value === ''
         ? null
         : +e.target.value === 0
-          ? e.target.value
-          : e.target.value.replace('- ', '').replace(',', '.') || null;
+        ? e.target.value
+        : e.target.value.replace('- ', '').replace(',', '.') || null;
 
     setFieldValue(e.target.name, newValue);
 
@@ -607,7 +614,6 @@ const PositionEditSL = observer(() => {
       if (errorsValues.length) {
         mixpanelTrackFailed(`${errorsValues[0]}`);
       }
-
     }
   };
 
@@ -651,19 +657,19 @@ const PositionEditSL = observer(() => {
             values.value !== null &&
             values.price !== null &&
             values.isToppingUpActive !== position.isToppingUpActive)) && (
-            <FlexContainer
-              position="absolute"
-              right="16px"
-              top="16px"
-              zIndex="300"
-            >
-              <ButtonWithoutStyles type="button" onClick={handleClickSubmit}>
-                <PrimaryTextSpan fontSize="16px" color="#ffffff">
-                  {t('Save')}
-                </PrimaryTextSpan>
-              </ButtonWithoutStyles>
-            </FlexContainer>
-          )}
+          <FlexContainer
+            position="absolute"
+            right="16px"
+            top="16px"
+            zIndex="300"
+          >
+            <ButtonWithoutStyles type="button" onClick={handleClickSubmit}>
+              <PrimaryTextSpan fontSize="16px" color="#ffffff">
+                {t('Save')}
+              </PrimaryTextSpan>
+            </ButtonWithoutStyles>
+          </FlexContainer>
+        )}
         <FlexContainer width="100%" flexDirection="column">
           <FlexContainer
             backgroundColor="rgba(42, 45, 56, 0.5)"
@@ -810,12 +816,13 @@ const PositionEditSL = observer(() => {
               color="rgba(196, 196, 196, 0.5)"
               lineHeight="1.4"
             >
-              {`${t('If the loss for a position reaches')} ${instrument?.stopOutPercent
-                }%, ${t(
-                  'an additional 20% of the original investment amount will be reserved from your balance to save your position from closing. If the position takes a further loss, your available balance is reduced by 20% again and again. Once the position rises to at least'
-                )} ${instrument?.stopOutPercent}%, ${t(
-                  'all previously reserved funds are returned to your balance.'
-                )}`}
+              {`${t('If the loss for a position reaches')} ${
+                instrument?.stopOutPercent
+              }%, ${t(
+                'an additional 20% of the original investment amount will be reserved from your balance to save your position from closing. If the position takes a further loss, your available balance is reduced by 20% again and again. Once the position rises to at least'
+              )} ${instrument?.stopOutPercent}%, ${t(
+                'all previously reserved funds are returned to your balance.'
+              )}`}
             </PrimaryTextSpan>
           </FlexContainer>
 
@@ -829,6 +836,30 @@ const PositionEditSL = observer(() => {
                 'You can limit the additional funds reserved on your balance by specifying a level of loss that is acceptable to you for this position.'
               )}
             </PrimaryTextSpan>
+          </FlexContainer>
+
+          <FlexContainer padding="0 16px 12px" flexDirection="column">
+            <FlexContainer alignItems="center">
+              <SvgIcon {...IconToppingUpActive} />
+              <PrimaryTextSpan
+                fontSize="13px"
+                color="rgba(196, 196, 196, 0.5)"
+                lineHeight="1.4"
+              >
+                {` - ${t('save position is active')}`}
+              </PrimaryTextSpan>
+            </FlexContainer>
+
+            <FlexContainer alignItems="center">
+              <SvgIcon {...IconToppingUpInUse} />
+              <PrimaryTextSpan
+                fontSize="13px"
+                color="rgba(196, 196, 196, 0.5)"
+                lineHeight="1.4"
+              >
+                {` - ${t('save position is active and use available funds')}`}
+              </PrimaryTextSpan>
+            </FlexContainer>
           </FlexContainer>
         </FlexContainer>
       </CustomForm>

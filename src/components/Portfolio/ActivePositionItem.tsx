@@ -9,6 +9,10 @@ import ActivePositionPnL from './ActivePositionPnL';
 import { Link, useParams } from 'react-router-dom';
 import Page from '../../constants/Pages';
 import ItemOperationLabel from './ItemOperationLabel';
+import SvgIcon from '../SvgIcon';
+
+import IconToppingUpActive from '../../assets/svg_no_compress/topping-up/icon-topping-up-active.svg';
+import IconToppingUpInUse from '../../assets/svg_no_compress/topping-up/icon-topping-up-active-in-use.svg';
 
 interface Props {
   position: PositionModelWSDTO;
@@ -19,7 +23,6 @@ const ActivePositionItem: FC<Props> = ({ position, isInner }) => {
   const { mainAppStore, instrumentsStore } = useStores();
   const { type } = useParams<{ type: string }>();
   const { id, instrument, operation } = position;
-  console.log(position)
   const groupName = (instrument: string) => {
     const groupId =
       instrumentsStore.instruments.find(
@@ -36,10 +39,26 @@ const ActivePositionItem: FC<Props> = ({ position, isInner }) => {
     [position]
   );
 
+  const toppingUpIcon =
+    position.reservedFundsForToppingUp > 0
+      ? IconToppingUpInUse
+      : IconToppingUpActive;
+
   return (
     <InstrumentItem to={`${Page.PORTFOLIO_MAIN}/${type}/${id}`}>
-      <FlexContainer width="48px" height="48px" marginRight="16px">
+      <FlexContainer
+        width="48px"
+        height="48px"
+        marginRight="16px"
+        position="relative"
+      >
         <ImageContainer instrumentId={instrument} />
+
+        {position.isToppingUpActive && (
+          <FlexContainer position="absolute" bottom="0" right="-4px">
+            <SvgIcon {...toppingUpIcon} />
+          </FlexContainer>
+        )}
       </FlexContainer>
 
       <FlexContainer
@@ -101,7 +120,12 @@ const InstrumentItem = styled(Link)`
   text-decoration: none;
   &:hover,
   &:focus {
-    background: linear-gradient(0deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.1)), rgba(42, 45, 56, 0.5);
+    background: linear-gradient(
+        0deg,
+        rgba(255, 255, 255, 0.1),
+        rgba(255, 255, 255, 0.1)
+      ),
+      rgba(42, 45, 56, 0.5);
     text-decoration: none;
   }
 `;

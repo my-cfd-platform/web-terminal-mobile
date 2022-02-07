@@ -664,5 +664,7 @@
     "Timeout connection error": "Timeout connection error",
     "We are trying to connect to the server": "We are trying to connect to the server",
     "Oooopsss": "Oooopsss",
-    "Reconnecting…": "Reconnecting…"
+    "Reconnecting…": "Reconnecting…",
+    "save position is active": "save position is active",
+    "save position is active and use available funds": "save position is active and use available funds"
 }
