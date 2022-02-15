@@ -54,6 +54,9 @@ const AuthorizedContainer: FC = observer(({ children }) => {
     Page.PAGE_NOT_FOUND,
     Page.ABOUT_STATUS,
     Page.VERIFICATION_SUCCESS_SEND,
+    Page.MT5_CHANGE_ACCOUNT,
+    Page.MT5_INFO_ACCOUNT,
+    Page.DEPOSIT,
   ]);
 
   const { push } = useHistory();
@@ -63,7 +66,7 @@ const AuthorizedContainer: FC = observer(({ children }) => {
     userProfileStore,
     serverErrorPopupStore,
     instrumentsStore,
-    badRequestPopupStore
+    badRequestPopupStore,
   } = useStores();
   const [waitingData, setWaitingData] = useState<boolean>(true);
   const [isBonusGotten, setIsBonusGotten] = useState<boolean>(false);
@@ -88,6 +91,9 @@ const AuthorizedContainer: FC = observer(({ children }) => {
     Page.EDUCATION_LIST,
     Page.ABOUT_STATUS,
     Page.VERIFICATION_SUCCESS_SEND,
+    Page.MT5_CHANGE_ACCOUNT,
+    Page.MT5_INFO_ACCOUNT,
+    Page.DEPOSIT,
   ]);
 
   const isHiddenPromoPage = hidenPromoPageList?.isExact;
@@ -163,9 +169,7 @@ const AuthorizedContainer: FC = observer(({ children }) => {
         // if app is reinitializing, we should wait widget first
 
         if (!response.length) {
-          throw new Error(
-            t('Something went wrong.')
-          );
+          throw new Error(t('Something went wrong.'));
         }
         await instrumentsStore.switchInstrument(response[response.length - 1]);
         mainAppStore.setDataLoading(false);
@@ -194,10 +198,7 @@ const AuthorizedContainer: FC = observer(({ children }) => {
 
   useEffect(() => {
     fetchFavoriteInstruments();
-  }, [
-    instrumentsStore.instruments,
-    mainAppStore.activeAccountId,
-  ]);
+  }, [instrumentsStore.instruments, mainAppStore.activeAccountId]);
 
   useEffect(() => {
     if (mainAppStore.isPromoAccount && isHiddenPromoPage) {
@@ -266,10 +267,7 @@ const AuthorizedContainer: FC = observer(({ children }) => {
       }
     }
 
-    if (
-      mainAppStore.token &&
-      !mainAppStore.isAdditionalRequestSent
-    ) {
+    if (mainAppStore.token && !mainAppStore.isAdditionalRequestSent) {
       fetchPersonalData();
     }
 
@@ -365,13 +363,14 @@ const AuthorizedContainer: FC = observer(({ children }) => {
             <NotificationPopup></NotificationPopup>
             <NotificationActivePositionPopup></NotificationActivePositionPopup>
             <NotificationPendingPositionPopup></NotificationPendingPositionPopup>
-            {(badRequestPopupStore.isActiveTimeout) &&
+            {badRequestPopupStore.isActiveTimeout && (
               <TimeoutNotificationPopup
                 show={badRequestPopupStore.isActiveTimeout}
                 isSuccessfull={false}
                 text={badRequestPopupStore.requestMessage}
-                toggleNotify={badRequestPopupStore.closeModal}/>
-            }
+                toggleNotify={badRequestPopupStore.closeModal}
+              />
+            )}
             <ReloadPopup
               show={badRequestPopupStore.isActiveReload}
               isSuccessfull={false}
@@ -387,7 +386,12 @@ const AuthorizedContainer: FC = observer(({ children }) => {
         )}
       </Observer>
       <LoaderFullscreen
-        isLoading={mainAppStore.isLoading || waitingData || mainAppStore.dataLoading || mainAppStore.activeACCLoading}
+        isLoading={
+          mainAppStore.isLoading ||
+          waitingData ||
+          mainAppStore.dataLoading ||
+          mainAppStore.activeACCLoading
+        }
       ></LoaderFullscreen>
       <Observer>
         {() => <>{serverErrorPopupStore.isActive && <ServerErrorPopup />}</>}

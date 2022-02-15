@@ -40,6 +40,9 @@ import PositionCreateSL from '../pages/PositionCreateSL';
 import PositionCreateTP from '../pages/PositionCreateTP';
 import AboutStatusPage from '../pages/AboutStatusPage';
 import AccountKYCSuccessPage from '../pages/AccountKYCSuccessPage';
+import AccountsMT5 from '../pages/AccountsMT5';
+import AccountMTLoginDetail from '../pages/AccountMTLoginDetail';
+import DepositPage from '../pages/DepositPage';
 
 export enum RouteLayoutType {
   Authorized,
@@ -258,6 +261,31 @@ const routesList = [
     strict: true,
     layoutType: RouteLayoutType.Authorized,
   },
+
+  {
+    component: AccountsMT5,
+    path: Page.MT5_CHANGE_ACCOUNT,
+    exact: true,
+    strict: true,
+    layoutType: RouteLayoutType.Authorized,
+  },
+
+  {
+    component: DepositPage,
+    path: Page.DEPOSIT,
+    exact: true,
+    strict: true,
+    layoutType: RouteLayoutType.Authorized,
+  },
+
+  {
+    component:  AccountMTLoginDetail,
+    path: Page.MT5_INFO_ACCOUNT,
+    exact: true,
+    strict: true,
+    layoutType: RouteLayoutType.Authorized,
+  },
+ 
   {
     component: AccountBonusFaq,
     path: Page.BONUS_FAQ,

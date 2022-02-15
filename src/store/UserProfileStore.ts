@@ -7,6 +7,7 @@ import { PersonalDataDTO } from '../types/PersonalDataTypes';
 import moment from 'moment';
 import {
   AccountUserStatusInfo,
+  MTCreateAccountDTO,
   UserActiveStatus,
 } from '../types/AccountsTypes';
 import KeysInApi from '../constants/keysInApi';
@@ -30,6 +31,8 @@ interface ContextProps {
   amountToNextAccountType: number | null;
   isCongratModal: boolean;
   isStatusDescription: boolean;
+
+  newMTAccountInfo: null | MTCreateAccountDTO;
 }
 
 export class UserProfileStore implements ContextProps {
@@ -55,8 +58,15 @@ export class UserProfileStore implements ContextProps {
   @observable isCongratModal: boolean = false;
   @observable isStatusDescription: boolean = false;
 
+  @observable newMTAccountInfo: null | MTCreateAccountDTO = null;
+
   constructor(rootStore: RootStore) {
     this.rootStore = rootStore;
+  }
+
+  @action
+  setNewMTAccount = (info: MTCreateAccountDTO) => {
+    this.newMTAccountInfo = info;
   }
 
   @action

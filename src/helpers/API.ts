@@ -11,7 +11,7 @@ import {
   PositionUpdtateToppingUp,
 } from '../types/Positions';
 import API_LIST from './apiList';
-import { AccountModelDTO } from '../types/AccountsTypes';
+import { AccountModelDTO, MTAccountDTO, MTCreateAccountDTO } from '../types/AccountsTypes';
 import {
   UserAuthenticate,
   UserAuthenticateResponse,
@@ -625,6 +625,24 @@ class API {
     );
     return response.data;
   };
+
+
+  getMTAccounts = async (apiUrl: string) => {
+    const response = await axios.get<MTAccountDTO[]>(
+      `${API_STRING || apiUrl}${API_LIST.MT5_ACCOUNTS.GET}`,
+      this.backgroundRequestOptions
+    );
+    return response.data;
+  };
+
+  createMTAccounts = async (apiUrl: string) => {
+    const response = await axios.post<MTCreateAccountDTO>(
+      `${API_STRING || apiUrl}${API_LIST.MT5_ACCOUNTS.GET}`, {},
+      this.backgroundRequestOptions
+    );
+    return response.data;
+  };
+
   // -------------------
 }
 

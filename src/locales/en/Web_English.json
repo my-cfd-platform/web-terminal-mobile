@@ -666,5 +666,11 @@
     "Oooopsss": "Oooopsss",
     "Reconnecting…": "Reconnecting…",
     "save position is active": "save position is active",
-    "save position is active and use available funds": "save position is active and use available funds"
+    "save position is active and use available funds": "save position is active and use available funds",
+    "Create MT5 Account": "Create MT5 Account",
+    "Margin": "Margin",
+    "MT5 Credentials": "MT5 Credentials",
+    "Copy All": "Copy All",
+    "Server": "Server",
+    "Investor": "Investor"
 }

@@ -30,6 +30,8 @@ const Page = {
   ONBOARDING: '/onboarding',
   BONUS_FAQ: '/bonus-faq',
   DEMO_REAL_PAGE: '/select-account',
+  MT5_CHANGE_ACCOUNT: '/select-account-mt5',
+  MT5_INFO_ACCOUNT: '/select-account-mt5-info',
 
   ABOUT_US: 'https://www.monfex.com/why-us',
   FAQ: '#',
@@ -37,7 +39,7 @@ const Page = {
 
   TERMS_OF_SERVICE: 'https://monfex.com/terms-of-service',
   PRIVACY_POLICY: 'https://www.monfex.com/privacy-policy',
-  
+
   MARKETS: '/markets',
   PORTFOLIO: '/portfolio/:type',
   POSITION_DETAILS: '/portfolio/:type/:id',

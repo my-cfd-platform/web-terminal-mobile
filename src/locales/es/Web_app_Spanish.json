@@ -514,7 +514,6 @@
     "second": "segundo",
     "Only": "Solo",
     "left": "quedan",
-    "Please enter a different Stop Loss amount": "Ingrese una cantidad de Stop Loss diferente",
     "Education": "Educación",
     "Review": "Revisar",
     "Continue": "Continuar",
@@ -546,7 +545,6 @@
     "In review": "En revisión",
     "Completed": "Terminado",
     "Restricted": "Limitado",
-    "Timeout connection error": "Error de conexión de tiempo de espera",
     "My Status": "Mi Estado",
     "Deposit to Get Status": "Deposite dinero para obtener Estado",
     "to unlock": "para desbloquear",
@@ -662,7 +660,13 @@
     "Popular": "Popular",
     "Personalized conditions": "Condiciones personalizadas",
     "Exclusive from": "Exclusiva desde",
+    "Please enter a different Stop Loss amount": "Ingrese una cantidad de Stop Loss diferente",
+    "Timeout connection error": "Error de conexión de tiempo de espera",
     "We are trying to connect to the server": "Estamos intentando conectarnos al servidor",
     "Oooopsss": "Uuupsss",
-    "Reconnecting…": "Reconectando..."
+    "Reconnecting…": "Reconectando...",
+    "save position is active": "Guarda posición está activo",
+    "save position is active and use available funds": "Guarda posición está activo y usa los fondos disponibles",
+    "Create MT5 Account": "Crear cuenta MT5",
+    "Margin": "Margen"
 }

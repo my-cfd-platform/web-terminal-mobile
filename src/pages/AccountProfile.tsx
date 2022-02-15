@@ -19,6 +19,7 @@ import IconBalanceHistory from '../assets/svg/profile/icon-balance-history.svg';
 import IconLogout from '../assets/svg/profile/icon-logout.svg';
 import IconAboutUs from '../assets/svg/profile/icon-about.svg';
 import IconVerify from '../assets/svg/profile/icon-verify.svg';
+import IconMT5 from '../assets/svg/profile/icon-account-mt5.svg';
 import IconStaus from '../assets/svg/profile/icon-status.svg';
 import IconPassword from '../assets/svg/profile/icon-account-password.svg';
 import { PersonalDataKYCEnum } from '../enums/PersonalDataKYCEnum';
@@ -208,6 +209,30 @@ const AccountProfile = observer(() => {
                 fontWeight="normal"
               >
                 {t('Withdraw')}
+              </PrimaryTextSpan>
+            </FlexContainer>
+            <SvgIcon {...IconArrowLink} fillColor="rgba(196, 196, 196, 0.5)" />
+          </ProfileMenuLink>
+
+          <ProfileMenuLink to={Page.MT5_CHANGE_ACCOUNT}>
+            <FlexContainer alignItems="center">
+              <FlexContainer
+                width="28px"
+                height="28px"
+                backgroundColor="#77787E"
+                borderRadius="50%"
+                justifyContent="center"
+                alignItems="center"
+                marginRight="14px"
+              >
+                <SvgIcon {...IconMT5} fillColor="#ffffff" />
+              </FlexContainer>
+              <PrimaryTextSpan
+                color="#ffffff"
+                fontSize="16px"
+                fontWeight="normal"
+              >
+                {t('MT5')}
               </PrimaryTextSpan>
             </FlexContainer>
             <SvgIcon {...IconArrowLink} fillColor="rgba(196, 196, 196, 0.5)" />
