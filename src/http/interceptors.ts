@@ -19,7 +19,12 @@ import mixapanelProps from '../constants/mixpanelProps';
 import Page from '../constants/Pages';
 import KeysInApi from '../constants/keysInApi';
 
-const openNotification = (errorText: string, mainAppStore: MainAppStore, isReload?: boolean, needTranslate?: boolean) => {
+const openNotification = (
+  errorText: string,
+  mainAppStore: MainAppStore,
+  isReload?: boolean,
+  needTranslate?: boolean
+) => {
   mainAppStore.rootStore.badRequestPopupStore.setMessage(errorText);
   mainAppStore.rootStore.notificationStore.setNotification(errorText);
   mainAppStore.rootStore.notificationStore.setNeedTranslate(!!needTranslate);
@@ -39,8 +44,7 @@ const injectInerceptors = (mainAppStore: MainAppStore) => {
     const urlString = new URL(url);
     if (urlString.search) {
       if (urlString.href.includes('KeyValue')) {
-        return urlString.href
-          .split(urlString.origin)[1];
+        return urlString.href.split(urlString.origin)[1];
       } else {
         return urlString.href
           .split(urlString.search)[0]
@@ -53,7 +57,7 @@ const injectInerceptors = (mainAppStore: MainAppStore) => {
   const addErrorUrl = (str: string) => {
     const url = getApiUrl(str);
     const newRequestErrorStack = mainAppStore.requestErrorStack;
-    newRequestErrorStack.push(url)
+    newRequestErrorStack.push(url);
     mainAppStore.setRequestErrorStack(newRequestErrorStack);
     console.log('add');
     console.log(mainAppStore.requestErrorStack);
@@ -61,7 +65,9 @@ const injectInerceptors = (mainAppStore: MainAppStore) => {
 
   const removeErrorUrl = (str: any) => {
     const url = getApiUrl(str);
-    const newRequestErrorStack = mainAppStore.requestErrorStack.filter((elem) => elem !== url);
+    const newRequestErrorStack = mainAppStore.requestErrorStack.filter(
+      (elem) => elem !== url
+    );
     mainAppStore.setRequestErrorStack(newRequestErrorStack);
     console.log('remove');
     console.log(mainAppStore.requestErrorStack);
@@ -84,8 +90,15 @@ const injectInerceptors = (mainAppStore: MainAppStore) => {
       return config;
     }
     const isAuthorized = `${mainAppStore.isAuthorized}`;
-    const request_url = getApiUrl(config?.url || "");
-    const initBy = CLIENTS_REQUEST.includes(request_url) ? requestOptions.CLIENT : requestOptions.BACKGROUND;
+    const request_url = getApiUrl(config?.url || '');
+    const initBy =
+      CLIENTS_REQUEST.includes(request_url) &&
+      !(
+        request_url.includes(API_LIST.MT5_ACCOUNTS.GET) &&
+        config.method === 'get'
+      )
+        ? requestOptions.CLIENT
+        : requestOptions.BACKGROUND;
     let newData = config.data;
     if (typeof newData === 'object') {
       if (newData instanceof FormData) {
@@ -115,7 +128,7 @@ const injectInerceptors = (mainAppStore: MainAppStore) => {
       if (
         response.data.status !== OperationApiResponseCodes.TechnicalError &&
         response.data.status !==
-        OperationApiResponseCodes.InvalidUserNameOrPassword &&
+          OperationApiResponseCodes.InvalidUserNameOrPassword &&
         response.config
       ) {
         if (mainAppStore.requestErrorStack.length > 0) {
@@ -124,7 +137,7 @@ const injectInerceptors = (mainAppStore: MainAppStore) => {
             response?.config?.params?.key &&
             response?.config?.url?.includes('KeyValue')
           ) {
-            requestUrl = `${requestUrl}?key=${response?.config?.params.key}`
+            requestUrl = `${requestUrl}?key=${response?.config?.params.key}`;
           }
           removeErrorUrl(requestUrl);
         }
@@ -142,7 +155,8 @@ const injectInerceptors = (mainAppStore: MainAppStore) => {
       }
 
       switch (response.data.status) {
-        case OperationApiResponseCodes.TechnicalError: {axios.request(response.config);
+        case OperationApiResponseCodes.TechnicalError: {
+          axios.request(response.config);
           if (!mainAppStore.rootStore.serverErrorPopupStore.isActive) {
             mainAppStore.rootStore.serverErrorPopupStore.openModal();
           }
@@ -176,9 +190,7 @@ const injectInerceptors = (mainAppStore: MainAppStore) => {
     },
 
     async function (error) {
-      const excludeReconectList = [
-        API_LIST.INSTRUMENTS.FAVOURITES,
-      ];
+      const excludeReconectList = [API_LIST.INSTRUMENTS.FAVOURITES];
       const excludeCheckErrorFlow = [
         API_LIST.DEBUG.POST,
         API_LIST.ONBOARDING.STEPS,
@@ -220,11 +232,15 @@ const injectInerceptors = (mainAppStore: MainAppStore) => {
         }
       };
 
-      let requestUrl: string = error?.config?.url === API_LIST.INIT.GET
-        ? error?.request?.responseURL
-        : error?.config?.url;
-      if (error?.config?.params?.key && error?.config?.url?.includes('KeyValue')) {
-        requestUrl = `${requestUrl}?key=${error?.config?.params?.key}`
+      let requestUrl: string =
+        error?.config?.url === API_LIST.INIT.GET
+          ? error?.request?.responseURL
+          : error?.config?.url;
+      if (
+        error?.config?.params?.key &&
+        error?.config?.url?.includes('KeyValue')
+      ) {
+        requestUrl = `${requestUrl}?key=${error?.config?.params?.key}`;
       }
       const originalRequest = error.config;
 
@@ -240,20 +256,14 @@ const injectInerceptors = (mainAppStore: MainAppStore) => {
       }
 
       if (
-        (
-          getApiUrl(requestUrl).includes(API_LIST.ONBOARDING.STEPS) ||
+        (getApiUrl(requestUrl).includes(API_LIST.ONBOARDING.STEPS) ||
           getApiUrl(requestUrl).includes(API_LIST.WELCOME_BONUS.GET) ||
-          (
-            getApiUrl(requestUrl).includes(API_LIST.EDUCATION.LIST) &&
+          (getApiUrl(requestUrl).includes(API_LIST.EDUCATION.LIST) &&
             !getApiUrl(requestUrl).includes(`${API_LIST.EDUCATION.LIST}/`) &&
-            error.config.method === 'get'
-          ) ||
-          (
-            getApiUrl(requestUrl).includes(API_LIST.KEY_VALUE.GET) &&
+            error.config.method === 'get') ||
+          (getApiUrl(requestUrl).includes(API_LIST.KEY_VALUE.GET) &&
             getApiUrl(requestUrl).includes(KeysInApi.SHOW_HINT) &&
-            error.config.method === 'get'
-          )
-        ) &&
+            error.config.method === 'get')) &&
         error.response?.status !== 401 &&
         error.response?.status !== 403
       ) {
@@ -262,10 +272,8 @@ const injectInerceptors = (mainAppStore: MainAppStore) => {
       }
 
       if (
-        (
-          getApiUrl(requestUrl).includes(API_LIST.EDUCATION.LIST) &&
-          error.config.method === 'post'
-        ) &&
+        getApiUrl(requestUrl).includes(API_LIST.EDUCATION.LIST) &&
+        error.config.method === 'post' &&
         error.response?.status !== 401 &&
         error.response?.status !== 403
       ) {
@@ -287,8 +295,13 @@ const injectInerceptors = (mainAppStore: MainAppStore) => {
       const repeatRequest = (callback: any) => {
         mainAppStore.requestReconnectCounter += 1;
         if (
-          !(excludeReconectList.includes(getApiUrl(requestUrl)) && error.config.method === 'get') &&
-          mainAppStore.requestErrorStack.filter((elem) => elem === getApiUrl(requestUrl)).length > 2
+          !(
+            excludeReconectList.includes(getApiUrl(requestUrl)) &&
+            error.config.method === 'get'
+          ) &&
+          mainAppStore.requestErrorStack.filter(
+            (elem) => elem === getApiUrl(requestUrl)
+          ).length > 2
         ) {
           if (getApiUrl(requestUrl).includes(AUTH_API_LIST.PERSONAL_DATA.GET)) {
             mainAppStore.signOut();
@@ -366,10 +379,17 @@ const injectInerceptors = (mainAppStore: MainAppStore) => {
         openNotification('Timeout connection error', mainAppStore, false, true);
       }
 
-      if (isTimeOutError && isReconnectedRequest && error.response?.status !== 401) {
+      if (
+        isTimeOutError &&
+        isReconnectedRequest &&
+        error.response?.status !== 401
+      ) {
         return new Promise((resolve, reject) => {
           repeatRequest(() => {
-            if (JSON.parse(finalJSON).isAuthorized === `${mainAppStore.isAuthorized}`) {
+            if (
+              JSON.parse(finalJSON).isAuthorized ===
+              `${mainAppStore.isAuthorized}`
+            ) {
               resolve(axios(originalRequest));
             } else {
               mainAppStore.setRequestErrorStack([]);
@@ -390,17 +410,14 @@ const injectInerceptors = (mainAppStore: MainAppStore) => {
         if (
           (error.response?.status !== 401 &&
             (error.response?.status !== 403 || !mainAppStore.isAuthorized) &&
-            (
-              error.response?.status.toString().includes('40') ||
+            (error.response?.status.toString().includes('40') ||
               error.response?.status.toString().includes('41') ||
               error.response?.status.toString().includes('42') ||
               error.response?.status.toString().includes('43') ||
               error.response?.status.toString().includes('44') ||
               error.response?.status.toString().includes('45') ||
               error.response?.status.toString().includes('46') ||
-              error.response?.status.toString().includes('49')
-            )
-          ) ||
+              error.response?.status.toString().includes('49'))) ||
           error.response?.status.toString().includes('50') ||
           error.response?.status.toString().includes('51') ||
           error.response?.status.toString().includes('52') ||
@@ -411,7 +428,10 @@ const injectInerceptors = (mainAppStore: MainAppStore) => {
           if (isReconnectedRequest) {
             return new Promise((resolve, reject) => {
               repeatRequest(() => {
-                if (JSON.parse(finalJSON).isAuthorized === `${mainAppStore.isAuthorized}`) {
+                if (
+                  JSON.parse(finalJSON).isAuthorized ===
+                  `${mainAppStore.isAuthorized}`
+                ) {
                   resolve(axios(originalRequest));
                 } else {
                   mainAppStore.setRequestErrorStack([]);
@@ -439,8 +459,9 @@ const injectInerceptors = (mainAppStore: MainAppStore) => {
             } else if (
               getApiUrl(requestUrl).includes(AUTH_API_LIST.PERSONAL_DATA.GET) ||
               getApiUrl(requestUrl).includes(API_LIST.KEY_VALUE.GET) ||
-              JSON.parse(finalJSON).isAuthorized !== `${mainAppStore.isAuthorized}`
-            ){
+              JSON.parse(finalJSON).isAuthorized !==
+                `${mainAppStore.isAuthorized}`
+            ) {
               return Promise.reject(error);
             } else {
               openNotification(error.message, mainAppStore, true);
@@ -503,7 +524,9 @@ const injectInerceptors = (mainAppStore: MainAppStore) => {
               return new Promise((resolve, reject) => {
                 repeatRequest(() => resolve(axios(originalRequest)));
               });
-            } else if (getApiUrl(requestUrl).includes(AUTH_API_LIST.PERSONAL_DATA.GET)){
+            } else if (
+              getApiUrl(requestUrl).includes(AUTH_API_LIST.PERSONAL_DATA.GET)
+            ) {
               return Promise.reject(error);
             } else {
               mainAppStore.rootStore.badRequestPopupStore.setMessage(
