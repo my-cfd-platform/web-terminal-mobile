@@ -1,4 +1,5 @@
 import { push } from 'mixpanel-browser';
+import { observer } from 'mobx-react-lite';
 import React, { useCallback, useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import LoaderFullscreen from '../components/LoaderFullscreen';
@@ -6,7 +7,7 @@ import Page from '../constants/Pages';
 import useRedirectMiddleware from '../hooks/useRedirectMiddleware';
 import { useStores } from '../hooks/useStores';
 
-const DepositPage = () => {
+const DepositPage = observer(() => {
   const urlParams = new URLSearchParams();
 
   const { userProfileStore, mainAppStore } = useStores();
@@ -42,6 +43,6 @@ const DepositPage = () => {
   }, [mainAppStore.token, mainAppStore.lang, mainAppStore.accounts]);
 
   return <LoaderFullscreen isLoading={true} />;
-};
+});
 
 export default DepositPage;
