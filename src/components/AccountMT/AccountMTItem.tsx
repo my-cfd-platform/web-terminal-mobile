@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { moneyFormatPart } from '../../helpers/moneyFormat';
 import { ButtonWithoutStyles } from '../../styles/ButtonWithoutStyles';
@@ -11,6 +11,7 @@ import { useStores } from '../../hooks/useStores';
 import { useHistory } from 'react-router-dom';
 import Fields from '../../constants/fields';
 import Topics from '../../constants/websocketTopics';
+import IconClose from '../../assets/svg/mt5/icon-info-close.svg';
 
 interface Props {
   isMT?: boolean;
@@ -21,6 +22,8 @@ interface Props {
   tradeLink: string;
   label: string;
   image: string;
+  server?: string;
+  login?: number;
 }
 
 const AccountMTItem = ({
@@ -32,12 +35,16 @@ const AccountMTItem = ({
   tradeLink,
   label,
   image,
+  server = '',
+  login,
 }: Props) => {
-
   const { t } = useTranslation();
   const { push } = useHistory();
   const { mainAppStore } = useStores();
 
+  const [showLoginInfo, setShowLoginInfo] = useState(false);
+
+  const toggleShowInfo = () => setShowLoginInfo(!showLoginInfo);
   const handleClickTrading = () => {
     const acc = mainAppStore.accounts.find((item) => item.isLive);
     if (!isMT) {
@@ -149,6 +156,73 @@ const AccountMTItem = ({
               </FlexContainer>
             )}
           </FlexContainer>
+
+          {isMT && (
+            <FlexContainer
+              marginBottom="16px"
+              flexDirection="column"
+              alignItems="flex-start"
+            >
+              <ButtonWithoutStyles onClick={toggleShowInfo}>
+                <FlexContainer alignItems="center" marginBottom="4px">
+                  <PrimaryTextSpan
+                    color="rgba(255, 255, 255, 0.64)"
+                    fontSize="13px"
+                    textTransform="uppercase"
+                    marginRight="8px"
+                  >
+                    {t('Login info')}
+                  </PrimaryTextSpan>
+                  <SvgIcon
+                    {...IconClose}
+                    fillColor="rgba(255, 255, 255, 0.64)"
+                  />
+                </FlexContainer>
+              </ButtonWithoutStyles>
+
+              {showLoginInfo && (
+                <FlexContainer flexDirection="column">
+                  <FlexContainer
+                    backgroundColor="rgba(255, 255, 255, 0.12)"
+                    borderRadius="4px"
+                    padding="6px 12px"
+                    margin="8px 0"
+                    alignItems="center"
+                    width="max-content"
+                  >
+                    <PrimaryTextSpan marginRight="12px">
+                      {t('Login')}:
+                    </PrimaryTextSpan>
+                    <PrimaryTextSpan
+                      color="#fff"
+                      fontWeight={500}
+                      fontSize="12px"
+                    >
+                      {login}
+                    </PrimaryTextSpan>
+                  </FlexContainer>
+                  <FlexContainer
+                    backgroundColor="rgba(255, 255, 255, 0.12)"
+                    borderRadius="4px"
+                    padding="6px 12px"
+                    alignItems="center"
+                    width="max-content"
+                  >
+                    <PrimaryTextSpan marginRight="12px">
+                      {t('Server name')}:
+                    </PrimaryTextSpan>
+                    <PrimaryTextSpan
+                      color="#fff"
+                      fontWeight={500}
+                      fontSize="12px"
+                    >
+                      {server}
+                    </PrimaryTextSpan>
+                  </FlexContainer>
+                </FlexContainer>
+              )}
+            </FlexContainer>
+          )}
           {/*  */}
           <FlexContainer flex="1" justifyContent="space-between">
             <FlexContainer flexDirection="column" width="calc(50% - 6px)">

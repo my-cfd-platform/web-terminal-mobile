@@ -11,10 +11,7 @@ import AccountMTItem from '../components/AccountMT/AccountMTItem';
 import { useStores } from '../hooks/useStores';
 import LogoMT from '../assets/images/logo-mt.png';
 import Page from '../constants/Pages';
-import {
-  AccountModelWebSocketDTO,
-  MTAccountDTO,
-} from '../types/AccountsTypes';
+import { AccountModelWebSocketDTO, MTAccountDTO } from '../types/AccountsTypes';
 import API from '../helpers/API';
 import LoaderForComponents from '../components/LoaderForComponents';
 import { useHistory } from 'react-router-dom';
@@ -125,10 +122,12 @@ const AccountsMT5 = () => {
                 tradeLink={accMt.tradeUrl}
                 label="MT5"
                 image={LogoMT}
+                server={accMt.serverName}
+                login={accMt.login}
               />
             ))}
 
-            {MTAccountInfo?.length === 0 ? (
+            {MTAccountInfo === null && (
               <ButtonWithoutStyles onClick={handleCreateMT}>
                 <FlexContainer
                   backgroundColor="rgba(255, 255, 255, 0.04)"
@@ -151,7 +150,7 @@ const AccountsMT5 = () => {
                   </PrimaryTextSpan>
                 </FlexContainer>
               </ButtonWithoutStyles>
-            ) : null}
+            )}
           </>
         )}
       </FlexContainer>
