@@ -115,8 +115,9 @@ const AccountsMT5 = () => {
           </FlexContainer>
         ) : (
           <>
-            {MTAccountInfo?.map((accMt) => (
+            {MTAccountInfo?.map((accMt, index) => (
               <AccountMTItem
+                key={`${accMt.login}_${index}`}
                 isMT={true}
                 balance={accMt.balance}
                 margin={accMt.margin}
