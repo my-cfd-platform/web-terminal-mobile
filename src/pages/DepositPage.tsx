@@ -24,9 +24,6 @@ const DepositPage = observer(() => {
     return redirectWithUpdateRefreshToken(API_DEPOSIT_STRING, parsedParams);
   }, [parsedParams, userProfileStore]);
 
-  useEffect(() => {
-    handleOpenDeposit();
-  }, []);
 
   useEffect(() => {
     urlParams.set('token', mainAppStore.token);
@@ -40,7 +37,11 @@ const DepositPage = observer(() => {
     urlParams.set('api', mainAppStore.initModel.tradingUrl);
     urlParams.set('rt', mainAppStore.refreshToken);
     setParsedParams(urlParams.toString());
-  }, [mainAppStore.token, mainAppStore.lang, mainAppStore.accounts]);
+
+    if (mainAppStore.token && mainAppStore.isAuthorized && parsedParams) {
+      handleOpenDeposit();
+    }
+  }, [mainAppStore.token, mainAppStore.lang, mainAppStore.accounts, parsedParams]);
 
   return <LoaderFullscreen isLoading={true} />;
 });

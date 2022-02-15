@@ -1,5 +1,4 @@
 import { useStores } from './useStores';
-import { push } from "mixpanel-browser";
 import { useHistory } from 'react-router-dom';
 import { DebugTypes } from '../types/DebugTypes';
 import { debugLevel } from '../constants/debugConstants';
@@ -10,7 +9,6 @@ import { getStatesSnapshot } from '../helpers/getStatesSnapshot';
 
 const useRedirectMiddleware = () => {
   const { mainAppStore } = useStores();
-  const { push } = useHistory();
   /*
     link:   domain for redirect
     params: url params string include 'token' that will be update
