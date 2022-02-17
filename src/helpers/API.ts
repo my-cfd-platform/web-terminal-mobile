@@ -264,7 +264,7 @@ class API {
 
   createMTAccounts = async (apiUrl: string) => {
     const response = await axios.post<MTCreateAccountDTO>(
-      `${API_STRING || apiUrl}${API_LIST.MT5_ACCOUNTS.GET}`, {},
+      `${API_STRING || apiUrl}${API_LIST.MT5_ACCOUNTS.POST}`, {},
       this.clientRequestOptions
     );
     return response.data;
