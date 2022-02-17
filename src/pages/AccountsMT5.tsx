@@ -47,7 +47,8 @@ const AccountsMT5 = () => {
         !!response.investorPassword &&
         !!response.login &&
         !!response.password &&
-        !!response.serverName
+        !!response.serverName &&
+        !!response.traderId
       ) {
         userProfileStore.setNewMTAccount(response);
         setIsLoading(false);
@@ -70,6 +71,8 @@ const AccountsMT5 = () => {
         );
         if (response.length > 0) {
           setMTAccountInfo(response);
+        } else {
+          badRequestPopupStore.openModal();
         }
         setIsLoading(false);
       } catch (error) {
