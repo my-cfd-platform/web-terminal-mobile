@@ -668,5 +668,11 @@
     "save position is active": "Guarda posición está activo",
     "save position is active and use available funds": "Guarda posición está activo y usa los fondos disponibles",
     "Create MT5 Account": "Crear cuenta MT5",
-    "Margin": "Margen"
+    "Margin": "Margen",
+    "MT5 Credentials": "Credenciales MT5",
+    "Copy All": "Copie todo",
+    "Server": "Servidor",
+    "Investor": "Inversor",
+    "Login info": "Información de acceso",
+    "Server name": "Nombre del servidor"
 }

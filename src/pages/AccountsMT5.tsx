@@ -118,7 +118,7 @@ const AccountsMT5 = () => {
                 isMT={true}
                 balance={accMt.balance}
                 margin={accMt.margin}
-                depositLink={Page.DEPOSIT}
+                depositLink={`${Page.DEPOSIT}?accountId=${accMt.accountId}`}
                 tradeLink={accMt.tradeUrl}
                 label="MT5"
                 image={LogoMT}

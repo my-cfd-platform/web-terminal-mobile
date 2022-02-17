@@ -1,14 +1,16 @@
 import { push } from 'mixpanel-browser';
 import { observer } from 'mobx-react-lite';
 import React, { useCallback, useEffect, useState } from 'react';
-import { useHistory } from 'react-router-dom';
+import { useHistory, useParams } from 'react-router-dom';
 import LoaderFullscreen from '../components/LoaderFullscreen';
 import Page from '../constants/Pages';
+import useQuery from '../hooks/useQuery';
 import useRedirectMiddleware from '../hooks/useRedirectMiddleware';
 import { useStores } from '../hooks/useStores';
 
 const DepositPage = observer(() => {
   const urlParams = new URLSearchParams();
+  let query = useQuery();
 
   const { userProfileStore, mainAppStore } = useStores();
   const { redirectWithUpdateRefreshToken } = useRedirectMiddleware();
@@ -24,12 +26,14 @@ const DepositPage = observer(() => {
     return redirectWithUpdateRefreshToken(API_DEPOSIT_STRING, parsedParams);
   }, [parsedParams, userProfileStore]);
 
-
   useEffect(() => {
+    console.log(query.get('accountId'));
     urlParams.set('token', mainAppStore.token);
     urlParams.set(
       'active_account_id',
-      mainAppStore.accounts.find((item) => item.isLive)?.id || ''
+      query.get('accountId') ||
+        mainAppStore.accounts.find((item) => item.isLive)?.id ||
+        ''
     );
     urlParams.set('env', 'web_mob');
     urlParams.set('trader_id', userProfileStore.userProfileId || '');
@@ -41,7 +45,12 @@ const DepositPage = observer(() => {
     if (mainAppStore.token && mainAppStore.isAuthorized && parsedParams) {
       handleOpenDeposit();
     }
-  }, [mainAppStore.token, mainAppStore.lang, mainAppStore.accounts, parsedParams]);
+  }, [
+    mainAppStore.token,
+    mainAppStore.lang,
+    mainAppStore.accounts,
+    parsedParams,
+  ]);
 
   return <LoaderFullscreen isLoading={true} />;
 });

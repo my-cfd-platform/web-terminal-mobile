@@ -53,6 +53,7 @@ export interface UserActiveStatus {
 
 
 export interface MTAccountDTO {
+  accountId: string;
   balance: number,
   margin: number,
   bonus: number,
