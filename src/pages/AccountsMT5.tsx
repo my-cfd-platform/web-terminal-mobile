@@ -69,7 +69,7 @@ const AccountsMT5 = () => {
           mainAppStore.initModel.tradingUrl
         );
         if (response.length > 0) {
-          // setMTAccountInfo(response);
+          setMTAccountInfo(response);
         }
         setIsLoading(false);
       } catch (error) {
