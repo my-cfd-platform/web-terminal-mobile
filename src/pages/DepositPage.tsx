@@ -27,7 +27,6 @@ const DepositPage = observer(() => {
   }, [parsedParams, userProfileStore]);
 
   useEffect(() => {
-    console.log(query.get('accountId'));
     urlParams.set('token', mainAppStore.token);
     urlParams.set(
       'active_account_id',

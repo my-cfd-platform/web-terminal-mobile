@@ -59,8 +59,8 @@ const injectInerceptors = (mainAppStore: MainAppStore) => {
     const newRequestErrorStack = mainAppStore.requestErrorStack;
     newRequestErrorStack.push(url);
     mainAppStore.setRequestErrorStack(newRequestErrorStack);
-    console.log('add');
-    console.log(mainAppStore.requestErrorStack);
+    // console.log('add');
+    // console.log(mainAppStore.requestErrorStack);
   };
 
   const removeErrorUrl = (str: any) => {
@@ -69,8 +69,8 @@ const injectInerceptors = (mainAppStore: MainAppStore) => {
       (elem) => elem !== url
     );
     mainAppStore.setRequestErrorStack(newRequestErrorStack);
-    console.log('remove');
-    console.log(mainAppStore.requestErrorStack);
+    // console.log('remove');
+    // console.log(mainAppStore.requestErrorStack);
   };
 
   const processQueue = (error: any, token: string | null = null) => {
@@ -331,9 +331,9 @@ const injectInerceptors = (mainAppStore: MainAppStore) => {
         finalJSON = error.config.data;
       }
       // ---
-      console.log(finalJSON);
-      console.log(error.message);
-      console.log(error.config);
+      // console.log(finalJSON);
+      // console.log(error.message);
+      // console.log(error.config);
       let isTimeOutError = error.message === requestOptions.TIMEOUT;
       let isReconnectedRequest =
         JSON.parse(finalJSON).initBy === requestOptions.BACKGROUND;
