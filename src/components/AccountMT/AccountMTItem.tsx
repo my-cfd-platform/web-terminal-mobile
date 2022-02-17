@@ -57,7 +57,7 @@ const AccountMTItem = ({
       push(tradeLink);
     } else {
       // @ts-ignore
-      window.open(`${tradingLink}`, '_blank').focus();
+      window.open(`${tradeLink}`, '_blank').focus();
     }
   };
 
