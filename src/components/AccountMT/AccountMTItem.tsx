@@ -45,20 +45,21 @@ const AccountMTItem = ({
   const [showLoginInfo, setShowLoginInfo] = useState(false);
 
   const toggleShowInfo = () => setShowLoginInfo(!showLoginInfo);
+
   const handleClickTrading = () => {
-    const acc = mainAppStore.accounts.find((item) => item.isLive);
-    if (!isMT) {
-      if (acc) {
-        mainAppStore.setActiveAccount(acc);
-        mainAppStore.activeSession?.send(Topics.SET_ACTIVE_ACCOUNT, {
-          [Fields.ACCOUNT_ID]: acc.id,
-        });
-      }
-      push(tradeLink);
-    } else {
-      // @ts-ignore
+    if (isMT) {
       window.location.href = `${tradeLink}`;
+      return;
     }
+    // !isMt
+    const acc = mainAppStore.accounts.find((item) => item.isLive);
+    if (acc) {
+      mainAppStore.setActiveAccount(acc);
+      mainAppStore.activeSession?.send(Topics.SET_ACTIVE_ACCOUNT, {
+        [Fields.ACCOUNT_ID]: acc.id,
+      });
+    }
+    push(tradeLink);
   };
 
   const handleClickDeposit = () => {
