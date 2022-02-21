@@ -71,7 +71,7 @@ const AccountsMT5 = () => {
           badRequestPopupStore.openModal();
           setIsLoading(false);
           return;
-        } 
+        }
 
         let isValidResponse = true;
         for (let i = 0; i < response.length; i++) {
@@ -79,6 +79,9 @@ const AccountsMT5 = () => {
           if (!validRes) {
             isValidResponse = false;
           }
+        }
+        if (!isValidResponse) {
+          badRequestPopupStore.openModal();
         }
 
         if (isValidResponse && response.length > 0) {
