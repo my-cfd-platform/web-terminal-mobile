@@ -15,6 +15,7 @@ import { AccountModelWebSocketDTO, MTAccountDTO } from '../types/AccountsTypes';
 import API from '../helpers/API';
 import LoaderForComponents from '../components/LoaderForComponents';
 import { useHistory } from 'react-router-dom';
+import { checkObjectKeys } from '../helpers/checkObjectKeys';
 
 const AccountsMT5 = () => {
   const { t } = useTranslation();
@@ -43,13 +44,9 @@ const AccountsMT5 = () => {
       const response = await API.createMTAccounts(
         mainAppStore.initModel.tradingUrl
       );
-      if (
-        !!response.investorPassword &&
-        !!response.login &&
-        !!response.password &&
-        !!response.serverName &&
-        !!response.traderId
-      ) {
+
+      const isValidResponse = checkObjectKeys(response);
+      if (isValidResponse) {
         userProfileStore.setNewMTAccount(response);
         setIsLoading(false);
         push(Page.MT5_INFO_ACCOUNT);
@@ -69,11 +66,25 @@ const AccountsMT5 = () => {
         const response = await API.getMTAccounts(
           mainAppStore.initModel.tradingUrl
         );
-        if (response.length > 0) {
-          setMTAccountInfo(response);
-        } else {
+
+        if (response.length < 0) {
           badRequestPopupStore.openModal();
+          setIsLoading(false);
+          return;
+        } 
+
+        let isValidResponse = true;
+        for (let i = 0; i < response.length; i++) {
+          const validRes = checkObjectKeys(response[i]);
+          if (!validRes) {
+            isValidResponse = false;
+          }
         }
+
+        if (isValidResponse && response.length > 0) {
+          setMTAccountInfo(response);
+        }
+
         setIsLoading(false);
       } catch (error) {
         setIsLoading(false);
@@ -115,20 +126,22 @@ const AccountsMT5 = () => {
           </FlexContainer>
         ) : (
           <>
-            {MTAccountInfo?.map((accMt, index) => (
-              <AccountMTItem
-                key={`${accMt.login}_${index}`}
-                isMT={true}
-                balance={accMt.balance}
-                margin={accMt.margin}
-                depositLink={`${Page.DEPOSIT}?accountId=${accMt.accountId}`}
-                tradeLink={accMt.tradeUrl}
-                label="MT5"
-                image={LogoMT}
-                server={accMt.serverName}
-                login={accMt.login}
-              />
-            ))}
+            {MTAccountInfo !== null && MTAccountInfo?.length > 0
+              ? MTAccountInfo?.map((accMt, index) => (
+                  <AccountMTItem
+                    key={`${accMt.login}_${index}`}
+                    isMT={true}
+                    balance={accMt.balance}
+                    margin={accMt.margin}
+                    depositLink={`${Page.DEPOSIT}?accountId=${accMt.accountId}`}
+                    tradeLink={accMt.tradeUrl}
+                    label="MT5"
+                    image={LogoMT}
+                    server={accMt.serverName}
+                    login={accMt.login}
+                  />
+                ))
+              : null}
 
             {MTAccountInfo === null && (
               <ButtonWithoutStyles onClick={handleCreateMT}>
