@@ -1,5 +1,5 @@
 variables:
-  BUILD_VERSION: 1.27.0
+  BUILD_VERSION: 1.26.1
   DOCKER_IMAGE_TAG: monfex/simple-trading-web-terminal-mobile:${BUILD_VERSION}
   DOCKER_DEV_IMAGE_TAG: monfex/simple-trading-web-terminal-mobile:${CI_COMMIT_REF_NAME}
   K8S_DEV_APP_SELECTOR: simple-trading-web-terminal-mobile
@@ -162,13 +162,11 @@ publish-kubernetes-stg:
     CLUSTER_NAME: Simple-Trading-Prod-Kube
   before_script:
     - az login --service-principal -u ${SERVICE_PRINCIPAL_LOGIN} -p ${SERVICE_PRINCIPAL_PASSWORD} --tenant ${SERVICE_PRINCIPAL_TENANT} > /dev/null
-    - az aks get-credentials --resource-group ${RG} --name ${CLUSTER_NAME} --subscription ${SUBSCRIPTION} --overwrite-existin
+    - az aks get-credentials --resource-group ${RG} --name ${CLUSTER_NAME} --subscription ${SUBSCRIPTION} --overwrite-existing
   script:
 #    - kubectl delete pods -l app=${KUBERNETES_APP_STG_SELECTOR_NAME} --namespace=$KUBERNETES_TEST_NAMESPACE
     - kubectl set image deployments/${K8S_STG_SELECTOR_NAME} ${K8S_STG_SELECTOR_NAME}=$DOCKER_REGISTRY_HOST/${DOCKER_IMAGE_TAG} --namespace=$K8S_STG_NAMESPACE
     - kubectl patch deployment ${K8S_STG_SELECTOR_NAME} -p "{\"spec\":{\"template\":{\"metadata\":{\"labels\":{\"date\":\"`date +'%s'`\"}}}}}" --namespace=$K8S_STG_NAMESPACE
-    - kubectl set image deployments/${K8S_STG_SELECTOR_NAME_HP} ${K8S_STG_SELECTOR_NAME_HP}=$DOCKER_REGISTRY_HOST/${DOCKER_IMAGE_TAG} --namespace=$K8S_STG_NAMESPACE
-    - kubectl patch deployment ${K8S_STG_SELECTOR_NAME_HP} -p "{\"spec\":{\"template\":{\"metadata\":{\"labels\":{\"date\":\"`date +'%s'`\"}}}}}" --namespace=$K8S_STG_NAMESPACE
   only:
     - stg
 
