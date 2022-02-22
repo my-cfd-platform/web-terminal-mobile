@@ -44,12 +44,42 @@ const AccountsMT5 = () => {
       const response = await API.createMTAccounts(
         mainAppStore.initModel.tradingUrl
       );
-
-      const isValidResponse = checkObjectKeys(response);
-      if (isValidResponse) {
+      if (
+        !!response.investorPassword &&
+        !!response.login &&
+        !!response.traderId &&
+        !!response.accountId &&
+        !!response.password &&
+        !!response.serverName
+      ) {
         userProfileStore.setNewMTAccount(response);
         setIsLoading(false);
         push(Page.MT5_INFO_ACCOUNT);
+        try {
+          const responseGet = await API.getMTAccounts(
+            mainAppStore.initModel.tradingUrl
+          );
+          const checkData = responseGet.some((item) => {
+            return (
+              !item.serverName ||
+              !(item.margin || item.margin === 0) ||
+              !(item.login || item.login === 0) ||
+              !(item.balance || item.balance === 0) ||
+              !item.accountId ||
+              !item.tradeUrl
+            );
+          });
+          if (checkData) {
+            setIsLoading(false);
+            badRequestPopupStore.openModal();
+          } else {
+            if (responseGet.length > 0) {
+              setMTAccountInfo(responseGet);
+            }
+          }
+        } catch (error) {
+          badRequestPopupStore.openModal();
+        }
       } else {
         setIsLoading(false);
         badRequestPopupStore.openModal();
@@ -66,31 +96,28 @@ const AccountsMT5 = () => {
         const response = await API.getMTAccounts(
           mainAppStore.initModel.tradingUrl
         );
-
-        if (response.length < 0) {
-          badRequestPopupStore.openModal();
+        const checkData = response.some((item) => {
+          return (
+            !item.serverName ||
+            !(item.margin || item.margin === 0) ||
+            !(item.login || item.login === 0) ||
+            !(item.balance || item.balance === 0) ||
+            !item.accountId ||
+            !item.tradeUrl
+          );
+        });
+        if (checkData) {
           setIsLoading(false);
-          return;
-        }
-
-        let isValidResponse = true;
-        for (let i = 0; i < response.length; i++) {
-          const validRes = checkObjectKeys(response[i]);
-          if (!validRes) {
-            isValidResponse = false;
+          badRequestPopupStore.openModal();
+        } else {
+          if (response.length > 0) {
+            setMTAccountInfo(response);
           }
         }
-        if (!isValidResponse) {
-          badRequestPopupStore.openModal();
-        }
-
-        if (isValidResponse && response.length > 0) {
-          setMTAccountInfo(response);
-        }
-
         setIsLoading(false);
       } catch (error) {
         setIsLoading(false);
+        badRequestPopupStore.openModal();
       }
     }
     fetchMTAccount();

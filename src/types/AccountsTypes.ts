@@ -28,7 +28,6 @@ export interface AccountModelWebSocketDTO {
   ];
 }
 
-
 export interface AccountUserStatusInfo {
   id: string;
   name: string;
@@ -41,31 +40,31 @@ export interface AccountUserStatusInfo {
 export interface AccountUserStatusDTO {
   accountTypeModels: AccountUserStatusInfo[];
   currentAccountTypeId: string;
-  currentAccountTypeProgressPercentage: number,
+  currentAccountTypeProgressPercentage: number;
   amountToNextAccountType: number;
 }
 
 export interface UserActiveStatus {
   currentAccountTypeId: string;
-  currentAccountTypeProgressPercentage: number,
+  currentAccountTypeProgressPercentage: number;
   amountToNextAccountType: number;
 }
 
-
 export interface MTAccountDTO {
   accountId: string;
-  balance: number,
-  margin: number,
-  bonus: number,
-  tradeUrl: string,
-  login: number,
-  serverName: string,
+  balance: number;
+  margin: number;
+  bonus: number;
+  tradeUrl: string;
+  login: number;
+  serverName: string;
 }
 
 export interface MTCreateAccountDTO {
-  traderId: string,
-  login: number,
-  serverName: string,
-  password: string,
-  investorPassword: string,
+  traderId: string;
+  login: number;
+  accountId: string;
+  serverName: string;
+  password: string;
+  investorPassword: string;
 }
