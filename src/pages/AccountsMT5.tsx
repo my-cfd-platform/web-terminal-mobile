@@ -71,18 +71,18 @@ const AccountsMT5 = () => {
           });
           if (checkData) {
             setIsLoading(false);
-            badRequestPopupStore.openModal();
+            badRequestPopupStore.openModalReload();
           } else {
             if (responseGet.length > 0) {
               setMTAccountInfo(responseGet);
             }
           }
         } catch (error) {
-          badRequestPopupStore.openModal();
+          badRequestPopupStore.openModalReload();
         }
       } else {
         setIsLoading(false);
-        badRequestPopupStore.openModal();
+        badRequestPopupStore.openModalReload();
       }
     } catch (error) {
       setIsLoading(false);
@@ -108,7 +108,7 @@ const AccountsMT5 = () => {
         });
         if (checkData) {
           setIsLoading(false);
-          badRequestPopupStore.openModal();
+          badRequestPopupStore.openModalReload();
         } else {
           if (response.length > 0) {
             setMTAccountInfo(response);
