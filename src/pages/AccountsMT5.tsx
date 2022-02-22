@@ -117,7 +117,6 @@ const AccountsMT5 = () => {
         setIsLoading(false);
       } catch (error) {
         setIsLoading(false);
-        badRequestPopupStore.openModal();
       }
     }
     fetchMTAccount();
