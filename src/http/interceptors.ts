@@ -190,7 +190,7 @@ const injectInerceptors = (mainAppStore: MainAppStore) => {
     },
 
     async function (error) {
-      const excludeReconectList = [API_LIST.INSTRUMENTS.FAVOURITES, API_LIST.MT5_ACCOUNTS.GET];
+      const excludeReconectList = [API_LIST.INSTRUMENTS.FAVOURITES];
       const excludeCheckErrorFlow = [
         API_LIST.DEBUG.POST,
         API_LIST.ONBOARDING.STEPS,
