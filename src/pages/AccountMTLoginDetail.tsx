@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import BackFlowLayout from '../components/BackFlowLayout';
 import { useStores } from '../hooks/useStores';
@@ -35,6 +35,12 @@ const AccountMTLoginDetail = () => {
   if (userProfileStore.newMTAccountInfo === null) {
     push(Page.MT5_CHANGE_ACCOUNT);
   }
+
+  useEffect(() => {
+    if (!userProfileStore.isMTAvailable) {
+      push(Page.DASHBOARD);
+    }
+  }, []);
 
   return (
     <BackFlowLayout pageTitle={t('MT5 Credentials')} type="close">

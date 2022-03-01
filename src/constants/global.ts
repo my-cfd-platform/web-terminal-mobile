@@ -9,4 +9,5 @@ export const LOCAL_CHART_TYPE = 'chart-type-mobile';
 export const LOCAL_IS_NEW_USER = 'is-new-user';
 export const LOCAL_TARGET = 'promo';
 export const LOCAL_HIDDEN_BALANCE = 'hidden-balance';
+export const LOCAL_STORAGE_MT = 'available-mt';
 export const MAX_FILE_UPLOAD_5_MB = 5242880;
