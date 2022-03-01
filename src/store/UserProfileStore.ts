@@ -31,6 +31,7 @@ interface ContextProps {
   amountToNextAccountType: number | null;
   isCongratModal: boolean;
   isStatusDescription: boolean;
+  isMTAvailable: boolean;
 
   newMTAccountInfo: null | MTCreateAccountDTO;
 }
@@ -57,11 +58,17 @@ export class UserProfileStore implements ContextProps {
 
   @observable isCongratModal: boolean = false;
   @observable isStatusDescription: boolean = false;
+  @observable isMTAvailable: boolean = false;
 
   @observable newMTAccountInfo: null | MTCreateAccountDTO = null;
 
   constructor(rootStore: RootStore) {
     this.rootStore = rootStore;
+  }
+
+  @action
+  setMTAvailable = (newValue: boolean) => {
+    this.isMTAvailable = newValue;
   }
 
   @action
@@ -95,6 +102,7 @@ export class UserProfileStore implements ContextProps {
     this.isBonus = false;
     this.bonusPercent = 0;
     this.bonusExpirationDate = 0;
+    this.isMTAvailable = false;
   };
 
   @action

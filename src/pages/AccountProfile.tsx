@@ -214,29 +214,29 @@ const AccountProfile = observer(() => {
             <SvgIcon {...IconArrowLink} fillColor="rgba(196, 196, 196, 0.5)" />
           </ProfileMenuLink>
 
-          <ProfileMenuLink to={Page.MT5_CHANGE_ACCOUNT}>
-            <FlexContainer alignItems="center">
-              <FlexContainer
-                width="28px"
-                height="28px"
-                backgroundColor="#77787E"
-                borderRadius="50%"
-                justifyContent="center"
-                alignItems="center"
-                marginRight="14px"
-              >
-                <SvgIcon {...IconMT5} fillColor="#ffffff" />
+          {userProfileStore.isMTAvailable && <ProfileMenuLink to={Page.MT5_CHANGE_ACCOUNT}>
+              <FlexContainer alignItems="center">
+                  <FlexContainer
+                      width="28px"
+                      height="28px"
+                      backgroundColor="#77787E"
+                      borderRadius="50%"
+                      justifyContent="center"
+                      alignItems="center"
+                      marginRight="14px"
+                  >
+                      <SvgIcon {...IconMT5} fillColor="#ffffff" />
+                  </FlexContainer>
+                  <PrimaryTextSpan
+                      color="#ffffff"
+                      fontSize="16px"
+                      fontWeight="normal"
+                  >
+                    {t('MT5')}
+                  </PrimaryTextSpan>
               </FlexContainer>
-              <PrimaryTextSpan
-                color="#ffffff"
-                fontSize="16px"
-                fontWeight="normal"
-              >
-                {t('MT5')}
-              </PrimaryTextSpan>
-            </FlexContainer>
-            <SvgIcon {...IconArrowLink} fillColor="rgba(196, 196, 196, 0.5)" />
-          </ProfileMenuLink>
+              <SvgIcon {...IconArrowLink} fillColor="rgba(196, 196, 196, 0.5)" />
+          </ProfileMenuLink>}
 
           <ProfileMenuLink to={Page.ACCOUNT_BALANCE_HISTORY}>
             <FlexContainer alignItems="center">

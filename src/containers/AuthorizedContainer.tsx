@@ -9,7 +9,7 @@ import ChartContainer from './ChartContainer';
 import NavigationPanel from '../components/NavigationPanel';
 import { useRouteMatch, useHistory } from 'react-router-dom';
 import Page from '../constants/Pages';
-import { FULL_VH, LAST_PAGE_VISITED } from '../constants/global';
+import { FULL_VH, LAST_PAGE_VISITED, LOCAL_STORAGE_MT } from '../constants/global';
 import API from '../helpers/API';
 import { getProcessId } from '../helpers/getProcessId';
 import mixpanel from 'mixpanel-browser';
@@ -348,6 +348,13 @@ const AuthorizedContainer: FC = observer(({ children }) => {
     mainAppStore.promo,
     mainAppStore.activeACCLoading,
   ]);
+
+  useEffect(() =>{
+    const isMTAvailable = localStorage.getItem(LOCAL_STORAGE_MT);
+    if (isMTAvailable) {
+      userProfileStore.setMTAvailable(!!isMTAvailable);
+    }
+  }, []);
 
   return (
     <FlexContainer

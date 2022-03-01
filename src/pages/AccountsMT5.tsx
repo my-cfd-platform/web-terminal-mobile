@@ -122,6 +122,12 @@ const AccountsMT5 = () => {
     fetchMTAccount();
   }, []);
 
+  useEffect(() => {
+    if (!userProfileStore.isMTAvailable) {
+      push(Page.DASHBOARD);
+    }
+  }, []);
+
   return (
     <BackFlowLayout pageTitle="MT5">
       <FlexContainer

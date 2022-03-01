@@ -7,6 +7,7 @@ import {
   LOCAL_IS_NEW_USER,
   LOCAL_TARGET,
   LOCAL_HIDDEN_BALANCE,
+  LOCAL_STORAGE_MT,
 } from './../constants/global';
 import axios, { AxiosRequestConfig } from 'axios';
 import {
@@ -830,6 +831,10 @@ export class MainAppStore implements MainAppStoreProps {
     );
     if (response.result === OperationApiResponseCodes.Ok) {
       localStorage.setItem(LOCAL_IS_NEW_USER, 'true');
+      if (response.data.mt5Enabled) {
+        localStorage.setItem(LOCAL_STORAGE_MT, 'true');
+        this.rootStore.userProfileStore.setMTAvailable(true);
+      }
       this.isAuthorized = true;
       this.signalRReconnectTimeOut = response.data.reconnectTimeOut;
       this.connectTimeOut = +response.data.connectionTimeOut;
@@ -884,6 +889,10 @@ export class MainAppStore implements MainAppStoreProps {
     );
     if (response.result === OperationApiResponseCodes.Ok) {
       localStorage.setItem(LOCAL_IS_NEW_USER, 'true');
+      if (response.data.mt5Enabled) {
+        localStorage.setItem(LOCAL_STORAGE_MT, 'true');
+        this.rootStore.userProfileStore.setMTAvailable(true);
+      }
       this.signalRReconnectTimeOut = response.data.reconnectTimeOut;
       this.isAuthorized = true;
       this.setTokenHandler(response.data.token);
@@ -907,6 +916,7 @@ export class MainAppStore implements MainAppStoreProps {
     localStorage.removeItem(LAST_PAGE_VISITED);
     localStorage.removeItem(LOCAL_TARGET);
     localStorage.removeItem(LOCAL_HIDDEN_BALANCE);
+    localStorage.removeItem(LOCAL_STORAGE_MT);
     this.activeACCLoading = true;
     this.isPromoAccount = false;
     this.activeSession?.stop();
