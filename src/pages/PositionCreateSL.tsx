@@ -100,12 +100,14 @@ const PositionCreateSL = observer(() => {
         currentPrice +
         ((stopLoss) * currentPrice) /
         (position.investmentAmount * direction * position.multiplier);
+      console.log('positionStopOutPriceByValue:', posPriceByValue);
     }
   };
 
   const postitionStopOut = useCallback(() => {
     const invest = position?.investmentAmount || 0;
     const instrumentPercentSL = (instrument?.stopOutPercent || 95) / 100;
+    console.log('postitionStopOut:', +Number(invest * instrumentPercentSL).toFixed(2));
     return +Number(invest * instrumentPercentSL).toFixed(2);
   }, [position, instrument]);
 
@@ -127,6 +129,7 @@ const PositionCreateSL = observer(() => {
           position.investmentAmount *
           position.multiplier *
           direction;
+        console.log('positionStopOutByPrice:', result);
         return +Number(result).toFixed(2);
       }
       return 0;
