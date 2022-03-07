@@ -674,5 +674,10 @@
     "Server": "Servidor",
     "Investor": "Inversor",
     "Login info": "Información de acceso",
-    "Server name": "Nombre del servidor"
+    "Server name": "Nombre del servidor",
+    "Basic": "Básicas",
+    "Silver": "Silver",
+    "Gold": "Gold",
+    "Platinum": "Platinum",
+    "Diamond": "Diamond"
 }

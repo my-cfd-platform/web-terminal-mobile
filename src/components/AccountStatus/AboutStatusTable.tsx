@@ -75,7 +75,7 @@ const AboutStatusTable = () => {
             >
               <PrimaryTextSpan
                 fontWeight="bold"
-                fontSize="16px"
+                fontSize="14px"
                 color={el.color}
               >
                 {t(el.name)}

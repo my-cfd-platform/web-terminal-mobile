@@ -152,7 +152,7 @@ const AccStatusData: IData = {
       {
         label: '150+ Instruments',
         icon: AccStautsFeatureIconEnum.CANDLES,
-        isNew: true,
+        isNew: false,
       },
       {
         label: 'Education course',

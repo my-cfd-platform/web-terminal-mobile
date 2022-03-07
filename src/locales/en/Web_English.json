@@ -674,5 +674,10 @@
     "Server": "Server",
     "Investor": "Investor",
     "Login info": "Login info",
-    "Server name": "Server name"
+    "Server name": "Server name",
+    "Basic": "Basic",
+    "Silver": "Silver",
+    "Gold": "Gold",
+    "Platinum": "Platinum",
+    "Diamond": "Diamond"
 }

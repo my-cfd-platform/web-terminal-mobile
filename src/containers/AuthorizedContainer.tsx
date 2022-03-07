@@ -57,6 +57,8 @@ const AuthorizedContainer: FC = observer(({ children }) => {
     Page.MT5_CHANGE_ACCOUNT,
     Page.MT5_INFO_ACCOUNT,
     Page.DEPOSIT,
+    Page.SL_CREATE_MAIN,
+    Page.TP_CREATE_MAIN,
   ]);
 
   const { push } = useHistory();
