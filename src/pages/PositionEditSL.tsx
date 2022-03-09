@@ -135,12 +135,14 @@ const PositionEditSL = observer(() => {
         currentPrice +
         ((stopLoss - commission) * currentPrice) /
           (position.investmentAmount * direction * position.multiplier);
+      console.log('positionStopOutPriceByValue:', posPriceByValue);
     }
   };
 
   const postitionStopOut = useCallback(() => {
     const invest = position?.investmentAmount || 0;
     const instrumentPercentSL = (instrument?.stopOutPercent || 95) / 100;
+    console.log('postitionStopOut:', +Number(invest * instrumentPercentSL).toFixed(2));
     return +Number(invest * instrumentPercentSL).toFixed(2);
   }, [position, instrument]);
 
@@ -546,6 +548,7 @@ const PositionEditSL = observer(() => {
     switch (e.target.name) {
       case 'value':
         positionStopOutPriceByValue(newValue === null ? 0 : +newValue);
+        console.log('newValue: ', newValue);
         if (newValue && +newValue > postitionStopOut()) {
           setFieldValue('isToppingUpActive', true);
         } else {
@@ -559,7 +562,8 @@ const PositionEditSL = observer(() => {
         const soValue = positionStopOutByPrice(
           newValue !== null ? +newValue : 0
         );
-
+        console.log('newValue: ', newValue);
+        console.log('positionStopOutByPrice: ', soValue);
         if (
           newValue &&
           soValue <= 0 &&
