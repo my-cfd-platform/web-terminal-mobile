@@ -679,5 +679,8 @@
     "Silver": "Silver",
     "Gold": "Gold",
     "Platinum": "Platinum",
-    "Diamond": "Diamond"
+    "Diamond": "Diamond",
+    "On": "On",
+    "Off": "Off",
+    "Save position": "Save position"
 }

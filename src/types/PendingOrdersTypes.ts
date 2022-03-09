@@ -15,6 +15,7 @@ export interface PendingOrderWSDTO {
   tpType: TpSlTypeEnum | null;
   slType: TpSlTypeEnum | null;
   timeStamp: number;
+  isToppingUpActive: boolean;
 }
 
 

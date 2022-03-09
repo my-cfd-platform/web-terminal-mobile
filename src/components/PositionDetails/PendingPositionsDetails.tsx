@@ -231,6 +231,18 @@ const PendingPositionsDetails: FC<Props> = observer((props) => {
               </PrimaryTextSpan>
               <PrimaryTextSpan fontSize="16px">{position.id}</PrimaryTextSpan>
             </FlexContainer>
+
+            <FlexContainer
+              width="100%"
+              padding="8px 16px"
+              justifyContent="space-between"
+              alignItems="center"
+            >
+              <PrimaryTextSpan color="#fff" fontSize="16px">
+                {t('Save position')}
+              </PrimaryTextSpan>
+              <PrimaryTextSpan fontSize="16px">{position.isToppingUpActive ? t('On') : t('Off')}</PrimaryTextSpan>
+            </FlexContainer>
           </FlexContainer>
 
           <FlexContainer flexDirection="column" marginBottom="20px">

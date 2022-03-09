@@ -679,5 +679,8 @@
     "Silver": "Srebrny",
     "Gold": "Złoty",
     "Platinum": "Platynowy",
-    "Diamond": "Diamentowy"
+    "Diamond": "Diamentowy",
+    "On": "Wł.",
+    "Off": "Wył.",
+    "Save position": "Zapisz pozycję"
 }

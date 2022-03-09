@@ -176,7 +176,7 @@
     "Week": "Semana",
     "Month": "Mes",
     "Year": "Año",
-    "Congratulations!": "¡Enhorabuena!",
+    "Congratulations!": "¡Felicidades!",
     "You Have Been Successfully Registered": "Se ha registrado con éxito",
     "Practice on Demo": "Practicar en Demo",
     "Invest Real funds": "Invertir fondos reales",
@@ -679,5 +679,8 @@
     "Silver": "Silver",
     "Gold": "Gold",
     "Platinum": "Platinum",
-    "Diamond": "Diamond"
+    "Diamond": "Diamond",
+    "On": "Encendido",
+    "Off": "Apagado",
+    "Save position": "Guarda posición"
 }
