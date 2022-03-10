@@ -22,6 +22,9 @@ import { InstrumentModelWSDTO } from '../types/InstrumentsTypes';
 import { AskBidEnum } from '../enums/AskBid';
 import { TpSlTypeEnum } from '../enums/TpSlTypeEnum';
 import { ButtonWithoutStyles } from '../styles/ButtonWithoutStyles';
+import SvgIcon from '../components/SvgIcon';
+import IconToppingUpActive from '../assets/svg_no_compress/topping-up/icon-topping-up-active.svg';
+import IconToppingUpInUse from '../assets/svg_no_compress/topping-up/icon-topping-up-active-in-use.svg';
 
 const PositionCreateSL = observer(() => {
   const { id } = useParams<{ id: string }>();
@@ -368,7 +371,6 @@ const PositionCreateSL = observer(() => {
         const soValue = positionStopOutByPrice(
           newValue !== null ? +newValue : 0
         );
-
         if (
           newValue &&
           soValue <= 0 &&
@@ -625,6 +627,32 @@ const PositionCreateSL = observer(() => {
                 'You can limit the additional funds reserved on your balance by specifying a level of loss that is acceptable to you for this position.'
               )}
             </PrimaryTextSpan>
+          </FlexContainer>
+
+          <FlexContainer padding="0 16px 12px" flexDirection="column">
+            <FlexContainer alignItems="center">
+              <SvgIcon {...IconToppingUpActive} />
+              <PrimaryTextSpan
+                fontSize="13px"
+                color="rgba(196, 196, 196, 0.5)"
+                lineHeight="1.4"
+              >
+                {` - ${t('save position is active')}`}
+              </PrimaryTextSpan>
+            </FlexContainer>
+
+            <FlexContainer alignItems="flex-start">
+              <FlexContainer margin="1px 0 0">
+                <SvgIcon {...IconToppingUpInUse} />
+              </FlexContainer>
+              <PrimaryTextSpan
+                fontSize="13px"
+                color="rgba(196, 196, 196, 0.5)"
+                lineHeight="1.4"
+              >
+                {` - ${t('save position is active and use available funds')}`}
+              </PrimaryTextSpan>
+            </FlexContainer>
           </FlexContainer>
         </FlexContainer>
       </CustomForm>

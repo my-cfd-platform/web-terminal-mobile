@@ -55,8 +55,8 @@ const AccountStatusProgress = observer(() => {
               {...IconProgressStar}
               fillColor={AccStatusData[userProfileStore.userStatus].color}
             />
-            <PrimaryTextSpan color="#ffffff" fontSize="16px" fontWeight="bold">
-              {AccStatusData[userProfileStore.userStatus].name}
+            <PrimaryTextSpan color="#ffffff" fontSize="14px" fontWeight="bold">
+              {t(AccStatusData[userProfileStore.userStatus].name)}
             </PrimaryTextSpan>
           </ProgressBackground>
         </ProgressWrapper>
@@ -72,10 +72,10 @@ const AccountStatusProgress = observer(() => {
             </PrimaryTextSpan>
             <PrimaryTextSpan
               fontSize="14px"
-              color={AccStatusData[userProfileStore.userStatus].color}
+              color={AccStatusData[userProfileStore.userNextStatus].color}
             >
               &nbsp;
-              {`${AccStatusData[userProfileStore.userNextStatus].name} ${t(
+              {`${t(AccStatusData[userProfileStore.userNextStatus].name)} ${t(
                 'Status'
               )}`}
             </PrimaryTextSpan>

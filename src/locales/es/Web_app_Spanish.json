@@ -176,7 +176,7 @@
     "Week": "Semana",
     "Month": "Mes",
     "Year": "Año",
-    "Congratulations!": "¡Enhorabuena!",
+    "Congratulations!": "¡Felicidades!",
     "You Have Been Successfully Registered": "Se ha registrado con éxito",
     "Practice on Demo": "Practicar en Demo",
     "Invest Real funds": "Invertir fondos reales",
@@ -550,7 +550,7 @@
     "to unlock": "para desbloquear",
     "About Statuses": "Sobre los Estados",
     "You received": "Recibiste",
-    "and unlocked": "y has desbloqueado",
+    "and unlocked": "y desbloqueado",
     "benefits": "beneficios",
     "New": "Nuevo",
     "Let’s Trade": "Vamos a comerciar",
@@ -674,5 +674,13 @@
     "Server": "Servidor",
     "Investor": "Inversor",
     "Login info": "Información de acceso",
-    "Server name": "Nombre del servidor"
+    "Server name": "Nombre del servidor",
+    "Basic": "Básicas",
+    "Silver": "Silver",
+    "Gold": "Gold",
+    "Platinum": "Platinum",
+    "Diamond": "Diamond",
+    "On": "Encendido",
+    "Off": "Apagado",
+    "Save position": "Guarda posición"
 }

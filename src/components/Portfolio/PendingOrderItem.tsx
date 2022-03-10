@@ -11,6 +11,8 @@ import { useStores } from '../../hooks/useStores';
 import { useTranslation } from 'react-i18next';
 import useInstrument from '../../hooks/useInstrument';
 import ItemOperationLabel from './ItemOperationLabel';
+import SvgIcon from '../SvgIcon';
+import IconToppingUpActive from '../../assets/svg_no_compress/topping-up/icon-topping-up-active.svg';
 
 interface Props {
   pendingOrder: PendingOrderWSDTO;
@@ -49,8 +51,13 @@ const PendingOrderItem: FC<Props> = ({ pendingOrder, isInner }) => {
 
   return (
     <InstrumentItem to={`${Page.PORTFOLIO_MAIN}/${type}/${id}`}>
-      <FlexContainer width="48px" height="48px" marginRight="16px">
+      <FlexContainer width="48px" height="48px" marginRight="16px" position="relative">
         <ImageContainer instrumentId={instrument} />
+        {pendingOrder.isToppingUpActive && (
+          <FlexContainer position="absolute" bottom="0" right="-4px">
+            <SvgIcon {...IconToppingUpActive} />
+          </FlexContainer>
+        )}
       </FlexContainer>
 
       <FlexContainer flexDirection="column" justifyContent="center">

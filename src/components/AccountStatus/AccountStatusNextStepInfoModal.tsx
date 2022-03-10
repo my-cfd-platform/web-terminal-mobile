@@ -141,14 +141,14 @@ const AccountStatusNextStepInfoModal = (props: Props) => {
                   fontWeight="bold"
                   fontSize="16px"
                 >
-                  {`${t('Deposit')} $${depositValue}`}
+                  {`${t('Deposit')} $${(depositValue).toLocaleString('en-US')}`}
                 </PrimaryTextSpan>
                 <PrimaryTextSpan
                   color="#1C1F26"
                   fontWeight="bold"
                   fontSize="16px"
                 >
-                  {`${t('to unlock')} ${statusInfo.name} ${t('Status')}!`}
+                  {`${t('to unlock')} ${t(statusInfo.name)} ${t('Status')}!`}
                 </PrimaryTextSpan>
               </>
             )}

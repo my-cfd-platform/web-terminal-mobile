@@ -559,7 +559,6 @@ const PositionEditSL = observer(() => {
         const soValue = positionStopOutByPrice(
           newValue !== null ? +newValue : 0
         );
-
         if (
           newValue &&
           soValue <= 0 &&
@@ -850,8 +849,10 @@ const PositionEditSL = observer(() => {
               </PrimaryTextSpan>
             </FlexContainer>
 
-            <FlexContainer alignItems="center">
-              <SvgIcon {...IconToppingUpInUse} />
+            <FlexContainer alignItems="flex-start">
+              <FlexContainer margin="1px 0 0">
+                <SvgIcon {...IconToppingUpInUse} />
+              </FlexContainer>
               <PrimaryTextSpan
                 fontSize="13px"
                 color="rgba(196, 196, 196, 0.5)"
