@@ -11,7 +11,11 @@ import {
   PositionUpdtateToppingUp,
 } from '../types/Positions';
 import API_LIST from './apiList';
-import { AccountModelDTO, MTAccountDTO, MTCreateAccountDTO } from '../types/AccountsTypes';
+import {
+  AccountModelDTO,
+  MTAccountDTO,
+  MTCreateAccountDTO,
+} from '../types/AccountsTypes';
 import {
   UserAuthenticate,
   UserAuthenticateResponse,
@@ -62,7 +66,10 @@ import { BrandEnum } from '../constants/brandingLinksTranslate';
 import { DebugResponse, DebugTypes } from '../types/DebugTypes';
 import { OnBoardingInfo } from '../types/OnBoardingTypes';
 import requestOptions from '../constants/requestOptions';
-import { IEducationCoursesDTO, IEducationQuestionsDTO } from '../types/EducationTypes';
+import {
+  IEducationCoursesDTO,
+  IEducationQuestionsDTO,
+} from '../types/EducationTypes';
 
 class API {
   private convertParamsToFormData = (params: { [key: string]: any }) => {
@@ -78,14 +85,14 @@ class API {
   clientRequestOptions: AxiosRequestConfig = {
     timeoutErrorMessage: requestOptions.TIMEOUT,
     data: {
-      initBy: requestOptions.CLIENT
-    }
+      initBy: requestOptions.CLIENT,
+    },
   };
   backgroundRequestOptions: AxiosRequestConfig = {
     timeoutErrorMessage: requestOptions.TIMEOUT,
     data: {
-      initBy: requestOptions.BACKGROUND
-    }
+      initBy: requestOptions.BACKGROUND,
+    },
   };
 
   //
@@ -264,7 +271,8 @@ class API {
 
   createMTAccounts = async (apiUrl: string) => {
     const response = await axios.post<MTCreateAccountDTO>(
-      `${API_STRING || apiUrl}${API_LIST.MT5_ACCOUNTS.POST}`, {},
+      `${API_STRING || apiUrl}${API_LIST.MT5_ACCOUNTS.POST}`,
+      {},
       this.clientRequestOptions
     );
     return response.data;
@@ -292,7 +300,7 @@ class API {
         params: {
           id,
         },
-        ...this.backgroundRequestOptions
+        ...this.backgroundRequestOptions,
       }
     );
     return response.data;
@@ -307,14 +315,14 @@ class API {
   };
 
   getPriceHistory = async (params: HistoryCandlesType) => {
-    const response = await axios.get<CandleDTO[]>(
+    const response = await axios.get<{ candles: CandleDTO[] }>(
       `${API_STRING}${API_LIST.PRICE_HISTORY.CANDLES}`,
       {
         params,
-        ...this.backgroundRequestOptions
+        ...this.backgroundRequestOptions,
       }
     );
-    const bars = response.data.map((item) => ({
+    const bars = response.data.candles.map((item) => ({
       time: item.d,
       low: item.l,
       high: item.h,
@@ -331,7 +339,7 @@ class API {
         params: {
           key,
         },
-        ...this.backgroundRequestOptions
+        ...this.backgroundRequestOptions,
       }
     );
     return response.data;
@@ -355,7 +363,7 @@ class API {
       `${API_STRING}${API_LIST.REPORTS.POSITIONS_HISTORY}`,
       {
         params,
-        ...this.backgroundRequestOptions
+        ...this.backgroundRequestOptions,
       }
     );
     return response.data;
@@ -366,7 +374,7 @@ class API {
       `${API_STRING}${API_LIST.REPORTS.BALANCE_HISTORY}`,
       {
         params,
-        ...this.backgroundRequestOptions
+        ...this.backgroundRequestOptions,
       }
     );
     return response.data;
@@ -379,7 +387,7 @@ class API {
         params: {
           processId: encodeURIComponent(processId),
         },
-        ...this.backgroundRequestOptions
+        ...this.backgroundRequestOptions,
       }
     );
     return response.data;
@@ -458,7 +466,7 @@ class API {
       `${API_STRING}${API_LIST.INSTRUMENTS.FAVOURITES}`,
       {
         params,
-        ...this.backgroundRequestOptions
+        ...this.backgroundRequestOptions,
       }
     );
     return response.data;
@@ -543,9 +551,9 @@ class API {
           } as InitModel,
         }
       : await axios.get<InitModel>(
-        `${API_LIST.INIT.GET}`,
-        this.backgroundRequestOptions
-      );
+          `${API_LIST.INIT.GET}`,
+          this.backgroundRequestOptions
+        );
     return response.data;
   };
 
@@ -592,7 +600,6 @@ class API {
     return response.data;
   };
 
-
   getListOfCourses = async (miscUrl: string) => {
     const needToAdd =
       (API_MISC_STRING || miscUrl).includes('/misc') || IS_LOCAL ? '' : '/misc';
@@ -607,19 +614,27 @@ class API {
     const needToAdd =
       (API_MISC_STRING || miscUrl).includes('/misc') || IS_LOCAL ? '' : '/misc';
     const response = await axios.get<IEducationQuestionsDTO>(
-      `${API_MISC_STRING || miscUrl}${needToAdd}${API_LIST.EDUCATION.LIST}/${id}`,
+      `${API_MISC_STRING || miscUrl}${needToAdd}${
+        API_LIST.EDUCATION.LIST
+      }/${id}`,
       this.backgroundRequestOptions
     );
     return response.data;
   };
 
-  saveProgressEducation = async (miscUrl: string, id: string, index: number) => {
+  saveProgressEducation = async (
+    miscUrl: string,
+    id: string,
+    index: number
+  ) => {
     const needToAdd =
       (API_MISC_STRING || miscUrl).includes('/misc') || IS_LOCAL ? '' : '/misc';
     const response = await axios.post<IEducationCoursesDTO>(
-      `${API_MISC_STRING || miscUrl}${needToAdd}${API_LIST.EDUCATION.LIST}/${id}/saveProgress`,
+      `${API_MISC_STRING || miscUrl}${needToAdd}${
+        API_LIST.EDUCATION.LIST
+      }/${id}/saveProgress`,
       {
-        lastQuestionId: index
+        lastQuestionId: index,
       },
       this.backgroundRequestOptions
     );

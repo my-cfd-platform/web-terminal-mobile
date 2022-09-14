@@ -106,16 +106,16 @@ module.exports = (env, argv) => {
         ),
       }),
       new webpack.DefinePlugin({
-        WS_HOST: JSON.stringify('http://localhost:5678/signalr'),
+        WS_HOST: JSON.stringify('http://localhost:5680/signalr'),
         API_STRING: ['production', 'none'].includes(argv.mode)
           ? JSON.stringify('')
-          : JSON.stringify('http://localhost:5678'),
+          : JSON.stringify('http://localhost:5680'),
         API_AUTH_STRING: ['production', 'none'].includes(argv.mode)
           ? JSON.stringify('')
           : JSON.stringify('http://localhost:5679'),
         API_DEPOSIT_STRING: ['production', 'none'].includes(argv.mode)
-          ? JSON.stringify('/mobile-deposit')
-          : JSON.stringify('http://localhost:8081'),
+          ? JSON.stringify('/deposit')
+          : JSON.stringify('http://localhost:5682/deposit'),
         API_WITHDRAWAL_STRING: ['production', 'none'].includes(argv.mode)
           ? JSON.stringify('')
           : JSON.stringify('http://localhost:5681'),
@@ -123,8 +123,11 @@ module.exports = (env, argv) => {
           ? JSON.stringify('')
           : JSON.stringify('http://localhost:5683/misc'),
         CHARTING_LIBRARY_PATH: ['production', 'none'].includes(argv.mode)
-          ? JSON.stringify('/charting_library/')
-          : JSON.stringify('/src/vendor/charting_library/'),
+          ? JSON.stringify('./charting_library/')
+          : JSON.stringify('./src/vendor/charting_library/'),
+        OneSignal_PATH: ['production', 'none'].includes(argv.mode)
+          ? JSON.stringify('./')
+          : JSON.stringify('./src/vendor/'),
         IS_LIVE: ['production', 'none'].includes(argv.mode),
         IS_LOCAL: argv.is_local === 'true',
         BUILD_VERSION: JSON.stringify(process.env.BUILD_VERSION),

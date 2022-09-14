@@ -4,7 +4,10 @@ import {
 } from '../vendor/charting_library/charting_library';
 import API from '../helpers/API';
 import { CandleTypeEnum } from '../enums/CandleType';
-import { HistoryCandlesType } from '../types/HistoryTypes';
+import {
+  HistoryCandlesDTOType,
+  HistoryCandlesType,
+} from '../types/HistoryTypes';
 import { AskBidEnum } from '../enums/AskBid';
 import { supportedResolutions } from '../constants/supportedTimeScales';
 
@@ -46,12 +49,11 @@ export default {
     }
 
     const params: HistoryCandlesType = {
-      candleType: resolutionEnum,
-      // TODO: FIXME: hardcode
-      bidOrAsk: AskBidEnum.Buy,
-      fromDate: rangeStartDate,
-      toDate: rangeEndDate,
-      instrumentId,
+      CandleType: resolutionEnum,
+      BidOrAsk: AskBidEnum.Buy,
+      From: rangeStartDate,
+      To: rangeEndDate,
+      InstrumentId: instrumentId,
     };
 
     return API.getPriceHistory(params);

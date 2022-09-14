@@ -1,0 +1,199 @@
+variables:
+  BUILD_VERSION: 1.28.0
+  DOCKER_IMAGE_TAG: monfex/simple-trading-web-terminal-mobile:${BUILD_VERSION}
+  DOCKER_DEV_IMAGE_TAG: monfex/simple-trading-web-terminal-mobile:${CI_COMMIT_REF_NAME}
+  K8S_DEV_APP_SELECTOR: simple-trading-web-terminal-mobile
+  K8S_DEV_NAMESPACE: simple-trading-dev
+  K8S_DEV_CONTEXT: SimpleTradingDevKubernetes
+  K8S_UAT_CONTEXT: kubernetes-uat
+  BUILD_FOLDER: wwwroot
+  KUBERNETES_APP_SELECTOR_NAME: web-terminal-mobile
+  K8S_STG_SELECTOR_NAME: web-terminal-mobile-slot-b
+  K8S_STG_NAMESPACE: simple-trading
+
+stages:
+  - build
+  - publish
+  - publish-kubernetes
+  - run-autotests
+  - lock-image
+
+build-dev:
+  stage: build
+  image: node:14.6.0
+  script:
+    - pwd
+    - ls -la
+    - npm -v
+    - node -v
+    - npm i
+    - npm run buildTest
+  artifacts:
+    paths:
+      - ${BUILD_FOLDER}
+  only:
+    - development
+
+build-test:
+  stage: build
+  image: node:14.6.0
+  script:
+    - npm i
+    - npm run buildTest
+  artifacts:
+    paths:
+      - ${BUILD_FOLDER}
+  only:
+    - test
+
+build-uat:
+  stage: build
+  image: node:14.6.0
+  script:
+    - npm i
+    - npm run buildProd
+  artifacts:
+    paths:
+      - ${BUILD_FOLDER}
+  only:
+    - uat
+
+publish-test:
+  stage: publish
+  services:
+    - docker:dind
+  variables:
+    DOCKER_DRIVER: overlay
+  script:
+    - ls ${BUILD_FOLDER}
+    - ls
+    - echo "$DOCKER_LOGIN"
+    - echo "$DOCKER_PASSWORD" | docker login $DOCKER_REGISTRY_HOST --username $DOCKER_LOGIN --password-stdin
+    - docker build --no-cache --build-arg BUILD_VERSION=${BUILD_VERSION} -t $DOCKER_REGISTRY_HOST/${DOCKER_IMAGE_TAG}-${CI_COMMIT_REF_NAME}-${CI_PIPELINE_ID} .
+    - docker push $DOCKER_REGISTRY_HOST/${DOCKER_IMAGE_TAG}-${CI_COMMIT_REF_NAME}-${CI_PIPELINE_ID}
+  image: docker:latest
+  only:
+    - test
+
+publish-uat:
+  stage: publish
+  services:
+    - docker:dind
+  variables:
+    DOCKER_DRIVER: overlay
+  script:
+    - ls ${BUILD_FOLDER}
+    - ls
+    - echo "$DOCKER_LOGIN"
+    - echo "$DOCKER_PASSWORD" | docker login $DOCKER_REGISTRY_HOST --username $DOCKER_LOGIN --password-stdin
+    - docker build --no-cache --build-arg BUILD_VERSION=${BUILD_VERSION} -t $DOCKER_REGISTRY_HOST/${DOCKER_IMAGE_TAG} .
+    - docker push $DOCKER_REGISTRY_HOST/${DOCKER_IMAGE_TAG}
+  image: docker:latest
+  only:
+    - uat
+
+publish-dev:
+  stage: publish
+  tags: [monfex]
+  services:
+    - docker:dind
+  variables:
+    DOCKER_DRIVER: overlay
+  script:
+    - ls ${BUILD_FOLDER}
+    - ls
+    - echo "$DOCKER_LOGIN"
+    - echo "$DOCKER_PASSWORD" | docker login $DOCKER_REGISTRY_HOST --username $DOCKER_LOGIN --password-stdin
+    - docker build --build-arg BUILD_VERSION=${BUILD_VERSION} -t $DOCKER_REGISTRY_HOST/${DOCKER_DEV_IMAGE_TAG} .
+    - docker push $DOCKER_REGISTRY_HOST/${DOCKER_DEV_IMAGE_TAG}
+  image: docker:latest
+  only:
+    - development
+
+publish-kubernetes-dev:
+  stage: publish-kubernetes
+  image: simpletrading.azurecr.io/monfex/simple-trading-kubectl:latest
+  services:
+    - docker:dind
+  before_script:
+    - kubectl config use-context $KUBERNETES_DEV_CONTEXT
+  script:
+    - kubectl delete pods -l app=${KUBERNETES_APP_SELECTOR_NAME} --namespace=$KUBERNETES_DEV_NAMESPACE
+  only:
+    - development
+
+publish-kubernetes-test:
+  stage: publish-kubernetes
+  image: simpletrading.azurecr.io/monfex/simple-trading-kubectl:latest
+  services:
+    - docker:dind
+  before_script:
+    - kubectl config use-context $KUBERNETES_TEST_CONTEXT
+  script:
+    - kubectl delete pods -l app=${KUBERNETES_APP_SELECTOR_NAME} --namespace=$KUBERNETES_TEST_NAMESPACE
+    - kubectl set image deployments/${KUBERNETES_APP_SELECTOR_NAME} ${KUBERNETES_APP_SELECTOR_NAME}=$DOCKER_REGISTRY_HOST/${DOCKER_IMAGE_TAG}-${CI_COMMIT_REF_NAME}-${CI_PIPELINE_ID} --namespace=$KUBERNETES_TEST_NAMESPACE
+    - kubectl patch deployment ${KUBERNETES_APP_SELECTOR_NAME} -p "{\"spec\":{\"template\":{\"metadata\":{\"labels\":{\"date\":\"`date +'%s'`\"}}}}}" --namespace=$KUBERNETES_TEST_NAMESPACE
+  only:
+    - test
+
+publish-kubernetes-uat:
+  stage: publish-kubernetes
+  image: simpletrading.azurecr.io/monfex/simple-trading-kubectl:latest
+  services:
+    - docker:dind
+  before_script:
+    - kubectl config use-context $K8S_UAT_CONTEXT
+  script:
+#    - kubectl delete pods -l app=${KUBERNETES_APP_SELECTOR_NAME} --namespace=$KUBERNETES_TEST_NAMESPACE
+    - kubectl set image deployments/${KUBERNETES_APP_SELECTOR_NAME} ${KUBERNETES_APP_SELECTOR_NAME}=$DOCKER_REGISTRY_HOST/${DOCKER_IMAGE_TAG} --namespace=$KUBERNETES_TEST_NAMESPACE
+    - kubectl patch deployment ${KUBERNETES_APP_SELECTOR_NAME} -p "{\"spec\":{\"template\":{\"metadata\":{\"labels\":{\"date\":\"`date +'%s'`\"}}}}}" --namespace=$KUBERNETES_TEST_NAMESPACE
+  only:
+    - uat
+
+publish-kubernetes-stg:
+  stage: publish-kubernetes
+  image: simpletrading.azurecr.io/monfex/helm:latest
+  services:
+    - docker:dind
+  variables:
+    GIT_STRATEGY: none
+    SUBSCRIPTION: Production-CSP
+    RG: SimpleTradingKubernetesRG
+    CLUSTER_NAME: Simple-Trading-Prod-Kube
+  before_script:
+    - az login --service-principal -u ${SERVICE_PRINCIPAL_LOGIN} -p ${SERVICE_PRINCIPAL_PASSWORD} --tenant ${SERVICE_PRINCIPAL_TENANT} > /dev/null
+    - az aks get-credentials --resource-group ${RG} --name ${CLUSTER_NAME} --subscription ${SUBSCRIPTION} --overwrite-existing
+  script:
+#    - kubectl delete pods -l app=${KUBERNETES_APP_STG_SELECTOR_NAME} --namespace=$KUBERNETES_TEST_NAMESPACE
+    - kubectl set image deployments/${K8S_STG_SELECTOR_NAME} ${K8S_STG_SELECTOR_NAME}=$DOCKER_REGISTRY_HOST/${DOCKER_IMAGE_TAG} --namespace=$K8S_STG_NAMESPACE
+    - kubectl patch deployment ${K8S_STG_SELECTOR_NAME} -p "{\"spec\":{\"template\":{\"metadata\":{\"labels\":{\"date\":\"`date +'%s'`\"}}}}}" --namespace=$K8S_STG_NAMESPACE
+  only:
+    - stg
+
+run-autotests-stg:
+  stage: run-autotests
+  image: simpletrading.azurecr.io/monfex/autotests-stage:latest
+  services:
+    - docker:dind
+  script:
+    - Xvfb -ac :99 -screen 0 1280x1024x16 &
+    - pytest tests/test_log_in.py
+  only:
+    - stg
+
+
+lock-image:
+  stage: lock-image
+  image: mcr.microsoft.com/azure-cli:latest
+  tags: [monfex]
+  variables:
+    GIT_STRATEGY: none
+  services:
+    - docker:dind
+  before_script:
+    - az login --service-principal --username $AZ_SERVICE_PRINCIPAL_LOGIN --password $AZ_SERVICE_PRINCIPAL_PASSWORD --tenant $AZ_SERVICE_PRINCIPAL_TENANT
+  script:
+    - az acr repository update --name $DOCKER_CONTAINER_REGISTRY_NAME --image ${DOCKER_IMAGE_TAG} --write-enabled false
+  only:
+    - master
+
