@@ -16,7 +16,7 @@ const API_LIST = {
     REGISTER: '/api/v1/Trader/Register',
   },
   PRICE_HISTORY: {
-    CANDLES: '/api/v1/PriceHistory/Candles',
+    CANDLES: '/api/candles/v1',
   },
   KEY_VALUE: {
     GET: '/api/v1/KeyValue',
