@@ -831,10 +831,10 @@ export class MainAppStore implements MainAppStoreProps {
     );
     if (response.result === OperationApiResponseCodes.Ok) {
       localStorage.setItem(LOCAL_IS_NEW_USER, 'true');
-      if (response.data.mt5Enabled) {
-        localStorage.setItem(LOCAL_STORAGE_MT, 'true');
-        this.rootStore.userProfileStore.setMTAvailable(true);
-      }
+      // if (response.data.mt5Enabled) {
+      //   localStorage.setItem(LOCAL_STORAGE_MT, 'true');
+      //   this.rootStore.userProfileStore.setMTAvailable(true);
+      // }
       this.isAuthorized = true;
       this.signalRReconnectTimeOut = response.data.reconnectTimeOut;
       this.connectTimeOut = +response.data.connectionTimeOut;
@@ -889,10 +889,10 @@ export class MainAppStore implements MainAppStoreProps {
     );
     if (response.result === OperationApiResponseCodes.Ok) {
       localStorage.setItem(LOCAL_IS_NEW_USER, 'true');
-      if (response.data.mt5Enabled) {
-        localStorage.setItem(LOCAL_STORAGE_MT, 'true');
-        this.rootStore.userProfileStore.setMTAvailable(true);
-      }
+      // if (response.data.mt5Enabled) {
+      //   localStorage.setItem(LOCAL_STORAGE_MT, 'true');
+      //   this.rootStore.userProfileStore.setMTAvailable(true);
+      // }
       this.signalRReconnectTimeOut = response.data.reconnectTimeOut;
       this.isAuthorized = true;
       this.setTokenHandler(response.data.token);

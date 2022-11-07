@@ -26,7 +26,6 @@ import WithdrawVisaMasterForm from '../pages/WithdrawVisaMasterForm';
 import WithdrawBitcoinForm from '../pages/WithdrawBitcoinForm';
 import WithdrawalHistoryDetails from '../pages/WithdrawalHistoryDetails';
 import WithdrawSuccessRequest from '../components/Withdraw/WithdrawSuccessRequest';
-import PositionEditSLTP from '../pages/PositionEditSL';
 import PositionEditSL from '../pages/PositionEditSL';
 import PositionEditTP from '../pages/PositionEditTP';
 import Onboarding from '../pages/Onboarding';
@@ -40,8 +39,8 @@ import PositionCreateSL from '../pages/PositionCreateSL';
 import PositionCreateTP from '../pages/PositionCreateTP';
 import AboutStatusPage from '../pages/AboutStatusPage';
 import AccountKYCSuccessPage from '../pages/AccountKYCSuccessPage';
-import AccountsMT5 from '../pages/AccountsMT5';
-import AccountMTLoginDetail from '../pages/AccountMTLoginDetail';
+// import AccountsMT5 from '../pages/AccountsMT5';
+// import AccountMTLoginDetail from '../pages/AccountMTLoginDetail';
 import DepositPage from '../pages/DepositPage';
 
 export enum RouteLayoutType {
@@ -262,13 +261,13 @@ const routesList = [
     layoutType: RouteLayoutType.Authorized,
   },
 
-  {
-    component: AccountsMT5,
-    path: Page.MT5_CHANGE_ACCOUNT,
-    exact: true,
-    strict: true,
-    layoutType: RouteLayoutType.Authorized,
-  },
+  // {
+  //   component: AccountsMT5,
+  //   path: Page.MT5_CHANGE_ACCOUNT,
+  //   exact: true,
+  //   strict: true,
+  //   layoutType: RouteLayoutType.Authorized,
+  // },
 
   {
     component: DepositPage,
@@ -278,14 +277,14 @@ const routesList = [
     layoutType: RouteLayoutType.Authorized,
   },
 
-  {
-    component:  AccountMTLoginDetail,
-    path: Page.MT5_INFO_ACCOUNT,
-    exact: true,
-    strict: true,
-    layoutType: RouteLayoutType.Authorized,
-  },
- 
+  // {
+  //   component:  AccountMTLoginDetail,
+  //   path: Page.MT5_INFO_ACCOUNT,
+  //   exact: true,
+  //   strict: true,
+  //   layoutType: RouteLayoutType.Authorized,
+  // },
+
   {
     component: AccountBonusFaq,
     path: Page.BONUS_FAQ,

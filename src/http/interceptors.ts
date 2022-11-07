@@ -91,14 +91,14 @@ const injectInerceptors = (mainAppStore: MainAppStore) => {
     }
     const isAuthorized = `${mainAppStore.isAuthorized}`;
     const request_url = getApiUrl(config?.url || '');
-    const initBy =
-      CLIENTS_REQUEST.includes(request_url) &&
-      !(
-        request_url.includes(API_LIST.MT5_ACCOUNTS.GET) &&
-        config.method === 'get'
-      )
-        ? requestOptions.CLIENT
-        : requestOptions.BACKGROUND;
+    const initBy = CLIENTS_REQUEST.includes(request_url)
+      ? // &&
+        // !(
+        //   request_url.includes(API_LIST.MT5_ACCOUNTS.GET) &&
+        //   config.method === 'get'
+        // )
+        requestOptions.CLIENT
+      : requestOptions.BACKGROUND;
     let newData = config.data;
     if (typeof newData === 'object') {
       if (newData instanceof FormData) {

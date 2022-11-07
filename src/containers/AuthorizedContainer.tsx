@@ -54,8 +54,8 @@ const AuthorizedContainer: FC = observer(({ children }) => {
     Page.PAGE_NOT_FOUND,
     Page.ABOUT_STATUS,
     Page.VERIFICATION_SUCCESS_SEND,
-    Page.MT5_CHANGE_ACCOUNT,
-    Page.MT5_INFO_ACCOUNT,
+    // Page.MT5_CHANGE_ACCOUNT,
+    // Page.MT5_INFO_ACCOUNT,
     Page.DEPOSIT,
     Page.SL_CREATE_MAIN,
     Page.TP_CREATE_MAIN,
@@ -93,8 +93,8 @@ const AuthorizedContainer: FC = observer(({ children }) => {
     Page.EDUCATION_LIST,
     Page.ABOUT_STATUS,
     Page.VERIFICATION_SUCCESS_SEND,
-    Page.MT5_CHANGE_ACCOUNT,
-    Page.MT5_INFO_ACCOUNT,
+    // Page.MT5_CHANGE_ACCOUNT,
+    // Page.MT5_INFO_ACCOUNT,
     Page.DEPOSIT,
   ]);
 
